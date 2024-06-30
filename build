@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# this script will take a dir as the only arg
+# use createrepo_c and modulemd tools to createrepo on that dir
+
+
+# Usage: build [repo1] [repo2] [repon...]
+# Usage: build  # iterate all dirs in current dir and build them
+
+PROG_NAME="$(basename $0)"
+PROG_DIR="$(cd $(dirname $0) && pwd)"
+
+# Function to create a repository in the given directory
+create_repo(){
+    local repo_dir=$1
+    local create_module=true
+
+    # Check if the directory exists
+    if [ ! -d "${repo_dir}" ]; then
+        echo "Error: repo dir ${repo_dir} does not exist" >&2
+        return 1
+    fi
+
+    if ls ${repo_dir} | grep -q 'el7'; then
+        create_module=false
+    fi
+
+    cd "${repo_dir}" || return 1
+    if ! createrepo_c .; then
+        echo "Error: failed to run createrepo_c in ${repo_dir}" >&2
+        return 1
+    fi
+
+    if [ "$create_module" = true ]; then
+        repo2module -s stable . modules.yaml
+        modifyrepo_c --mdtype=modules modules.yaml repodata/
+        return 0
+    fi
+}
+
+# Function to recursively find all directories and create repos
+process_directories(){
+    local base_dir=$1
+    find "$base_dir" -type d | while read -r dir; do
+        # skip dir named with repodata or start with .
+        if [[ "$dir" == *repodata ]] || [[ "$dir" == "." ]]; then
+            echo "skip directory: ${dir}"
+            continue
+        fi
+        echo "Creating repo in directory: ${dir}"
+        create_repo "$dir"
+    done
+    wait
+}
+
+# Main script logic
+if [ "$#" -eq 0 ]; then
+    # If no arguments are given, iterate all directories from current location
+    echo "No arguments provided. Processing all directories recursively from current location."
+    process_directories ${PROG_DIR}
+else
+    # If arguments are given, process each one
+    for dir in "$@"; do
+        if [ -d "$dir" ]; then
+            process_directories "$dir"
+        else
+            echo "Directory $dir does not exist. Skipping."
+        fi
+    done
+fi
+
+echo "done"

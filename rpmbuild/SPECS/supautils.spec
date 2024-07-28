@@ -19,7 +19,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0
 URL:		https://github.com/supabase/supautils
-Source0:	https://github.com/supabase/supautils/archive/refs/tags/supautils-2.2.1.tar.gz
+Source0:	supautils-2.2.1.tar.gz
 #           https://github.com/supabase/supautils/archive/refs/tags/v2.2.1.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

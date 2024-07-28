@@ -194,109 +194,98 @@ pgjwt:
 #---------------------------------------------#
 pg_sqlog:
 	rm -rf ~/rpmbuild/RPMS/x86_64/pg_sqlog*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
 
 #---------------------------------------------#
 # pg_proctab
 #---------------------------------------------#
 pg_proctab:
 	rm -rf ~/rpmbuild/RPMS/x86_64/pg_proctab*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_proctab.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_proctab.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_proctab.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_proctab.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_proctab.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_proctab.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_proctab.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_proctab.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_proctab.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_proctab.spec
 
 #---------------------------------------------#
 # pg_hashids
 #---------------------------------------------#
 pg_hashids:
 	rm -rf ~/rpmbuild/RPMS/x86_64/pg_hashids*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_hashids.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_hashids.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_hashids.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_hashids.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_hashids.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_hashids.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_hashids.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_hashids.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_hashids.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_hashids.spec
 
 #---------------------------------------------#
 # postgres_shacrypt
 #---------------------------------------------#
 postgres_shacrypt:
 	rm -rf ~/rpmbuild/RPMS/x86_64/postgres_shacrypt*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/postgres_shacrypt.spec
 
 #---------------------------------------------#
 # permuteseq
 #---------------------------------------------#
 permuteseq:
 	rm -rf ~/rpmbuild/RPMS/x86_64/permuteseq*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/permuteseq.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/permuteseq.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/permuteseq.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/permuteseq.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/permuteseq.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/permuteseq.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/permuteseq.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/permuteseq.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/permuteseq.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/permuteseq.spec
 
 #---------------------------------------------#
 # vault
 #---------------------------------------------#
 vault:
 	rm -rf ~/rpmbuild/RPMS/x86_64/vault*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/vault.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/vault.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/vault.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/vault.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/vault.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/vault.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/vault.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/vault.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/vault.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/vault.spec
 
 #---------------------------------------------#
 # supautils
 #---------------------------------------------#
 supautils:
 	rm -rf ~/rpmbuild/RPMS/x86_64/supautils*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/supautils.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/supautils.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/supautils.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/supautils.spec
-
-#---------------------------------------------#
-# pointcloud (included in PGDG, obsolete)
-#---------------------------------------------#
-pointcloud:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pointcloud*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pointcloud.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/supautils.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/supautils.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/supautils.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/supautils.spec
 
 #---------------------------------------------#
 # imgsmlr
 #---------------------------------------------#
 imgsmlr:
 	rm -rf ~/rpmbuild/RPMS/x86_64/imgsmlr*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/imgsmlr.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/imgsmlr.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/imgsmlr.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/imgsmlr.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/imgsmlr.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/imgsmlr.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/imgsmlr.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/imgsmlr.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/imgsmlr.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/imgsmlr.spec
 
 #---------------------------------------------#
 # pg_similarity
 #---------------------------------------------#
 pg_similarity:
 	rm -rf ~/rpmbuild/RPMS/x86_64/pg_similarity*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_similarity.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_similarity.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_similarity.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_similarity.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_similarity.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_similarity.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_similarity.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_similarity.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_similarity.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_similarity.spec
 
 #---------------------------------------------#
 # hydra (lz4-devel libzstd-devel)
@@ -307,7 +296,6 @@ hydra:
 	PATH=/usr/pgsql-14/bin:/usr/bin/:$PATH rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/hydra.spec
 	PATH=/usr/pgsql-15/bin:/usr/bin/:$PATH rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/hydra.spec
 	PATH=/usr/pgsql-16/bin:/usr/bin/:$PATH rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/hydra.spec
-
 
 #---------------------------------------------#
 # pg_filedump (lz4-devel libzstd-devel)
@@ -422,6 +410,18 @@ pg_tle:
 	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_tle.spec
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_tle.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_tle.spec   # not available on el7
+
+
+#---------------------------------------------#
+# pointcloud (included in PGDG, obsolete)
+#---------------------------------------------#
+pointcloud:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pointcloud*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pointcloud.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pointcloud.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pointcloud.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pointcloud.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pointcloud.spec
 
 
 ###############################################################

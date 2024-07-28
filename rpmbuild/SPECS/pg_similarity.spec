@@ -17,7 +17,7 @@ Version:	1.0
 Release:	2PIGSTY%{?dist}
 Summary:	Functions and operators for executing similarity queries
 License:	BSD-3-Clause Like
-URL:		https://github.com/eulerto/%{sname}
+URL:		https://github.com/eulerto/pg_similarity
 Source0:	pg_similarity-1.0.tar.gz
 #           https://github.com/eulerto/pg_similarity/archive/refs/tags/pg_similarity_1_0.tar.gz
 

@@ -25,7 +25,6 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 A PostgreSQL extension to generate SHA256-CRYPT and SHA512-CRYPT password hashes.
-
 See https://www.akkadia.org/drepper/SHA-crypt.txt for the specification and upstream code by Ulrich Drepper.
 
 %if %llvm

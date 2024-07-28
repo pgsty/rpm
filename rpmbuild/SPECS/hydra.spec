@@ -18,9 +18,9 @@ Version:	1.1.2
 Release:	1PIGSTY%{?dist}
 Summary:	Hydra: Column-oriented Postgres. Add scalable analytics to your project in minutes.
 License:	Apache-2.0
-URL:		https://github.com/hydradatabase/%{sname}
-Source0:	https://github.com/hydradatabase/hydra/archive/refs/tags/hydra-1.1.2.tar.gz
-#           https://github.com/hydradatabase/hydra/archive/refs/tags/v1.1.1.tar.gz
+URL:		https://github.com/hydradatabase/hydra
+Source0:	hydra-1.1.2.tar.gz
+#           https://github.com/hydradatabase/hydra/archive/refs/tags/v1.1.2.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 

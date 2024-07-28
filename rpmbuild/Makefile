@@ -91,6 +91,17 @@ parquet_s3_fdw:
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/parquet_s3_fdw.spec
 
 #---------------------------------------------#
+# plv8 (manually build)
+#---------------------------------------------#
+plv8:
+	rm -rf ~/rpmbuild/RPMS/x86_64/plv8*.rpm;
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/plv8.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/plv8.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/plv8.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/plv8.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/plv8.spec
+
+#---------------------------------------------#
 # hunspell
 #---------------------------------------------#
 hunspell: hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot
@@ -166,6 +177,12 @@ hunspell_ru_ru_aot:
 	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/hunspell_ru_ru_aot.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/hunspell_ru_ru_aot.spec
 
+
+###############################################################
+#                   Common Extensions                         #
+###############################################################
+common: pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault supautils pointcloud imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash
+
 #---------------------------------------------#
 # pg_roaringbitmap
 #---------------------------------------------#
@@ -176,7 +193,6 @@ pg_roaringbitmap:
 	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_roaringbitmap.spec
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_roaringbitmap.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_roaringbitmap.spec   # not available on el7
-
 
 #---------------------------------------------#
 # pgjwt
@@ -298,13 +314,6 @@ hydra:
 	PATH=/usr/pgsql-16/bin:/usr/bin/:$PATH rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/hydra.spec
 
 #---------------------------------------------#
-# pg_filedump (lz4-devel libzstd-devel)
-#---------------------------------------------#
-pg_filedump:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_filedump*.rpm;
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_filedump.spec
-
-#---------------------------------------------#
 # apache-age  (dnf install perl perl-FindBin)
 # yum install gcc glibc glib-common readline readline-devel zlib zlib-devel flex bison
 #---------------------------------------------#
@@ -334,94 +343,16 @@ md5hash:
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/md5hash.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/md5hash.spec
 
-#---------------------------------------------#
-# plv8
-#---------------------------------------------#
-plv8:
-	rm -rf ~/rpmbuild/RPMS/x86_64/plv8*.rpm;
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/plv8.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/plv8.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/plv8.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/plv8.spec
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/plv8.spec
-
-#---------------------------------------------#
-# pg_dirtyread (included in PGDG, obsolete)
-#---------------------------------------------#
-pg_dirtyread:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_dirtyread*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_dirtyread.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_dirtyread.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_dirtyread.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_dirtyread.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_dirtyread.spec
-
-#---------------------------------------------#
-# pg_net (included in PGDG, obsolete)
-#---------------------------------------------#
-pg_net:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_net*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_net.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_net.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_net.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_net.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_net.spec
-
-#---------------------------------------------#
-# pgsql_http (included in PGDG, obsolete)
-#---------------------------------------------#
-pgsql_http:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pgsql_http*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgsql_http.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgsql_http.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgsql_http.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgsql_http.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pgsql_http.spec
-
-#---------------------------------------------#
-# pgsql_gzip (included in PGDG, obsolete)
-#---------------------------------------------#
-pgsql_gzip:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pgsql_gzip*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgsql_gzip.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgsql_gzip.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgsql_gzip.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgsql_gzip.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pgsql_gzip.spec
-
-#---------------------------------------------#
-# pg_bigm (included in PGDG, obsolete)
-#---------------------------------------------#
-pg_bigm:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_bigm*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-
-#---------------------------------------------#
-# pg_tle (deps: krb5-devel) rename to v1.4.0
-#---------------------------------------------#
-pg_tle:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_tle*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_tle.spec   # not available on el7
 
 
 #---------------------------------------------#
-# pointcloud (included in PGDG, obsolete)
+# pg_filedump (lz4-devel libzstd-devel)
 #---------------------------------------------#
-pointcloud:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pointcloud*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pointcloud.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pointcloud.spec
+pg_filedump:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_filedump*.rpm;
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_filedump.spec
+
+
 
 
 ###############################################################

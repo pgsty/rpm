@@ -6,7 +6,7 @@
 
 PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 
-21 Extensions build with `c/c++`:
+22 Extensions build with `c/c++`:
 
 | Extension Name                                                     |             | SPEC                                                   | Comment            |
 |--------------------------------------------------------------------|-------------|--------------------------------------------------------|--------------------|
@@ -31,6 +31,7 @@ PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 | [supautils](https://github.com/supabase/supautils)                 | v2.2.1      | [supautils.spec](SPECS/supautils.spec)                 |                    |
 | [pg_similarity](https://github.com/eulerto/pg_similarity)          | v1.0        | [pg_similarity.spec](SPECS/pg_similarity.spec)         |                    |
 | [imgsmlr](https://github.com/postgrespro/imgsmlr)                  | v1.0        | [imgsmlr.spec](SPECS/imgsmlr.spec)                     |                    |
+| [pg_filedump](https://github.com/df7cb/pg_filedump)                | v17.0       |                                                        |
 
 16 Extension build with `rust` & `pgrx`:
 
@@ -53,7 +54,8 @@ PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 | timescale     | [vectorscale](https://github.com/timescale/pgvectorscale)                  | v0.2.0  | [v0.11.4](https://github.com/timescale/pgvectorscale/blob/main/pgvectorscale/Cargo.toml#L17)    | [PostgreSQL](https://github.com/timescale/pgvectorscale/blob/main/LICENSE)  | 16,15,14,13,12 |                      |
 | kaspermarstal | [plprql](https://github.com/kaspermarstal/plprql)                          | v0.1.0  | [v0.11.4](https://github.com/kaspermarstal/plprql/blob/main/Cargo.toml#L21)                     | [Apache-2.0](https://github.com/kaspermarstal/plprql/blob/main/LICENSE)     | 16,15,14,13,12 |                      |
 
-10 Extensions that is obsolete due to included in PGDG or no longer maintained:
+
+9 Extensions that is obsolete due to included in PGDG or no longer maintained:
 
 | Extension Name                                                       | SPEC   | Comment                     |
 |----------------------------------------------------------------------|--------|-----------------------------|
@@ -64,7 +66,6 @@ PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 | [pg_bigm](https://github.com/pgbigm/pg_bigm)                         | v1.2   | PGDG included, for el7 only |
 | [pgsql-http](https://github.com/pramsey/pgsql-http)                  | v1.6.0 | PGDG included, for el7 only |
 | [pgsql-gzip](https://github.com/pramsey/pgsql-gzip)                  | v1.0.0 | PGDG included, for el7 only |
-| [pg_filedump](https://github.com/df7cb/pg_filedump)                  | v16.0  | PGDG included, for el7 pg15 |
 | [pg_dirtyread](https://github.com/df7cb/pg_dirtyread)                | v2.7   | PGDG included, for el7 only |
 | [pointcloud](https://github.com/pgpointcloud/pointcloud)             | v1.2.5 | PGDG included, for el7 only |
 

@@ -17,8 +17,8 @@ Version:	1.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases
 License:	Apache-2.0
-URL:		https://github.com/apache/%{pname}
-Source0:	https://github.com/apache/%{pname}/releases/download/PG15%2Fv1.4.0-rc0/apache-age-1.4.0-pg15-src.tar.gz
+URL:		https://github.com/apache/age
+Source0:	apache-age-1.4.0-pg15-src.tar.gz
 #           https://github.com/apache/age/releases/download/PG15%2Fv1.4.0-rc0/apache-age-1.4.0-src.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

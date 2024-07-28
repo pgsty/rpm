@@ -19,7 +19,6 @@ default:
 ###############################################################
 #                         2. Deps                             #
 ###############################################################
-
 deps: scws scws-install libduckdb libduckdb-install
 
 #---------------------------------------------#
@@ -58,6 +57,10 @@ libarrow-s3:
 ###############################################################
 #                  3. C/C++ Extensions                        #
 ###############################################################
+# parquet_s3_fdw is mannually built
+common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault supautils pointcloud imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash \
+	pg_roaringbitmap pg_tle pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault supautils pointcloud imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash plv8 \
+	pg_dirtyread pg_net pgsql_http pgsql_gzip pg_bigm pg_tle
 
 #---------------------------------------------#
 # zhparser (depend on scws)
@@ -71,13 +74,6 @@ zhparser:
 	QA_RPATHS=2 rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/zhparser.spec   # not available on el7
 
 #---------------------------------------------#
-# parquet_s3_fdw (depend on parquet_s3_fdw)
-#---------------------------------------------#
-parquet_s3_fdw:
-	rm -rf ~/rpmbuild/RPMS/x86_64/parquet_s3_fdw*.rpm;
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/parquet_s3_fdw.spec
-
-#---------------------------------------------#
 # duckdb_fdw (depend on libduckdb)
 #---------------------------------------------#
 duckdb_fdw:
@@ -86,6 +82,13 @@ duckdb_fdw:
 	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
+
+#---------------------------------------------#
+# parquet_s3_fdw (depend on parquet_s3_fdw)
+#---------------------------------------------#
+parquet_s3_fdw:
+	rm -rf ~/rpmbuild/RPMS/x86_64/parquet_s3_fdw*.rpm;
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/parquet_s3_fdw.spec
 
 #---------------------------------------------#
 # hunspell
@@ -174,16 +177,6 @@ pg_roaringbitmap:
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_roaringbitmap.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_roaringbitmap.spec   # not available on el7
 
-#---------------------------------------------#
-# pg_tle (deps: krb5-devel) rename to v1.4.0
-#---------------------------------------------#
-pg_tle:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_tle*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_tle.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_tle.spec   # not available on el7
 
 #---------------------------------------------#
 # pgjwt
@@ -306,16 +299,6 @@ pg_similarity:
 	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_similarity.spec
 
 #---------------------------------------------#
-# pg_bigm (included in PGDG, obsolete)
-#---------------------------------------------#
-pg_bigm:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_bigm*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_bigm.spec
-
-#---------------------------------------------#
 # hydra (lz4-devel libzstd-devel)
 #---------------------------------------------#
 hydra:
@@ -418,10 +401,33 @@ pgsql_gzip:
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgsql_gzip.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pgsql_gzip.spec
 
+#---------------------------------------------#
+# pg_bigm (included in PGDG, obsolete)
+#---------------------------------------------#
+pg_bigm:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_bigm*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_bigm.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_bigm.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_bigm.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_bigm.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_bigm.spec
+
+#---------------------------------------------#
+# pg_tle (deps: krb5-devel) rename to v1.4.0
+#---------------------------------------------#
+pg_tle:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_tle*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_tle.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_tle.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_tle.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_tle.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_tle.spec   # not available on el7
+
 
 ###############################################################
 #               4. RUST / PGRX Extensions                     #
 ###############################################################
+rust: pgml pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_tier pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
 
 #---------------------------------------------#
 # pgml [RUST]
@@ -552,6 +558,14 @@ pgsmcrypto:
 	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgsmcrypto.spec
 
 #---------------------------------------------#
+# pgvectorscale [RUST]
+#---------------------------------------------#
+pgvectorscale:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pgvectorscale*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pgvectorscale.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgvectorscale.spec
+
+#---------------------------------------------#
 # pgdd [RUST]
 #---------------------------------------------#
 pgdd:
@@ -572,14 +586,6 @@ pg_tiktoken:
 	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_tiktoken.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_tiktoken.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_tiktoken.spec
-
-#---------------------------------------------#
-# pgvectorscale [RUST]
-#---------------------------------------------#
-pgvectorscale:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pgvectorscale*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pgvectorscale.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgvectorscale.spec
 
 #---------------------------------------------#
 # pg_analytics [RUST] (Obsolete)

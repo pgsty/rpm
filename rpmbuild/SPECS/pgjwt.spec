@@ -8,8 +8,8 @@ Version:	0.2.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL implementation of JSON Web Tokens
 License:	MIT
-URL:		https://github.com/michelp/%{sname}
-Source0:	https://github.com/michelp/%{sname}/archive/refs/tags/pgjwt-0.2.0.tar.gz
+URL:		https://github.com/michelp/pgjwt
+Source0:	pgjwt-0.2.0.tar.gz
 #           https://github.com/michelp/pgjwt/archive/refs/heads/master.zip
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

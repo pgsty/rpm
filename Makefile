@@ -55,6 +55,7 @@ pulld:
 push-el: push9 push8 push7
 push7:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --delete rpmbuild/ el7:~/rpmbuild/
+	ssh el7 'cp -f ~/rpmbuild/Makefile.el7 ~/rpmbuild/Makefile'
 push8:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --delete rpmbuild/ el8:~/rpmbuild/
 push9:

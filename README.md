@@ -90,6 +90,12 @@ sudo cpanm FindBin; perl -MFindBin -e 1                   # el9 only logic
 make ps      # make push-ss (specs & sources)
 ```
 
+EL Building Recipe:
+
+```bash
+make 
+```
+
 
 --------
 

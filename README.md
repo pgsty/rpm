@@ -91,10 +91,20 @@ sudo cpanm FindBin; perl -MFindBin -e 1                   # el9 only logic
 make ps      # make push-ss (specs & sources)
 ```
 
-EL Building Recipe:
+EL 8/9 Building Recipe:
 
 ```bash
-make 
+common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq\
+	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash # plv8 parquet_s3_fdw
+rust: pgml pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_tier pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
+```
+
+EL7 Building Recipe:
+
+```bash
+common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq \
+	vault pointcloud imgsmlr pg_similarity hydra pg_filedump age15 md5hash \
+	pg_dirtyread pgsql_http pgsql_gzip pg_bigm pg_tle
 ```
 
 

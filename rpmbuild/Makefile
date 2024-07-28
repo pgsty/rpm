@@ -58,9 +58,8 @@ libarrow-s3:
 #                  3. C/C++ Extensions                        #
 ###############################################################
 # parquet_s3_fdw is mannually built
-common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault supautils pointcloud imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash \
-	pg_roaringbitmap pg_tle pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault supautils pointcloud imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash plv8 \
-	pg_dirtyread pg_net pgsql_http pgsql_gzip pg_bigm pg_tle
+common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq\
+	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash # parquet_s3_fdw plv8
 
 #---------------------------------------------#
 # zhparser (depend on scws)

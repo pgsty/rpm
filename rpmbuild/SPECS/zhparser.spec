@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Open-source full-text search of Chinese language
 License:	PostgreSQL
 URL:		https://github.com/amutu/zhparser/
-Source0:	https://github.com/amutu/zhparser/archive/refs/tags/zhparser-2.2.tar.gz
+Source0:	zhparser-2.2.tar.gz
 #           https://github.com/amutu/zhparser/archive/refs/tags/V2.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -81,5 +81,5 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 
 %changelog
-* Wed Sep 13 2023 Vonng <rh@vonng.com> - 2.2-1
+* Wed Sep 13 2023 Vonng <rh@vonng.com> - 2.2-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

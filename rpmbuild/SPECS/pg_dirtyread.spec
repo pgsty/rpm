@@ -17,8 +17,8 @@ Version:	2.7
 Release:	1PIGSTY%{?dist}
 Summary:	Read dead but unvacuumed tuples from a PostgreSQL relation
 License:	PostgreSQL
-URL:		https://github.com/df7cb/%{sname}
-Source0:	https://github.com/df7cb/%{sname}/pg_dirtyread-2.7.tar.gz
+URL:		https://github.com/df7cb/pg_dirtyread
+Source0:	pg_dirtyread-2.7.tar.gz
 #           https://github.com/df7cb/pg_dirtyread/archive/refs/tags/2.7.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -78,6 +78,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Fri Jun 14 2024 Vonng <rh@vonng.com> - 2.7-1PIGSTY
-* Sun May 5 2024 Vonng <rh@vonng.com> - 2.6-1PIGSTY
+* Fri Jun 14 2024 Vonng <rh@vonng.com> - 2.7
+* Sun May 5 2024 Vonng <rh@vonng.com> - 2.6
 - Initial RPM release, used by Pigsty <https://pigsty.io>

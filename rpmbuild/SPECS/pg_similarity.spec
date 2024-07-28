@@ -80,7 +80,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Mon Jul 22 2024 Vonng <rh@vonng.com> - 1.0-1PIGSTY
+* Mon Jul 22 2024 Vonng <rh@vonng.com> - 1.0
 - patch for PostgreSQL 16
 * Mon Oct 16 2023 Vonng <rh@vonng.com> - 1.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -17,8 +17,8 @@ Version:	1.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Gzip compress and decompress for PostgreSQL
 License:	MIT
-URL:		https://github.com/pramsey/%{sname}
-Source0:	https://github.com/pramsey/%{sname}/archive/refs/tags/pgsql-gzip-1.0.0.tar.gz
+URL:		https://github.com/pramsey/pgsql-gzip
+Source0:	pgsql-gzip-1.0.0.tar.gz
 #           https://github.com/pramsey/pgsql-gzip/archive/refs/tags/v1.0.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

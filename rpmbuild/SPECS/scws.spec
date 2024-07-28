@@ -40,5 +40,5 @@ make install DESTDIR=%{buildroot}
 /sbin/ldconfig
 
 %changelog
-* Wed Sep 13 2023 Vonng <rh@vonng.com> - 1.2.3-1PIGSTY
+* Wed Sep 13 2023 Vonng <rh@vonng.com> - 1.2.3
 - Initial RPM release, used by Pigsty <https://pigsty.io>

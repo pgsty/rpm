@@ -8,9 +8,8 @@ Version:	1.5.7
 Release:	1PIGSTY%{?dist}
 Summary:	GraphQL support to your PostgreSQL database.
 License:	Apache-2.0
-URL:		https://github.com/supabase/%{sname}
-#Source0:	https://github.com/supabase/%{sname}/archive/refs/tags/pg_graphql-1.5.4.tar.gz
-#           https://github.com/supabase/pg_graphql/archive/refs/tags/v1.5.4.tar.gz
+URL:		https://github.com/supabase/pg_graphql
+#Source0:	https://github.com/supabase/pg_graphql/archive/refs/tags/v1.5.7.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

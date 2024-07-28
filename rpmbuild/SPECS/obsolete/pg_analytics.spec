@@ -8,7 +8,7 @@ Version:	0.6.1
 Release:	1PIGSTY%{?dist}
 Summary:	Accelerates analytical query processing inside Postgres
 License:	GNU Affero General Public License v3.0
-URL:		https://github.com/paradedb/paradedb/tree/dev/%{sname}
+URL:		https://github.com/paradedb/paradedb/tree/dev/pg_analytics
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

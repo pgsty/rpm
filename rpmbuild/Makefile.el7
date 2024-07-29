@@ -257,6 +257,13 @@ md5hash:
 	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/md5hash.spec
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/md5hash.spec
 
+
+###############################################################
+#                   Debian Migration                          #
+###############################################################
+debian: prepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
+	q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
+
 #---------------------------------------------#
 # preprepare
 #---------------------------------------------#
@@ -296,6 +303,126 @@ icu_ext:
 	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/icu_ext.spec
 	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/icu_ext.spec
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/icu_ext.spec
+
+#---------------------------------------------#
+# asn1oid
+#---------------------------------------------#
+asn1oid:
+	rm -rf ~/rpmbuild/RPMS/x86_64/asn1oid*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/asn1oid.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/asn1oid.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/asn1oid.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/asn1oid.spec
+
+#---------------------------------------------#
+# numeral
+#---------------------------------------------#
+numeral:
+	rm -rf ~/rpmbuild/RPMS/x86_64/numeral*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/numeral.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/numeral.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/numeral.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/numeral.spec
+
+#---------------------------------------------#
+# pg_rational
+#---------------------------------------------#
+pg_rational:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_rational*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_rational.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_rational.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_rational.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_rational.spec
+
+#---------------------------------------------#
+# q3c
+#---------------------------------------------#
+q3c:
+	rm -rf ~/rpmbuild/RPMS/x86_64/q3c*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/q3c.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/q3c.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/q3c.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/q3c.spec
+
+#---------------------------------------------#
+# pgsphere
+#---------------------------------------------#
+pgsphere:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pgsphere*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgsphere.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgsphere.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgsphere.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgsphere.spec
+
+#---------------------------------------------#
+# pg_rrule
+#---------------------------------------------#
+pg_rrule:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_rrule*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_rrule.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_rrule.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_rrule.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_rrule.spec
+
+#---------------------------------------------#
+# pgfaceting
+#---------------------------------------------#
+pgfaceting:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pgfaceting*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgfaceting.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgfaceting.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgfaceting.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgfaceting.spec
+
+#---------------------------------------------#
+# mimeo
+#---------------------------------------------#
+mimeo:
+	rm -rf ~/rpmbuild/RPMS/x86_64/mimeo*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/mimeo.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/mimeo.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/mimeo.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/mimeo.spec
+
+#---------------------------------------------#
+# tablelog
+#---------------------------------------------#
+tablelog:
+	rm -rf ~/rpmbuild/RPMS/x86_64/tablelog*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/tablelog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/tablelog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/tablelog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/tablelog.spec
+
+#---------------------------------------------#
+# pg_snakeoil
+#---------------------------------------------#
+pg_snakeoil:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_snakeoil*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_snakeoil.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_snakeoil.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_snakeoil.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_snakeoil.spec
+
+#---------------------------------------------#
+# pgextwlist
+#---------------------------------------------#
+pgextwlist:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pgextwlist*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgextwlist.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgextwlist.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgextwlist.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgextwlist.spec
+
+#---------------------------------------------#
+# toastinfo
+#---------------------------------------------#
+toastinfo:
+	rm -rf ~/rpmbuild/RPMS/x86_64/toastinfo*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/toastinfo.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/toastinfo.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/toastinfo.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/toastinfo.spec
 
 
 

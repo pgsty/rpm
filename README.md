@@ -40,6 +40,9 @@ Related Projects:
 | [imgsmlr](https://github.com/postgrespro/imgsmlr)                  | v1.0        | [imgsmlr.spec](SPECS/imgsmlr.spec)                     |                    |
 | [pg_filedump](https://github.com/df7cb/pg_filedump)                | v17.0       |                                                        |
 
+[first_last_agg.spec](rpmbuild%2FSPECS%2Ffirst_last_agg.spec)
+[preprepare.spec](rpmbuild%2FSPECS%2Fpreprepare.spec)
+
 16 [Rust](RUST.md) Extension build with `pgrx`:
 
 | Vendor        | Name                                                                       | Version | PGRX                                                                                            | License                                                                     | PG Ver         | Deps                 |
@@ -101,11 +104,12 @@ make ps      # make push-ss (specs & sources)
 EL 8/9 Building [Recipe](rpmbuild/Makefile):
 
 ```bash
-make deps common rust
+make deps common debian rust
 
-deps: scws scws-install libduckdb libduckdb-install
-common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash plv8
-rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
+deps: scws scws-install libduckdb libduckdb-install pg_filedump
+common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8
+rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml
+debian: prepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
 
 make pgml # el9 (el8 need gcc13)
 ```
@@ -113,10 +117,11 @@ make pgml # el9 (el8 need gcc13)
 EL7 Building [Recipe](rpmbuild/Makefile.el7):
 
 ```bash
-make deps common legacy
+make deps common debian legacy
 
-deps: scws scws-install
-common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault imgsmlr pg_similarity hydra pg_filedump age15 md5hash
+deps: scws scws-install pg_filedump
+common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault pointcloud imgsmlr pg_similarity hydra age15 md5hash
+debian: prepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
 legacy: pg_tle pg_bigm pgsql_http pgsql_gzip pg_dirtyread pointcloud
 ```
 

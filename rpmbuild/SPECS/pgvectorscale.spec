@@ -9,6 +9,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
 URL:		https://github.com/timescale/pgvectorscale
+SOURCE0:    pgvectorscale-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0
@@ -16,13 +17,21 @@ Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0
 %description
 pgvectorscale builds on pgvector with higher performance embedding search and cost-efficient storage for AI applications.
 
+%prep
+%setup -q -n %{sname}-%{version}
+
+%build
+export PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH
+export RUSTFLAGS="-C target-feature=+avx2,+fma"
+cd pgvectorscale
+cargo pgrx package -v
+
 %install
-%{__rm} -rf %{buildroot}
-install -d %{buildroot}%{pginstdir}/lib/
-install -d %{buildroot}%{pginstdir}/share/extension/
-install -m 755 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}-%{version}.so %{buildroot}%{pginstdir}/lib/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}-*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
+cp -a %{_builddir}/%{sname}-%{version}/%{sname}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}-%{version}.so       %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{sname}-%{version}/%{sname}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{sname}-%{version}/%{sname}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}-%{version}.so

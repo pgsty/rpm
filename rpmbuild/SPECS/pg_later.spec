@@ -8,6 +8,7 @@ Version:	0.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	Execute SQL now and get the results later.
 License:	PostgreSQL
+SOURCE0:    pg_later-%{version}.tar.gz
 URL:		https://github.com/tembo-io/pg_later
 #           https://github.com/tembo-io/pg_later/archive/refs/tags/v0.1.1.tar.gz
 
@@ -19,13 +20,18 @@ Execute SQL now and get the results later.
 
 A postgres extension to execute queries asynchronously. Built on pgmq.
 
+%prep
+%setup -q -n %{sname}-%{version}
+
+%build
+PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+
 %install
-%{__rm} -rf %{buildroot}
-install -d %{buildroot}%{pginstdir}/lib/
-install -d %{buildroot}%{pginstdir}/share/extension/
-install -m 755 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}-*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
+cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so

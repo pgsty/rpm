@@ -9,6 +9,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/tembo-io/pg_vectorize
+SOURCE0:    pg_vectorize-%{version}.tar.gz
 #           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.17.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -19,13 +20,19 @@ Recommends: pg_cron_%{pgmajorversion}
 A Postgres extension that automates the transformation and orchestration of text to embeddings and provides hooks into the most popular LLMs.
 This allows you to do vector search and build LLM applications on existing data with as little as two function calls.
 
+%prep
+%setup -q -n %{sname}-%{version}
+
+%build
+cd extension
+PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+
 %install
-%{__rm} -rf %{buildroot}
-install -d %{buildroot}%{pginstdir}/lib/
-install -d %{buildroot}%{pginstdir}/share/extension/
-install -m 755 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}-*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
+cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so

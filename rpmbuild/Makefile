@@ -45,21 +45,12 @@ libduckdb-install:
 	sudo yum remove -y libduckdb || /bin/true
 	sudo rpm -ivh ~/rpmbuild/RPMS/x86_64/libduckdb-1.0.0-1PIGSTY.el*.x86_64.rpm
 
-#---------------------------------------------#
-# libarrow-s3 (deps of parquet_s3_fdw)
-#---------------------------------------------#
-libarrow-s3:
-	rm -rf ~/rpmbuild/RPMS/x86_64/libarrow-s3*.rpm;
-	rpmbuild -ba ~/rpmbuild/SPECS/libarrow-s3.spec
-
-
 
 ###############################################################
 #                  3. C/C++ Extensions                        #
 ###############################################################
-# parquet_s3_fdw is mannually built
 common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq\
-	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash # parquet_s3_fdw plv8
+	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash plv8
 
 #---------------------------------------------#
 # zhparser (depend on scws)
@@ -343,16 +334,12 @@ md5hash:
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/md5hash.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/md5hash.spec
 
-
-
 #---------------------------------------------#
 # pg_filedump (lz4-devel libzstd-devel)
 #---------------------------------------------#
 pg_filedump:
 	rm -rf ~/rpmbuild/RPMS/x86_64/pg_filedump*.rpm;
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_filedump.spec
-
-
 
 
 ###############################################################
@@ -428,12 +415,6 @@ pgmq:
 	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgmq.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgmq.spec
 
-#---------------------------------------------#
-# pg_tier [RUST]
-#---------------------------------------------#
-pg_tier:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_tier*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_tier.spec
 
 #---------------------------------------------#
 # pg_vectorize [RUST]
@@ -518,6 +499,11 @@ pg_tiktoken:
 	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_tiktoken.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_tiktoken.spec
 
+
+###############################################################
+#                         Obsolete                            #
+###############################################################
+
 #---------------------------------------------#
 # pg_analytics [RUST] (Obsolete)
 #---------------------------------------------#
@@ -526,10 +512,24 @@ pg_analytics:
 	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_analytics.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_analytics.spec
 
+#---------------------------------------------#
+# pg_tier [RUST] (Obsolete)
+#---------------------------------------------#
+pg_tier:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_tier*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_tier.spec
+
+#---------------------------------------------#
+# libarrow-s3 (deps of parquet_s3_fdw)
+#---------------------------------------------#
+libarrow-s3:
+	rm -rf ~/rpmbuild/RPMS/x86_64/libarrow-s3*.rpm;
+	rpmbuild -ba ~/rpmbuild/SPECS/libarrow-s3.spec
+
 
 
 ###############################################################
-#                   4. List & Info                            #
+#                    List & Info                              #
 ###############################################################
 ls-rpm:
 	ls -alh  ~/rpmbuild/RPMS/x86_64/

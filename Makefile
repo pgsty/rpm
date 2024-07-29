@@ -54,12 +54,12 @@ pulld:
 # push SRC to building VMs
 push-el: push9 push8 push7
 push7:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --delete rpmbuild/ el7:~/rpmbuild/
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el7:~/rpmbuild/
 	ssh el7 'cp -f ~/rpmbuild/Makefile.el7 ~/rpmbuild/Makefile'
 push8:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --delete rpmbuild/ el8:~/rpmbuild/
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el8:~/rpmbuild/
 push9:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --delete rpmbuild/ el9:~/rpmbuild/
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9:~/rpmbuild/
 
 # fetch RPMS from building VMs
 pull-el: pull9 pull8 pull7

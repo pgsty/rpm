@@ -9,7 +9,8 @@ Release:	1PIGSTY%{?dist}
 Summary:	GraphQL support to your PostgreSQL database.
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_graphql
-#Source0:	https://github.com/supabase/pg_graphql/archive/refs/tags/v1.5.7.tar.gz
+Source0:	pg_graphql-1.5.7.tar.gz
+#           https://github.com/supabase/pg_graphql/archive/refs/tags/v1.5.7.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -19,13 +20,18 @@ pg_graphql reflects a GraphQL schema from the existing SQL schema.
 The extension keeps schema translation and query resolution neatly contained on your database server.
 This enables any programming language that can connect to PostgreSQL to query the database via GraphQL with no additional servers, processes, or libraries.
 
+%prep
+%setup -q -n %{sname}-%{version}
+
+%build
+PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+
 %install
-%{__rm} -rf %{buildroot}
-install -d %{buildroot}%{pginstdir}/lib/
-install -d %{buildroot}%{pginstdir}/share/extension/
-install -m 755 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}-*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
+cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so

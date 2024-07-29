@@ -19,13 +19,13 @@ rpmdev-setuptree
 
 ```bash
 PROXY=http://192.168.0.104:8118
-export PGRX_VER=0.11.3
-
 export HTTP_PROXY=${PROXY}
 export HTTPS_PROXY=${PROXY}
 export ALL_PROXY=${PROXY}
 export NO_PROXY="localhost,127.0.0.1,10.0.0.0/8,192.168.0.0/16,*.pigsty,*.aliyun.com,mirrors.*,*.myqcloud.com,*.tsinghua.edu.cn"
+```
 
+```bash
 alias pg16="export PATH=/usr/pgsql-16/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
 alias pg15="export PATH=/usr/pgsql-15/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
 alias pg14="export PATH=/usr/pgsql-14/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
@@ -63,8 +63,8 @@ source "$HOME/.cargo/env"
 ## pgrx
 
 ```bash
-cargo install --locked cargo-pgrx@${PGRX_VER-'0.11.3'}
-cargo install --locked cargo-pgrx@${PGRX_VER-'0.10.2'}  # build pgdd & pg_tiktoken
+cargo install --locked cargo-pgrx@0.11.3  # build most extensions
+cargo install --locked cargo-pgrx@0.10.2  # build pgdd & pg_tiktoken
 cargo pgrx init
 ```
 
@@ -119,4 +119,93 @@ cd ~/pgvectorscale/pgvectorscale; pg16 build;    pg15 build;
 # use pgrx version 0.10.2
 cd ~/pgdd;                     pg16 build;    pg15 build;    pg14 build;       # 16,15,14
 cd ~/pg_tiktoken;              pg16 build;    pg15 build;    pg14 build;       # 16,15,14
+```
+
+
+```bash
+rm -rf ~/rpmbuild/SOURCES/pgml_16;          cp -r ~/postgresml/pgml-extension/target/release/pgml-pg16 ~/rpmbuild/SOURCES/pgml_16;
+rm -rf ~/rpmbuild/SOURCES/pgml_15;          cp -r ~/postgresml/pgml-extension/target/release/pgml-pg15 ~/rpmbuild/SOURCES/pgml_15;
+rm -rf ~/rpmbuild/SOURCES/pgml_14;          cp -r ~/postgresml/pgml-extension/target/release/pgml-pg14 ~/rpmbuild/SOURCES/pgml_14;
+
+rm -rf ~/rpmbuild/SOURCES/pg_search_16;     cp -r ~/paradedb/target/release/pg_search-pg16      ~/rpmbuild/SOURCES/pg_search_16;
+rm -rf ~/rpmbuild/SOURCES/pg_search_15;     cp -r ~/paradedb/target/release/pg_search-pg15      ~/rpmbuild/SOURCES/pg_search_15;
+rm -rf ~/rpmbuild/SOURCES/pg_search_14;     cp -r ~/paradedb/target/release/pg_search-pg14      ~/rpmbuild/SOURCES/pg_search_14;
+rm -rf ~/rpmbuild/SOURCES/pg_search_13;     cp -r ~/paradedb/target/release/pg_search-pg13      ~/rpmbuild/SOURCES/pg_search_13;
+rm -rf ~/rpmbuild/SOURCES/pg_search_12;     cp -r ~/paradedb/target/release/pg_search-pg12      ~/rpmbuild/SOURCES/pg_search_12;
+
+rm -rf ~/rpmbuild/SOURCES/pg_lakehouse_16;  cp -r ~/paradedb/target/release/pg_lakehouse-pg16   ~/rpmbuild/SOURCES/pg_lakehouse_16;
+rm -rf ~/rpmbuild/SOURCES/pg_lakehouse_15;  cp -r ~/paradedb/target/release/pg_lakehouse-pg15   ~/rpmbuild/SOURCES/pg_lakehouse_15;
+
+rm -rf ~/rpmbuild/SOURCES/pg_graphql_16;    cp -r ~/pg_graphql/target/release/pg_graphql-pg16 ~/rpmbuild/SOURCES/pg_graphql_16;
+rm -rf ~/rpmbuild/SOURCES/pg_graphql_15;    cp -r ~/pg_graphql/target/release/pg_graphql-pg15 ~/rpmbuild/SOURCES/pg_graphql_15;
+rm -rf ~/rpmbuild/SOURCES/pg_graphql_14;    cp -r ~/pg_graphql/target/release/pg_graphql-pg14 ~/rpmbuild/SOURCES/pg_graphql_14;
+
+rm -rf ~/rpmbuild/SOURCES/pg_jsonschema_16; cp -r ~/pg_jsonschema/target/release/pg_jsonschema-pg16 ~/rpmbuild/SOURCES/pg_jsonschema_16;
+rm -rf ~/rpmbuild/SOURCES/pg_jsonschema_15; cp -r ~/pg_jsonschema/target/release/pg_jsonschema-pg15 ~/rpmbuild/SOURCES/pg_jsonschema_15;
+rm -rf ~/rpmbuild/SOURCES/pg_jsonschema_14; cp -r ~/pg_jsonschema/target/release/pg_jsonschema-pg14 ~/rpmbuild/SOURCES/pg_jsonschema_14;
+rm -rf ~/rpmbuild/SOURCES/pg_jsonschema_13; cp -r ~/pg_jsonschema/target/release/pg_jsonschema-pg13 ~/rpmbuild/SOURCES/pg_jsonschema_13;
+rm -rf ~/rpmbuild/SOURCES/pg_jsonschema_12; cp -r ~/pg_jsonschema/target/release/pg_jsonschema-pg12 ~/rpmbuild/SOURCES/pg_jsonschema_12;
+
+rm -rf ~/rpmbuild/SOURCES/wrappers_16;      cp -r ~/wrappers/target/release/wrappers-pg16 ~/rpmbuild/SOURCES/wrappers_16;
+rm -rf ~/rpmbuild/SOURCES/wrappers_15;      cp -r ~/wrappers/target/release/wrappers-pg15 ~/rpmbuild/SOURCES/wrappers_15;
+rm -rf ~/rpmbuild/SOURCES/wrappers_14;      cp -r ~/wrappers/target/release/wrappers-pg14 ~/rpmbuild/SOURCES/wrappers_14;
+
+rm -rf ~/rpmbuild/SOURCES/pgmq_16;          cp -r ~/pgmq/target/release/pgmq-pg16 ~/rpmbuild/SOURCES/pgmq_16;
+rm -rf ~/rpmbuild/SOURCES/pgmq_15;          cp -r ~/pgmq/target/release/pgmq-pg15 ~/rpmbuild/SOURCES/pgmq_15;
+rm -rf ~/rpmbuild/SOURCES/pgmq_14;          cp -r ~/pgmq/target/release/pgmq-pg14 ~/rpmbuild/SOURCES/pgmq_14;
+rm -rf ~/rpmbuild/SOURCES/pgmq_13;          cp -r ~/pgmq/target/release/pgmq-pg13 ~/rpmbuild/SOURCES/pgmq_13;
+rm -rf ~/rpmbuild/SOURCES/pgmq_12;          cp -r ~/pgmq/target/release/pgmq-pg12 ~/rpmbuild/SOURCES/pgmq_12;
+
+rm -rf ~/rpmbuild/SOURCES/pg_later_16;      cp -r ~/pg_later/target/release/pg_later-pg16 ~/rpmbuild/SOURCES/pg_later_16;
+rm -rf ~/rpmbuild/SOURCES/pg_later_15;      cp -r ~/pg_later/target/release/pg_later-pg15 ~/rpmbuild/SOURCES/pg_later_15;
+rm -rf ~/rpmbuild/SOURCES/pg_later_14;      cp -r ~/pg_later/target/release/pg_later-pg14 ~/rpmbuild/SOURCES/pg_later_14;
+rm -rf ~/rpmbuild/SOURCES/pg_later_13;      cp -r ~/pg_later/target/release/pg_later-pg13 ~/rpmbuild/SOURCES/pg_later_13;
+
+rm -rf ~/rpmbuild/SOURCES/vectorize_16;     cp -r ~/pg_vectorize/extension/target/release/vectorize-pg16 ~/rpmbuild/SOURCES/vectorize_16;
+rm -rf ~/rpmbuild/SOURCES/vectorize_15;     cp -r ~/pg_vectorize/extension/target/release/vectorize-pg15 ~/rpmbuild/SOURCES/vectorize_15;
+rm -rf ~/rpmbuild/SOURCES/vectorize_14;     cp -r ~/pg_vectorize/extension/target/release/vectorize-pg14 ~/rpmbuild/SOURCES/vectorize_14;
+
+rm -rf ~/rpmbuild/SOURCES/pg_tier_16;       cp -r ~/pg_tier/target/release/pg_tier-pg16 ~/rpmbuild/SOURCES/pg_tier_16;
+
+rm -rf ~/rpmbuild/SOURCES/pg_idkit_16;      cp -r ~/pg_idkit/target/release/pg_idkit-pg16 ~/rpmbuild/SOURCES/pg_idkit_16;
+rm -rf ~/rpmbuild/SOURCES/pg_idkit_15;      cp -r ~/pg_idkit/target/release/pg_idkit-pg15 ~/rpmbuild/SOURCES/pg_idkit_15;
+rm -rf ~/rpmbuild/SOURCES/pg_idkit_14;      cp -r ~/pg_idkit/target/release/pg_idkit-pg14 ~/rpmbuild/SOURCES/pg_idkit_14;
+rm -rf ~/rpmbuild/SOURCES/pg_idkit_13;      cp -r ~/pg_idkit/target/release/pg_idkit-pg13 ~/rpmbuild/SOURCES/pg_idkit_13;
+rm -rf ~/rpmbuild/SOURCES/pg_idkit_12;      cp -r ~/pg_idkit/target/release/pg_idkit-pg12 ~/rpmbuild/SOURCES/pg_idkit_12;
+
+rm -rf ~/rpmbuild/SOURCES/pgsmcrypto_16;    cp -r ~/pgsmcrypto/target/release/pgsmcrypto-pg16 ~/rpmbuild/SOURCES/pgsmcrypto_16;
+rm -rf ~/rpmbuild/SOURCES/pgsmcrypto_15;    cp -r ~/pgsmcrypto/target/release/pgsmcrypto-pg15 ~/rpmbuild/SOURCES/pgsmcrypto_15;
+rm -rf ~/rpmbuild/SOURCES/pgsmcrypto_14;    cp -r ~/pgsmcrypto/target/release/pgsmcrypto-pg14 ~/rpmbuild/SOURCES/pgsmcrypto_14;
+rm -rf ~/rpmbuild/SOURCES/pgsmcrypto_13;    cp -r ~/pgsmcrypto/target/release/pgsmcrypto-pg13 ~/rpmbuild/SOURCES/pgsmcrypto_13;
+rm -rf ~/rpmbuild/SOURCES/pgsmcrypto_12;    cp -r ~/pgsmcrypto/target/release/pgsmcrypto-pg12 ~/rpmbuild/SOURCES/pgsmcrypto_12;
+
+rm -rf ~/rpmbuild/SOURCES/plprql_16;        cp -r ~/plprql/target/release/plprql-pg16 ~/rpmbuild/SOURCES/plprql_16;
+rm -rf ~/rpmbuild/SOURCES/plprql_15;        cp -r ~/plprql/target/release/plprql-pg15 ~/rpmbuild/SOURCES/plprql_15;
+rm -rf ~/rpmbuild/SOURCES/plprql_14;        cp -r ~/plprql/target/release/plprql-pg14 ~/rpmbuild/SOURCES/plprql_14;
+rm -rf ~/rpmbuild/SOURCES/plprql_13;        cp -r ~/plprql/target/release/plprql-pg13 ~/rpmbuild/SOURCES/plprql_13;
+rm -rf ~/rpmbuild/SOURCES/plprql_12;        cp -r ~/plprql/target/release/plprql-pg12 ~/rpmbuild/SOURCES/plprql_12;
+
+rm -rf ~/rpmbuild/SOURCES/vectorscale_16; cp -r ~/pgvectorscale/pgvectorscale/target/release/vectorscale-pg16 ~/rpmbuild/SOURCES/vectorscale_16;
+rm -rf ~/rpmbuild/SOURCES/vectorscale_15; cp -r ~/pgvectorscale/pgvectorscale/target/release/vectorscale-pg15 ~/rpmbuild/SOURCES/vectorscale_15;
+
+rm -rf ~/rpmbuild/SOURCES/pgdd_16;          cp -r ~/pgdd/target/release/pgdd-pg16 ~/rpmbuild/SOURCES/pgdd_16;
+rm -rf ~/rpmbuild/SOURCES/pgdd_15;          cp -r ~/pgdd/target/release/pgdd-pg15 ~/rpmbuild/SOURCES/pgdd_15;
+rm -rf ~/rpmbuild/SOURCES/pgdd_14;          cp -r ~/pgdd/target/release/pgdd-pg14 ~/rpmbuild/SOURCES/pgdd_14;
+rm -rf ~/rpmbuild/SOURCES/pgdd_13;          cp -r ~/pgdd/target/release/pgdd-pg13 ~/rpmbuild/SOURCES/pgdd_13;
+rm -rf ~/rpmbuild/SOURCES/pgdd_12;          cp -r ~/pgdd/target/release/pgdd-pg12 ~/rpmbuild/SOURCES/pgdd_12;
+
+rm -rf ~/rpmbuild/SOURCES/pg_tiktoken_16;   cp -r ~/pg_tiktoken/target/release/pg_tiktoken-pg16 ~/rpmbuild/SOURCES/pg_tiktoken_16;
+rm -rf ~/rpmbuild/SOURCES/pg_tiktoken_15;   cp -r ~/pg_tiktoken/target/release/pg_tiktoken-pg15 ~/rpmbuild/SOURCES/pg_tiktoken_15;
+rm -rf ~/rpmbuild/SOURCES/pg_tiktoken_14;   cp -r ~/pg_tiktoken/target/release/pg_tiktoken-pg14 ~/rpmbuild/SOURCES/pg_tiktoken_14;
+rm -rf ~/rpmbuild/SOURCES/pg_tiktoken_13;   cp -r ~/pg_tiktoken/target/release/pg_tiktoken-pg13 ~/rpmbuild/SOURCES/pg_tiktoken_13;
+rm -rf ~/rpmbuild/SOURCES/pg_tiktoken_12;   cp -r ~/pg_tiktoken/target/release/pg_tiktoken-pg12 ~/rpmbuild/SOURCES/pg_tiktoken_12;
+
+cd ~/rpmbuild/SPECS
+make pgml
+make pg_search pg_lakehouse
+make pg_graphql pg_jsonschema wrappers
+make pgmq pg_later pg_vectorize pg_tier 
+make pg_idkit pgsmcrypto plprql pgvectorscale
+
+make pgdd pg_tiktoken
 ```

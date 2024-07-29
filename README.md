@@ -51,7 +51,6 @@ Related Projects:
 | Supabase      | [pg_jsonschema](https://github.com/supabase/pg_jsonschema)                 | v0.3.1  | [v0.11.3](https://github.com/supabase/pg_jsonschema/blob/master/Cargo.toml#L19)                 | [Apache-2.0](https://github.com/supabase/pg_jsonschema/blob/master/LICENSE) | 16,15,14,13,12 |                      |
 | Supabase      | [wrappers](https://github.com/supabase/wrappers)                           | v0.4.1  | [v0.11.3](https://github.com/supabase/wrappers/blob/main/Cargo.lock#L4254)                      | [Apache-2.0](https://github.com/supabase/wrappers/blob/main/LICENSE)        | 16,15,14       |                      |
 | Tembo         | [pgmq](https://github.com/tembo-io/pgmq)                                   | v1.2.1  | v0.11.3                                                                                         | [PostgreSQL](https://github.com/tembo-io/pgmq)                              | 16,15,14,13,12 |                      |
-| Tembo         | [pg_tier](https://github.com/tembo-io/pg_tier)                             | v0.0.4  | v0.11.3                                                                                         | [Apache-2.0](https://github.com/tembo-io/pg_tier/blob/main/LICENSE)         | 16             | pgmq, parquet_s3_fdw |
 | Tembo         | [pg_vectorize](https://github.com/tembo-io/pg_vectorize)                   | v0.17.0 | v0.11.3                                                                                         | [PostgreSQL](https://github.com/tembo-io/pg_vectorize/blob/main/LICENSE)    | 16,15,14       | pgmq, pg_cron        |
 | Tembo         | [pg_later](https://github.com/tembo-io/pg_later)                           | v0.1.1  | v0.11.3                                                                                         | [PostgreSQL](https://github.com/tembo-io/pg_later/blob/main/LICENSE)        | 16,15,14,13    | pgmq                 |
 | VADOSWARE     | [pg_idkit](https://github.com/VADOSWARE/pg_idkit)                          | v0.2.3  | v0.11.3                                                                                         | [Apache-2.0](https://github.com/VADOSWARE/pg_idkit/blob/main/LICENSE)       | 16,15,14,13,12 |                      |
@@ -75,7 +74,7 @@ Related Projects:
 | [pg_dirtyread](https://github.com/df7cb/pg_dirtyread)                | v2.7   | PGDG included, for el7 only |
 | [pointcloud](https://github.com/pgpointcloud/pointcloud)             | v1.2.5 | PGDG included, for el7 only |
 
-Notices: `scws`, `libduckdb`, `libarrow-s3`, `pg_filedump`, `pgxnclient`, `pg_search` & `pg_lakehouse` are moved
+Notices: `scws`, `libduckdb`, `pg_filedump`, `pgxnclient`, `pg_search` & `pg_lakehouse` are moved
 to [`pgsql/pkg`](https://github.com/pgsty/pkg) due to oversize.
 
 
@@ -102,12 +101,11 @@ make ps      # make push-ss (specs & sources)
 EL 8/9 Building [Recipe](rpmbuild/Makefile):
 
 ```bash
-common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq\
-	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash # plv8 parquet_s3_fdw
-rust: pgml pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_tier pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
+common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash plv8
+rust: pgml pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
 
 make deps common
-make rust plv8 parquet_s3_fdw
+make rust
 ```
 
 EL7 Building [Recipe](rpmbuild/Makefile.el7):

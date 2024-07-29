@@ -9,7 +9,6 @@ Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL SM Algorithm Extension
 License:	MIT
 URL:		https://github.com/zhuobie/pgsmcrypto
-#           https://github.com/zhuobie/pgsmcrypto
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

@@ -9,7 +9,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Hunspell dictionaries for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/hunspell_dicts
-Source0:	hunspell-1.0.tar.gz
+Source0:	hunspell-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

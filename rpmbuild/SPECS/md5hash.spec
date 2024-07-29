@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	A custom data type for storing MD5 hashes (instead of the native TEXT varlena type).
 License:	BSD 2-Clause
 URL:		https://github.com/tvondra/md5hash
-Source0:	md5hash-1.0.1.tar.gz
+Source0:	md5hash-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

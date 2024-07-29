@@ -1,10 +1,17 @@
 # pgsql-rpm: build rpm for PostgreSQL Extensions
 
+PostgreSQL Extensions that **NOT** included in the official PGDG repo used by [Pigsty](https://pigsty.io).
+
+Related Projects:
+
+- [`pgsql/pkg`](https://github.com/pgsty/pkg): Infra Packages, PostgreSQL Deps, ParadeDB, DuckDB, etc.
+- [`infra_pkg`](https://github.com/pgsty/infra-pkg): Building observability stack & modules from tarball
+- [`pgsql-rpm`](https://github.com/pgsty/pgsql-rpm): Building PostgreSQL RPM packages from source code
+- [`pgsql-deb`](https://github.com/pgsty/pgsql-deb): Building PostgreSQL DEB packages from source code
+
 --------
 
 ## What's inside?
-
-PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 
 22 Extensions build with `c/c++`:
 
@@ -37,7 +44,7 @@ PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 
 | Vendor        | Name                                                                       | Version | PGRX                                                                                            | License                                                                     | PG Ver         | Deps                 |
 |---------------|----------------------------------------------------------------------------|---------|-------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------------|----------------------|
-| PostgresML    | [pgml](https://github.com/postgresml/postgresml)                           | v2.9.2  | [v0.11.3](https://github.com/postgresml/postgresml/blob/master/pgml-extension/Cargo.lock#L1785) | [MIT](https://github.com/postgresml/postgresml/blob/master/MIT-LICENSE.txt) | 16,15,14       |                      |
+| PostgresML    | [pgml](https://github.com/postgresml/postgresml)                           | v2.9.3  | [v0.11.3](https://github.com/postgresml/postgresml/blob/master/pgml-extension/Cargo.lock#L1785) | [MIT](https://github.com/postgresml/postgresml/blob/master/MIT-LICENSE.txt) | 16,15,14       |                      |
 | ParadeDB      | [pg_search](https://github.com/paradedb/paradedb/tree/dev/pg_search)       | v0.8.6  | [v0.11.3](https://github.com/paradedb/paradedb/blob/dev/pg_search/Cargo.toml#L36)               | [AGPLv3](https://github.com/paradedb/paradedb/blob/dev/LICENSE)             | 16,15,14,13,12 |                      |
 | ParadeDB      | [pg_lakehouse](https://github.com/paradedb/paradedb/tree/dev/pg_lakehouse) | v0.8.6  | [v0.11.3](https://github.com/paradedb/paradedb/blob/dev/pg_lakehouse/Cargo.toml#L26)            | [AGPLv3](https://github.com/paradedb/paradedb/blob/dev/LICENSE)             | 16,15          |                      |
 | Supabase      | [pg_graphql](https://github.com/supabase/pg_graphql)                       | v1.5.7  | [v0.11.3](https://github.com/supabase/pg_graphql/blob/master/Cargo.toml#L17)                    | [Apache-2.0](https://github.com/supabase/pg_graphql/blob/master/LICENSE)    | 16,15          |                      |
@@ -54,7 +61,6 @@ PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 | timescale     | [vectorscale](https://github.com/timescale/pgvectorscale)                  | v0.2.0  | [v0.11.4](https://github.com/timescale/pgvectorscale/blob/main/pgvectorscale/Cargo.toml#L17)    | [PostgreSQL](https://github.com/timescale/pgvectorscale/blob/main/LICENSE)  | 16,15,14,13,12 |                      |
 | kaspermarstal | [plprql](https://github.com/kaspermarstal/plprql)                          | v0.1.0  | [v0.11.4](https://github.com/kaspermarstal/plprql/blob/main/Cargo.toml#L21)                     | [Apache-2.0](https://github.com/kaspermarstal/plprql/blob/main/LICENSE)     | 16,15,14,13,12 |                      |
 
-
 9 Extensions that is obsolete due to included in PGDG or no longer maintained:
 
 | Extension Name                                                       | SPEC   | Comment                     |
@@ -69,6 +75,8 @@ PostgreSQL Extensions that **NOT** included in the official PGDG repo.
 | [pg_dirtyread](https://github.com/df7cb/pg_dirtyread)                | v2.7   | PGDG included, for el7 only |
 | [pointcloud](https://github.com/pgpointcloud/pointcloud)             | v1.2.5 | PGDG included, for el7 only |
 
+Notices: `scws`, `libduckdb`, `libarrow-s3`, `pg_filedump`, `pgxnclient`, `pg_search` & `pg_lakehouse` are moved
+to [`pgsql/pkg`](https://github.com/pgsty/pkg) due to oversize.
 
 
 ----------
@@ -91,22 +99,25 @@ sudo cpanm FindBin; perl -MFindBin -e 1                   # el9 only logic
 make ps      # make push-ss (specs & sources)
 ```
 
-EL 8/9 Building Recipe:
+EL 8/9 Building [Recipe](rpmbuild/Makefile):
 
 ```bash
 common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq\
 	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash # plv8 parquet_s3_fdw
 rust: pgml pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_tier pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
+
+make deps common
+make rust plv8 parquet_s3_fdw
 ```
 
-EL7 Building Recipe:
+EL7 Building [Recipe](rpmbuild/Makefile.el7):
 
 ```bash
 common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq \
 	vault pointcloud imgsmlr pg_similarity hydra pg_filedump age15 md5hash \
 	pg_dirtyread pgsql_http pgsql_gzip pg_bigm pg_tle
+make deps common
 ```
-
 
 --------
 

@@ -19,6 +19,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	V8 Engine Javascript Procedural Language add-on for PostgreSQL
 License:	BSD
 URL:		https://github.com/plv8/plv8
+SOURCE0:    plv8-3.2.2.tar.gz
 #           https://github.com/plv8/plv8/archive/refs/tags/v3.2.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -54,14 +55,16 @@ Requires:	llvm => 13.0
 This packages provides JIT support for %{sname}
 %endif
 
+
+%prep
+%setup -q -n %{sname}-%{version}
+
 %build
-cd %{_sourcedir}/%{sname}
 PATH=%{pginstdir}/bin:$PATH %{__make} clean
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make}
 
 %install
 %{__rm} -rf %{buildroot}
-cd %{_sourcedir}/%{sname}
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files

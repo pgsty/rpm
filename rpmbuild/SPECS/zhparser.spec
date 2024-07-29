@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Open-source full-text search of Chinese language
 License:	PostgreSQL
 URL:		https://github.com/amutu/zhparser/
-Source0:	zhparser-2.2.tar.gz
+Source0:	zhparser-%{version}.tar.gz
 #           https://github.com/amutu/zhparser/archive/refs/tags/V2.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

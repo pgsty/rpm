@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	HTTP client for PostgreSQL, retrieve a web page from inside the database.
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-http
-Source0:	pgsql-http-1.6.0.tar.gz
+Source0:	pgsql-http-%{version}.tar.gz
 #           https://github.com/pramsey/pgsql-http/archive/refs/tags/v1.6.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

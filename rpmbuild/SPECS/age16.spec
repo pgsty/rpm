@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases for PostgreSQL 16
 License:	Apache-2.0
 URL:		https://github.com/apache/age
-Source0:	apache-age-1.5.0-pg16-src.tar.gz
+Source0:	apache-age-%{version}-pg16-src.tar.gz
 #           https://github.com/apache/age/releases/download/PG16%2Fv1.5.0-rc0/apache-age-1.5.0-src.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

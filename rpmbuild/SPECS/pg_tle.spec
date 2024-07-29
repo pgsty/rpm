@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Trusted Language Extensions for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/aws/pg_tle
-Source0:	pg_tle-1.4.0.tar.gz
+Source0:	pg_tle-%{version}.tar.gz
 #           https://github.com/aws/pg_tle/archive/refs/tags/v1.4.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

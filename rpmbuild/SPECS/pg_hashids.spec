@@ -19,7 +19,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Short unique id generator for PostgreSQL, using hashids
 License:	MIT
 URL:		https://github.com/iCyberon/pg_hashids
-Source0:	pg_hashids-1.3.tar.gz
+Source0:	pg_hashids-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 

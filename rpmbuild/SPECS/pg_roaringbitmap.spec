@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	RoaringBitmap extension for PostgreSQL.
 License:	Apache-2.0
 URL:		https://github.com/ChenHuajun/pg_roaringbitmap
-Source0:	pg_roaringbitmap-0.5.4.tar.gz
+Source0:	pg_roaringbitmap-%{version}.tar.gz
 #           https://github.com/ChenHuajun/pg_roaringbitmap/archive/refs/tags/v0.5.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

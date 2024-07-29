@@ -9,7 +9,6 @@ Release:	1PIGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
 URL:		https://github.com/timescale/pgvectorscale
-#           https://github.com/timescale/pgvectorscale
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0

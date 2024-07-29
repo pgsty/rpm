@@ -19,7 +19,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension for scalable pseudo-random permutations of sequences
 License:	PostgreSQL
 URL:		https://github.com/dverite/permuteseq
-Source0:	permuteseq-1.2.2.tar.gz
+Source0:	permuteseq-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 

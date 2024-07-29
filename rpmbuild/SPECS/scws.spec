@@ -4,7 +4,7 @@ Release:        1PIGSTY%{?dist}
 Summary:        Simple Chinese Word Segmentation
 License:        BSD
 URL:            http://www.xunsearch.com/scws/
-Source0:        scws-1.2.3.tar.bz2
+Source0:        scws-%{version}.tar.bz2
 #               http://www.xunsearch.com/scws/down/scws-1.2.3.tar.bz2
 
 BuildRequires:  gcc, make

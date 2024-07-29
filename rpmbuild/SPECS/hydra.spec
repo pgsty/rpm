@@ -19,7 +19,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Hydra: Column-oriented Postgres. Add scalable analytics to your project in minutes.
 License:	AGPLv3
 URL:		https://github.com/hydradatabase/hydra
-Source0:	hydra-1.1.2.tar.gz
+Source0:	hydra-%{version}.tar.gz
 #           https://github.com/hydradatabase/hydra/archive/refs/tags/v1.1.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

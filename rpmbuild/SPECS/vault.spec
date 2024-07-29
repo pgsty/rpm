@@ -9,7 +9,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Extension for storing encrypted secrets in the Vault
 License:	Apache-2.0
 URL:		https://github.com/supabase/vault
-Source0:	vault-0.2.9.tar.gz
+Source0:	vault-%{version}.tar.gz
 #           https://github.com/supabase/vault/archive/refs/tags/v0.2.9.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

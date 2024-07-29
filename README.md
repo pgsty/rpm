@@ -101,20 +101,23 @@ make ps      # make push-ss (specs & sources)
 EL 8/9 Building [Recipe](rpmbuild/Makefile):
 
 ```bash
-common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash plv8
-rust: pgml pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
+make deps common rust
 
-make deps common
-make rust
+deps: scws scws-install libduckdb libduckdb-install
+common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash plv8
+rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
+
+make pgml # el9 (el8 need gcc13)
 ```
 
 EL7 Building [Recipe](rpmbuild/Makefile.el7):
 
 ```bash
-common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq \
-	vault pointcloud imgsmlr pg_similarity hydra pg_filedump age15 md5hash \
-	pg_dirtyread pgsql_http pgsql_gzip pg_bigm pg_tle
-make deps common
+make deps common legacy
+
+deps: scws scws-install
+common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault imgsmlr pg_similarity hydra pg_filedump age15 md5hash
+legacy: pg_tle pg_bigm pgsql_http pgsql_gzip pg_dirtyread pointcloud
 ```
 
 --------

@@ -9,6 +9,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Query engine over object stores like S3 and table formats like Delta Lake
 License:	GNU Affero General Public License v3.0
 URL:		https://github.com/paradedb/paradedb
+SOURCE0:    paradedb-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -17,13 +18,20 @@ Requires:	postgresql%{pgmajorversion}-server
 pg_lakehouse is an extension that transforms Postgres into an analytical query engine over object stores like S3 and table formats like Delta Lake.
 Queries are pushed down to Apache DataFusion, which delivers excellent analytical performance. Combinations of the following object stores, table formats, and file formats are supported.
 
+%prep
+%setup -q -n paradedb-%{version}
+PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo update
+
+%build
+cd %{pname}
+PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+
 %install
-%{__rm} -rf %{buildroot}
-install -d %{buildroot}%{pginstdir}/lib/
-install -d %{buildroot}%{pginstdir}/share/extension/
-install -m 755 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_sourcedir}/%{pname}_%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
+cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so

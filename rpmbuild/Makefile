@@ -345,7 +345,7 @@ pg_filedump:
 ###############################################################
 #               4. RUST / PGRX Extensions                     #
 ###############################################################
-rust: pgml pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_tier pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken
+rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale pgdd pg_tiktoken # pgml
 
 #---------------------------------------------#
 # pgml [RUST]

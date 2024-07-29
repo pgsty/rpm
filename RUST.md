@@ -83,7 +83,6 @@ cd ~; git clone git@github.com:supabase/pg_graphql.git                ; cd ~/pg_
 cd ~; git clone git@github.com:supabase/pg_jsonschema.git             ; cd ~/pg_jsonschema  && git checkout v0.3.1                    
 cd ~; git clone git@github.com:supabase/wrappers.git                  ; cd ~/wrappers       && git checkout v0.4.1               
 cd ~; git clone git@github.com:tembo-io/pgmq.git                      ; cd ~/pgmq           && git checkout v1.2.1 #v1.3.3           
-cd ~; git clone git@github.com:tembo-io/pg_tier.git                   ; cd ~/pg_tier        && git checkout v0.0.4              
 cd ~; git clone git@github.com:tembo-io/pg_vectorize.git              ; cd ~/pg_vectorize   && git checkout v0.17.0                   
 cd ~; git clone git@github.com:tembo-io/pg_later.git                  ; cd ~/pg_later       && git checkout v0.1.1               
 cd ~; git clone git@github.com:VADOSWARE/pg_idkit.git                 ; cd ~/pg_idkit       && git checkout v0.2.3               
@@ -165,8 +164,6 @@ rm -rf ~/rpmbuild/SOURCES/vectorize_16;     cp -r ~/pg_vectorize/extension/targe
 rm -rf ~/rpmbuild/SOURCES/vectorize_15;     cp -r ~/pg_vectorize/extension/target/release/vectorize-pg15 ~/rpmbuild/SOURCES/vectorize_15;
 rm -rf ~/rpmbuild/SOURCES/vectorize_14;     cp -r ~/pg_vectorize/extension/target/release/vectorize-pg14 ~/rpmbuild/SOURCES/vectorize_14;
 
-rm -rf ~/rpmbuild/SOURCES/pg_tier_16;       cp -r ~/pg_tier/target/release/pg_tier-pg16 ~/rpmbuild/SOURCES/pg_tier_16;
-
 rm -rf ~/rpmbuild/SOURCES/pg_idkit_16;      cp -r ~/pg_idkit/target/release/pg_idkit-pg16 ~/rpmbuild/SOURCES/pg_idkit_16;
 rm -rf ~/rpmbuild/SOURCES/pg_idkit_15;      cp -r ~/pg_idkit/target/release/pg_idkit-pg15 ~/rpmbuild/SOURCES/pg_idkit_15;
 rm -rf ~/rpmbuild/SOURCES/pg_idkit_14;      cp -r ~/pg_idkit/target/release/pg_idkit-pg14 ~/rpmbuild/SOURCES/pg_idkit_14;
@@ -204,7 +201,7 @@ cd ~/rpmbuild/SPECS
 make pgml
 make pg_search pg_lakehouse
 make pg_graphql pg_jsonschema wrappers
-make pgmq pg_later pg_vectorize pg_tier 
+make pgmq pg_later pg_vectorize 
 make pg_idkit pgsmcrypto plprql pgvectorscale
 
 make pgdd pg_tiktoken

@@ -40,7 +40,7 @@ Related Projects:
 | [imgsmlr](https://github.com/postgrespro/imgsmlr)                  | v1.0        | [imgsmlr.spec](SPECS/imgsmlr.spec)                     |                    |
 | [pg_filedump](https://github.com/df7cb/pg_filedump)                | v17.0       |                                                        |
 
-16 Extension build with `rust` & `pgrx`:
+16 [Rust](RUST.md) Extension build with `pgrx`:
 
 | Vendor        | Name                                                                       | Version | PGRX                                                                                            | License                                                                     | PG Ver         | Deps                 |
 |---------------|----------------------------------------------------------------------------|---------|-------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------------|----------------------|

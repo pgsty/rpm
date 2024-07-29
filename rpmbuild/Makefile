@@ -180,7 +180,8 @@ hunspell_ru_ru_aot:
 ###############################################################
 #                   Common Extensions                         #
 ###############################################################
-common: pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault supautils pointcloud imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash
+common: pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq \
+	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash
 
 #---------------------------------------------#
 # pg_roaringbitmap

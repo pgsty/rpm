@@ -493,9 +493,8 @@ pointcloud:
 	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pointcloud.spec
 
 
-
 ###############################################################
-#                   4. List & Info                            #
+#                     RPM & SRPM                              #
 ###############################################################
 ls-rpm:
 	ls -alh  ~/rpmbuild/RPMS/x86_64/
@@ -507,10 +506,16 @@ rm-srpm:
 	rm -rf  ~/rpmbuild/SRPMS/*
 
 
-#---------------------------------------------#
-# phony
-#---------------------------------------------#
-.PHONY: zhparser zhparser-srpm zhparser-rpm \
-		pg_embedding pg_embedding-srpm pg_embedding-rpm \
+###############################################################
+#                      Inventory                              #
+###############################################################
+.PHONY: default deps common debian \
+	prepare scws scws-install \
+    zhparser hunspell hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
+    first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo \
+    pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault pointcloud imgsmlr pg_similarity hydra age15 md5hash \
+    legacy pg_tle pg_bigm pgsql_http pgsql_gzip pg_dirtyread pointcloud \
+    ls-rpm ls-srpm rm-rpm rm-srpm
+
 
 

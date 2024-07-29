@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.5
 Release:	1PIGSTY%{?dist}
 Summary:	ASN.1 OID datatype for PostgreSQL
-License:	GPL
+License:	GPLv3
 URL:		https://github.com/df7cb/pgsql-asn1oid
 Source0:	pgsql-asn1oid-%{version}.tar.gz
 

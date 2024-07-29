@@ -80,13 +80,6 @@ duckdb_fdw:
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
 
 #---------------------------------------------#
-# parquet_s3_fdw (depend on parquet_s3_fdw)
-#---------------------------------------------#
-parquet_s3_fdw:
-	rm -rf ~/rpmbuild/RPMS/x86_64/parquet_s3_fdw*.rpm;
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/parquet_s3_fdw.spec
-
-#---------------------------------------------#
 # plv8 (manually build)
 #---------------------------------------------#
 plv8:
@@ -345,7 +338,7 @@ md5hash:
 ###############################################################
 #                   Debian Migration                          #
 ###############################################################
-debian: prepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
+debian: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
 	q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
 
 #---------------------------------------------#
@@ -712,10 +705,17 @@ libarrow-s3:
 	rm -rf ~/rpmbuild/RPMS/x86_64/libarrow-s3*.rpm;
 	rpmbuild -ba ~/rpmbuild/SPECS/libarrow-s3.spec
 
+#---------------------------------------------#
+# parquet_s3_fdw (depend on parquet_s3_fdw)
+#---------------------------------------------#
+parquet_s3_fdw:
+	rm -rf ~/rpmbuild/RPMS/x86_64/parquet_s3_fdw*.rpm;
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/parquet_s3_fdw.spec
+
 
 
 ###############################################################
-#                    List & Info                              #
+#                     RPM & SRPM                              #
 ###############################################################
 ls-rpm:
 	ls -alh  ~/rpmbuild/RPMS/x86_64/
@@ -727,10 +727,13 @@ rm-srpm:
 	rm -rf  ~/rpmbuild/SRPMS/*
 
 
-#---------------------------------------------#
-# phony
-#---------------------------------------------#
-.PHONY: zhparser zhparser-srpm zhparser-rpm \
-		pg_embedding pg_embedding-srpm pg_embedding-rpm \
 
-
+###############################################################
+#                      Inventory                              #
+###############################################################
+.PHONY: default deps scws scws-install libduckdb libduckdb-install \
+	deps scws scws-install libduckdb libduckdb-install pg_filedump \
+	common zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8 \
+	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml \
+	debian preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo \
+	ls-rpm ls-srpm rm-rpm rm-srpm

@@ -19,7 +19,7 @@ default:
 ###############################################################
 #                         2. Deps                             #
 ###############################################################
-deps: scws scws-install
+deps: scws scws-install pg_filedump
 
 #---------------------------------------------#
 # scws (deps of zhparser)
@@ -33,14 +33,20 @@ scws-install:
 	sudo yum remove -y scws || /bin/true
 	sudo rpm -ivh ~/rpmbuild/RPMS/x86_64/scws-1.2.3-1PIGSTY.el*.x86_64.rpm
 
+#---------------------------------------------#
+# pg_filedump (lz4-devel libzstd-devel)
+#---------------------------------------------#
+pg_filedump:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_filedump*.rpm;
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_filedump.spec
+
 
 ###############################################################
 #                  3. C/C++ Extensions                        #
 ###############################################################
-# parquet_s3_fdw is mannually built
-common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq \
-	vault pointcloud imgsmlr pg_similarity hydra pg_filedump age15 md5hash \
-	pg_dirtyread pgsql_http pgsql_gzip pg_bigm pg_tle
+common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault pointcloud imgsmlr pg_similarity hydra age15 md5hash
+
+
 
 #---------------------------------------------#
 # zhparser (depend on scws)
@@ -122,7 +128,6 @@ hunspell_ru_ru_aot:
 ###############################################################
 #                   Common Extensions                         #
 ###############################################################
-common: pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault imgsmlr pg_similarity hydra
 
 #---------------------------------------------#
 # pg_roaringbitmap
@@ -253,11 +258,45 @@ md5hash:
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/md5hash.spec
 
 #---------------------------------------------#
-# pg_filedump (lz4-devel libzstd-devel)
+# preprepare
 #---------------------------------------------#
-pg_filedump:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_filedump*.rpm;
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_filedump.spec
+preprepare:
+	rm -rf ~/rpmbuild/RPMS/x86_64/preprepare*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/preprepare.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/preprepare.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/preprepare.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/preprepare.spec
+
+#---------------------------------------------#
+# first_last_agg
+#---------------------------------------------#
+first_last_agg:
+	rm -rf ~/rpmbuild/RPMS/x86_64/first_last_agg*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/first_last_agg.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/first_last_agg.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/first_last_agg.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/first_last_agg.spec
+
+#---------------------------------------------#
+# pgpcre
+#---------------------------------------------#
+pgpcre:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pgpcre*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgpcre.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgpcre.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgpcre.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgpcre.spec
+
+#---------------------------------------------#
+# icu_ext
+#---------------------------------------------#
+icu_ext:
+	rm -rf ~/rpmbuild/RPMS/x86_64/icu_ext*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/icu_ext.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/icu_ext.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/icu_ext.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/icu_ext.spec
+
 
 
 ###############################################################

@@ -68,10 +68,25 @@ cargo install --locked cargo-pgrx@0.10.2  # build pgdd & pg_tiktoken
 cargo pgrx init
 ```
 
+--------
+
+## build
+
+Build with `rpmbuild`:
+
+```bash
+cd ~/rpmbuild/
+
+make rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale
+make pgdd pg_tiktoken 
+make pgml # extra setup on el9
+```
+
+
 
 --------
 
-## Batch Build
+## Legacy Batch Building Approach
 
 Clone rust extension repo:
 

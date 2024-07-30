@@ -1,4 +1,4 @@
-%global pname unit
+%global pname postgresql-unit
 %global sname unit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
@@ -12,7 +12,7 @@
  %{!?llvm:%global llvm 1}
 %endif
 
-Name:		%{sname}_%{pgmajorversion}
+Name:		%{pname}_%{pgmajorversion}
 Version:	7.7
 Release:	1PIGSTY%{?dist}
 Summary:	SI Units for PostgreSQL
@@ -23,8 +23,13 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-postgresql-unit implements a PostgreSQL datatype for SI units, plus byte. The eight base units can be combined to arbitrarily complex derived units using operators defined in the PostgreSQL type system. SI and IEC binary prefixes are used for input and output, and quantities can be converted to arbitrary scale.
-Unit and prefix definitions are retrieved from database tables, and new definitions can be added at run time. The extension comes with over 2500 units and over 100 prefixes found in the definitions.units file in GNU Units.
+postgresql-unit implements a PostgreSQL datatype for SI units, plus byte.
+The base units can be combined to named and unnamed derived units using
+operators defined in the PostgreSQL type system. SI prefixes are used for
+input and output, and quantities can be converted to arbitrary scale.
+
+Requires PostgreSQL 9.5 or later (uses psprintf()), flex, and bison 3 (the
+pre-built grammar files are used if only bison 2 is available).
 
 %if %llvm
 %package llvmjit
@@ -79,3 +84,45 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %changelog
 * Tue Jul 30 2024 Vonng <rh@vonng.com> - 7.7
 - Initial RPM release, used by Pigsty <https://pigsty.io>
+
+* Wed Jun 2 2021 Devrim Gündüz <devrim@gunduz.org> - 7.4-1
+- Update to 7.4
+- Remove pgxs patches, and export PATH instead.
+
+* Tue Oct 27 2020 Devrim Gündüz <devrim@gunduz.org> - 7.2-2
+- Use underscore before PostgreSQL version number for consistency, per:
+  https://www.postgresql.org/message-id/CAD%2BGXYMfbMnq3c-eYBRULC3nZ-W69uQ1ww8_0RQtJzoZZzp6ug%40mail.gmail.com
+
+* Thu Sep 26 2019 Devrim Gündüz <devrim@gunduz.org>- 7.2-1.1
+- Rebuild for PostgreSQL 12
+
+* Thu Sep 5 2019 Devrim Gündüz <devrim@gunduz.org> 7.2-1
+- Update to 7.2
+
+* Thu Jul 25 2019 Devrim Gündüz <devrim@gunduz.org> 7.1-1
+- Update to 7.1
+
+* Tue Oct 23 2018 Devrim Gündüz <devrim@gunduz.org> 7.0-1
+- Update to 7.0
+
+* Mon Oct 15 2018 Devrim Gündüz <devrim@gunduz.org> 6.0-2.1
+- Rebuild against PostgreSQL 11.0
+
+* Thu Aug 23 2018 - Devrim Gündüz <devrim@gunduz.org> 6.0-2
+- Add v11+ bitcode conditionals
+
+* Thu Mar 22 2018 - Devrim Gündüz <devrim@gunduz.org> 6.0-1
+- Update to 6.0
+
+* Sun May 28 2017 - Devrim Gündüz <devrim@gunduz.org> 3.1-1
+- Update to 3.1
+
+* Thu Apr 27 2017 - Devrim Gündüz <devrim@gunduz.org> 3.0-1
+- Update to 3.0
+- Add support for Power RPMs.
+
+* Tue Jan 10 2017 - Devrim Gündüz <devrim@gunduz.org> 2.0-1
+- Update to 2.0
+
+* Thu Sep 22 2016 - Devrim Gündüz <devrim@gunduz.org> 1.0-1
+- Initial RPM packaging for PostgreSQL YUM Repository

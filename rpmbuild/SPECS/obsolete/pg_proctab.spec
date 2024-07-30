@@ -67,7 +67,7 @@ PATH=%{pginstdir}/bin:$PATH make USE_PGXS=1 install DESTDIR=%{buildroot}
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/doc/extension/README*
 %{pginstdir}/share/extension/%{pname}.control
-%{pginstdir}/share/extension/%{pname}*sql
+%{pginstdir}/share/extension/*.sql
 %exclude /usr/lib/.build-id/*
 %if %llvm
 %files llvmjit

@@ -536,11 +536,18 @@ geoip:
 	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/geoip.spec
 
 #---------------------------------------------#
-# tableversion (pg15@el7, el9)
+# tableversion (pg15@el7, pg16@el9)
 #---------------------------------------------#
 table_version:
 	rm -rf ~/rpmbuild/RPMS/x86_64/table_version*.rpm;
 	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/table_version.spec
+
+#---------------------------------------------#
+# plproxy (pg16 @ el8/el9)
+#---------------------------------------------#
+plproxy:
+	rm -rf ~/rpmbuild/RPMS/x86_64/plproxy*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/plproxy.spec
 
 
 ###############################################################

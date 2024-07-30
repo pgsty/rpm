@@ -54,7 +54,7 @@ Related Projects:
 | [pgextwlist](https://github.com/dimitri/pgextwlist)                         | v1.17       | [pgextwlist.spec](rpmbuild/SPECS/pgextwlist.spec)               | [PostgreSQL](https://github.com/dimitri/pgextwlist?tab=readme-ov-file#licence)              |                    |
 | [toastinfo](https://github.com/credativ/toastinfo)                          | v1.4        | [toastinfo.spec](rpmbuild/SPECS/toastinfo.spec)                 | [PostgreSQL](https://github.com/credativ/toastinfo/blob/master/debian/copyright)            |                    |
 | [geoip](https://github.com/tvondra/geoip)                                   | v0.3.0      | [geoip.spec](rpmbuild/SPECS/geoip.spec)                         | [BSD-Like](https://github.com/tvondra/geoip/blob/master/LICENSE)                            | pg16@el8, pg16@el9 |
-| [tableversion](https://github.com/linz/postgresql-tableversion)             | v1.10.3     | [tableversion.spec](rpmbuild/SPECS/tableversion.spec)           | [BSD-Like](https://github.com/linz/postgresql-tableversion/blob/master/LICENSE)             | pg15@el7, pg16@el9 |
+| [tableversion](https://github.com/linz/postgresql-tableversion)             | v1.10.3     | [tableversion.spec](rpmbuild/SPECS/tableversion.spec)           | [BSD-Like](https://github.com/linz/postgresql-tableversion/blob/master/LICENSE)             | pg16@el9           |
 | [plproxy](https://github.com/plproxy/plproxy)                               | v2.11.0     | [plproxy.spec](rpmbuild/SPECS/plproxy.spec)                     | [BSD-Like](https://github.com/plproxy/plproxy/blob/master/COPYRIGHT)                        | pg16@el8, pg16@el9 |
 | [unit](https://github.com/df7cb/postgresql-unit?tab=readme-ov-file#license) | v7.7        | [unit.spec](rpmbuild/SPECS/unit.spec)                           | [GPLv3](https://github.com/df7cb/postgresql-unit?tab=readme-ov-file#license)                | pg16@el8, pg16@el9 |
 | [mysqlcompat](https://github.com/2ndQuadrant/mysqlcompat)                   | v0.0.7      | [mysqlcompat.spec](rpmbuild/SPECS/mysqlcompat.spec)             | [unrestricted](https://pgxn.org/dist/mysqlcompat/)                                          | pg16@el8, pg16@el9 |
@@ -135,13 +135,12 @@ missing: geoip  plproxy unit mysqlcompat # and table_version on pg16@el9
 EL7 Building [Recipe](rpmbuild/Makefile.el7):
 
 ```bash
-make deps common debian legacy missing
+make deps common debian legacy
 
 deps: scws scws-install pg_filedump
 common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault pointcloud imgsmlr pg_similarity hydra age15 md5hash
 debian: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
 legacy: pg_tle pg_bigm pgsql_http pgsql_gzip pg_dirtyread pointcloud
-missing: tableversion
 ```
 
 --------

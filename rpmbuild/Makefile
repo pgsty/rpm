@@ -517,7 +517,30 @@ toastinfo:
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/toastinfo.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/toastinfo.spec
 
+#---------------------------------------------#
+# toastinfo
+#---------------------------------------------#
+toastinfo:
+	rm -rf ~/rpmbuild/RPMS/x86_64/toastinfo*.rpm;
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/toastinfo.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/toastinfo.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/toastinfo.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/toastinfo.spec
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/toastinfo.spec
 
+#---------------------------------------------#
+# geoip (pg16@el8/el9)
+#---------------------------------------------#
+geoip:
+	rm -rf ~/rpmbuild/RPMS/x86_64/geoip*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/geoip.spec
+
+#---------------------------------------------#
+# tableversion (pg15@el7, el9)
+#---------------------------------------------#
+table_version:
+	rm -rf ~/rpmbuild/RPMS/x86_64/table_version*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/table_version.spec
 
 
 ###############################################################

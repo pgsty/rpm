@@ -520,7 +520,7 @@ toastinfo:
 ###############################################################
 #           Missing in specific Major Version                 #
 ###############################################################
-missing: geoip table_version plproxy unit mysqlcompat
+missing: geoip table_version plproxy unit
 
 #---------------------------------------------#
 # geoip (pg16@el8/el9)
@@ -553,9 +553,9 @@ unit:
 #---------------------------------------------#
 # mysqlcompat (pg16 @ el8/el9)
 #---------------------------------------------#
-mysqlcompat:
-	rm -rf ~/rpmbuild/RPMS/x86_64/mysqlcompat*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/mysqlcompat.spec
+#mysqlcompat:
+#	rm -rf ~/rpmbuild/RPMS/x86_64/mysqlcompat*.rpm;
+#	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/mysqlcompat.spec
 
 
 ###############################################################

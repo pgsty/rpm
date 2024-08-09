@@ -57,7 +57,7 @@ Related Projects:
 | [tableversion](https://github.com/linz/postgresql-tableversion)             | v1.10.3     | [tableversion.spec](rpmbuild/SPECS/tableversion.spec)           | [BSD-Like](https://github.com/linz/postgresql-tableversion/blob/master/LICENSE)             | pg16@el9           |
 | [plproxy](https://github.com/plproxy/plproxy)                               | v2.11.0     | [plproxy.spec](rpmbuild/SPECS/plproxy.spec)                     | [BSD-Like](https://github.com/plproxy/plproxy/blob/master/COPYRIGHT)                        | pg16@el8, pg16@el9 |
 | [unit](https://github.com/df7cb/postgresql-unit?tab=readme-ov-file#license) | v7.7        | [unit.spec](rpmbuild/SPECS/unit.spec)                           | [GPLv3](https://github.com/df7cb/postgresql-unit?tab=readme-ov-file#license)                | pg16@el8, pg16@el9 |
-| [mysqlcompat](https://github.com/2ndQuadrant/mysqlcompat)                   | v0.0.7      | [mysqlcompat.spec](rpmbuild/SPECS/mysqlcompat.spec)             | [unrestricted](https://pgxn.org/dist/mysqlcompat/)                                          | pg16@el8, pg16@el9 |
+| [mysqlcompat](https://github.com/2ndQuadrant/mysqlcompat)                   | v0.0.7      | [mysqlcompat.spec](rpmbuild/SPECS/mysqlcompat.spec)             | [unrestricted](https://pgxn.org/dist/mysqlcompat/)                                          | pkg broken         |
 
 15 [Rust](RUST.md) Extension build with `pgrx`:
 
@@ -139,7 +139,7 @@ make deps common debian legacy
 
 deps: scws scws-install pg_filedump
 common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault pointcloud imgsmlr pg_similarity hydra age15 md5hash
-debian: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
+debian: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo pg_snakeoil pgextwlist toastinfo
 legacy: pg_tle pg_bigm pgsql_http pgsql_gzip pg_dirtyread pointcloud
 ```
 

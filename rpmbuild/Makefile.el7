@@ -262,7 +262,7 @@ md5hash:
 #                   Debian Migration                          #
 ###############################################################
 debian: prepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
-	q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
+	q3c pgsphere pg_rrule pgfaceting mimeo pg_snakeoil pgextwlist toastinfo
 
 #---------------------------------------------#
 # preprepare
@@ -383,16 +383,6 @@ mimeo:
 	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/mimeo.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/mimeo.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/mimeo.spec
-
-#---------------------------------------------#
-# tablelog
-#---------------------------------------------#
-tablelog:
-	rm -rf ~/rpmbuild/RPMS/x86_64/tablelog*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/tablelog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/tablelog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/tablelog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/tablelog.spec
 
 #---------------------------------------------#
 # pg_snakeoil

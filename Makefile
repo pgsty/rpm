@@ -52,7 +52,7 @@ pulld:
 	rsync -avc --delete $(DEVEL_PATH)/ ./
 
 # push SRC to building VMs
-push-el: push9 push8 push7
+push-el: push9 push8 #push7
 push7:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el7:~/rpmbuild/
 	ssh el7 'cp -f ~/rpmbuild/Makefile.el7 ~/rpmbuild/Makefile'
@@ -70,7 +70,7 @@ pull8:
 pull9:
 	rsync -avc --delete el9:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el9.x86_64/ || true
 
-pull-ela: pull9 pull8 pull7
+pull-ela: pull9 pull8 #pull7
 pull7a:
 	rsync -avc el7:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el7.aarch64/ || true
 pull8a:
@@ -82,13 +82,13 @@ pull9a:
 el-dir:
 	ssh el9 'rpmdev-setuptree'
 	ssh el8 'rpmdev-setuptree'
-	ssh el7 'rpmdev-setuptree'
+	#ssh el7 'rpmdev-setuptree'
 el-spec:
-	rsync -avc --delete rpmbuild/SPECS/   el7:~/rpmbuild/SPECS/
+	#rsync -avc --delete rpmbuild/SPECS/   el7:~/rpmbuild/SPECS/
 	rsync -avc --delete rpmbuild/SPECS/   el8:~/rpmbuild/SPECS/
 	rsync -avc --delete rpmbuild/SPECS/   el9:~/rpmbuild/SPECS/
 el-src:
-	rsync -avc rpmbuild/SOURCES/ el7:~/rpmbuild/SOURCES/
+	#rsync -avc rpmbuild/SOURCES/ el7:~/rpmbuild/SOURCES/
 	rsync -avc rpmbuild/SOURCES/ el8:~/rpmbuild/SOURCES/
 	rsync -avc rpmbuild/SOURCES/ el9:~/rpmbuild/SOURCES/
 

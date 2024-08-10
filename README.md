@@ -123,13 +123,12 @@ make ps      # make push-ss (specs & sources)
 EL 8/9 Building [Recipe](rpmbuild/Makefile):
 
 ```bash
-make deps common debian rust
-
-deps: scws scws-install libduckdb libduckdb-install pg_filedump
-common: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8
-rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml
-debian: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
-missing: geoip  plproxy unit mysqlcompat # and table_version on pg16@el9
+make rust deps plv8 batch1 batch2 batch3 batch4 batch5
+batch1: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_hashids postgres_shacrypt permuteseq vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash #pg_proctab
+batch2: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
+batch3: geoip table_version plproxy unit
+batch4: pg_orphaned pgcozy decoder_raw pg_failover_slots log_fdw index_advisor pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address lower_quantile pg_timeit quantile pg_random session_variable smlar sslutils pg_mon chkpass pg_currency pg_emailaddr pg_uri cryptint floatvec pg_auditor noset redis_fdw
+batch5: aggs_for_arrays pgqr pg_zstd url_encode pg_geohash pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs acl pg_crash pg_math
 ```
 
 EL7 Building [Recipe](rpmbuild/Makefile.el7):

@@ -762,8 +762,7 @@ redis_fdw:
 
 common4: pg_orphaned pgcozy decoder_raw pg_failover_slots log_fdw index_advisor pg_financial pg_savior \
 	aggs_for_vecs base36 base62 pg_envvar pg_html5_email_address lower_quantile pg_timeit quantile random \
-	session_variable smlar sslutils pg_mon chkpass pg_currency pg_emailaddr pg_uri cryptint floatvec pg_auditor noset
-
+	session_variable smlar sslutils pg_mon chkpass pg_currency pg_emailaddr pg_uri cryptint floatvec pg_auditor noset redis_fdw
 
 
 ###############################################################

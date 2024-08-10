@@ -69,6 +69,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
+%{pginstdir}/share/extension/uninstall_sslutils.sql
 %if %llvm
 %files llvmjit
    %{pginstdir}/lib/bitcode/*

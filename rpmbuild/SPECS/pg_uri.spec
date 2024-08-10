@@ -1,5 +1,5 @@
 %global pname uri
-%global sname uri
+%global sname pg_uri
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl

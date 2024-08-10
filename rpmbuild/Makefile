@@ -337,7 +337,7 @@ md5hash:
 # this batch is migrated from debian APT repo
 
 batch2: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
-	q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
+	q3c pgsphere pg_rrule pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo
 
 #---------------------------------------------#
 # preprepare
@@ -472,15 +472,15 @@ mimeo:
 	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/mimeo.spec
 
 #---------------------------------------------#
-# tablelog
+# table_log
 #---------------------------------------------#
-tablelog:
-	rm -rf ~/rpmbuild/RPMS/x86_64/tablelog*.rpm;
-	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/tablelog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/tablelog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/tablelog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/tablelog.spec
-	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/tablelog.spec
+table_log:
+	rm -rf ~/rpmbuild/RPMS/x86_64/table_log*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/table_log.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/table_log.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/table_log.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/table_log.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/table_log.spec
 
 #---------------------------------------------#
 # pg_snakeoil
@@ -1085,5 +1085,5 @@ rm-srpm:
 	deps scws scws-install libduckdb libduckdb-install pg_filedump \
 	common zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8 \
 	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml \
-	debian preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo \
+	debian preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo \
 	ls-rpm ls-srpm rm-rpm rm-srpm

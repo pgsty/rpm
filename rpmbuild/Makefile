@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-07-28
+# Mtime     :   2024-08-10
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -54,9 +54,10 @@ pg_filedump:
 
 
 ###############################################################
-#                  3. C/C++ Extensions                        #
+#                      The 1st Batch                          #
 ###############################################################
-common1: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8
+batch1: zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids \
+	postgres_shacrypt permuteseq vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8
 
 #---------------------------------------------#
 # zhparser (depend on scws)
@@ -166,12 +167,6 @@ hunspell_ru_ru_aot:
 	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/hunspell_ru_ru_aot.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/hunspell_ru_ru_aot.spec
 
-
-###############################################################
-#                   Common Extensions                         #
-###############################################################
-common2: pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq \
-	vault supautils imgsmlr pg_similarity hydra pg_filedump age age15 pg_tde md5hash
 
 #---------------------------------------------#
 # pg_roaringbitmap
@@ -336,9 +331,11 @@ md5hash:
 
 
 ###############################################################
-#                   Debian Migration                          #
+#                      The 2nd Batch                          #
 ###############################################################
-debian: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
+# this batch is migrated from debian APT repo
+
+batch2: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
 	q3c pgsphere pg_rrule pgfaceting mimeo tablelog pg_snakeoil pgextwlist toastinfo
 
 #---------------------------------------------#
@@ -517,10 +514,12 @@ toastinfo:
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/toastinfo.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/toastinfo.spec
 
+
 ###############################################################
-#           Missing in specific Major Version                 #
+#                      The 3rd Batch                          #
 ###############################################################
-missing: geoip table_version plproxy unit
+# the third batch is missing packages in PGDG repo (with un-aligned versions)
+batch3: geoip table_version plproxy unit
 
 #---------------------------------------------#
 # geoip (pg16@el8/el9)
@@ -559,8 +558,12 @@ unit:
 
 
 ###############################################################
-#                   3rd Batch Extension                       #
+#                      The 4th Batch                          #
 ###############################################################
+batch4: pg_orphaned pgcozy decoder_raw pg_failover_slots log_fdw index_advisor pg_financial pg_savior \
+	aggs_for_vecs base36 base62 pg_envvar pg_html5_email_address lower_quantile pg_timeit quantile random \
+	session_variable smlar sslutils pg_mon chkpass pg_currency pg_emailaddr pg_uri cryptint floatvec pg_auditor noset redis_fdw
+
 pg_orphaned:
 	rm -rf ~/rpmbuild/RPMS/x86_64/pg_orphaned*.rpm
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_orphaned.spec
@@ -760,9 +763,112 @@ redis_fdw:
 	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/redis_fdw.spec
 	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/redis_fdw.spec
 
-common4: pg_orphaned pgcozy decoder_raw pg_failover_slots log_fdw index_advisor pg_financial pg_savior \
-	aggs_for_vecs base36 base62 pg_envvar pg_html5_email_address lower_quantile pg_timeit quantile random \
-	session_variable smlar sslutils pg_mon chkpass pg_currency pg_emailaddr pg_uri cryptint floatvec pg_auditor noset redis_fdw
+
+
+###############################################################
+#                   5th Batch Extension                       #
+###############################################################
+batch5: aggs_for_arrays pgqr pg_zstd url_encode pg_geohash pg_meta pg_redis_pubsub \
+	pg_arraymath pagevis pg_ecdsa pg_cheat_funcs acl pg_crash pg_math
+
+aggs_for_arrays:
+	rm -rf ~/rpmbuild/RPMS/x86_64/aggs_for_arrays*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/aggs_for_arrays.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/aggs_for_arrays.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/aggs_for_arrays.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/aggs_for_arrays.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/aggs_for_arrays.spec
+pgqr:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pgqr*.rpm
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgqr.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgqr.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgqr.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgqr.spec
+zstd:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_zstd*.rpm
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_zstd.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_zstd.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_zstd.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_zstd.spec
+url_encode:
+	rm -rf ~/rpmbuild/RPMS/x86_64/url_encode*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/url_encode.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/url_encode.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/url_encode.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/url_encode.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/url_encode.spec
+pg_geohash:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_geohash*.rpm
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_geohash.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_geohash.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_geohash.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_geohash.spec
+meta:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_meta*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_meta.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_meta.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_meta.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_meta.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_meta.spec
+pg_redis_pubsub:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_redis_pubsub*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_redis_pubsub.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_redis_pubsub.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_redis_pubsub.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_redis_pubsub.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_redis_pubsub.spec
+pg_arraymath:
+	rm -rf ~/rpmbuild/RPMS/x86_64/array_math*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_arraymath.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_arraymath.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_arraymath.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_arraymath.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_arraymath.spec
+pagevis:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pagevis*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pagevis.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pagevis.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pagevis.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pagevis.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pagevis.spec
+pg_ecdsa:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_ecdsa*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_ecdsa.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_ecdsa.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_ecdsa.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_ecdsa.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_ecdsa.spec
+pg_cheat_funcs:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_cheat_funcs*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_cheat_funcs.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_cheat_funcs.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_cheat_funcs.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_cheat_funcs.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_cheat_funcs.spec
+acl:
+	rm -rf ~/rpmbuild/RPMS/x86_64/acl*.rpm
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/acl.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/acl.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/acl.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/acl.spec
+pg_crash:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_crash*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_crash.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_crash.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_crash.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_crash.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_crash.spec
+pg_math:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_math*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_math.spec
+	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_math.spec
+	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_math.spec
+	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_math.spec
+	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_math.spec
+pgai:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pgai*.rpm
+	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pgai.spec
+
 
 
 ###############################################################
@@ -838,7 +944,6 @@ pgmq:
 	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgmq.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pgmq.spec
 	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pgmq.spec
-
 
 #---------------------------------------------#
 # pg_vectorize [RUST]
@@ -958,7 +1063,6 @@ parquet_s3_fdw:
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/parquet_s3_fdw.spec
 
 
-
 ###############################################################
 #                     RPM & SRPM                              #
 ###############################################################
@@ -970,7 +1074,6 @@ rm-rpm:
 	rm -rf  ~/rpmbuild/RPMS/*
 rm-srpm:
 	rm -rf  ~/rpmbuild/SRPMS/*
-
 
 
 ###############################################################

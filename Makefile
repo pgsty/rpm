@@ -107,7 +107,7 @@ pull-ss:
 
 pp: pull-ssp
 pull-ssp:
-	ssh -t sv "cd /data/pgsql-rpm && make pull-el repo7 repo8 repo9"
+	ssh -t sv "cd /data/pgsql-rpm && make pull-el repo8 repo9"
 	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
 
 

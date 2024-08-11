@@ -20,7 +20,7 @@ License:	PostgreSQL
 URL:		https://github.com/ibarwick/firebird_fdw
 Source0:	%{sname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 libfq >= 0.5.0 firebird-devel >= 2.0.0
 Requires:	postgresql%{pgmajorversion}-server libfq >= 0.5.0
 
 %description

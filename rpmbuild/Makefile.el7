@@ -600,7 +600,7 @@ redis_fdw:
 ###############################################################
 batch5: aggs_for_arrays pgqr pg_zstd url_encode pg_geohash pg_meta \
 	pg_arraymath pagevis pg_ecdsa pg_cheat_funcs acl pg_crash pg_math
-	firebird_fdw sequential_uuids pgnodemx pg_protobuf pg_country pg_fio aws_s3
+	sequential_uuids pgnodemx pg_protobuf pg_country pg_fio aws_s3 firebird_fdw
 	# pg_redis_pubsub kafka_fdw pg_hashlib
 
 aggs_for_arrays:

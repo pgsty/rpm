@@ -135,11 +135,11 @@ EL7 Building [Recipe](rpmbuild/Makefile.el7):
 
 ```bash
 make deps common debian legacy
-
 deps: scws scws-install pg_filedump
-common: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_proctab pg_hashids postgres_shacrypt permuteseq vault pointcloud imgsmlr pg_similarity hydra age15 md5hash
-debian: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo pg_snakeoil pgextwlist toastinfo
-legacy: pg_tle pg_bigm pgsql_http pgsql_gzip pg_dirtyread pointcloud
+batch1: zhparser hunspell pg_roaringbitmap pgjwt pg_sqlog pg_hashids postgres_shacrypt permuteseq vault pointcloud imgsmlr pg_similarity hydra age15 md5hash
+batch2: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo
+batch4: pg_orphaned pgcozy decoder_raw pg_failover_slots log_fdw index_advisor pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address lower_quantile pg_timeit quantile pg_random session_variable smlar sslutils pg_mon chkpass pg_currency pg_emailaddr pg_uri cryptint floatvec pg_auditor noset redis_fdw
+batch5: aggs_for_arrays pgqr pg_zstd url_encode pg_geohash pg_meta pg_arraymath pagevis pg_ecdsa pg_cheat_funcs acl pg_crash pg_math sequential_uuids pgnodemx pg_protobuf pg_country pg_fio aws_s3 firebird_fdw # pg_redis_pubsub kafka_fdw pg_hashlib
 ```
 
 --------

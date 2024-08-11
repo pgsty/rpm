@@ -195,11 +195,11 @@ pgjwt:
 #---------------------------------------------#
 pg_sqlog:
 	rm -rf ~/rpmbuild/RPMS/x86_64/pg_sqlog*.rpm;
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
+	rpmbuild --without debuginfo --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_sqlog.spec
 
 #---------------------------------------------#
 # pg_hashids
@@ -425,17 +425,6 @@ pgsphere:
 	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pgsphere.spec
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pgsphere.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pgsphere.spec
-
-#---------------------------------------------#
-# pg_rrule
-#---------------------------------------------#
-pg_rrule:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_rrule*.rpm;
-	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/pg_rrule.spec
-	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/pg_rrule.spec
-	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/pg_rrule.spec
-	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/pg_rrule.spec
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_rrule.spec
 
 #---------------------------------------------#
 # pgfaceting
@@ -759,8 +748,8 @@ redis_fdw:
 #                   5th Batch Extension                       #
 ###############################################################
 batch5: aggs_for_arrays pgqr pg_zstd url_encode pg_geohash pg_meta pg_redis_pubsub \
-	pg_arraymath pagevis pg_ecdsa pg_cheat_funcs acl pg_crash pg_math
-	firebird_fdw sequential_uuids kafka_fdw pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3
+	pg_arraymath pagevis pg_ecdsa pg_cheat_funcs acl pg_crash pg_math \
+	sequential_uuids kafka_fdw pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 firebird_fdw
 
 aggs_for_arrays:
 	rm -rf ~/rpmbuild/RPMS/x86_64/aggs_for_arrays*.rpm

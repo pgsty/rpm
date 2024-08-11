@@ -325,7 +325,7 @@ md5hash:
 # this batch is migrated from debian APT repo
 
 batch2: preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
-	q3c pgsphere pg_rrule pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo
+	q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo # pg_rrule
 
 #---------------------------------------------#
 # preprepare

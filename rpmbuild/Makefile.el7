@@ -262,7 +262,7 @@ md5hash:
 #                   Debian Migration                          #
 ###############################################################
 debian: prepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational \
-	q3c pgsphere pg_rrule pgfaceting mimeo pg_snakeoil pgextwlist toastinfo
+	q3c pgsphere pgfaceting mimeo pg_snakeoil pgextwlist toastinfo # pg_rrule
 
 #---------------------------------------------#
 # preprepare

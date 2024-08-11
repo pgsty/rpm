@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Textual numeric datatypes for PostgreSQL
 License:	GPL
 URL:		https://github.com/df7cb/postgresql-numeral
-Source0:	postgresql-%{pname}-%{version}.tar.gz
+Source0:	%{pname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -60,7 +60,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n postgresql-%{sname}-%{version}
+%setup -q -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}

@@ -74,11 +74,19 @@ zhparser:
 # duckdb_fdw (depend on libduckdb)
 #---------------------------------------------#
 duckdb_fdw:
+	rm -rf ~/rpmbuild/RPMS/x86_64/duckdb_fdw*.rpm;
 	rpmbuild --define "pgmajorversion 12" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
 	rpmbuild --define "pgmajorversion 13" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
 	rpmbuild --define "pgmajorversion 14" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/duckdb_fdw.spec
+
+#---------------------------------------------#
+# pg_duckdb
+#---------------------------------------------#
+pg_duckdb:
+	rm -rf ~/rpmbuild/RPMS/x86_64/pg_duckdb*.rpm;
+	rpmbuild --without debuginfo --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_duckdb.spec
 
 #---------------------------------------------#
 # plv8 (manually build)
@@ -1120,7 +1128,7 @@ rm-srpm:
 ###############################################################
 .PHONY: default deps scws scws-install libduckdb libduckdb-install \
 	deps scws scws-install libduckdb libduckdb-install pg_filedump \
-	common zhparser duckdb_fdw hunspell pg_roaringbitmap pgjwt pg_sqlog pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8 \
+	common zhparser duckdb_fdw pg_duckdb hunspell pg_roaringbitmap pgjwt pg_sqlog pg_hashids postgres_shacrypt permuteseq	vault supautils imgsmlr pg_similarity hydra age age15 pg_tde md5hash plv8 \
 	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml \
 	debian preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pg_rrule pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo firebird_fdw \
 	ls-rpm ls-srpm rm-rpm rm-srpm

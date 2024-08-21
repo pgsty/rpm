@@ -21,7 +21,7 @@ URL:		https://github.com/df7cb/table_log
 Source0:	%{sname}-0.6.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server plv8_%{pgmajorversion}
+Requires:	postgresql%{pgmajorversion}-server
 
 %description
 table_log is a set of functions to log changes on a table in PostgreSQL and to restore the state of the table or a specific row on any time in the past.

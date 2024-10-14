@@ -4,13 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.7
+Version:	1.5.9
 Release:	1PIGSTY%{?dist}
 Summary:	GraphQL support to your PostgreSQL database.
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_graphql
-Source0:	pg_graphql-1.5.7.tar.gz
-#           https://github.com/supabase/pg_graphql/archive/refs/tags/v1.5.7.tar.gz
+Source0:	pg_graphql-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -40,6 +39,8 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.5.9
+* Sun Oct 13 2024 Vonng <rh@vonng.com> - 1.5.8
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 1.5.7
 * Sat Jun 29 2024 Vonng <rh@vonng.com> - 1.5.6
 * Sun May 5 2024 Vonng <rh@vonng.com> - 1.5.4

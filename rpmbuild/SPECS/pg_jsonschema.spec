@@ -4,13 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.1
+Version:	0.3.2
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension providing JSON Schema validation
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_jsonschema
 SOURCE0:    pg_jsonschema-%{version}.tar.gz
-#           https://github.com/supabase/pg_jsonschema/archive/refs/tags/v0.3.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -38,5 +37,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.3.2
 * Sun May 5 2024 Vonng <rh@vonng.com> - 0.3.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

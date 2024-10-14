@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.8.0
+Version:	1.9.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension (in C) to expose functionality from the ICU library
 License:	PostgreSQL
@@ -77,5 +77,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.9.0
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.8.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

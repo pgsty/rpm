@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	0.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
@@ -40,5 +40,6 @@ cp -a %{_builddir}/%{sname}-%{version}/%{sname}/target/release/%{pname}-pg%{pgma
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.4.0
 * Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.2.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.1
+Version:	1.4.4
 Release:	1PIGSTY%{?dist}
 Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
@@ -25,22 +25,20 @@ Messages stay in the queue until explicitly removed, Messages can be archived, i
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+PATH=%{pginstdir}/bin:$PATH make
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+%{__rm} -rf %{buildroot}
+PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 
 %files
-%{pginstdir}/lib/%{pname}.so
+%doc README.md
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%exclude /usr/lib/.build-id
+%exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.4.4
 * Sat Jun 29 2024 Vonng <rh@vonng.com> - 1.2.1
 * Sun May 5 2024 Vonng <rh@vonng.com> - 1.1.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

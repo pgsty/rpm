@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.6
+Version:	1.7
 Release:	1PIGSTY%{?dist}
 Summary:	Capture node OS metrics via SQL queries
 License:	PostgreSQL
@@ -77,5 +77,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.7
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.6
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -38,5 +38,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.1.0 (pgrx 0.12.5)
 * Sun May 5 2024 Vonng <rh@vonng.com> - 0.1.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

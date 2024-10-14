@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.2.1
+Version:	2.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0
 URL:		https://github.com/supabase/supautils
 Source0:	supautils-%{version}.tar.gz
-#           https://github.com/supabase/supautils/archive/refs/tags/v2.2.1.tar.gz
+#           https://github.com/supabase/supautils/archive/refs/tags/v2.4.0.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
@@ -77,5 +77,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Mon Oct 14 2023 Vonng <rh@vonng.com> - 2.4.0
 * Thu Jul 18 2023 Vonng <rh@vonng.com> - 2.2.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -1,0 +1,125 @@
+#!/bin/bash
+# set -o pipefail
+#==============================================================#
+# File      :   build
+# Desc      :   build an extension
+# Ctime     :   2024-10-13
+# Mtime     :   2024-10-13
+# Usage     :   build [nodebug] <extension> <versions...>
+# Author    :   Ruohang Feng (rh@vonng.com)
+# License   :   AGPLv3
+#==============================================================#
+PROG_NAME="$(basename $0)"
+PROG_DIR="$(cd $(dirname $0) && pwd)"
+SPEC_DIR="${PROG_DIR}/SPECS"
+RPMS_DIR="${PROG_DIR}/RPMS"
+
+#--------------------------------------------------------------#
+# Usage
+#--------------------------------------------------------------#
+# build [nodebug] <extension> <versions...>
+# ./build pg_roaringbitmap         12 13 14 15 16 17
+# ./build pgjwt            nodebug 12 13 14 15 16 17
+
+#--------------------------------------------------------------#
+# Log Util
+#--------------------------------------------------------------#
+# if output is a terminal, setup color alias, else use empty str
+if [[ -t 1 ]]; then
+    __CN='\033[0m';__CB='\033[0;30m';__CR='\033[0;31m';__CG='\033[0;32m';
+    __CY='\033[0;33m';__CB='\033[0;34m';__CM='\033[0;35m';__CC='\033[0;36m';__CW='\033[0;37m';
+else
+    __CN='';__CB='';__CR='';__CG='';__CY='';__CB='';__CM='';__CC='';__CW='';
+fi
+function log_info()  { printf "[${__CG} OK ${__CN}] ${__CG}$*${__CN}\n"; }
+function log_warn()  { printf "[${__CY}WARN${__CN}] ${__CY}$*${__CN}\n"; }
+function log_error() { printf "[${__CR}FAIL${__CN}] ${__CR}$*${__CN}\n"; }
+function log_red()   { printf "[${__CR}WARN${__CN}] ${__CR}$*${__CN}\n"; }
+function log_debug() { printf "[${__CB}HINT${__CN}] ${__CB}$*${__CN}\n"; }
+function log_title() { printf "[${__CG}$1${__CN}] ${__CG}$2${__CN}\n";   }
+function log_hint()  { printf "${__CB}$*${__CN}\n"; }
+function log_line()  { printf "${__CM}[$*] ===========================================${__CN}\n"; }
+
+
+#--------------------------------------------------------------#
+# ARGS
+#--------------------------------------------------------------#
+EXTENSION_NAME=$1
+shift
+
+DEBUG_OPT="--with"
+if [[ "$1" == "nodebug" || "$1" == "nodbg" ]]; then
+    DEBUG_OPT="--without"
+    shift
+fi
+
+VERSIONS=""
+if [ $# -eq 0 ]; then
+    VERSIONS="12 13 14 15 16 17"
+else
+
+    # Validate versions
+    VALID_VERSIONS="12 13 14 15 16 17"
+    for arg in "$@"; do
+        found=false
+        for ver in ${VALID_VERSIONS}; do
+            if [ "${ver}" = "${arg}" ]; then
+                found="true"
+            fi
+        done
+        if [[ "${found}" != "true" ]]; then
+            log_error "invalid pg version: ${arg}"
+            exit 1
+        fi
+    done
+    VERSIONS=$@
+fi
+
+
+#--------------------------------------------------------------#
+# Check Spec
+#--------------------------------------------------------------#
+SPEC_FILE="${SPEC_DIR}/${EXTENSION_NAME}.spec"
+
+if [ -f "${SPEC_FILE}" ]; then
+    log_line "${EXTENSION_NAME} spec file"
+else
+    log_error "rpm spec not found: ${SPEC_FILE}"
+    exit 1
+fi
+
+cat ${SPEC_FILE} | grep -E '^Version:|^Release:|^Summary:|^License:|^URL:|^Source0:'
+
+
+#--------------------------------------------------------------#
+# Check RPMs
+#--------------------------------------------------------------#
+if [ -d "${RPMS_DIR}/x86_64" ]; then
+    log_line "${EXTENSION_NAME} rpms dir"
+    ls -alh ${RPMS_DIR}/x86_64 | grep "${EXTENSION_NAME}"
+    log_warn "existing ${EXTENSION_NAME} rpms will be removed"
+    log_hint rm -rf "${RPMS_DIR}/x86_64/${EXTENSION_NAME}*.rpm"
+    rm -rf "${RPMS_DIR}/x86_64/${EXTENSION_NAME}*.rpm"
+fi
+
+
+#--------------------------------------------------------------#
+# Building for each pgmajorversion
+#--------------------------------------------------------------#
+for ver in $VERSIONS; do
+    MARCO="pgmajorversion $ver"
+    log_line "${EXTENSION_NAME} for PG$ver"
+    log_hint "\$" rpmbuild "${DEBUG_OPT}" debuginfo --define \"${MARCO}\" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
+    rpmbuild ${DEBUG_OPT} debuginfo --define "${MARCO}" -ba "${SPEC_FILE}"
+done
+
+
+#--------------------------------------------------------------#
+# Print RPM List
+#--------------------------------------------------------------#
+log_line "${EXTENSION_NAME} rpms"
+log_info "${RPMS_DIR}"
+if [ -d "${RPMS_DIR}/x86_64" ]; then
+    ls -alh ${RPMS_DIR}/x86_64 | grep "${EXTENSION_NAME}"
+fi
+log_line "${EXTENSION_NAME} done"

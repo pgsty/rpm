@@ -58,7 +58,7 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PG_CPPFLAGS=-Wno-int-conversion PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}

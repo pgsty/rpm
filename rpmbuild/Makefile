@@ -347,7 +347,7 @@ pg_jsonschema:
 # wrappers [RUST]
 #---------------------------------------------#
 wrappers:
-	./build wrappers nodebug 14 15 16
+	./build wrappers nodebug 14 15 16 17
 
 #---------------------------------------------#
 # pg_vectorize [RUST]

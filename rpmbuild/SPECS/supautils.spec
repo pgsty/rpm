@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.4.0
+Version:	2.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0
@@ -77,6 +77,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Tue Oct 15 2023 Vonng <rh@vonng.com> - 2.5.0
 * Mon Oct 14 2023 Vonng <rh@vonng.com> - 2.4.0
 * Thu Jul 18 2023 Vonng <rh@vonng.com> - 2.2.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

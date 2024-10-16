@@ -383,7 +383,7 @@ pgsmcrypto:
 # pgvectorscale [RUST]
 #---------------------------------------------#
 pgvectorscale:
-	./build pgvectorscale nodebug 15 16 17
+	./build pgvectorscale nodebug 13 14 15 16 17
 
 #---------------------------------------------#
 # pgdd [RUST]

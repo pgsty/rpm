@@ -42,7 +42,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Tue Oct 15 2024 Vonng <rh@vonng.com> - 0.4.3
+* Wed Oct 16 2024 Vonng <rh@vonng.com> - 0.4.3
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.4.2
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.4.1
 * Sun May 5 2024 Vonng <rh@vonng.com> - 0.3.1

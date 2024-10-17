@@ -2,7 +2,7 @@
 ## 2024-10-16
 
 - [x] plv8 3.2.3
-- [x] supautils 2.4.0
+- [x] supautils 2.5.0
 - [x] icu_ext 1.9.0
 - [x] redis_fdw 17
 - [x] pg_failover_slots 1.1.0
@@ -23,10 +23,8 @@
 - [x] pgvectorscale 0.4.0 (+13,14,17)
 - [x] pgsmcrypto (+17)
 - [x] pg_tiktoken (+17)
-- [x] wrappers 0.4.2 (pgrx 0.11.3)
+- [x] wrappers 0.4.3 (pgrx 0.12.6)
 - [x] pg_later 0.1.3 (pgrx 0.11.3)
 - [x] plprql 1.0.0 (pgrx 0.11.3)
 - [x] pg_vectorize 0.18.3 (pgrx 0.11.3)
-- [x] pg_later 0.1.3 (pgrx 0.11.3)
-
 

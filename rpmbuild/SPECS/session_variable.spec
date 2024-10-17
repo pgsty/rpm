@@ -13,12 +13,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.3
+Version:	3.4
 Release:	1PIGSTY%{?dist}
 Summary:	The session_variable Postgres database extension provides a way to create and maintain session scoped variables and constants, more or less like Oracle's global variables.
 License:	GPL-3.0
 URL:		https://github.com/splendiddata/session_variable
-Source0:	session_variable-version_%{version}.tar.gz
+Source0:	session_variable-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -55,7 +55,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n session_variable-version_%{version}
+%setup -q -n session_variable-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -78,5 +78,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 #%exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Thu Oct 17 2024 Vonng <rh@vonng.com> - 3.4
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 3.3
 - Initial RPM release, used by Pigsty <https://pigsty.io>

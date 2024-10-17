@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.2
+Version:	0.3.3
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension providing JSON Schema validation
 License:	Apache-2.0
@@ -37,6 +37,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu Oct 17 2024 Vonng <rh@vonng.com> - 0.3.3
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.3.2
 * Sun May 5 2024 Vonng <rh@vonng.com> - 0.3.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

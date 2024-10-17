@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-10-14
+# Mtime     :   2024-10-17
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -109,7 +109,7 @@ plv8:
 	./build plv8
 
 pg_duckdb:
-	./build pg_duckdb 16 17
+	./build pg_duckdb 15 16 17
 
 
 ###############################################################

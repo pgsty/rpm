@@ -41,7 +41,7 @@
 
 - [ ] pg_polyline https://github.com/yihong0618/pg_polyline
 - [ ] pgvector.rs https://github.com/tensorchord/pgvecto.rs
-- [ ] pg_cardano https://github.com/Fell-x27/pg_cardano/blob/master/Cargo.toml
+- [ ] pg_cardano https://github.com/Fell-x27/pg_cardano
 - [ ] base58 https://github.com/Fell-x27/pg_base58
 - [ ] pg_summarize https://github.com/HexaCluster/pg_summarize
 - [ ] upid https://github.com/carderne/upid

@@ -285,7 +285,7 @@ pg_snakeoil:
 ###############################################################
 #                      The 4th Batch                          #
 ###############################################################
-batch4: geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries
+batch4: geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter
 
 # missing packages in PGDG repo (with un-aligned versions)
 geoip:
@@ -318,6 +318,8 @@ pgmq:
 	./build pgmq nodebug
 pg_timeseries:
 	./build pg_timeseries nodebug
+pg_plan_filter:
+	./build pg_plan_filter
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #
@@ -397,6 +399,12 @@ pgdd:
 pg_tiktoken:
 	./build pg_tiktoken nodebug
 
+#---------------------------------------------#
+# pg_parquet [RUST]
+#---------------------------------------------#
+pg_parquet:
+	./build pg_parquet nodebug 16 17
+
 
 ###############################################################
 #                         Obsolete                            #
@@ -453,6 +461,6 @@ rm-srpm:
 	batch2 pg_roaringbitmap pg_sqlog pg_hashids postgres_shacrypt permuteseq imgsmlr pg_similarity md5hash preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo \
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
-	batch4 geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries \
-	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml \
+	batch4 geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter \
+	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml pg_parquet \
 	ls-rpm ls-srpm rm-rpm rm-srpm

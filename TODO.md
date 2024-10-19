@@ -27,4 +27,5 @@
 - [x] pg_later 0.1.3 (pgrx 0.11.3)
 - [x] plprql 1.0.0 (pgrx 0.11.3)
 - [x] pg_vectorize 0.18.3 (pgrx 0.11.3)
-
+- [x] pg_plan_filter 0.0.1 (new)
+- [x] pg_parquet 0.1.0 (pgrx 0.12.6)

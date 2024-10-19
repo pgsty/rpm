@@ -102,7 +102,7 @@ push-ssa: push
 
 pl: pull-ss
 pull-ss:
-	ssh -t sv "cd /data/pgsql-rpm && make pull-el"
+	#ssh -t sv "cd /data/pgsql-rpm && make pull-el"
 	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
 
 pp: pull-ssp

@@ -15,8 +15,6 @@
 - [x] pg_protobuf 16 17  (compile flag)
 - [x] log_fdw 1.4 pg17
 - [x] pg_duckdb to the latest commit
-- [x] pgmq 1.4.4
-- [x] pg_timeseries 0.1.6 (new) (mod)
 - [x] pg_idkit 0.2.4
 - [x] pg_graphql 1.5.9
 - [x] pg_jsonschema 0.3.2
@@ -27,8 +25,18 @@
 - [x] pg_later 0.1.3 (pgrx 0.11.3)
 - [x] plprql 1.0.0 (pgrx 0.11.3)
 - [x] pg_vectorize 0.18.3 (pgrx 0.11.3)
+
+**New Extension**
+
+- [x] pgmq 1.4.4 (from rust to raw SQL)
+- [x] pg_timeseries 0.1.6 (new) (mod)
 - [x] pg_plan_filter 0.0.1 (new)
 - [x] pg_parquet 0.1.0 (pgrx 0.12.6)
+- [x] pg-explain-ui https://github.com/davidgomes/pg-explain-ui
+- [x] pg_polyline https://github.com/yihong0618/pg_polyline
+- [x] pg_cardano https://github.com/Fell-x27/pg_cardano
+- [x] base58 https://github.com/Fell-x27/pg_base58
+- [x] pg_summarize https://github.com/HexaCluster/pg_summarize
 
 - [ ] pg_uint128 https://github.com/pg-uint/pg-uint128
 - [ ] pg_relusage https://pgxn.org/dist/pg_relusage/0.0.1/
@@ -39,15 +47,10 @@
 - [ ] pg_cld2 https://github.com/hedges333/pg_cld2
 - [ ] pg_readme https://github.com/bigsmoke/pg_readme
 
-- [ ] pg_polyline https://github.com/yihong0618/pg_polyline
-- [ ] pgvector.rs https://github.com/tensorchord/pgvecto.rs
-- [ ] pg_cardano https://github.com/Fell-x27/pg_cardano
-- [ ] base58 https://github.com/Fell-x27/pg_base58
-- [ ] pg_summarize https://github.com/HexaCluster/pg_summarize
+**TBD**
+
 - [ ] upid https://github.com/carderne/upid
 - [ ] pg_bestmatch.rs https://github.com/tensorchord/pg_bestmatch.rs
+- [ ] pgvector.rs https://github.com/tensorchord/pgvecto.rs
 - [ ] pg_stat_sysinfo https://github.com/postgresml/pg_stat_sysinfo
-- [ ] pg-explain-ui https://github.com/davidgomes/pg-explain-ui
-
-
-- [ ] pg-jsonschema-boon : https://github.com/tembo-io/pg-jsonschema-boon/
+- [ ] pg-jsonschema-boon : https://github.com/tembo-io/pg-jsonschema-boon

@@ -6,3 +6,4 @@ infra-pkg.iml
 rpmbuild/SOURCES
 rpmbuild/RPMS
 rpm/
+tmp/

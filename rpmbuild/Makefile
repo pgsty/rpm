@@ -412,6 +412,11 @@ pg_explain_ui:
 	./build pg_explain_ui nodebug
 pg_cardano:
 	./build pg_cardano nodebug
+pg_summarize:
+	./build pg_summarize nodebug
+upid_pg:
+	./build upid_pg nodebug
+
 
 ###############################################################
 #                         Obsolete                            #
@@ -469,5 +474,5 @@ rm-srpm:
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
 	batch4 geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter \
-	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml pg_parquet pg_polyline pg_explain_ui pg_cardano pg_base58 \
+	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml pg_parquet pg_polyline pg_explain_ui pg_cardano pg_base58 pg_summarize upid_pg \
 	ls-rpm ls-srpm rm-rpm rm-srpm

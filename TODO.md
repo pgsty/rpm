@@ -1,5 +1,5 @@
 
-## 2024-10-16
+## 2024-10-20
 
 - [x] plv8 3.2.3
 - [x] supautils 2.5.0
@@ -37,12 +37,12 @@
 - [x] pg_cardano https://github.com/Fell-x27/pg_cardano
 - [x] base58 https://github.com/Fell-x27/pg_base58
 - [x] pg_summarize https://github.com/HexaCluster/pg_summarize
+- [x] pg_relusage https://pgxn.org/dist/pg_relusage/0.0.1/
 
-- [ ] pg_uint128 https://github.com/pg-uint/pg-uint128
-- [ ] pg_relusage https://pgxn.org/dist/pg_relusage/0.0.1/
+- [ ] pg_xenophile https://github.com/bigsmoke/pg_xenophile
+- [ ] pg_uint128 https://github.com/pg-uint/pg-uint128 (el8 failed)
 - [ ] pg_task https://github.com/RekGRpth/pg_task
 - [ ] pg_mustach https://github.com/RekGRpth/pg_mustach
-- [ ] pg_xenophile https://github.com/bigsmoke/pg_xenophile
 - [ ] graph_component https://api.pgxn.org/src/graph_component/
 - [ ] pg_cld2 https://github.com/hedges333/pg_cld2
 - [ ] pg_readme https://github.com/bigsmoke/pg_readme

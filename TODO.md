@@ -32,20 +32,12 @@
 - [x] pg_timeseries 0.1.6 (new) (mod)
 - [x] pg_plan_filter 0.0.1 (new)
 - [x] pg_parquet 0.1.0 (pgrx 0.12.6)
-- [x] pg-explain-ui https://github.com/davidgomes/pg-explain-ui
+- [x] pg_explain_ui https://github.com/davidgomes/pg-explain-ui
 - [x] pg_polyline https://github.com/yihong0618/pg_polyline
 - [x] pg_cardano https://github.com/Fell-x27/pg_cardano
-- [x] base58 https://github.com/Fell-x27/pg_base58
+- [x] pg_base58 https://github.com/Fell-x27/pg_base58
 - [x] pg_summarize https://github.com/HexaCluster/pg_summarize
 - [x] pg_relusage https://pgxn.org/dist/pg_relusage/0.0.1/
-
-- [ ] pg_xenophile https://github.com/bigsmoke/pg_xenophile
-- [ ] pg_uint128 https://github.com/pg-uint/pg-uint128 (el8 failed)
-- [ ] pg_task https://github.com/RekGRpth/pg_task
-- [ ] pg_mustach https://github.com/RekGRpth/pg_mustach
-- [ ] graph_component https://api.pgxn.org/src/graph_component/
-- [ ] pg_cld2 https://github.com/hedges333/pg_cld2
-- [ ] pg_readme https://github.com/bigsmoke/pg_readme
 
 **TBD**
 
@@ -54,3 +46,11 @@
 - [ ] pgvector.rs https://github.com/tensorchord/pgvecto.rs
 - [ ] pg_stat_sysinfo https://github.com/postgresml/pg_stat_sysinfo
 - [ ] pg-jsonschema-boon : https://github.com/tembo-io/pg-jsonschema-boon
+
+- [ ] pg_xenophile https://github.com/bigsmoke/pg_xenophile
+- [ ] pg_uint128 https://github.com/pg-uint/pg-uint128 (el8 failed)
+- [ ] pg_task https://github.com/RekGRpth/pg_task
+- [ ] pg_mustach https://github.com/RekGRpth/pg_mustach
+- [ ] graph_component https://api.pgxn.org/src/graph_component/
+- [ ] pg_cld2 https://github.com/hedges333/pg_cld2
+- [ ] pg_readme https://github.com/bigsmoke/pg_readme

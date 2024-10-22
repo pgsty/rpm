@@ -1,5 +1,5 @@
-%global pname pgnodemx
-%global sname pgnodemx
+%global pname pgsodium
+%global sname pgsodium
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -13,19 +13,27 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7
+Version:	3.1.9
 Release:	1PIGSTY%{?dist}
-Summary:	Capture node OS metrics via SQL queries
-License:	PostgreSQL
-URL:		https://github.com/CrunchyData/pgnodemx
+Summary:	PostgreSQL extension for high level cryptographic algorithms
+License:	BSD
+URL:		https://github.com/michelp/pgsodium
 Source0:	%{sname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server
+#https://git.postgresql.org/gitweb/?p=pgrpms.git;a=blob;f=rpm/redhat/main/non-common/pgsodium/main/pgsodium.spec;h=15127595c2645c2b57f121d55fdd8ed5cbaa3ab3;hb=HEAD
+
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 libsodium-devel
+Requires:	postgresql%{pgmajorversion}-server libsodium
 
 %description
-SQL functions that allow capture of node OS metrics from PostgreSQL
-Executing role must have been granted pg_monitor membership (pgmonitor for PostgreSQL version 9.6 and below - see Compatibility section below).
+pgsodium is an encryption library extension for PostgreSQL using the
+libsodium library for high level cryptographic algorithms.
+
+pgsodium can be used a straight interface to libsodium, but it can also use
+a powerful feature called Server Key Management where pgsodium loads an
+external secret key into memory that is never accessible to SQL. This
+inaccessible root key can then be used to derive sub-keys and keypairs by
+key id. This id (type bigint) can then be stored instead of the derived key.
 
 %if %llvm
 %package llvmjit
@@ -76,6 +84,5 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.7
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.6
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+* Tue Oct 22 2024 Vonng <rh@vonng.com> - 3.1.9
+- Initial RPM release, fill missing PG17 in PGDG, used by Pigsty <https://pigsty.io>

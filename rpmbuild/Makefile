@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-10-17
+# Mtime     :   2024-10-22
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -324,6 +324,10 @@ pg_uint128:
 	./build pg_uint128
 pg_relusage:
 	./build pg_relusage
+pg_net:
+	./build pg_net
+pgsodium:
+	./build pgsodium 17
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #

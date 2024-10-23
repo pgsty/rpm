@@ -303,7 +303,7 @@ log_fdw:
 pg_mon:
 	./build pg_mon 12 13 14 15 16
 pgqr:
-	./build pgqr 12 13 14 15
+	./build pgqr
 pg_zstd:
 	./build pg_zstd 12 13 14 15
 pg_geohash:

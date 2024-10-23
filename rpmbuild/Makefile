@@ -307,7 +307,7 @@ pgqr:
 pg_zstd:
 	./build pg_zstd 12 13 14 15
 pg_geohash:
-	./build pg_geohash 12 13 14 15
+	./build pg_geohash
 acl:
 	./build acl 12 13 14 15
 pg_emailaddr:
@@ -454,7 +454,7 @@ mysqlcompat:
 	./build mysqlcompat 16
 
 sslutils:
-	./build sslutils 12 13 14 15 #16 17
+	./build sslutils 12 13 14 15 16 17
 
 
 ###############################################################

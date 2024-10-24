@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-10-22
+# Mtime     :   2024-10-24
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -205,7 +205,7 @@ pg_failover_slots:
 pg_financial:
 	./build pg_financial
 pg_savior:
-	./build pg_savior
+	./build pg_savior 13 14 15 16 17
 aggs_for_vecs:
 	./build aggs_for_vecs
 pg_base36:
@@ -305,15 +305,15 @@ pg_mon:
 pgqr:
 	./build pgqr
 pg_zstd:
-	./build pg_zstd 12 13 14 15
+	./build pg_zstd
 pg_geohash:
 	./build pg_geohash
 acl:
-	./build acl 12 13 14 15
+	./build acl
 pg_emailaddr:
-	./build pg_emailaddr 12 13 14 15
+	./build pg_emailaddr
 smlar:
-	./build smlar 13 14 15
+	./build smlar 13 14 15 16 17
 pgmq:
 	./build pgmq nodebug
 pg_timeseries:

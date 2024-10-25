@@ -14,12 +14,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.1
+Version:	0.1.0
 Release:	f34ae06%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT License
 URL:		https://github.com/duckdb/pg_duckdb
-Source0:	%{sname}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -57,7 +57,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}
+%setup -q -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} || /bin/true
@@ -82,9 +82,5 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
-
-
-* Thu Oct 20 2024 Vonng <rh@vonng.com> -0.0.1-f34ae06
-- https://github.com/duckdb/pg_duckdb/commit/d663d8a178ba8e9387dd9124e91dff1455afa2bf
-* Mon Aug 12 2024 Vonng <rh@vonng.com> - 0.0.1
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+* Thu Oct 24 2024 Vonng <rh@vonng.com> -0.1.0
+- the first public release, used by Pigsty <https://pigsty.io>

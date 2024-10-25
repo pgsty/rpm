@@ -285,7 +285,7 @@ pg_snakeoil:
 ###############################################################
 #                      The 4th Batch                          #
 ###############################################################
-batch4: geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter
+batch4: geoip plproxy table_version ddlx postgresql_anonymizer kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter
 
 # missing packages in PGDG repo (with un-aligned versions)
 geoip:
@@ -294,6 +294,12 @@ plproxy:
 	./build plproxy 16 17   # el8/el9
 table_version:
 	./build table_version   # el8/el9
+ddlx:
+	./build toastinfo 17
+anon: postgresql_anonymizer
+postgresql_anonymizer:
+	./build postgresql_anonymizer 17
+
 
 # missing PG major version
 kafka_fdw:

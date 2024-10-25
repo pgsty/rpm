@@ -300,7 +300,6 @@ anon: postgresql_anonymizer
 postgresql_anonymizer:
 	./build postgresql_anonymizer 17
 
-
 # missing PG major version
 kafka_fdw:
 	./build kafka_fdw 12 13 14 15 16
@@ -334,6 +333,9 @@ pg_net:
 	./build pg_net
 pgsodium:
 	./build pgsodium 17
+pg4ml:
+	./build pg4ml
+
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #
@@ -485,6 +487,6 @@ rm-srpm:
 	batch2 pg_roaringbitmap pg_sqlog pg_hashids postgres_shacrypt permuteseq imgsmlr pg_similarity md5hash preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo \
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
-	batch4 geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 \
+	batch4 geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml \
 	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml pg_parquet pg_polyline pg_explain_ui pg_cardano pg_base58 pg_summarize \
 	ls-rpm ls-srpm rm-rpm rm-srpm

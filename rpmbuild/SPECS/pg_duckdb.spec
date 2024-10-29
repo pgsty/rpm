@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	f34ae06%{?dist}
+Release:	1%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT License
 URL:		https://github.com/duckdb/pg_duckdb

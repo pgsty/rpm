@@ -430,6 +430,8 @@ pg_summarize:
 	./build pg_summarize nodebug
 pg_base58:
 	./build pg_base58 nodebug
+pg_smtp_client:
+	./build pg_smtp_client nodebug 14 15 16 17
 
 
 ###############################################################

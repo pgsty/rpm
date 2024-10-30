@@ -18,21 +18,23 @@ rpmdev-setuptree
 ## Env & Proxy
 
 ```bash
-PROXY=http://192.168.0.104:8118
+PROXY=http://192.168.0.105:8118
 export HTTP_PROXY=${PROXY}
 export HTTPS_PROXY=${PROXY}
 export ALL_PROXY=${PROXY}
 export NO_PROXY="localhost,127.0.0.1,10.0.0.0/8,192.168.0.0/16,*.pigsty,*.aliyun.com,mirrors.*,*.myqcloud.com,*.tsinghua.edu.cn"
-```
 
-```bash
+alias pg17="export PATH=/usr/pgsql-17/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
 alias pg16="export PATH=/usr/pgsql-16/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
 alias pg15="export PATH=/usr/pgsql-15/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
 alias pg14="export PATH=/usr/pgsql-14/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
 alias pg13="export PATH=/usr/pgsql-13/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
 alias pg12="export PATH=/usr/pgsql-12/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;"
+
 alias build="HTTPS_PROXY=${PROXY} cargo pgrx package -v"
 alias b="HTTPS_PROXY=${PROXY} cargo pgrx package"
+
+. ~/.cargo/env
 ```
 
 Edit `~/.ssh/config`:
@@ -63,7 +65,7 @@ source "$HOME/.cargo/env"
 ## pgrx
 
 ```bash
-cargo install --locked cargo-pgrx@0.12.5  # build latest extensions
+cargo install --locked cargo-pgrx@0.12.7  # build latest extensions
 cargo install --locked cargo-pgrx@0.11.3  # build most extensions
 cargo install --locked cargo-pgrx@0.10.2  # build pgdd & pg_tiktoken
 cargo pgrx init

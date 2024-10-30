@@ -370,7 +370,7 @@ pg_base58:
 pg_parquet:
 	./build pg_parquet nodebug 14 15 16 17
 pg_vectorize:
-	./build pg_vectorize nodebug 14 15 16
+	./build pg_vectorize nodebug 14 15 16 17
 pgvectorscale:
 	./build pgvectorscale nodebug 13 14 15 16 17
 

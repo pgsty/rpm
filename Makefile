@@ -104,6 +104,8 @@ pl: pull-ss
 pull-ss:
 	ssh -t sv "cd /data/pgsql-rpm && make pull-el"
 	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
+pull-rpm:
+	rsync -avc --delete sv:/data/pgsql-rpm/rpmbuild/RPMS/ rpmbuild/RPMS/
 
 pp: pull-ssp
 pull-ssp:

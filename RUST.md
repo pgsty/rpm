@@ -66,7 +66,7 @@ source "$HOME/.cargo/env"
 
 ```bash
 cargo install --locked cargo-pgrx@0.12.7  # build latest extensions
-cargo install --locked cargo-pgrx@0.11.3  # build most extensions
+cargo install --locked cargo-pgrx@0.11.4  # build most extensions
 cargo install --locked cargo-pgrx@0.10.2  # build pgdd & pg_tiktoken
 cargo pgrx init
 ```

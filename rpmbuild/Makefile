@@ -306,7 +306,7 @@ kafka_fdw:
 log_fdw:
 	./build log_fdw 14 15 16 17
 pg_mon:
-	./build pg_mon 12 13 14 15 16
+	./build pg_mon
 pgqr:
 	./build pgqr
 pg_zstd:

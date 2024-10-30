@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-10-24
+# Mtime     :   2024-10-30
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -340,98 +340,56 @@ pg4ml:
 ###############################################################
 #               6. RUST / PGRX Extensions                     #
 ###############################################################
-rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale
-# pgdd pg_tiktoken # pgml
+rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
+rust2: pgml plprql pg_later pg_smtp_client
+rust3: pgdd
 
-#---------------------------------------------#
-# pgml [RUST]
-#---------------------------------------------#
-pgml:
-	./build pgml nodebug 14 15 16 17
-
-#---------------------------------------------#
-# pg_graphql [RUST]
-#---------------------------------------------#
+# pgrx 0.12.7
 pg_graphql:
 	./build pg_graphql nodebug 14 15 16 17
-
-#---------------------------------------------#
-# pg_jsonschema [RUST]
-#---------------------------------------------#
 pg_jsonschema:
 	./build pg_jsonschema nodebug
-
-#---------------------------------------------#
-# wrappers [RUST]
-#---------------------------------------------#
 wrappers:
 	./build wrappers nodebug 14 15 16 17
-
-#---------------------------------------------#
-# pg_vectorize [RUST]
-#---------------------------------------------#
-pg_vectorize:
-	./build pg_vectorize nodebug 14 15 16
-
-#---------------------------------------------#
-# pg_later [RUST]
-#---------------------------------------------#
-pg_later:
-	./build pg_later nodebug 13 14 15 16
-
-#---------------------------------------------#
-# plprql [RUST]
-#---------------------------------------------#
-plprql:
-	./build plprql nodebug 12 13 14 15 16
-
-#---------------------------------------------#
-# pg_idkit [RUST]
-#---------------------------------------------#
 pg_idkit:
 	./build pg_idkit nodebug
-
-#---------------------------------------------#
-# pgsmcrypto [RUST]
-#---------------------------------------------#
 pgsmcrypto:
 	./build pgsmcrypto nodebug
-
-#---------------------------------------------#
-# pgvectorscale [RUST]
-#---------------------------------------------#
-pgvectorscale:
-	./build pgvectorscale nodebug 13 14 15 16 17
-
-#---------------------------------------------#
-# pgdd [RUST]
-#---------------------------------------------#
-pgdd:
-	./build pgdd nodebug
-
-#---------------------------------------------#
-# pg_tiktoken [RUST]
-#---------------------------------------------#
 pg_tiktoken:
 	./build pg_tiktoken nodebug
-
-#---------------------------------------------#
-# pg_parquet [RUST]
-#---------------------------------------------#
-pg_parquet:
-	./build pg_parquet nodebug 16 17
+pg_summarize:
+	./build pg_summarize nodebug
 pg_polyline:
 	./build pg_polyline nodebug
 pg_explain_ui:
 	./build pg_explain_ui nodebug
 pg_cardano:
 	./build pg_cardano nodebug
-pg_summarize:
-	./build pg_summarize nodebug
 pg_base58:
 	./build pg_base58 nodebug
+pg_parquet:
+	./build pg_parquet nodebug 14 15 16 17
+pg_vectorize:
+	./build pg_vectorize nodebug 14 15 16
+pgvectorscale:
+	./build pgvectorscale nodebug 13 14 15 16 17
+
+
+# pgrx 0.11.4
+pgml:
+	./build pgml nodebug 14 15 16 17
+plprql:
+	./build plprql nodebug 12 13 14 15 16
+pg_later:
+	./build pg_later nodebug 13 14 15 16
 pg_smtp_client:
-	./build pg_smtp_client nodebug 14 15 16 17
+	./build pg_smtp_client nodebug 14 15 16
+
+
+# pgrx 0.10.x
+pgdd:
+	./build pgdd nodebug
+
 
 
 ###############################################################

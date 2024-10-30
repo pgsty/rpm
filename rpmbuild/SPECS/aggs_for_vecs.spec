@@ -18,7 +18,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Postgres C extension with aggregate functions for array inputs
 License:	MIT
 URL:		https://github.com/pjungwir/aggs_for_vecs
-Source0:	aggs_for_vecs-%{version}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

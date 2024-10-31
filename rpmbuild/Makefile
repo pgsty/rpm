@@ -111,6 +111,9 @@ plv8:
 pg_duckdb:
 	./build pg_duckdb 15 16 17
 
+pg_mooncake:
+	./build pg_mooncake 15 16 17
+
 
 ###############################################################
 #                      The 2nd Batch                          #
@@ -373,7 +376,8 @@ pg_vectorize:
 	./build pg_vectorize nodebug 14 15 16 17
 pgvectorscale:
 	./build pgvectorscale nodebug 13 14 15 16 17
-
+pg_session_jwt:
+	./build pg_session_jwt nodebug 14 15 16 17
 
 # pgrx 0.11.4
 pgml:
@@ -448,5 +452,7 @@ rm-srpm:
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
 	batch4 geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml \
-	rust pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale # pgdd pg_tiktoken pgml pg_parquet pg_polyline pg_explain_ui pg_cardano pg_base58 pg_summarize \
+	rust rust1 rust2 rust3 pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale pg_session_jwt pgml plprql pg_later pg_smtp_client pgdd \
 	ls-rpm ls-srpm rm-rpm rm-srpm
+
+

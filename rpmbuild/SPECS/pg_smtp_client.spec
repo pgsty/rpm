@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.2.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to send email using SMTP
 License:	MIT
@@ -38,5 +38,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Nov 01 2024 Vonng <rh@vonng.com> - 0.2.0
 * Wed Oct 30 2024 Vonng <rh@vonng.com> - 0.1.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

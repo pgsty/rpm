@@ -387,7 +387,7 @@ plprql:
 pg_later:
 	./build pg_later nodebug 13 14 15 16
 pg_smtp_client:
-	./build pg_smtp_client nodebug 14 15 16
+	./build pg_smtp_client nodebug 14 15 16 17
 
 
 # pgrx 0.10.x

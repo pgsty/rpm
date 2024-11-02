@@ -288,20 +288,38 @@ pg_snakeoil:
 ###############################################################
 #                      The 4th Batch                          #
 ###############################################################
-batch4: geoip plproxy table_version ddlx postgresql_anonymizer kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter
+batch4: geoip plproxy table_version ddlx postgresql_anonymizer count_distinct pg_fkpart pg_store_plan pgcryptokey pgmeminfo pguint temporal_tables sslutils
+batch5: kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter
 
 # missing packages in PGDG repo (with un-aligned versions)
 geoip:
-	./build geoip 16 17     # el8/el9
+	./build geoip     # el8/el9
 plproxy:
-	./build plproxy 16 17   # el8/el9
+	./build plproxy   # el8/el9
 table_version:
 	./build table_version   # el8/el9
 ddlx:
-	./build toastinfo 17
+	./build ddlx
 anon: postgresql_anonymizer
 postgresql_anonymizer:
-	./build postgresql_anonymizer 17
+	./build postgresql_anonymizer
+count_distinct:
+	./build count_distinct
+pg_fkpart:
+	./build pg_fkpart
+pg_store_plan:
+	./build pg_store_plan 12 13 14 15 16
+pgcryptokey:
+	./build pgcryptokey
+pgmeminfo:
+	./build pgmeminfo
+pguint:
+	./build pguint 13 14 15 16 17
+temporal_tables:
+	./build temporal_tables
+sslutils:
+	./build sslutils
+
 
 # missing PG major version
 kafka_fdw:
@@ -419,14 +437,9 @@ libarrow-s3:
 parquet_s3_fdw:
 	./build parquet_s3_fdw 16
 
-unit:
-	./build unit 16
-
 mysqlcompat:
 	./build mysqlcompat 16
 
-sslutils:
-	./build sslutils 12 13 14 15 16 17
 
 
 ###############################################################

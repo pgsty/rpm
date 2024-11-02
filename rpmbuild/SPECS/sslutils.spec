@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.3
+Version:	1.4
 Release:	1PIGSTY%{?dist}
 Summary:	A Postgres extension for managing SSL certificates through SQL.
 License:	PostgreSQL
@@ -62,21 +62,37 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{__make} %{?_smp_mflags} DESTDIR=%{buildroot} install
+
+# Install README-sslutils.txt
+%{__install} -d -m 755 %{buildroot}%{pginstdir}/share/doc/extension
+%{__cp} README.%{sname} %{buildroot}%{pginstdir}/share/doc/extension/README-%{sname}.txt
+
+%ifarch ppc64 ppc64le
+strip %{buildroot}%{pginstdir}/lib/*.so
+%endif
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
 
 %files
-#%doc README.md
-%{pginstdir}/lib/%{pname}.so
-%{pginstdir}/share/extension/%{pname}.control
-%{pginstdir}/share/extension/%{pname}*sql
+%defattr(-,root,root,-)
+%attr(644,root,root) %{pginstdir}/share/doc/extension/README-%{sname}.txt
+%{pginstdir}/lib/sslutils.so
+%{pginstdir}/share/extension/sslutils*.sql
 %{pginstdir}/share/extension/uninstall_sslutils.sql
+%{pginstdir}/share/extension/sslutils.control
+
 %if %llvm
 %files llvmjit
-   %{pginstdir}/lib/bitcode/*
+   %{pginstdir}/lib/bitcode/%{sname}*.bc
+   %{pginstdir}/lib/bitcode/%{sname}/*.bc
 %endif
-%exclude /usr/lib/.build-id/*
-#%exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.4
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.3
 - Initial RPM release, used by Pigsty <https://pigsty.io>

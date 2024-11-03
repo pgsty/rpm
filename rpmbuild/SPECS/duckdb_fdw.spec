@@ -13,16 +13,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.2
 Release:	1PIGSTY%{?dist}
 Summary:	DuckDB Foreign data wrapper extension for PostgreSQL.
 License:	MIT License
 URL:		https://github.com/alitrack/%{sname}
-Source0:	duckdb_fdw-%{version}.tar.gz
-# https://github.com/alitrack/duckdb_fdw/archive/refs/tags/v1.0.0.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
+# https://github.com/alitrack/duckdb_fdw/archive/refs/tags/v1.1.2.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server libduckdb = 1.0.0
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros
+Requires:	postgresql%{pgmajorversion}-server libduckdb = %{version}
 
 %description
 DuckDB Foreign Data Wrapper for PostgreSQL
@@ -49,13 +49,13 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
+BuildRequires:  llvm-devel >= 13.0 clang-devel >= 13.0
 Requires:	llvm => 13.0
 %endif
 
 %description llvmjit
 This packages provides JIT support for %{sname}
 %endif
-
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -82,6 +82,8 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
+* Sun Nov 03 2024 Vonng <rh@vonng.com> - 1.1.2
+- Bump libduckdb to 1.1.2 with PostgreSQL 17 support
 * Sat Jun 29 2024 Vonng <rh@vonng.com> - 1.0.0
 - Changing version schema to keep in sync with libduckdb
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.1

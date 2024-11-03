@@ -64,7 +64,7 @@ zhparser:
 
 # depend on libduckdb
 duckdb_fdw:
-	./build duckdb_fdw 12 13 14 15 16
+	./build duckdb_fdw
 
 hunspell:
 	./build hunspell_cs_cz

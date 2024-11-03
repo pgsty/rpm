@@ -319,7 +319,8 @@ temporal_tables:
 	./build temporal_tables
 sslutils:
 	./build sslutils
-
+pglogical_ticker:
+	./build pglogical_ticker
 
 # missing PG major version
 kafka_fdw:

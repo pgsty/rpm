@@ -21,7 +21,7 @@ URL:		https://github.com/enov/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros
-Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-server pglogical_%{pgmajorversion}
 
 %description
 

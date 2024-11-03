@@ -1,12 +1,12 @@
 %define debug_package %{nil}
 Name:           libduckdb
-Version:        1.0.0
+Version:        1.1.2
 Release:        1PIGSTY%{?dist}
 Summary:        In-process SQL OLAP Database Management System
 License:        MIT License
 URL:            https://github.com/duckdb/duckdb/
 Source0:        libduckdb-%{version}.tar.gz
-# https://github.com/duckdb/duckdb/releases/download/v1.0.0/libduckdb-src.zip
+# https://github.com/duckdb/duckdb/releases/download/v1.1.2/libduckdb-src.zip
 
 %description
 DuckDB is a high-performance analytical database system.
@@ -36,6 +36,7 @@ install -m 0755 libduckdb.so %{buildroot}/usr/lib64
 /sbin/ldconfig
 
 %changelog
+* Sun Nov 03 2024 Vonng <rh@vonng.com> - 1.1.2
 * Fri Jun 28 2024 Vonng <rh@vonng.com> - 1.0.0
 * Sat Apr 27 2024 Vonng <rh@vonng.com> - 0.10.2
 * Tue Jan 30 2024 Vonng <rh@vonng.com> - 0.9.2

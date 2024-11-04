@@ -13,7 +13,8 @@ SOURCE0:    pg_mooncake-%{version}.tar.gz
 #           https://github.com/pg_mooncake/pg_mooncake/archive/refs/tags/v0.0.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server pg_duckdb_%{pgmajorversion}
+Requires:	postgresql%{pgmajorversion}-server
+# we will use pg_duckdb's libduckdb instead to avoid conflict later
 
 %description
 pg_mooncake is a PostgreSQL extension that adds native columnstore tables with DuckDB execution.
@@ -35,6 +36,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id/*
+
 %changelog
 * Thu Oct 31 2024 Vonng <rh@vonng.com> - 0.0.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -1,6 +1,10 @@
 ## 2024-12-10
 
-- pgpdf (depend on libpoppler-glib-dev / poppler-glib-devel) 0.1.0 https://github.com/Florents-Tselai/pgpdf
+- pgpdf (depend on libpoppler-glib-dev / poppler-glib-devel) 0.1.0 https://github.com/Florents-Tselai/pgpdf feat
+- vchord https://github.com/tensorchord/VectorChord 0.1.0 rag
+- pgvectorscale https://github.com/timescale/pgvectorscale/releases/tag/0.5.1 0.5.1 rag
+- 
+
 
 
 ## 2024-10-20

@@ -8,7 +8,7 @@
 # License   :   AGPLv3
 #==============================================================#
 
-DEVEL_PATH = sv:/data/pgsql-rpm
+DEVEL_PATH = sv:/data/rpm
 
 ###############################################################
 #                        1. Building                          #
@@ -98,21 +98,21 @@ el-src:
 # push to building server, then deliver to el building VMs
 ps: push-ss
 push-ss: push
-	ssh -t sv "cd /data/pgsql-rpm && make push-el"
+	ssh -t sv "cd /data/rpm && make push-el"
 psa: push-ssa
 push-ssa: push
-	ssh -t sv "cd /data/pgsql-rpm && make push-el"
+	ssh -t sv "cd /data/rpm && make push-el"
 
 pl: pull-ss
 pull-ss:
-	ssh -t sv "cd /data/pgsql-rpm && make pull-el"
+	ssh -t sv "cd /data/rpm && make pull-el"
 	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
 pull-rpm:
-	rsync -avc --delete sv:/data/pgsql-rpm/rpmbuild/RPMS/ rpmbuild/RPMS/
+	rsync -avc --delete sv:/data/rpm/rpmbuild/RPMS/ rpmbuild/RPMS/
 
 pp: pull-ssp
 pull-ssp:
-	ssh -t sv "cd /data/pgsql-rpm && make pull-el repo7 repo8 repo9"
+	ssh -t sv "cd /data/rpm && make pull-el repo7 repo8 repo9"
 	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
 
 

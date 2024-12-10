@@ -1,4 +1,4 @@
-# pgsql-rpm: build rpm for PostgreSQL Extensions
+# PGSTY/RPM: build rpm for PostgreSQL Extensions
 
 PostgreSQL Extensions that **NOT** included in the official PGDG repo used by [Pigsty](https://pigsty.io).
 
@@ -6,7 +6,7 @@ Related Projects:
 
 - [`pgsql/pkg`](https://github.com/pgsty/pkg): Infra Packages, PostgreSQL Deps, ParadeDB, DuckDB, etc.
 - [`infra_pkg`](https://github.com/pgsty/infra-pkg): Building observability stack & modules from tarball
-- [`pgsql-rpm`](https://github.com/pgsty/pgsql-rpm): Building PostgreSQL RPM packages from source code
+- [`rpm`](https://github.com/pgsty/rpm): Building PostgreSQL RPM packages from source code
 - [`pgsql-deb`](https://github.com/pgsty/pgsql-deb): Building PostgreSQL DEB packages from source code
 
 --------

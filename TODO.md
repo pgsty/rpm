@@ -1,3 +1,7 @@
+## 2024-12-10
+
+- pgpdf (depend on libpoppler-glib-dev / poppler-glib-devel) 0.1.0 https://github.com/Florents-Tselai/pgpdf
+
 
 ## 2024-10-20
 

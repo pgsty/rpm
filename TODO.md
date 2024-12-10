@@ -1,11 +1,16 @@
 ## 2024-12-10
-
-- pgpdf (depend on libpoppler-glib-dev / poppler-glib-devel) 0.1.0 https://github.com/Florents-Tselai/pgpdf feat
-- vchord https://github.com/tensorchord/VectorChord 0.1.0 rag
+ 
+- vchord https://github.com/tensorchord/VectorChord 0.1.0 rag    14 -17
 - pgvectorscale https://github.com/timescale/pgvectorscale/releases/tag/0.5.1 0.5.1 rag
-- 
-
-
+- pg_bestmatch.rs 0.0.1 pgrx 0.12.9 rag
+- vchord-bm25 TBD
+- pglite_fusion https://github.com/frectonz/pglite-fusion 0.0.3 type
+- pgpdf (depend on libpoppler-glib-dev / poppler-glib-devel) 0.1.0 https://github.com/Florents-Tselai/pgpdf feat
+- pg_parquet 0.1.0 -> 0.1.1
+- pg_search 0.13.0 -> 0.13.1
+- pg_polyline 0.0.1
+- pg_cardano 1.0.2 -> 1.0.3
+- pg_vectorize rollback to 0.19.1
 
 ## 2024-10-20
 

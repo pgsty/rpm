@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.0
+Version:	0.0.1
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL Extension for Text Summarization using Rust and OpenAI
 License:	Unlicensed
@@ -39,5 +39,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.0.1
 * Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.0.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

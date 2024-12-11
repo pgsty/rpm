@@ -56,7 +56,8 @@ pg_filedump:
 ###############################################################
 #                      The 1st Batch                          #
 ###############################################################
-batch1: zhparser duckdb_fdw hunspell hydra age age15 pg_tde pgjwt vault supautils index_advisor plv8 pg_duckdb
+batch1: zhparser duckdb_fdw hunspell hydra age age15 pg_tde pgjwt vault supautils index_advisor
+batch1a: plv8 pg_duckdb pg_mooncake
 
 # depend on scws
 zhparser:
@@ -74,9 +75,9 @@ hunspell:
 	./build hunspell_ne_np
 	./build hunspell_nl_nl
 	./build hunspell_nn_no
-	./build hunspell_pt_pt
 	./build hunspell_ru_ru
 	./build hunspell_ru_ru_aot
+	#./build hunspell_pt_pt
 
 hydra:
 	./build hydra 13 14 15 16 #17 not ready yet
@@ -362,9 +363,14 @@ pg4ml:
 ###############################################################
 #               6. RUST / PGRX Extensions                     #
 ###############################################################
-rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
+rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale vchord pglite_fusion pg_bestmatch
 rust2: pgml plprql pg_later pg_smtp_client
 rust3: pgdd
+
+rusta: pg_graphql pg_jsonschema wrappers
+rustb: pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui
+rustc: pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
+rustd: vchord pglite_fusion pg_bestmatch
 
 # pgrx 0.12.7
 pg_graphql:
@@ -397,6 +403,13 @@ pgvectorscale:
 	./build pgvectorscale nodebug 13 14 15 16 17
 pg_session_jwt:
 	./build pg_session_jwt nodebug 14 15 16 17
+vchord:
+	./build vchord nodebug 14 15 16 17
+pglite_fusion:
+	./build pglite_fusion nodebug
+pg_bestmatch:
+	./build pg_bestmatch nodebug
+
 
 # pgrx 0.11.4
 pgml:
@@ -408,38 +421,9 @@ pg_later:
 pg_smtp_client:
 	./build pg_smtp_client nodebug 14 15 16 17
 
-
 # pgrx 0.10.x
 pgdd:
 	./build pgdd nodebug
-
-
-
-###############################################################
-#                         Obsolete                            #
-###############################################################
-
-pg_search:
-	./build pg_search 12 13 14 15 16 17
-
-pg_lakehouse:
-	./build pg_search 15 16
-
-pg_analytics:
-	./build pg_analytics 15 16 17
-
-pg_tier:
-	./build pg_tier 16
-
-libarrow-s3:
-	rm -rf ~/rpmbuild/RPMS/x86_64/libarrow-s3*.rpm;
-	rpmbuild -ba ~/rpmbuild/SPECS/libarrow-s3.spec
-
-parquet_s3_fdw:
-	./build parquet_s3_fdw 16
-
-mysqlcompat:
-	./build mysqlcompat 16
 
 
 

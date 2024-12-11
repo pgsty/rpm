@@ -7,10 +7,12 @@
 - pglite_fusion https://github.com/frectonz/pglite-fusion 0.0.3 type
 - pgpdf (depend on libpoppler-glib-dev / poppler-glib-devel) 0.1.0 https://github.com/Florents-Tselai/pgpdf feat
 - pg_parquet 0.1.0 -> 0.1.1
-- pg_search 0.13.0 -> 0.13.1
 - pg_polyline 0.0.1
 - pg_cardano 1.0.2 -> 1.0.3
 - pg_vectorize 0.20.0
+- pg_duckdb 0.1.0 -> 0.2.0
+- pg_search 0.13.0 -> 0.13.1 (download)
+
 
 ## 2024-10-20
 

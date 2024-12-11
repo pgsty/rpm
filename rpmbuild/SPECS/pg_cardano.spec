@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.2
+Version:	1.0.3
 Release:	1PIGSTY%{?dist}
 Summary:	Cardano-related tools, including cryptographic functions, address encoding/decoding, and blockchain data processing.
 License:	MIT
@@ -39,5 +39,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Dec 10 2024 Vonng <rh@vonng.com> - 1.0.3
 * Sat Oct 19 2024 Vonng <rh@vonng.com> - 1.0.2
 - Initial RPM release, used by Pigsty <https://pigsty.io>

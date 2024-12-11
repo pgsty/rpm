@@ -68,6 +68,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
+%{pginstdir}/share/extension/pg_proctab*
 %if %llvm
 %files llvmjit
    %{pginstdir}/lib/bitcode/*

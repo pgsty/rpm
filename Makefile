@@ -75,11 +75,11 @@ pull9:
 
 pull-ela: pull9 pull8 #pull7
 pull7a:
-	rsync -avc el7:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el7.aarch64/ || true
+	rsync -avc el7:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el7.aarch64/ || true
 pull8a:
-	rsync -avc el8:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el8.aarch64/ || true
+	rsync -avc el8:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el8.aarch64/ || true
 pull9a:
-	rsync -avc el9:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el9.aarch64/ || true
+	rsync -avc el9:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el9.aarch64/ || true
 
 # sync building specs with el VMs
 el-dir:

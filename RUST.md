@@ -68,8 +68,8 @@ source "$HOME/.cargo/env"
 
 ```bash
 cargo install --locked cargo-pgrx@0.12.9  # build latest extensions
-cargo install --locked cargo-pgrx@0.11.4  # build most extensions
-cargo install --locked cargo-pgrx@0.10.2  # build pgdd & pg_tiktoken
+cargo install --locked cargo-pgrx@0.11.4  # build some extensions
+cargo install --locked cargo-pgrx@0.10.2  # build pgdd
 cargo pgrx init
 ```
 
@@ -82,9 +82,14 @@ Build with `rpmbuild`:
 ```bash
 cd ~/rpmbuild/
 
-make rust: pg_search pg_lakehouse pg_graphql pg_jsonschema wrappers pgmq pg_vectorize pg_later plprql pg_idkit pgsmcrypto pgvectorscale
-make pgdd pg_tiktoken 
-make pgml # extra setup on el9
+rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale vchord pglite_fusion pg_bestmatch pg_later
+rust2: pgml plprql
+rust3: pgdd
+
+rusta: pg_graphql pg_jsonschema wrappers pg_idkit pg_later
+rustb: pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui
+rustc: pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
+rustd: vchord pglite_fusion pg_bestmatch pg_session_jwt pg_smtp_client
 ```
 
 

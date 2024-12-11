@@ -79,7 +79,7 @@ hunspell:
 	./build hunspell_nn_no
 	./build hunspell_ru_ru
 	./build hunspell_ru_ru_aot
-	#./build hunspell_pt_pt
+	./build hunspell_pt_pt
 
 hydra:
 	./build hydra 13 14 15 16 #17 not ready yet
@@ -195,10 +195,10 @@ toastinfo:
 #                      The 3rd Batch                          #
 ###############################################################
 batch3: pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior \
-	aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random \
+	aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_random \
 	session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis url_encode pg_ecdsa pg_cheat_funcs pg_crash pg_math \
-	firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3
+	firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 pg_timeit
 
 pg_orphaned:
 	./build pg_orphaned
@@ -226,8 +226,6 @@ quantile:
 	./build quantile
 lower_quantile:
 	./build lower_quantile
-pg_timeit:
-	./build pg_timeit
 pg_random:
 	./build pg_random
 session_variable:
@@ -286,6 +284,8 @@ aws_s3:
 	./build aws_s3 nodebug
 pg_snakeoil:
 	./build pg_snakeoil
+pg_timeit:
+	./build pg_timeit
 
 
 ###############################################################
@@ -367,16 +367,16 @@ pgsodium:
 ###############################################################
 #               6. RUST / PGRX Extensions                     #
 ###############################################################
-rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale vchord pglite_fusion pg_bestmatch
-rust2: pgml plprql pg_later pg_smtp_client
+rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale vchord pglite_fusion pg_bestmatch pg_later pg_smtp_client
+rust2: pgml plprql
 rust3: pgdd
 
-rusta: pg_graphql pg_jsonschema wrappers pg_idkit
+rusta: pg_graphql pg_jsonschema wrappers pg_idkit pg_later
 rustb: pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui
 rustc: pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
-rustd: vchord pglite_fusion pg_bestmatch
+rustd: vchord pglite_fusion pg_bestmatch pg_session_jwt pg_smtp_client
 
-# pgrx 0.12.7
+# pgrx 0.12.9
 pg_graphql:
 	./build pg_graphql nodebug 14 15 16 17
 pg_jsonschema:
@@ -413,6 +413,10 @@ pglite_fusion:
 	./build pglite_fusion nodebug
 pg_bestmatch:
 	./build pg_bestmatch nodebug
+pg_later:
+	./build pg_later nodebug 13 14 15 16 17
+pg_smtp_client:
+	./build pg_smtp_client nodebug 14 15 16 17
 
 
 # pgrx 0.11.4
@@ -420,10 +424,6 @@ pgml:
 	./build pgml nodebug 14 15 16 17
 plprql:
 	./build plprql nodebug 12 13 14 15 16
-pg_later:
-	./build pg_later nodebug 13 14 15 16 17
-pg_smtp_client:
-	./build pg_smtp_client nodebug 14 15 16 17
 
 # pgrx 0.10.x
 pgdd:
@@ -453,8 +453,9 @@ rm-srpm:
 	batch2 pg_roaringbitmap pg_sqlog pg_hashids postgres_shacrypt permuteseq imgsmlr pg_similarity md5hash preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo \
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
-	batch4 geoip plproxy table_version kafka_fdw log_fdw pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml \
-	rust rust1 rust2 rust3 pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale pg_session_jwt pgml plprql pg_later pg_smtp_client pgdd \
+	batch4 geoip plproxy table_version kafka_fdw log_fdw pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml pgpdf \
+	rust rust1 rust2 rust3 rusta rustb rustc rustd \
+	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale vchord pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd \
 	ls-rpm ls-srpm rm-rpm rm-srpm
 
 

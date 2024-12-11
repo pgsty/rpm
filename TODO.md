@@ -10,7 +10,7 @@
 - pg_search 0.13.0 -> 0.13.1
 - pg_polyline 0.0.1
 - pg_cardano 1.0.2 -> 1.0.3
-- pg_vectorize rollback to 0.19.1
+- pg_vectorize 0.20.0
 
 ## 2024-10-20
 

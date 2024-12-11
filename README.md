@@ -65,14 +65,14 @@ Related Projects:
 | pg_later       | pg_later       | 0.2.0   | https://github.com/tembo-io/pg_later                    | PostgreSQL | {17,16,15,14,13}    | {pgmq}                |
 | pgml           | pgml           | 2.9.3   | https://github.com/postgresml/postgresml                | MIT        | {16,15,14}          |                       |
 | vectorize      | pg_vectorize   | 0.20.0  | https://github.com/tembo-io/pg_vectorize                | PostgreSQL | {17,16,15,14}       | {pg_cron,pgmq,vector} |
-| pg_summarize   | pg_summarize   | 0.0.0   | https://github.com/HexaCluster/pg_summarize             | PostgreSQL | {17,16,15,14,13,12} |                       |
-| pg_parquet     | pg_parquet     | 0.1.0   | https://github.com/CrunchyData/pg_parquet/              | PostgreSQL | {17,16,15,14}       |                       |
-| plprql         | plprql         | 0.1.0   | https://github.com/kaspermarstal/plprql                 | Apache-2.0 | {16,15,14,13,12}    |                       |
+| pg_summarize   | pg_summarize   | 0.0.1   | https://github.com/HexaCluster/pg_summarize             | PostgreSQL | {17,16,15,14,13,12} |                       |
+| pg_parquet     | pg_parquet     | 0.1.1   | https://github.com/CrunchyData/pg_parquet/              | PostgreSQL | {17,16,15,14}       |                       |
+| plprql         | plprql         | 1.0.0   | https://github.com/kaspermarstal/plprql                 | Apache-2.0 | {16,15,14,13,12}    |                       |
 | pg_polyline    | pg_polyline    | 0.0.1   | https://github.com/yihong0618/pg_polyline               | MIT        | {17,16,15,14,13,12} |                       |
 | wrappers       | wrappers       | 0.4.3   | https://github.com/supabase/wrappers                    | Apache-2.0 | {17,16,15,14}       |                       |
 | pg_graphql     | pg_graphql     | 1.5.9   | https://github.com/supabase/pg_graphql                  | Apache-2.0 | {17,16,15,14}       |                       |
 | pg_jsonschema  | pg_jsonschema  | 0.3.3   | https://github.com/supabase/pg_jsonschema               | Apache-2.0 | {17,16,15,14,13,12} |                       |
-| pg_cardano     | pg_cardano     | 1.0.2   | https://github.com/Fell-x27/pg_cardano                  | MIT        | {17,16,15,14,13,12} |                       |
+| pg_cardano     | pg_cardano     | 1.0.3   | https://github.com/Fell-x27/pg_cardano                  | MIT        | {17,16,15,14,13,12} |                       |
 | pg_smtp_client | pg_smtp_client | 0.2.0   | https://github.com/brianpursley/pg_smtp_client          | MIT        | {17,16,15,14}       |                       |
 | pg_idkit       | pg_idkit       | 0.2.4   | https://github.com/VADOSWARE/pg_idkit                   | Apache-2.0 | {17,16,15,14,13,12} |                       |
 | pg_base58      | pg_base58      | 0.0.1   | https://github.com/Fell-x27/pg_base58                   | MIT        | {17,16,15,14,13,12} |                       |
@@ -83,6 +83,12 @@ Related Projects:
 | vectorscale    | pgvectorscale  | 0.5.1   | https://github.com/timescale/pgvectorscale              | PostgreSQL | {17,16,15,14,13}    | {vector}              |
 | pg_tiktoken    | pg_tiktoken    | 0.0.1   | https://github.com/kelvich/pg_tiktoken                  | Apache-2.0 | {17,16,15,14,13,12} |                       |
 
+```bash
+make pg_cardano pg_smtp_client pg_idkit pg_base58 pg_explain_ui pg_session_jwt pgsmcrypto pg_tiktoken
+
+rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
+rust2: pgml plprql pg_later pg_smtp_client
+```
 
 | Vendor        | Name                                                       | Version | PGRX                                                                                            | License                                                                     | PG Ver            | Deps          |
 |---------------|------------------------------------------------------------|---------|-------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|-------------------|---------------|

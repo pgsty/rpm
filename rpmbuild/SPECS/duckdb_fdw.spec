@@ -27,7 +27,7 @@ Requires:	postgresql%{pgmajorversion}-server libduckdb = %{version}
 %description
 DuckDB Foreign Data Wrapper for PostgreSQL
 This is a foreign data wrapper (FDW) to connect PostgreSQL to DuckDB database file.
-This FDW works with PostgreSQL 9.6 ... 16 and compiled with exact same version of libduckdb.
+This FDW works with PostgreSQL 9.6 ... 17 and compiled with exact same version of libduckdb.
 
 %if %llvm
 %package llvmjit

@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.2.0
 Release:	1PIGSTY%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT License
@@ -82,5 +82,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
+* Wed Dec 11 2024 Vonng <rh@vonng.com> -0.2.0
 * Thu Oct 24 2024 Vonng <rh@vonng.com> -0.1.0
 - the first public release, used by Pigsty <https://pigsty.io>

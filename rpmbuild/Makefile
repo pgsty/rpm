@@ -195,7 +195,7 @@ toastinfo:
 batch3: pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior \
 	aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random \
 	session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
-	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math \
+	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis url_encode pg_ecdsa pg_cheat_funcs pg_crash pg_math \
 	firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3
 
 pg_orphaned:
@@ -289,8 +289,10 @@ pg_snakeoil:
 ###############################################################
 #                      The 4th Batch                          #
 ###############################################################
-batch4: geoip plproxy table_version ddlx postgresql_anonymizer count_distinct pg_fkpart pg_store_plan pgcryptokey pgmeminfo pguint temporal_tables sslutils
-batch5: kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter
+batch4: geoip plproxy table_version ddlx postgresql_anonymizer count_distinct \
+	pg_fkpart pg_store_plan pgcryptokey pgmeminfo pguint temporal_tables sslutils \
+	kafka_fdw log_fdw pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries \
+	pg_plan_filter pg_uint128 pg_relusage pg_net pg4ml pgpdf pglogical_ticker pgsodium
 
 # missing packages in PGDG repo (with un-aligned versions)
 geoip:
@@ -328,8 +330,6 @@ kafka_fdw:
 	./build kafka_fdw 12 13 14 15 16
 log_fdw:
 	./build log_fdw 14 15 16 17
-pg_mon:
-	./build pg_mon
 pgqr:
 	./build pgqr
 pg_zstd:
@@ -354,10 +354,12 @@ pg_relusage:
 	./build pg_relusage
 pg_net:
 	./build pg_net
-pgsodium:
-	./build pgsodium 17
 pg4ml:
 	./build pg4ml
+pgpdf:
+	./build pgpdf
+pgsodium:
+	./build pgsodium 17
 
 
 ###############################################################
@@ -367,8 +369,8 @@ rust1: pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summ
 rust2: pgml plprql pg_later pg_smtp_client
 rust3: pgdd
 
-rusta: pg_graphql pg_jsonschema wrappers
-rustb: pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui
+rusta: pg_graphql pg_jsonschema wrappers pg_idkit
+rustb: pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui
 rustc: pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
 rustd: vchord pglite_fusion pg_bestmatch
 
@@ -417,7 +419,7 @@ pgml:
 plprql:
 	./build plprql nodebug 12 13 14 15 16
 pg_later:
-	./build pg_later nodebug 13 14 15 16
+	./build pg_later nodebug 13 14 15 16 17
 pg_smtp_client:
 	./build pg_smtp_client nodebug 14 15 16 17
 
@@ -449,7 +451,7 @@ rm-srpm:
 	batch2 pg_roaringbitmap pg_sqlog pg_hashids postgres_shacrypt permuteseq imgsmlr pg_similarity md5hash preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo \
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
-	batch4 geoip plproxy table_version kafka_fdw log_fdw pg_mon pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml \
+	batch4 geoip plproxy table_version kafka_fdw log_fdw pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml \
 	rust rust1 rust2 rust3 pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale pg_session_jwt pgml plprql pg_later pg_smtp_client pgdd \
 	ls-rpm ls-srpm rm-rpm rm-srpm
 

@@ -12,6 +12,14 @@
 - pg_vectorize 0.20.0
 - pg_duckdb 0.1.0 -> 0.2.0
 - pg_search 0.13.0 -> 0.13.1 (download)
+- postgresql_anonymizer: https://github.com/daamien/postgresql_anonymizer/tree/latest v2.0 with rust
+- pgmq 1.4.5
+
+el8: 
+- remove pg_mon
+- + pg_relusage pg_uint128 pg4ml pg_net pglogical_ticker pgnodemx url_encode
+- postgresql-unit @ 16
+- aggs_for_vecs 1.3.1 -> 1.3.2
 
 
 ## 2024-10-20

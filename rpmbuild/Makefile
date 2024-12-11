@@ -2,12 +2,14 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-10-30
+# Mtime     :   2024-12-11
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
 #==============================================================#
 
+
+ARCH=x86_64
 
 ###############################################################
 #                        1. Info                              #
@@ -25,31 +27,31 @@ deps: scws scws-install libduckdb libduckdb-install pg_filedump
 # scws (deps of zhparser)
 #---------------------------------------------#
 scws:
-	rm -rf ~/rpmbuild/RPMS/x86_64/scws*.rpm /tmp/pigsty-rpm/RPMS/scws*.rpm
+	rm -rf ~/rpmbuild/RPMS/$(ARCH)/scws*.rpm /tmp/pigsty-rpm/RPMS/scws*.rpm
 	QA_RPATHS=2 rpmbuild -ba ~/rpmbuild/SPECS/scws.spec
 
 # scws is required when building zhparser
 scws-install:
 	sudo yum remove -y scws || /bin/true
-	sudo rpm -ivh ~/rpmbuild/RPMS/x86_64/scws-1.2.3-1PIGSTY.el*.x86_64.rpm
+	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/scws-1.2.3-1PIGSTY.el*.$(ARCH).rpm
 
 #---------------------------------------------#
 # libduckdb (deps of duckdb_fdw)
 #---------------------------------------------#
 libduckdb:
-	rm -rf ~/rpmbuild/RPMS/x86_64/libduckdb*.rpm;
+	rm -rf ~/rpmbuild/RPMS/$(ARCH)/libduckdb*.rpm;
 	rpmbuild --without debuginfo -ba ~/rpmbuild/SPECS/libduckdb.spec
 
 # scws is required when building zhparser
 libduckdb-install:
 	sudo yum remove -y libduckdb || /bin/true
-	sudo rpm -ivh ~/rpmbuild/RPMS/x86_64/libduckdb-1.*.el*.x86_64.rpm
+	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/libduckdb-1.*.el*.$(ARCH).rpm
 
 #---------------------------------------------#
 # pg_filedump (lz4-devel libzstd-devel)
 #---------------------------------------------#
 pg_filedump:
-	rm -rf ~/rpmbuild/RPMS/x86_64/pg_filedump*.rpm;
+	rm -rf ~/rpmbuild/RPMS/$(ARCH)/pg_filedump*.rpm;
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_filedump.spec
 
 
@@ -83,11 +85,11 @@ hydra:
 	./build hydra 13 14 15 16 #17 not ready yet
 
 age:
-	rm -rf ~/rpmbuild/RPMS/x86_64/age*.rpm;
+	rm -rf ~/rpmbuild/RPMS/$(ARCH)/age*.rpm;
 	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/age16.spec
 
 age15:
-	rm -rf ~/rpmbuild/RPMS/x86_64/age*.rpm;
+	rm -rf ~/rpmbuild/RPMS/$(ARCH)/age*.rpm;
 	rpmbuild --define "pgmajorversion 15" -ba ~/rpmbuild/SPECS/age15.spec
 
 pg_tde:
@@ -433,7 +435,7 @@ pgdd:
 #                     RPM & SRPM                              #
 ###############################################################
 ls-rpm:
-	ls -alh  ~/rpmbuild/RPMS/x86_64/
+	ls -alh  ~/rpmbuild/RPMS/$(ARCH)/
 ls-srpm:
 	ls -alh  ~/rpmbuild/SRPMS/
 rm-rpm:

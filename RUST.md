@@ -18,7 +18,7 @@ rpmdev-setuptree
 ## Env & Proxy
 
 ```bash
-PROXY=http://192.168.0.105:8118
+PROXY=http://192.168.0.107:8118
 
 PROXY=http://127.0.0.1:1081
 export HTTP_PROXY=${PROXY}

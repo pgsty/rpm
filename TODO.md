@@ -13,7 +13,6 @@
 - pg_duckdb 0.1.0 -> 0.2.0
 - pg_search 0.13.0 -> 0.13.1 (download)
 - postgresql_anonymizer: https://github.com/daamien/postgresql_anonymizer/tree/latest v2.0 with rust
-- pgmq 1.4.5
 
 el8: 
 - remove pg_mon

@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-12-11
+# Mtime     :   2024-12-12
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -112,10 +112,8 @@ plv8:
 	./build plv8
 
 pg_duckdb:
-	./build pg_duckdb 15 16 17
+	./build pg_duckdb 14 15 16 17
 
-pg_mooncake:
-	./build pg_mooncake 15 16 17
 
 
 ###############################################################
@@ -385,6 +383,9 @@ wrappers:
 	./build wrappers nodebug 14 15 16 17
 pg_idkit:
 	./build pg_idkit nodebug
+pg_later:
+	./build pg_later nodebug 13 14 15 16 17
+
 pgsmcrypto:
 	./build pgsmcrypto nodebug
 pg_tiktoken:
@@ -413,8 +414,7 @@ pglite_fusion:
 	./build pglite_fusion nodebug
 pg_bestmatch:
 	./build pg_bestmatch nodebug
-pg_later:
-	./build pg_later nodebug 13 14 15 16 17
+
 pg_smtp_client:
 	./build pg_smtp_client nodebug 14 15 16 17
 

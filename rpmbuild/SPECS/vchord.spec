@@ -12,7 +12,7 @@ URL:		https://github.com/tensorchord/VectorChord
 Source0:	vchord-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0
 
 %description
 VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-performance, and disk-efficient vector similarity search, and serves as the successor to pgvecto.rs.

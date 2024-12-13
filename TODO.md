@@ -1,9 +1,8 @@
 ## 2024-12-10
  
-- vchord https://github.com/tensorchord/VectorChord 0.1.0 rag    14 -17
+- vchord https://github.com/tensorchord/VectorChord 0.1.0 rag    14 -17 (deps)
 - pgvectorscale https://github.com/timescale/pgvectorscale/releases/tag/0.5.1 0.5.1 rag
-- pg_bestmatch.rs 0.0.1 pgrx 0.12.9 rag
-- vchord-bm25 TBD
+- pg_bestmatch.rs https://github.com/tensorchord/pg_bestmatch.rs 0.0.1 pgrx 0.12.9 rag
 - pglite_fusion https://github.com/frectonz/pglite-fusion 0.0.3 type
 - pgpdf (depend on libpoppler-glib-dev / poppler-glib-devel) 0.1.0 https://github.com/Florents-Tselai/pgpdf feat
 - pg_parquet 0.1.0 -> 0.1.1
@@ -12,13 +11,12 @@
 - pg_vectorize 0.20.0
 - pg_duckdb 0.1.0 -> 0.2.0
 - pg_search 0.13.0 -> 0.13.1 (download)
-- postgresql_anonymizer: https://github.com/daamien/postgresql_anonymizer/tree/latest v2.0 with rust
-
-el8: 
-- remove pg_mon
-- + pg_relusage pg_uint128 pg4ml pg_net pglogical_ticker pgnodemx url_encode
-- postgresql-unit @ 16
 - aggs_for_vecs 1.3.1 -> 1.3.2
+
+TODO:
+
+- postgresql_anonymizer: https://github.com/daamien/postgresql_anonymizer/tree/latest v2.0-rc2 with rust
+- vchord-bm25 TBD: https://github.com/tensorchord/VectorChord-bm25
 
 
 ## 2024-10-20

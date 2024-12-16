@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	4PIGSTY%{?dist}
 Summary:	Gzip compress and decompress for PostgreSQL
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-gzip

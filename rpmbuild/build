@@ -109,7 +109,7 @@ fi
 for ver in $VERSIONS; do
     MARCO="pgmajorversion $ver"
     log_line "${EXTENSION_NAME} for PG$ver"
-    export PATH=/usr/pgsql-${ver}/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;
+    export PATH=/usr/bin:/usr/pgsql-${ver}/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;
     log_hint "\$" rpmbuild "${DEBUG_OPT}" debuginfo --define \"${MARCO}\" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
     rpmbuild ${DEBUG_OPT} debuginfo --define "${MARCO}" -ba "${SPEC_FILE}"
 done

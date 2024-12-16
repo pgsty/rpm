@@ -52,7 +52,7 @@ libduckdb-install:
 #---------------------------------------------#
 pg_filedump:
 	rm -rf ~/rpmbuild/RPMS/$(ARCH)/pg_filedump*.rpm;
-	rpmbuild --define "pgmajorversion 16" -ba ~/rpmbuild/SPECS/pg_filedump.spec
+	PATH=/usr/bin:/usr/pgsql-17/bin:$PATH rpmbuild --define "pgmajorversion 17" -ba ~/rpmbuild/SPECS/pg_filedump.spec
 
 
 ###############################################################

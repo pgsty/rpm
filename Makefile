@@ -65,13 +65,13 @@ push9:
 pull-el: pull9 pull8 pull7
 pull7:
 	mkdir -p rpmbuild/RPMS/el7.x86_64/
-	rsync -avc --delete el7:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el7.x86_64/ || true
+	rsync -avc el7:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el7.x86_64/ || true
 pull8:
 	mkdir -p rpmbuild/RPMS/el8.x86_64/
-	rsync -avc --delete el8:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el8.x86_64/ || true
+	rsync -avc el8:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el8.x86_64/ || true
 pull9:
 	mkdir -p rpmbuild/RPMS/el9.x86_64/
-	rsync -avc --delete el9:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el9.x86_64/ || true
+	rsync -avc el9:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el9.x86_64/ || true
 
 pull-ela: pull9 pull8 #pull7
 pull7a:

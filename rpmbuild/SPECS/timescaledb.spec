@@ -1,12 +1,15 @@
 %global debug_package %{nil}
-%global sname	timescaledb
+%global sname timescaledb
+%global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Summary:	PostgreSQL based time-series database
-Name:		%{sname}_%{pgmajorversion}
+Name:		pg_%{sname}_%{pgmajorversion}
 Version:	2.17.2
-Release:	1PGDG%{?dist}
+Release:	1PIGSTY%{?dist}
 License:	Timescale
-Source0:	https://github.com/timescale/%{sname}/archive/%{version}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
+#           https://github.com/timescale/timescaledb/archive/2.17.2.tar.gz
+
 URL:		https://github.com/timescale/timescaledb
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros
 BuildRequires:	openssl-devel
@@ -26,24 +29,12 @@ time-series data. It is engineered up from PostgreSQL, providing automatic
 partitioning across time and space (partitioning key), as well as full SQL
 support.
 
-%package devel
-Summary:	Development portions of timescaledb-tsl
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-BuildRequires:	perl-Test-Harness
-
-%description devel
-This packages includes development portions of timescaledb-tsl.
-
 %prep
 %setup -q -n %{sname}-%{version}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%patch -P 1 -p0
-%endif
 
-# Disable telemetry, so that we can distribute it via PGDG repos:
+# Disable telemetry
 export PATH=%{pginstdir}/bin:$PATH
-./bootstrap -DSEND_TELEMETRY_DEFAULT=NO \
-	-DREGRESS_CHECKS=OFF
+./bootstrap -DSEND_TELEMETRY_DEFAULT=NO -DREGRESS_CHECKS=OFF
 
 %build
 export PATH=%{pginstdir}/bin:$PATH
@@ -66,10 +57,9 @@ cd build; %{__make} DESTDIR=%{buildroot} install
 %{pginstdir}/share/extension/%{sname}--*.sql
 %{pginstdir}/share/extension/%{sname}.control
 
-%files devel
-%{pginstdir}/lib/pgxs/src/test/perl/AccessNode.pm
-%{pginstdir}/lib/pgxs/src/test/perl/DataNode.pm
-%{pginstdir}/lib/pgxs/src/test/perl/TimescaleNode.pm
+%exclude %{pginstdir}/lib/pgxs/src/test/perl/AccessNode.pm
+%exclude %{pginstdir}/lib/pgxs/src/test/perl/DataNode.pm
+%exclude %{pginstdir}/lib/pgxs/src/test/perl/TimescaleNode.pm
 
 %changelog
 * Mon Dec 16 2024 Vonng <rh@vonng.com> - 2.17.2

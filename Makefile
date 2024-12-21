@@ -61,7 +61,7 @@ push8:
 push9:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9:~/rpmbuild/
 
-# fetch RPMS from building VMs
+# fetch RPMS from bucilding VMs
 pull-el: pull9 pull8 pull7
 pull7:
 	mkdir -p rpmbuild/RPMS/el7.x86_64/

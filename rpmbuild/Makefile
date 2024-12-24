@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-12-12
+# Mtime     :   2024-12-24
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -112,11 +112,12 @@ plv8:
 
 pg_duckdb:
 	./build pg_duckdb 14 15 16 17
-
 pgroonga:
 	./build pgroonga 13 14 15 16 17
 timescaledb:
 	./build timescaledb 14 15 16 17
+citus:
+	./build citus 14 15 16
 
 ###############################################################
 #                      The 2nd Batch                          #
@@ -451,7 +452,7 @@ rm-srpm:
 ###############################################################
 .PHONY: default deps scws scws-install libduckdb libduckdb-install \
 	deps scws scws-install libduckdb libduckdb-install pg_filedump \
-	batch1 zhparser duckdb_fdw hunspell hydra age age15 pg_tde pgjwt vault supautils index_advisor plv8 pg_duckdb pgroonga timescaledb \
+	batch1 zhparser duckdb_fdw hunspell hydra age age15 pg_tde pgjwt vault supautils index_advisor plv8 pg_duckdb pgroonga timescaledb citus \
 	batch2 pg_roaringbitmap pg_sqlog pg_hashids postgres_shacrypt permuteseq imgsmlr pg_similarity md5hash preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo \
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \

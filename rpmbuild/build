@@ -4,7 +4,7 @@
 # File      :   build
 # Desc      :   build an extension
 # Ctime     :   2024-10-13
-# Mtime     :   2024-12-11
+# Mtime     :   2025-01-08
 # Usage     :   build [nodebug] <extension> <versions...>
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
@@ -18,8 +18,8 @@ RPMS_DIR="${PROG_DIR}/RPMS"
 # Usage
 #--------------------------------------------------------------#
 # build [nodebug] <extension> <versions...>
-# ./build pg_roaringbitmap         12 13 14 15 16 17
-# ./build pgjwt            nodebug 12 13 14 15 16 17
+# ./build pg_roaringbitmap         13 14 15 16 17
+# ./build pgjwt            nodebug 13 14 15 16 17
 
 #--------------------------------------------------------------#
 # Log Util
@@ -55,11 +55,11 @@ fi
 
 VERSIONS=""
 if [ $# -eq 0 ]; then
-    VERSIONS="12 13 14 15 16 17"
+    VERSIONS="13 14 15 16 17"
 else
 
     # Validate versions
-    VALID_VERSIONS="12 13 14 15 16 17"
+    VALID_VERSIONS="13 14 15 16 17"
     for arg in "$@"; do
         found=false
         for ver in ${VALID_VERSIONS}; do

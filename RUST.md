@@ -18,9 +18,7 @@ rpmdev-setuptree
 ## Env & Proxy
 
 ```bash
-PROXY=http://192.168.0.107:8118
-
-PROXY=http://127.0.0.1:1081
+PROXY=http://127.0.0.1:12345
 export HTTP_PROXY=${PROXY}
 export HTTPS_PROXY=${PROXY}
 export ALL_PROXY=${PROXY}
@@ -72,6 +70,14 @@ cargo install --locked cargo-pgrx@0.11.4  # build some extensions
 cargo install --locked cargo-pgrx@0.10.2  # build pgdd
 cargo pgrx init
 ```
+
+
+```bash
+cargo pgrx init --pg13=/usr/pgsql-13/bin/pg_config --pg14=/usr/pgsql-14/bin/pg_config --pg15=/usr/pgsql-15/bin/pg_config --pg16=/usr/pgsql-16/bin/pg_config --pg17=/usr/pgsql-17/bin/pg_config
+cargo pgrx init --pg13=/usr/lib/postgresql/13/bin/pg_config --pg14=/usr/lib/postgresql/14/bin/pg_config --pg15=/usr/lib/postgresql/15/bin/pg_config --pg16=/usr/lib/postgresql/16/bin/pg_config --pg17=/usr/lib/postgresql/17/bin/pg_config
+```
+
+
 
 --------
 

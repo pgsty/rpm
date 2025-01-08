@@ -306,7 +306,6 @@ table_version:
 	./build table_version   # el8/el9
 ddlx:
 	./build ddlx
-anon: postgresql_anonymizer
 postgresql_anonymizer:
 	./build postgresql_anonymizer
 count_distinct:
@@ -388,6 +387,9 @@ pg_idkit:
 	./build pg_idkit nodebug
 pg_later:
 	./build pg_later nodebug 13 14 15 16 17
+pg_anon:
+	./build pg_anon nodebug 13 14 15 16 17
+
 
 pgsmcrypto:
 	./build pgsmcrypto nodebug

@@ -52,7 +52,7 @@ pulld:
 	rsync -avc --delete $(DEVEL_PATH)/ ./
 
 # push SRC to building VMs
-push-el: push9 push8 #push7
+push-el: push8 #push9 #push7
 push7:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el7:~/rpmbuild/
 	ssh el7 'cp -f ~/rpmbuild/Makefile.el7 ~/rpmbuild/Makefile'

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.2
+Version:	1.0.3
 Release:	1PIGSTY%{?dist}
 Summary:	generator of sequential UUIDs
 License:	PostgreSQL
@@ -83,5 +83,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Thu Jan 09 2025 Vonng <rh@vonng.com> - 1.0.3
+- with official pg16/17 support
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0.2
 - Initial RPM release, used by Pigsty <https://pigsty.io>

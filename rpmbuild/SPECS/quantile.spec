@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.1.7
+Version:	1.1.8
 Release:	1PIGSTY%{?dist}
 Summary:	Quantile aggregation function for PostgreSQL
 License:	BSD
@@ -77,5 +77,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Thu Jan 09 2025 Vonng <rh@vonng.com> - 1.1.8
+- Bump to v1.1.8 with official pg16/17 compatibility
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.1.7
 - Initial RPM release, used by Pigsty <https://pigsty.io>

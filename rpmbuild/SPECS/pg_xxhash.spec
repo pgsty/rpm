@@ -1,5 +1,5 @@
-%global pname pg_duration
-%global sname pg_duration
+%global pname xxhash
+%global sname pg_xxhash
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -13,21 +13,18 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.1
+Version:	0.0.1
 Release:	1PIGSTY%{?dist}
-Summary:	A PostgreSQL extension for a time based duration type.
-License:	MIT
-URL:		https://github.com/jkosh44/pg_duration
+Summary:	xxhash functions for PostgreSQL
+License:	PostgreSQL
+URL:		https://github.com/hatarist/pg_xxhash
 Source0:	%{sname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 xxhash-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-pg_duration is a PostgreSQL extension that adds a duration data type to PostgreSQL.
-duration allows users to store the total time of some event in their databases.
-duration is very similar to the builtin interval type, except duration does not have
-a months or days component, only a microsecond component.
+Think twice before even considering to use it in any serious environment.
 
 %if %llvm
 %package llvmjit
@@ -80,5 +77,5 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Fri Jan 10 2025 Ruohang Feng Vonng <rh@vonng.com> - 1.0.1
+* Fri Jan 10 2025 Vonng <rh@vonng.com> - 0.0.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

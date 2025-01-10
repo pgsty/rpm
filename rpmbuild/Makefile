@@ -363,6 +363,25 @@ pgpdf:
 pgsodium:
 	./build pgsodium 17
 
+omnisketch:
+	./build omnisketch
+ddsketch:
+	./build ddsketch
+pg_duration:
+	./build pg_duration 17
+ddl_historization:
+	./build ddl_historization
+data_historization:
+	./build data_historization
+schedoc:
+	./build schedoc
+floatfile:
+	./build floatfile
+pg_upless:
+	./build pg_upless
+
+
+
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #
@@ -419,7 +438,6 @@ pglite_fusion:
 	./build pglite_fusion nodebug
 pg_bestmatch:
 	./build pg_bestmatch nodebug
-
 pg_smtp_client:
 	./build pg_smtp_client nodebug 14 15 16 17
 

@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Summary:	PostgreSQL based time-series database
-Name:		pg_%{sname}_%{pgmajorversion}
+Name:		%{sname}-tsl_%{pgmajorversion}
 Version:	2.17.2
 Release:	1PIGSTY%{?dist}
 License:	Timescale

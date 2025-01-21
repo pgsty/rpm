@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.1
+Version:	0.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	Columnstore Table in Postgres
 License:	MIT
 URL:		https://github.com/Mooncake-Labs/pg_mooncake
 SOURCE0:    pg_mooncake-%{version}.tar.gz
-#           https://github.com/pg_mooncake/pg_mooncake/archive/refs/tags/v0.0.1.tar.gz
+#           https://github.com/pg_mooncake/pg_mooncake/archive/refs/tags/v0.1.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -38,5 +38,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Jan 21 2025 Vonng <rh@vonng.com> - 0.1.0
 * Thu Oct 31 2024 Vonng <rh@vonng.com> - 0.0.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

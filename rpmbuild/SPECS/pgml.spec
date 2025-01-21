@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	2.9.3
+Version:	2.10.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgresML is a complete MLOps platform in a PostgreSQL extension. Build simpler, faster and more scalable models right inside your database.
 License:	MIT license
@@ -40,6 +40,7 @@ cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Jan 21 2025 Vonng <rh@vonng.com> - 2.10.0
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 2.9.3
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 2.9.2
 * Mon Jan 22 2024 Vonng <rh@vonng.com> - 2.9.1

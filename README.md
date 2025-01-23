@@ -168,6 +168,13 @@ batch4: pg_orphaned pgcozy decoder_raw pg_failover_slots log_fdw index_advisor p
 batch5: aggs_for_arrays pgqr pg_zstd url_encode pg_geohash pg_meta pg_arraymath pagevis pg_ecdsa pg_cheat_funcs acl pg_crash pg_math sequential_uuids pgnodemx pg_protobuf pg_country pg_fio aws_s3 firebird_fdw # pg_redis_pubsub kafka_fdw pg_hashlib
 ```
 
+## Patch
+
+```bash
+vi src/pgduckdb/scan/postgres_seq_scan.cpp 76GPL
+tar -zcf pg_mooncake-0.1.0.tar.gz pg_mooncake-0.1.0
+```
+
 --------
 
 ## License

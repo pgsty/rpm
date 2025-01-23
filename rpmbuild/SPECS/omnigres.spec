@@ -10,7 +10,7 @@ Summary:	Postgres as a Platform
 License:	Apache-2.0
 URL:		https://github.com/omnigres/omnigres
 Source0:	omnigres-%{version}.tar.gz
-BuildRequires:	pgdg-srpm-macros >= 1.0.27 cmake postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-devel postgresql%{pgmajorversion}-contrib postgresql%{pgmajorversion}-plpython3 cpan python3.11-devel python3.11-pyparsing
+BuildRequires:	pgdg-srpm-macros >= 1.0.27 cmake postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-devel postgresql%{pgmajorversion}-contrib postgresql%{pgmajorversion}-plpython3 cpan python3.11-devel python3.11-pyparsing python3.11-pip
 Requires:	postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-contrib postgresql%{pgmajorversion}-plpython3
 
 %description

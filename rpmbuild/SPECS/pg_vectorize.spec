@@ -13,7 +13,7 @@ SOURCE0:    pg_vectorize-%{version}.tar.gz
 #           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.20.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1.1.1 pgvector_%{pgmajorversion} >= 0.7.0
+Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1.1.1 pgvector_%{pgmajorversion} >= 0.7.0 pg_cron_%{pgmajorversion}
 Recommends: pg_cron_%{pgmajorversion}
 
 %description

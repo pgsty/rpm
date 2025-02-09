@@ -6,12 +6,13 @@
 
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
-Version:	13.0.0
-Release:	1PIGSTY%{dist}
+Version:	13.0.1
+Release:	2PIGSTY%{dist}
 License:	AGPLv3
 URL:		https://github.com/citusdata/%{sname}
-Source0:    citus-%{version}.tar.gz
+Source0:    https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
 #Source0:	https://github.com/citusdata/%{sname}/archive/v%{version}.tar.gz
+
 BuildRequires:	postgresql%{pgmajorversion}-devel libxml2-devel
 BuildRequires:	libxslt-devel openssl-devel pam-devel readline-devel
 BuildRequires:	libcurl-devel pgdg-srpm-macros libzstd-devel
@@ -102,6 +103,8 @@ make %{?_smp_mflags}
 %endif
 
 %changelog
+* Sun Feb 09 2025 Vonng <rh@vonng.com> -13.0.1
+- Bump to 13.0.1
 * Thu Jan 23 2025 Vonng <rh@vonng.com> -13.0.0
 - Bump to 13.0.0 with PostgreSQL 17 support
 * Tue Dec 24 2024 Vonng <rh@vonng.com> -12.1.6

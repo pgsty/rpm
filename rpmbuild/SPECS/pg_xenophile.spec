@@ -31,11 +31,11 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
-%license LICENSE.txt
 %{pginstdir}/share/extension/*.control
 %{pginstdir}/share/extension/*sql
+%exclude %{pginstdir}/doc/*
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Thu Jan 23 2024 Vonng <rh@vonng.com> - 0.8.3
+* Thu Jan 23 2025 Vonng <rh@vonng.com> - 0.8.3
 - Initial RPM release, used by Pigsty <https://pigsty.io>

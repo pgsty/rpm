@@ -121,7 +121,7 @@ pgroonga:
 timescaledb:
 	./build timescaledb 14 15 16 17
 citus:
-	./build citus 14 15 16 17
+	./build citus nodebug 15 16 17
 
 ###############################################################
 #                      The 2nd Batch                          #

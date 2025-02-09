@@ -1,3 +1,4 @@
+%define debug_package %{nil}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global _build_id_links none
 %global sname citus
@@ -15,7 +16,7 @@ Source0:    https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel libxml2-devel
 BuildRequires:	libxslt-devel openssl-devel pam-devel readline-devel
-BuildRequires:	libcurl-devel pgdg-srpm-macros libzstd-devel
+BuildRequires:	libcurl-devel pgdg-srpm-macros libzstd-devel krb5-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -104,7 +105,7 @@ make %{?_smp_mflags}
 
 %changelog
 * Sun Feb 09 2025 Vonng <rh@vonng.com> -13.0.1
-- Bump to 13.0.1
+- Bump to 13.0.1 and drop PostgreSQL 14 support
 * Thu Jan 23 2025 Vonng <rh@vonng.com> -13.0.0
 - Bump to 13.0.0 with PostgreSQL 17 support
 * Tue Dec 24 2024 Vonng <rh@vonng.com> -12.1.6

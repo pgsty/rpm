@@ -6,11 +6,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.8
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Store execution plans like pg_stat_statements does for queries
 License:	PostgreSQL
 URL:		https://github.com/ossc-db/%{sname}/
-Source0:	%{sname}-%{version}.tar.gz
+Source0:	https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros
 Requires:	postgresql%{pgmajorversion}-server
@@ -77,5 +77,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sun Feb 09 2025 Vonng <rh@vonng.com> - 1.8-2PIGSTY
 * Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.8
 - Initial RPM release, used by Pigsty <https://pigsty.io>

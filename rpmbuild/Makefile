@@ -317,13 +317,13 @@ count_distinct:
 pg_fkpart:
 	./build pg_fkpart
 pg_store_plan:
-	./build pg_store_plan 12 13 14 15 16
+	./build pg_store_plan
 pgcryptokey:
 	./build pgcryptokey
 pgmeminfo:
 	./build pgmeminfo
 pguint:
-	./build pguint 13 14 15 16 17
+	./build pguint
 temporal_tables:
 	./build temporal_tables
 sslutils:

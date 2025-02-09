@@ -51,7 +51,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 13.0
+Requires:	llvm => 17.0
 %endif
 
 %description llvmjit

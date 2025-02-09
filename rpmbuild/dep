@@ -1,11 +1,11 @@
 #!/bin/bash
 # set -o pipefail
 #==============================================================#
-# File      :   build
-# Desc      :   build an extension (on el systems)
-# Ctime     :   2024-10-13
+# File      :   dep
+# Desc      :   install dependencies for an extension
+# Ctime     :   2025-02-09
 # Mtime     :   2025-02-09
-# Usage     :   build [nodebug] <extension> <versions...>
+# Usage     :   dep <extension>
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
 #==============================================================#
@@ -45,36 +45,6 @@ function log_line()  { printf "${__CM}[$*] =====================================
 # ARGS
 #--------------------------------------------------------------#
 EXTENSION_NAME=$1
-shift
-
-DEBUG_OPT="--with"
-if [[ "$1" == "nodebug" || "$1" == "nodbg" ]]; then
-    DEBUG_OPT="--without"
-    shift
-fi
-
-VERSIONS=""
-if [ $# -eq 0 ]; then
-    VERSIONS="13 14 15 16 17"
-else
-
-    # Validate versions
-    VALID_VERSIONS="10 11 12 13 14 15 16 17"
-    for arg in "$@"; do
-        found=false
-        for ver in ${VALID_VERSIONS}; do
-            if [ "${ver}" = "${arg}" ]; then
-                found="true"
-            fi
-        done
-        if [[ "${found}" != "true" ]]; then
-            log_error "invalid pg version: ${arg}"
-            exit 1
-        fi
-    done
-    VERSIONS=$@
-fi
-
 
 #--------------------------------------------------------------#
 # Check Spec
@@ -88,40 +58,8 @@ else
     exit 1
 fi
 
-cat ${SPEC_FILE} | grep -E '^Version:|^Release:|^Summary:|^License:|^URL:|^Source0:'
-
-
-#--------------------------------------------------------------#
-# Check RPMs
-#--------------------------------------------------------------#
-ARCH=$(uname -m)
-if [ -d "${RPMS_DIR}/${ARCH}" ]; then
-    log_line "${EXTENSION_NAME} rpms dir"
-    ls -alh ${RPMS_DIR}/${ARCH} | grep "${EXTENSION_NAME}"
-    log_warn "existing ${EXTENSION_NAME} rpms will be removed"
-    log_hint rm -rf "${RPMS_DIR}/${ARCH}/${EXTENSION_NAME}*.rpm"
-    rm -rf "${RPMS_DIR}/${ARCH}/${EXTENSION_NAME}*.rpm"
-fi
-
-
 #--------------------------------------------------------------#
 # Building for each pgmajorversion
 #--------------------------------------------------------------#
-for ver in $VERSIONS; do
-    MARCO="pgmajorversion $ver"
-    log_line "${EXTENSION_NAME} for PG$ver"
-    export PATH=/usr/bin:/usr/pgsql-${ver}/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;
-    log_hint "\$" rpmbuild "${DEBUG_OPT}" debuginfo --define \"${MARCO}\" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
-    rpmbuild ${DEBUG_OPT} debuginfo --define "${MARCO}" -ba "${SPEC_FILE}"
-done
-
-
-#--------------------------------------------------------------#
-# Print RPM List
-#--------------------------------------------------------------#
-log_line "${EXTENSION_NAME} rpms"
-log_info "${RPMS_DIR}"
-if [ -d "${RPMS_DIR}/x86_64" ]; then
-    ls -alh ${RPMS_DIR}/x86_64 | grep "${EXTENSION_NAME}"
-fi
-log_line "${EXTENSION_NAME} done"
+log_info "install dependencies for ${EXTENSION_NAME}"
+sudo dnf builddep -y --define "pgmajorversion 16" SPECS/${EXTENSION_NAME}.spec

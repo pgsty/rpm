@@ -119,7 +119,7 @@ pg_duckdb:
 pgroonga:
 	./build pgroonga 13 14 15 16 17
 timescaledb:
-	./build timescaledb 14 15 16 17
+	./build timescaledb nodebug 14 15 16 17
 citus:
 	./build citus nodebug 15 16 17
 
@@ -407,14 +407,14 @@ hashtypes:
 	./build hashtypes 14 15 16 17
 db_migrator:
 	./build db_migrator
+pg_cooldown:
+	./build pg_cooldown 13 14 15 16 17
 jsonb_apply:
 	./build jsonb_apply
 
-pg_mustach:
-	./build pg_mustach
 # not included
 logfmt:
-	./build logfmt
+	./build logfmt 15 16
 pg_kaboom:
 	./build pg_kaboom 13 14 15 16
 
@@ -469,19 +469,21 @@ pgvectorscale:
 	./build pgvectorscale nodebug 13 14 15 16 17
 pg_session_jwt:
 	./build pg_session_jwt nodebug 14 15 16 17
-vchord:
-	./build vchord nodebug 14 15 16 17
 pglite_fusion:
 	./build pglite_fusion nodebug
 pg_bestmatch:
 	./build pg_bestmatch nodebug
 pg_smtp_client:
 	./build pg_smtp_client nodebug 14 15 16 17
+pgml:
+	./build pgml nodebug 14 15 16 17
+vchord:
+	./build vchord nodebug 14 15 16 17
+vchord_bm25:
+	./build vchord_bm25 nodebug 14 15 16 17
 
 
 # pgrx 0.11.4
-pgml:
-	./build pgml nodebug 14 15 16 17
 plprql:
 	./build plprql nodebug 12 13 14 15 16
 
@@ -489,7 +491,8 @@ plprql:
 pgdd:
 	./build pgdd nodebug
 
-
+#prometheus_fdw:
+#	./build prometheus_fdw nodebug
 
 ###############################################################
 #                     RPM & SRPM                              #
@@ -514,9 +517,9 @@ rm-srpm:
 	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
 	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
 	batch4 geoip plproxy table_version kafka_fdw log_fdw pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml pgpdf pgsodium \
-	omnisketch ddsketch pg_duration ddl_historization data_historization pg_schedoc floatfile pg_upless vasco pg_xxhash pg_xenophile pg_drop_events pg_documentdb_core pg_tracing pg_curl pgxicor pgsparql pgjq hashtypes db_migrator pg_mustach \
+	omnisketch ddsketch pg_duration ddl_historization data_historization pg_schedoc floatfile pg_upless vasco pg_xxhash pg_xenophile pg_drop_events pg_documentdb_core pg_tracing pg_curl pgxicor pgsparql pgjq hashtypes db_migrator pg_cooldown pg_mustach \
 	rust rust1 rust2 rust3 rusta rustb rustc rustd \
-	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd \
+	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord vchord_bm25 pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd \
 	ls-rpm ls-srpm rm-rpm rm-srpm
 
 

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.2
+Version:	2.3
 Release:	1PIGSTY%{?dist}
 Summary:	Open-source full-text search of Chinese language
 License:	PostgreSQL
@@ -81,5 +81,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 
 %changelog
+* Tue Feb 11 2025 Vonng <rh@vonng.com> - 2.3
 * Wed Sep 13 2023 Vonng <rh@vonng.com> - 2.2
 - Initial RPM release, used by Pigsty <https://pigsty.io>

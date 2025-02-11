@@ -14,14 +14,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.2.5
+Version:	4.0.0
 Release:	1%{?dist}
 Summary:	Fast full-text search plugin for PostgreSQL based on Groonga
 Group:		Applications/Text
 License:	PostgreSQL
-URL:		  https://pgroonga.github.io/
+URL:		https://pgroonga.github.io/
 Source0:	pgroonga-%{version}.tar.gz
-#		      https://packages.groonga.org/source/pgroonga/pgroonga-%{version}.tar.gz
+#		    https://packages.groonga.org/source/pgroonga/pgroonga-%{version}.tar.gz
 
 BuildRequires:	ccache
 BuildRequires:	clang
@@ -120,5 +120,6 @@ EOF
 %endif
 
 %changelog
+* Tue Feb 11 2025 Vonng <rh@vonng.com> - 4.0.0
 * Sat Dec 21 2024 Vonng <rh@vonng.com> - 3.2.5
 - Initial RPM release, used by Pigsty <https://pigsty.io>

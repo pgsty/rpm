@@ -24,3 +24,14 @@ cd ~/rpmbuild
 make pg_documentdb_core
 ```
 
+
+Debian
+
+```bash
+
+cp ~/deb/tarball/documentdb-0.100-0.tar.gz /tmp/
+cd /tmp/;
+tar -xf documentdb-0.100-0.tar.gz
+cp -r documentdb-0.100-0/scripts /tmp/install_setup
+
+```

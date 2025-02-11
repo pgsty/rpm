@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.0
+Version:	0.21.1
 Release:	1PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
@@ -41,6 +41,7 @@ cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgm
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Feb 11 2025 Vonng <rh@vonng.com> - 0.21.1
 * Wed Oct 30 2024 Vonng <rh@vonng.com> - 0.20.0
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.18.3
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.17.0

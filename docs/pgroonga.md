@@ -1,6 +1,17 @@
 #!/bin/bash
 
 
+
+```bash
+curl https://repo.pigsty.cc/pig | bash
+```
+
+```bash
+pig repo set -u
+yum install -y scws
+apt install -y scws
+```
+
 ## EL
 
 ```bash
@@ -13,15 +24,14 @@ sudo dnf install -y https://apache.jfrog.io/artifactory/arrow/almalinux/9/apache
 sudo dnf install -y https://packages.groonga.org/almalinux/9/groonga-release-latest.noarch.rpm
 
 
-yum download arrow-devel-18.0.0
-yum download arrow1800-libs-18.0.0
-yum download groonga-devel
-yum download groonga-libs
-yum download groonga-tokenizer-mecab
+#yum download arrow-devel-18.0.0
+#yum download arrow1800-libs-18.0.0
+#yum download groonga-devel
+#yum download groonga-libs
+#yum download groonga-tokenizer-mecab
 
-sudo yum install arrow-devel-18.0.0
-sudo yum install groonga-devel
-sudo dnf install ccache llvm-toolset llvm-devel msgpack-devel xxhash-devel
+sudo yum install -y groonga-devel
+sudo dnf install -y ccache llvm-toolset llvm-devel msgpack-devel xxhash-devel
 ```
 
 
@@ -37,12 +47,21 @@ sudo apt install -y -V ./groonga-apt-source-latest-$(lsb_release --codename --sh
 sudo add-apt-repository -y ppa:groonga/ppa
 
 # install dependencies
-sudo apt install libgroonga-dev libmsgpack-dev
+sudo apt install -y libgroonga-dev libmsgpack-dev
+```
+
+Download libgronnga0:
+
+```bash
+apt download libgronnga0
 ```
 
 
-
-
+- Debian:
+  - groonga: https://packages.groonga.org/debian/ 
+  - arrow: https://apache.jfrog.io/artifactory/arrow/debian/ 
+- Ubuntu: https://ppa.launchpadcontent.net/groonga/ppa/ubuntu/pool/main/g/groonga/
+- EL: https://packages.groonga.org/almalinux/
 
 ## Source
 

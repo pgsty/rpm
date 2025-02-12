@@ -34,7 +34,7 @@ BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	xxhash-devel
 #BuildRequires:	libpq-devel
 
-Requires:	groonga-libs >= 14.1.1
+Requires:	groonga-libs >= 15.0.0
 Requires:	msgpack
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	xxhash-libs

@@ -33,7 +33,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 %files
 %{pginstdir}/lib/%{pname}*.so
-%{pginstdir}/lib/libduckdb.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id/*

@@ -60,6 +60,7 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
+git submodule update --init --recursive
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} || /bin/true
 
 %install

@@ -24,6 +24,7 @@ Columnstore tables are stored as Iceberg or Delta Lake tables in object storage.
 %setup -q -n %{sname}-%{version}
 
 %build
+git submodule update --init --recursive
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} release
 
 %install

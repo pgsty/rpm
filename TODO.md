@@ -22,6 +22,7 @@
 ./dep vault
 ./dep pg_curl
 
+yum install libsodium-devel libcurl-devel bzip2-devel jq
 apt install libsodium-dev libcurl4-openssl-dev libbz2-dev jq
 
 make pg_net  # break on el8 u22
@@ -31,13 +32,11 @@ make timescaledb
 make pg_mooncake
 make pg_duckdb
 make documentdb
+pig b e pgsql_tweaks
 ```
 
-- debian
 - pgsql_tweaks 0.11.0
-- oraface 4.14.2
-- pg_task 1.0.0 release 2
-- partman 5.2.4
+
 
 
 

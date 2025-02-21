@@ -1,5 +1,5 @@
-%global pname documentdb_core
-%global sname pg_documentdb_core
+%global pname documentdb
+%global sname documentdb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -13,15 +13,20 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.100
+Version:	0.101
 Release:	0PIGSTY%{?dist}
-Summary:	Core API surface for DocumentDB on PostgreSQL
+Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/microsoft/documentdb
-Source0:	documentdb-%{version}-0.tar.gz
+Source0:	%{sname}-%{version}-0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:   postgresql%{pgmajorversion}-contrib
+Requires:   pg_cron_%{pgmajorversion}
+Requires:   pgvector_%{pgmajorversion}
+Requires:   rum_%{pgmajorversion}
+Recommends: postgis35_%{pgmajorversion}
 
 # Require extra dependencies for building: https://github.com/microsoft/documentdb/tree/main/scripts
 # Available for PostgreSQL 15,16,17
@@ -29,7 +34,9 @@ Requires:	postgresql%{pgmajorversion}-server
 %description
 DocumentDB offers a native implementation of document-oriented NoSQL database,
 enabling seamless CRUD operations on BSON data types within a PostgreSQL framework.
-Powering vCore-based Azure Cosmos DB for MongoDB.
+Beyond basic operations, DocumentDB empowers you to execute complex workloads,
+including full-text searches, geospatial queries, and vector embeddings on your dataset,
+delivering robust functionality and flexibility for diverse data management needs.
 
 %if %llvm
 %package llvmjit
@@ -59,22 +66,24 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n documentdb-%{version}-0
+%setup -q -n %{pname}-%{version}-0
 
 %build
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 cd pg_documentdb_core
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 cd pg_documentdb_core
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
 %license LICENSE
-%{pginstdir}/lib/%{sname}.so
-%{pginstdir}/share/extension/%{pname}.control
+%{pginstdir}/lib/pg_%{pname}*.so
+%{pginstdir}/share/extension/%{pname}*.control
 %{pginstdir}/share/extension/%{pname}*sql
 %if %llvm
 %files llvmjit
@@ -84,5 +93,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.101-0PIGSTY
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.100-0PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

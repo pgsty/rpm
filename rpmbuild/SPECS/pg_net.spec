@@ -13,15 +13,17 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.9.2
+Version:	0.14.0
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension that enables asynchronous (non-blocking) HTTP/HTTPS requests with SQL
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_net
 Source0:	pg_net-%{version}.tar.gz
-#           https://github.com/supabase/pg_net/archive/refs/tags/v0.9.2.tar.gz
+#           https://github.com/supabase/pg_net/archive/refs/tags/v0.14.0.tar.gz
+
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server
+BuildRequires:	libcurl-devel
+Requires:	    postgresql%{pgmajorversion}-server
 
 %description
 The PG_NET extension enables PostgreSQL to make asynchronous HTTP/HTTPS requests in SQL.
@@ -79,6 +81,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.14.0
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.9.2
 * Thu May 09 2024 Vonng <rh@vonng.com> - 0.9.1
 * Sat Feb 17 2024 Vonng <rh@vonng.com> - 0.8.0

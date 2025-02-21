@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.28
+Version:	0.29
 Release:	1PIGSTY%{?dist}
 Summary:	DDL eXtractor functions for PostgreSQL (ddlx)
 License:	PostgreSQL
@@ -40,5 +40,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} install DESTDI
 %doc %{pginstdir}/doc/extension/README-%{sname}.md
 
 %changelog
-* Fri Oct 25 2023 Vonng <rh@vonng.com> - 0.28
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.29-1PIGSTY
+* Fri Oct 25 2023 Vonng <rh@vonng.com> - 0.28-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

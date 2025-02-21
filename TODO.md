@@ -22,7 +22,7 @@
 ./dep vault
 ./dep pg_curl
 
-yum install libsodium-devel libcurl-devel bzip2-devel jq
+yum install -y libsodium-devel libcurl-devel bzip2-devel jq
 apt install libsodium-dev libcurl4-openssl-dev libbz2-dev jq
 
 make pg_net  # break on el8 u22

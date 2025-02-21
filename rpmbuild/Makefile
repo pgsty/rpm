@@ -493,17 +493,13 @@ vchord:
 vchord_bm25:
 	./build vchord_bm25 nodebug 14 15 16 17
 
-
 # pgrx 0.11.4
 plprql:
 	./build plprql nodebug 12 13 14 15 16
-
 # pgrx 0.10.x
 pgdd:
 	./build pgdd nodebug
 
-#prometheus_fdw:
-#	./build prometheus_fdw nodebug
 
 ###############################################################
 #                     RPM & SRPM                              #

@@ -60,6 +60,10 @@ push8:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el8:~/rpmbuild/
 push9:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9:~/rpmbuild/
+push8a:
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el8a:~/rpmbuild/
+push9a:
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9a:~/rpmbuild/
 
 # fetch RPMS from bucilding VMs
 pull-el: pull9 pull8 pull7
@@ -75,11 +79,11 @@ pull9:
 
 pull-ela: pull9 pull8 #pull7
 pull7a:
-	rsync -avc el7:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el7.aarch64/ || true
+	rsync -avc el7a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el7.aarch64/ || true
 pull8a:
-	rsync -avc el8:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el8.aarch64/ || true
+	rsync -avc el8a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el8.aarch64/ || true
 pull9a:
-	rsync -avc el9:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el9.aarch64/ || true
+	rsync -avc el9a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el9.aarch64/ || true
 
 # sync building specs with el VMs
 el-dir:
@@ -136,6 +140,31 @@ repo9:
 	mv -f rpmbuild/RPMS/el9.x86_64/*debug*.rpm rpmbuild/RPMS/el9.x86_64/debug/ || true
 	./build	rpmbuild/RPMS/el9.x86_64       sign
 	./build	rpmbuild/RPMS/el9.x86_64/debug sign
+
+
+###############################################################
+#                         Terraform                           #
+###############################################################
+u:
+	cd tf && terraform apply -auto-approve
+	sleep 5
+	tf/ssh
+	sleep 15
+	tf/ssh
+a:
+	cd tf && terraform apply
+d:
+	cd tf && terraform destroy -auto-approve
+destroy:
+	cd tf && terraform destroy
+out:
+	cd tf && terraform output
+ssh:
+	tf/ssh
+r:
+	git restore tf/terraform.tf
+
+
 
 ###############################################################
 #                         Inventory                           #

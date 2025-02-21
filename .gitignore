@@ -9,3 +9,9 @@ rpm/
 tmp/
 
 docs/pig.md
+
+tf/.terraform/
+tf/*.hcl
+tf/*.tfstate*
+tf/.terraform*
+#tf/terraform.tf

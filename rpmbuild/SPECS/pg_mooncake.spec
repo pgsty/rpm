@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.1
+Version:	0.1.2
 Release:	1PIGSTY%{?dist}
 Summary:	Columnstore Table in Postgres
 License:	MIT
@@ -38,6 +38,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.1.2
 * Tue Feb 11 2025 Vonng <rh@vonng.com> - 0.1.1
 * Tue Jan 21 2025 Vonng <rh@vonng.com> - 0.1.0
 * Thu Oct 31 2024 Vonng <rh@vonng.com> - 0.0.1

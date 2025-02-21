@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	0.2.1
 Release:	1PIGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0
@@ -31,12 +31,15 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
+%doc README.md
+%license LICENSE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.2.1
 * Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.2.0
 * Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.1.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

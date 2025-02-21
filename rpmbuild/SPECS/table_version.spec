@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.10.3
+Version:	1.11.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL table versioning management software
 
@@ -49,8 +49,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/share/extension/%{sname}*sql
 %{pginstdir}/doc/extension/table_version.md
 /usr/local/bin/table_version-loader
-/usr/local/share/table_version/table_version-1.10.3.sql.tpl
+/usr/local/share/table_version/table_version-%{version}.sql.tpl
 
 %changelog
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.11.0
 * Tue Jul 30 2024 Vonng <rh@vonng.com> - 1.10.3
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.1
+Version:	1.0.2
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension for a time based duration type.
 License:	MIT
@@ -80,5 +80,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Fri Jan 10 2025 Ruohang Feng Vonng <rh@vonng.com> - 1.0.1
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.0.2
+* Fri Jan 10 2025 Vonng <rh@vonng.com> - 1.0.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

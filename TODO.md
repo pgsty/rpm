@@ -1,3 +1,46 @@
+## 2025-02-22
+
+- documentdb 0.101-0
+- pgcollection (new) 0.9.1
+- pg_bzip (new) 1.0.0
+- pg_net 0.14.0
+- pg_curl 2.4.2
+- vault 0.3.1 (become C)
+- table_version 1.10.3 -> 1.11.0
+- pg_duration 1.0.2
+- timescaledb 2.18.2
+- pg_analytics 0.3.4
+- pg_search 0.15.2
+- pg_graphql 1.5.11
+- vchord 0.1.1 -> 0.2.1 ((+13))
+- vchord_bm25 0.1.0 -> 0.1.1
+- pg_mooncake 0.1.1 -> 0.1.2
+- pg_duckdb 0.2.0 -> 0.3.1
+- pgddl 0.29
+
+```bash
+./dep vault
+./dep pg_curl
+
+apt install libsodium-dev libcurl4-openssl-dev libbz2-dev jq
+
+make pg_net  # break on el8 u22
+make pg_bzip pg_curl pgcollection vault table_version pg_duration ddlx
+make pg_graphql vchord_bm25 vchord
+make timescaledb
+make pg_mooncake
+make pg_duckdb
+make documentdb
+```
+
+- debian
+- pgsql_tweaks 0.11.0
+- oraface 4.14.2
+- pg_task 1.0.0 release 2
+- partman 5.2.4
+
+
+
 ## 2024-12-10
  
 - vchord https://github.com/tensorchord/VectorChord 0.1.0 rag    14 -17 (deps)

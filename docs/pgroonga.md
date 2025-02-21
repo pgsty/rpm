@@ -61,7 +61,22 @@ apt download libgronnga0
   - groonga: https://packages.groonga.org/debian/ 
   - arrow: https://apache.jfrog.io/artifactory/arrow/debian/ 
 - Ubuntu: https://ppa.launchpadcontent.net/groonga/ppa/ubuntu/pool/main/g/groonga/
-- EL: https://packages.groonga.org/almalinux/
+- EL: 
+  - groonga: https://packages.groonga.org/almalinux/
+  - arrow: https://apache.jfrog.io/artifactory/arrow/almalinux/
+
+
+```bash
+https://apache.jfrog.io/ui/native/arrow/almalinux/8/aarch64/Packages/arrow1900-libs-19.0.0-1.el8.aarch64.rpm
+https://apache.jfrog.io/ui/native/arrow/almalinux/8/aarch64/Packages/arrow-devel-19.0.0-1.el8.aarch64.rpm
+https://apache.jfrog.io/ui/native/arrow/almalinux/8/x86_64/Packages/arrow1900-libs-19.0.0-1.el8.x86_64.rpm
+https://apache.jfrog.io/ui/native/arrow/almalinux/8/x86_64/Packages/arrow-devel-19.0.0-1.el8.x86_64.rpm
+
+https://apache.jfrog.io/ui/native/arrow/almalinux/9/aarch64/Packages/arrow1900-libs-19.0.0-1.el9.aarch64.rpm
+https://apache.jfrog.io/ui/native/arrow/almalinux/9/aarch64/Packages/arrow-devel-19.0.0-1.el9.aarch64.rpm
+https://apache.jfrog.io/ui/native/arrow/almalinux/9/x86_64/Packages/arrow1900-libs-19.0.0-1.el9.x86_64.rpm
+https://apache.jfrog.io/ui/native/arrow/almalinux/9/x86_64/Packages/arrow-devel-19.0.0-1.el9.x86_64.rpm
+```
 
 ## Source
 

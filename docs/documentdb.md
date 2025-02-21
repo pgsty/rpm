@@ -2,18 +2,17 @@
 
 
 ```bash
-cp ~/rpmbuild/SOURCES/documentdb-0.100-0.tar.gz /tmp/
+cp ~/rpmbuild/SOURCES/documentdb-0.101-0.tar.gz /tmp/
 cd /tmp/;
-tar -xf documentdb-0.100-0.tar.gz
-cp -r documentdb-0.100-0/scripts /tmp/install_setup
+tar -xf documentdb-0.101-0.tar.gz
+cp -r documentdb-0.101-0/scripts /tmp/install_setup
 
 sudo su 
+# proxy env (po)
 cd /tmp/install_setup
 export CLEANUP_SETUP=1
 export INSTALL_DEPENDENCIES_ROOT=/tmp/install_setup
 export MAKE_PROGRAM=cmake
-
-# proxy env (po)
 cd /tmp/install_setup
 ./install_setup_libbson.sh
 ./install_setup_pcre2.sh
@@ -28,10 +27,8 @@ make pg_documentdb_core
 Debian
 
 ```bash
-
-cp ~/deb/tarball/documentdb-0.100-0.tar.gz /tmp/
+cp ~/deb/tarball/documentdb-0.101-0.tar.gz /tmp/
 cd /tmp/;
-tar -xf documentdb-0.100-0.tar.gz
-cp -r documentdb-0.100-0/scripts /tmp/install_setup
-
+tar -xf documentdb-0.101-0.tar.gz
+cp -r documentdb-0.101-0/scripts /tmp/install_setup
 ```

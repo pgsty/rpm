@@ -7,3 +7,5 @@ rpmbuild/SOURCES
 rpmbuild/RPMS
 rpm/
 tmp/
+
+docs/pig.md

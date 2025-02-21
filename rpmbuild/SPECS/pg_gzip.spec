@@ -22,6 +22,7 @@ Source0:	pgsql-gzip-%{version}.tar.gz
 #           https://github.com/pramsey/pgsql-gzip/archive/refs/tags/v1.0.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:  zlib-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

@@ -1,5 +1,5 @@
-%global pname gzip
-%global sname pgsql_gzip
+%global pname http
+%global sname pg_http
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -13,21 +13,20 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
-Release:	4PIGSTY%{?dist}
-Summary:	Gzip compress and decompress for PostgreSQL
+Version:	1.6.3
+Release:	1PIGSTY%{?dist}
+Summary:	HTTP client for PostgreSQL, retrieve a web page from inside the database.
 License:	MIT
-URL:		https://github.com/pramsey/pgsql-gzip
-Source0:	pgsql-gzip-%{version}.tar.gz
-#           https://github.com/pramsey/pgsql-gzip/archive/refs/tags/v1.0.0.tar.gz
+URL:		https://github.com/pramsey/pgsql-http
+Source0:	pgsql-http-%{version}.tar.gz
+#           https://github.com/pramsey/pgsql-http/archive/refs/tags/v1.6.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-Sometimes you just need to compress your bytea object before you return it to the client.
-Sometimes you receive a compressed bytea from the client, and you have to uncompress it before you can work with it.
-This extension is for that.
+Wouldn't it be nice to be able to write a trigger that called a web service? Either to get back a result,
+ or to poke that service into refreshing itself against the new state of the database? This extension is for that.
 
 
 %if %llvm
@@ -59,7 +58,7 @@ This packages provides JIT support for %{sname}
 
 
 %prep
-%setup -q -n pgsql-gzip-%{version}
+%setup -q -n pgsql-http-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -80,5 +79,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.6.3
+- Rename package name to pg_http
+* Mon Dec 16 2024 Vonng <rh@vonng.com> - 1.6.1
+- Initial RPM release, used by Pigsty <https://pigsty.io>
+* Wed Sep 13 2023 Vonng <rh@vonng.com> - 1.6.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

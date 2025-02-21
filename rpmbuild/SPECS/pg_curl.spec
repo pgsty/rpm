@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.4
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	PostgreSQL tool for transferring data with URL syntax
 License:	MIT
 URL:		https://github.com/RekGRpth/pg_curl
@@ -22,9 +22,8 @@ Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel
+Requires:	    postgresql%{pgmajorversion}-server
 
-Requires:	postgresql%{pgmajorversion}-server
-Requires:	libcurl
 
 %description
 PostgreSQL tool for transferring data with URL syntax, supporting DICT, FILE, FTP, FTPS, GOPHER, GOPHERS, HTTP, HTTPS, IMAP, IMAPS,
@@ -81,5 +80,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.4
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 2.4-2PIGSTY
+* Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.4-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

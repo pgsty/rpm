@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.9
+Version:	1.5.11
 Release:	1PIGSTY%{?dist}
 Summary:	GraphQL support to your PostgreSQL database.
 License:	Apache-2.0
@@ -39,11 +39,12 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.5.11
 * Thu Oct 17 2024 Vonng <rh@vonng.com> - 1.5.9
 * Sun Oct 13 2024 Vonng <rh@vonng.com> - 1.5.8
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 1.5.7
 * Sat Jun 29 2024 Vonng <rh@vonng.com> - 1.5.6
-* Sun May 5 2024 Vonng <rh@vonng.com> - 1.5.4
+* Sun May 05 2024 Vonng <rh@vonng.com> - 1.5.4
 * Sat Apr 27 2024 Vonng <rh@vonng.com> - 1.5.3
 * Sat Feb 17 2024 Vonng <rh@vonng.com> - 1.5.0
 * Mon Jan 22 2024 Vonng <rh@vonng.com> - 1.4.4

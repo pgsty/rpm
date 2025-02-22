@@ -23,7 +23,7 @@
 ./dep pg_curl
 
 yum install -y libsodium-devel libcurl-devel bzip2-devel jq
-apt install libsodium-dev libcurl4-openssl-dev libbz2-dev jq
+apt install libsodium-dev libcurl4-openssl-dev libbz2-dev jq patchelf
 
 make pg_net  # break on el8 u22
 make pg_bzip pg_curl pgcollection vault table_version pg_duration ddlx

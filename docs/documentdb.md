@@ -9,11 +9,13 @@ cp -r documentdb-0.101-0/scripts /tmp/install_setup
 
 sudo su 
 # proxy env (po)
+
+po
 cd /tmp/install_setup
 export CLEANUP_SETUP=1
 export INSTALL_DEPENDENCIES_ROOT=/tmp/install_setup
 export MAKE_PROGRAM=cmake
-cd /tmp/install_setup
+
 ./install_setup_libbson.sh
 ./install_setup_pcre2.sh
 ./install_setup_intel_decimal_math_lib.sh

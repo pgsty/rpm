@@ -100,7 +100,7 @@ if [ -d "${RPMS_DIR}/${ARCH}" ]; then
     ls -alh ${RPMS_DIR}/${ARCH} | grep "${EXTENSION_NAME}"
     log_warn "existing ${EXTENSION_NAME} rpms will be removed"
     log_hint rm -rf "${RPMS_DIR}/${ARCH}/${EXTENSION_NAME}*.rpm"
-    rm -rf "${RPMS_DIR}/${ARCH}/${EXTENSION_NAME}*.rpm"
+    #rm -rf "${RPMS_DIR}/${ARCH}/${EXTENSION_NAME}*.rpm"
 fi
 
 
@@ -121,7 +121,8 @@ done
 #--------------------------------------------------------------#
 log_line "${EXTENSION_NAME} rpms"
 log_info "${RPMS_DIR}"
-if [ -d "${RPMS_DIR}/x86_64" ]; then
-    ls -alh ${RPMS_DIR}/x86_64 | grep "${EXTENSION_NAME}"
+ARCH=$(uname -m)
+if [ -d "${RPMS_DIR}/${ARCH}" ]; then
+    ls -alh ${RPMS_DIR}/${ARCH} | grep "${EXTENSION_NAME}"
 fi
 log_line "${EXTENSION_NAME} done"

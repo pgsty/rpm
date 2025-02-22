@@ -13,6 +13,7 @@ SOURCE0:    pg_mooncake-%{version}.tar.gz
 #           https://github.com/pg_mooncake/pg_mooncake/archive/refs/tags/v0.1.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:  patchelf
 Requires:	postgresql%{pgmajorversion}-server
 # we will use pg_duckdb's libduckdb instead to avoid conflict later
 

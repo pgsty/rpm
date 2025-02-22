@@ -513,6 +513,14 @@ rm-rpm:
 rm-srpm:
 	rm -rf  ~/rpmbuild/SRPMS/*
 
+rmdbg:
+	mkdir -p RPMS/el8.x86_64/tmp RPMS/el9.x86_64/tmp RPMS/el8.aarch64/tmp RPMS/el9.aarch64/tmp
+	mv RPMS/el8.x86_64/*debug* RPMS/el8.x86_64/tmp/
+	mv RPMS/el8.aarch64/*debug* RPMS/el8.aarch64/tmp/
+	mv RPMS/el9.x86_64/*debug* RPMS/el9.x86_64/tmp/
+	mv RPMS/el9.aarch64/*debug* RPMS/el9.aarch64/tmp/
+
+
 
 ###############################################################
 #                      Inventory                              #

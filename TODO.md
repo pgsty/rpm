@@ -18,27 +18,6 @@
 - pg_duckdb 0.2.0 -> 0.3.1
 - pgddl 0.29
 
-```bash
-./dep vault
-./dep pg_curl
-
-yum install -y libsodium-devel libcurl-devel bzip2-devel jq
-apt install libsodium-dev libcurl4-openssl-dev libbz2-dev jq patchelf
-
-make pg_net  # break on el8 u22
-make pg_bzip pg_curl pgcollection vault table_version pg_duration ddlx
-make pg_graphql vchord_bm25 vchord
-make timescaledb
-make pg_mooncake
-make pg_duckdb
-make documentdb
-pig b e pgsql_tweaks
-```
-
-- pgsql_tweaks 0.11.0
-
-
-
 
 ## 2024-12-10
  

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.1
+Version:	0.6.4
 Release:	1PIGSTY%{?dist}
 Summary:	Log changes on a table and restore the state of table/row on any time in the past
 License:	BSD 2-Clause
@@ -87,5 +87,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.6.4
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 0.6.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5
+Version:	1.6
 Release:	1PIGSTY%{?dist}
 Summary:	ASN.1 OID datatype for PostgreSQL
 License:	GPLv3
@@ -75,5 +75,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.6
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.5
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -62,7 +62,7 @@ Extension build with `pgrx`:
 
 | name           | alias          | version | url                                            | license    | pg_ver              | requires              |
 |:---------------|:---------------|:--------|:-----------------------------------------------|:-----------|:--------------------|:----------------------|
-| pg_later       | pg_later       | 0.2.0   | https://github.com/tembo-io/pg_later           | PostgreSQL | {17,16,15,14,13}    | {pgmq}                |
+| pg_later       | pg_later       | 0.3.0   | https://github.com/tembo-io/pg_later           | PostgreSQL | {17,16,15,14,13}    | {pgmq}                |
 | pgml           | pgml           | 2.9.3   | https://github.com/postgresml/postgresml       | MIT        | {16,15,14}          |                       |
 | vectorize      | pg_vectorize   | 0.20.0  | https://github.com/tembo-io/pg_vectorize       | PostgreSQL | {17,16,15,14}       | {pg_cron,pgmq,vector} |
 | pg_summarize   | pg_summarize   | 0.0.1   | https://github.com/HexaCluster/pg_summarize    | PostgreSQL | {17,16,15,14,13,12} |                       |

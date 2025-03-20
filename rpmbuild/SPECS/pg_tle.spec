@@ -13,14 +13,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.0
+Version:	1.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	Trusted Language Extensions for PostgreSQL
 
 License:	Apache-2.0
 URL:		https://github.com/aws/pg_tle
 Source0:	pg_tle-%{version}.tar.gz
-#           https://github.com/aws/pg_tle/archive/refs/tags/v1.4.0.tar.gz
+#           https://github.com/aws/pg_tle/archive/refs/tags/v1.5.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -82,6 +82,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.5.0
 * Sat Apr 27 2024 Vonng <rh@vonng.com> - 1.4.0
 * Sat Feb 17 2024 Vonng <rh@vonng.com> - 1.3.4
 * Wed Sep 13 2023 Vonng <rh@vonng.com> - 1.2.0

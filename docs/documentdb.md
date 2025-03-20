@@ -1,11 +1,12 @@
-# Build DocumentDB Core
+# Build DocumentDB 
 
+## EL
 
 ```bash
-cp ~/rpmbuild/SOURCES/documentdb-0.101-0.tar.gz /tmp/
+cp ~/rpmbuild/SOURCES/documentdb-0.102-0.tar.gz /tmp/
 cd /tmp/;
-tar -xf documentdb-0.101-0.tar.gz
-cp -r documentdb-0.101-0/scripts /tmp/install_setup
+tar -xf documentdb-0.102-0.tar.gz
+cp -r documentdb-0.102-0/scripts /tmp/install_setup
 
 sudo su 
 # proxy env (po)
@@ -22,15 +23,15 @@ export MAKE_PROGRAM=cmake
 ./install_citus_indent.sh
 
 cd ~/rpmbuild
-make pg_documentdb_core
+make documentdb
 ```
 
 
-Debian
+## Debian
 
 ```bash
-cp ~/deb/tarball/documentdb-0.101-0.tar.gz /tmp/
+cp ~/deb/tarball/documentdb-0.102-0.tar.gz /tmp/
 cd /tmp/;
-tar -xf documentdb-0.101-0.tar.gz
-cp -r documentdb-0.101-0/scripts /tmp/install_setup
+tar -xf documentdb-0.102-0.tar.gz
+cp -r documentdb-0.102-0/scripts /tmp/install_setup
 ```

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.101
+Version:	0.102
 Release:	0PIGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
@@ -93,6 +93,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.102-0PIGSTY
+- FerretDB modified version: https://github.com/FerretDB/documentdb
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.101-0PIGSTY
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.100-0PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

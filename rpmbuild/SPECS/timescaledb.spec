@@ -5,7 +5,7 @@
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
 Version:	2.19.0
-Release:	1PIGSTY%{?dist}
+Release:	9PIGSTY%{?dist}
 License:	Timescale
 Source0:	https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
 #           https://github.com/timescale/timescaledb/archive/2.17.2.tar.gz

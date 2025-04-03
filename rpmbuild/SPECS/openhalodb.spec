@@ -3,12 +3,12 @@
 %global pgbaseinstdir	/usr/halo-%{pgmajorversion}
 
 Name:		%{sname}
-Version:	1.0.14.10
+Version:	14.10
 Release:	1PIGSTY%{?dist}
 Summary:	MySQL wire protocol support for PostgreSQL
 License:	GPL-3.0 License
 URL:		https://github.com/HaloTech-Co-Ltd/openHalo
-Source0:	openHalo-1.0.tar.gz
+Source0:	%{sname}-1.0.tar.gz
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++,readline-devel, zlib-devel >= 1.0.4
@@ -31,7 +31,7 @@ As a result, the effort required to modify and move applications running on MySQ
 is reduced, leading to faster, lower-risk, and more cost-effective migrations.
 
 %prep
-%setup -q -n openHalo-1.0
+%setup -q -n %{sname}-1.0
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"
@@ -55,7 +55,6 @@ export CFLAGS
 --with-libxslt \
 --with-icu \
 --with-llvm \
-#--with-perl \
 --with-python \
 --with-tcl \
 --with-openssl \
@@ -102,5 +101,5 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
-* Wed Apr 02 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 1.0.14.10-1PIGSTY
+* Wed Apr 02 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 14.10-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

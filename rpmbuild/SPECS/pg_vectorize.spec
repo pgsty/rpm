@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.21.1
+Version:	0.22.1
 Release:	1PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/tembo-io/pg_vectorize
 SOURCE0:    pg_vectorize-%{version}.tar.gz
-#           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.20.0.tar.gz
+#           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.22.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1.1.1 pgvector_%{pgmajorversion} >= 0.7.0 pg_cron_%{pgmajorversion}
@@ -41,6 +41,7 @@ cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgm
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.22.1
 * Tue Feb 11 2025 Vonng <rh@vonng.com> - 0.21.1
 * Wed Oct 30 2024 Vonng <rh@vonng.com> - 0.20.0
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.18.3

@@ -4,8 +4,8 @@
 %global pginstdir	/usr/oriole-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.0
-Release:	10PIGSTY%{?dist}
+Version:	1.4
+Release:	0.beta10PIGSTY%{?dist}
 Summary:	Modern cloud-native storage engine for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/orioledb/orioledb
@@ -38,5 +38,5 @@ PATH=%{pginstdir}/bin:$PATH USE_PGXS=1 %{__make} %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Sat Apr 05 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 0.0.0-10PIGSTY
+* Sat Apr 05 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 1.4-0.beta10PIGSTY
 - Initial RPM release, beta10 version, used by Pigsty <https://pigsty.io>

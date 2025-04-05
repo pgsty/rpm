@@ -17,7 +17,6 @@ BuildRequires:  lz4-devel, libicu-devel, openldap-devel, pam-devel, python3-deve
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel, libcurl-devel
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
-Requires:       llvm-devel => 17.0 clang-devel >= 17.0
 
 %description
 OrioleDB is a new storage engine for PostgreSQL, bringing a modern approach to database capacity, capabilities and performance to the world's most-loved database platform.

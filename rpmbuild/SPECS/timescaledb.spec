@@ -4,7 +4,7 @@
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.19.0
+Version:	2.19.1
 Release:	9PIGSTY%{?dist}
 License:	Timescale
 Source0:	https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
@@ -62,6 +62,8 @@ cd build; %{__make} DESTDIR=%{buildroot} install
 %exclude %{pginstdir}/lib/pgxs/src/test/perl/TimescaleNode.pm
 
 %changelog
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 2.19.1
+- https://github.com/timescale/timescaledb/releases/tag/2.19.1
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 2.19.0
 - https://github.com/timescale/timescaledb/releases/tag/2.19.0
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 2.18.2

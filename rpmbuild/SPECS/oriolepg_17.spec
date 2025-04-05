@@ -11,13 +11,11 @@ URL:		https://github.com/orioledb/orioledb
 Source0:	%{sname}-17.0.tar.gz
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
-BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
+BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm, clang-devel, llvm-devel
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel, libcurl-devel
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
-Requires:       llvm-devel => 17.0 clang-devel >= 17.0
-
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 Requires:       llvm-devel => 17.0 clang-devel >= 17.0
 

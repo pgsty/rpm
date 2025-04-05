@@ -1,28 +1,33 @@
-%global sname openhalodb
-%global pgmajorversion 14
-%global pgbaseinstdir	/usr/halo-%{pgmajorversion}
+%global sname oriolepg
+%global pgmajorversion 17
+%global pgbaseinstdir	/usr/oriole-%{pgmajorversion}
 
-Name:		%{sname}
-Version:	14.10
-Release:	1PIGSTY%{?dist}
-Summary:	MySQL wire protocol support for PostgreSQL
-License:	GPL-3.0 License
-URL:		https://github.com/HaloTech-Co-Ltd/openHalo
-Source0:	%{sname}-1.0.tar.gz
+Name:		%{sname}_%{pgmajorversion}
+Version:	17.0
+Release:	6PIGSTY%{?dist}
+Summary:	Modern cloud-native storage engine for PostgreSQL
+License:	PostgreSQL
+URL:		https://github.com/orioledb/orioledb
+Source0:	%{sname}-17.0.tar.gz
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
-BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm, clang-devel, llvm-devel
+BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
-BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
-#BuildRequries:  perl, perl-ExtUtils-Embed, perl-FindBin
-Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.0.2k, libxml2
+BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel, libcurl-devel
+BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
+Requires:       llvm-devel => 17.0 clang-devel >= 17.0
+
+Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
+Requires:       llvm-devel => 17.0 clang-devel >= 17.0
 
 %description
-Adding capability for PostgreSQL to work with applications written for MySQL but provides much more better performance than MySQL!
+OrioleDB is a new storage engine for PostgreSQL, bringing a modern approach to database capacity, capabilities and performance to the world's most-loved database platform.
+OrioleDB consists of an extension, building on the innovative table access method framework and other standard Postgres extension interfaces.
+By extending and enhancing the current table access methods, OrioleDB opens the door to a future of more powerful storage models that are optimized for cloud and modern hardware architectures.
 
 %prep
-%setup -q -n %{sname}-1.0
+%setup -q -n %{sname}-17.0
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"
@@ -70,10 +75,7 @@ make DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} install-world-bin
 
 %files
 %doc README.md
-%doc %{pgbaseinstdir}/doc/postgresql/extension/*.example
-%license %{pgbaseinstdir}/LICENSE
-%license %{pgbaseinstdir}/COPYRIGHT
-%license %{pgbaseinstdir}/3party-legal-notices
+%license COPYRIGHT
 %{pgbaseinstdir}/lib/*
 %{pgbaseinstdir}/bin/*
 %{pgbaseinstdir}/share/*
@@ -92,5 +94,5 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
-* Wed Apr 02 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 14.10-1PIGSTY
+* Sat Apr 05 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.0-6PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -25,10 +25,12 @@ Messages stay in the queue until explicitly removed, Messages can be archived, i
 %setup -q -n %{sname}-%{version}
 
 %build
+cd pgmq-extension
 PATH=%{pginstdir}/bin:$PATH make
 
 %install
 %{__rm} -rf %{buildroot}
+cd pgmq-extension
 PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 
 %files

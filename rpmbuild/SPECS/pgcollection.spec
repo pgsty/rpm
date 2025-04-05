@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.9.1
+Version:	1.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension to add a collection data type
 License:	Apache-2.0
@@ -80,5 +80,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.0.0
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.9.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

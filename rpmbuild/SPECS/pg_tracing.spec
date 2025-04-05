@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.2
+Version:	0.1.3
 Release:	1PIGSTY%{?dist}
 Summary:	Distributed Tracing for PostgreSQL
 License:	MIT
@@ -78,5 +78,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.1.3
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.1.2
 - Initial RPM release, used by Pigsty <https://pigsty.io>

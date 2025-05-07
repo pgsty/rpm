@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.5
+Version:	0.4.6
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
@@ -41,6 +41,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 0.4.6
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.4.5
 * Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.4.4
 * Thu Oct 17 2024 Vonng <rh@vonng.com> - 0.4.3

@@ -14,3 +14,6 @@ You can install `clang` on Ubuntu 24 directly, and install clang-18 on Ubuntu 22
 curl --proto '=https' --tlsv1.2 -sSf https://apt.llvm.org/llvm.sh | bash -s -- 18
 sudo update-alternatives --install /usr/bin/clang clang $(which clang-18) 255
 ```
+
+EL 9 直接有 Clang 18
+

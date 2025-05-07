@@ -1,6 +1,6 @@
 %define debug_package %{nil}
 %global pname tzf
-%global sname tzf
+%global sname pg_tzf
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}

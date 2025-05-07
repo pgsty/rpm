@@ -463,8 +463,8 @@ pg_tiktoken:
 	./build pg_tiktoken nodebug
 pg_summarize:
 	./build pg_summarize nodebug
-tzf:
-	./build tzf nodebug
+pg_tzf:
+	./build pg_tzf nodebug
 pg_polyline:
 	./build pg_polyline nodebug
 pg_explain_ui:
@@ -545,7 +545,7 @@ rmdbg:
 	batch4 geoip plproxy table_version kafka_fdw log_fdw pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml pgpdf pgsodium \
 	omnisketch ddsketch pg_duration ddl_historization data_historization pg_schedoc floatfile pg_upless vasco pg_xxhash pg_xenophile pg_drop_events documentdb pg_tracing pg_curl pgxicor pgsparql pgjq hashtypes db_migrator pg_bulkload pg_cooldown pg_mustach jsonb_apply pgcollection pg_bzip pg_tle pg_incremental \
 	rust rust1 rust2 rust3 rusta rustb rustc rustd \
-	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord vchord_bm25 pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd \
+	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_tzf pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord vchord_bm25 pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd \
 	openhalodb oriolepg orioledb \
 	ls-rpm ls-srpm rm-rpm rm-srpm
 

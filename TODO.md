@@ -1,3 +1,40 @@
+## 2025-05-07
+
+- timescaledb [2.19.3](https://github.com/timescale/timescaledb/releases/tag/2.19.3)
+- supautils [2.9.1](https://github.com/supabase/supautils/releases/tag/v2.9.1)
+- pg_envvar [1.0.1](https://github.com/theory/pg-envvar/releases/tag/v1.0.1)
+
+- tzf-pg [0.2.0](https://github.com/ringsaturn/tzf-pg/releases/tag/v0.2.0) (pgrx 0.14.1)
+- pg_search [0.15.18](https://github.com/paradedb/paradedb/releases/tag/v0.15.18) (pgrx 0.14.1)
+- anon [2.1.1](https://gitlab.com/dalibo/postgresql_anonymizer/-/tree/latest/debian?ref_type=heads) (pgrx 0.14.1)
+- pg_parquet [0.4.0](https://github.com/CrunchyData/pg_parquet/releases/tag/v0.3.2) (0.14.1) 
+- pg_cardano [1.0.5](https://github.com/Fell-x27/pg_cardano/commits/master/) (pgrx 0.12) -> 0.14.1
+- pglite_fusion [0.0.5](https://github.com/frectonz/pglite-fusion/releases/tag/v0.0.5) (pgrx 0.12.8) -> 14.1
+- wrappers [0.4.6](https://github.com/supabase/wrappers/releases/tag/v0.4.6) (pgrx 0.12.9)
+- timescaledb-toolkit [1.21.0](https://github.com/timescale/timescaledb-toolkit/releases/tag/1.21.0) (0.12.9)
+- pgvectorscale [0.7.1](https://github.com/timescale/pgvectorscale/releases/tag/0.7.1) (pgrx 0.12.9)
+- pg_session_jwt [0.3.1](https://github.com/neondatabase/pg_session_jwt/releases/tag/v0.3.1) (pgrx 0.12.6) -> 0.12.9
+- vchord_bm25 [0.2.1](https://github.com/tensorchord/VectorChord-bm25/releases/tag/0.2.1)  (pgrx 0.13.1)
+- vchord [0.3.0](https://github.com/tensorchord/VectorChord/releases/tag/0.3.0) (pgrx 0.13.1)
+
+DEB
+
+- pg_ivm 1.10
+- plpgsql_check [2.8.1](https://github.com/okbob/plpgsql_check/releases/tag/v2.8.1)
+- pg_stat_monitor [2.1.1](https://github.com/percona/pg_stat_monitor/releases/tag/2.1.1)
+- pg_show_plans [2.1.3](https://github.com/cybertec-postgresql/pg_show_plans/releases/tag/v2.1.3)
+
+
+
+## 2025-03-30
+
+- bump pgcollection RPM to 1.0.0
+- bump pg_vectorize RPM to 0.22.1
+- bump pglite_fusion RPM to 0.0.4
+- bump aggs_for_vecs RPM to 1.4.0
+- bump pg_tracing RPM to 0.1.3
+- bump pgmq RPM to 1.5.1
+
 ## 2025-02-22
 
 - documentdb 0.101-0

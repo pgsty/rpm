@@ -3,24 +3,14 @@
 %global sname supautils
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%ifarch ppc64 ppc64le s390 s390x armv7hl
- %if 0%{?rhel} && 0%{?rhel} == 7
-  %{!?llvm:%global llvm 0}
- %else
-  %{!?llvm:%global llvm 1}
- %endif
-%else
- %{!?llvm:%global llvm 1}
-%endif
-
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.6.0
+Version:	2.9.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0
 URL:		https://github.com/supabase/supautils
 Source0:	https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
-#           https://github.com/supabase/supautils/archive/refs/tags/v2.6.0.tar.gz
+#           https://github.com/supabase/supautils/archive/refs/tags/v2.9.1.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
@@ -28,34 +18,6 @@ Requires:	postgresql%{pgmajorversion}-server
 Supautils is an extension that secures a PostgreSQL cluster on a cloud environment.
 It doesn't require creating database objects. It's a shared library that modifies PostgreSQL behavior through "hooks",
 not through tables or functions.
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 17.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -65,20 +27,18 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+install -d -m 755 %{buildroot}%{pginstdir}/lib/
+install -m 755 build/%{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
 
 %files
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %exclude /usr/lib/.build-id/*
-%if %llvm
-%files llvmjit
-   %{pginstdir}/lib/bitcode/*
-%endif
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 2.9.1
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.6.0
-* Tue Oct 15 2023 Vonng <rh@vonng.com> - 2.5.0
+* Sun Oct 15 2023 Vonng <rh@vonng.com> - 2.5.0
 * Mon Oct 14 2023 Vonng <rh@vonng.com> - 2.4.0
-* Thu Jul 18 2023 Vonng <rh@vonng.com> - 2.2.1
+* Tue Jul 18 2023 Vonng <rh@vonng.com> - 2.2.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -16,8 +16,6 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion}  pg_ivm_%{pgmajorversion}
 %if 0%{?fedora} || 0%{?rhel} >= 8
 Recommends: pg_partman_%{pgmajorversion} hydra_%{pgmajorversion}
-%else
-Requires: pg_partman_%{pgmajorversion} hydra_%{pgmajorversion}
 %endif
 
 %description

@@ -455,7 +455,7 @@ pg_later:
 pg_anon:
 	./build pg_anon nodebug 13 14 15 16 17
 timescaledb_toolkit:
-	./build timescaledb_toolkit nodebug 14 15 16 17
+	./build timescaledb_toolkit nodebug 15 16 17
 
 pgsmcrypto:
 	./build pgsmcrypto nodebug

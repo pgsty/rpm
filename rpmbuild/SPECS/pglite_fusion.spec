@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	0.0.4
+Version:	0.0.5
 Release:	1PIGSTY%{?dist}
 Summary:	Embed an SQLite database in your PostgreSQL table. AKA multitenancy has been solved.
 License:	MIT
@@ -37,6 +37,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 0.0.5
 * Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.0.4
 * Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.0.3
 - Initial RPM release, used by Pigsty <https://pigsty.io>

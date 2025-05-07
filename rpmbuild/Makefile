@@ -220,7 +220,7 @@ pg_base36:
 pg_base62:
 	./build pg_base62
 pg_envvar:
-	./build pg_envvar
+	./build pg_envvar nodebug
 pg_html5_email_address:
 	./build pg_html5_email_address
 quantile:
@@ -463,6 +463,8 @@ pg_tiktoken:
 	./build pg_tiktoken nodebug
 pg_summarize:
 	./build pg_summarize nodebug
+tzf:
+	./build tzf nodebug
 pg_polyline:
 	./build pg_polyline nodebug
 pg_explain_ui:
@@ -491,6 +493,7 @@ vchord:
 	./build vchord nodebug 14 15 16 17
 vchord_bm25:
 	./build vchord_bm25 nodebug 14 15 16 17
+
 
 # pgrx 0.11.4
 plprql:

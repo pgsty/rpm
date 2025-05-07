@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.2
+Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0
@@ -39,6 +39,7 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 0.3.0
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.2.2
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.2.1
 * Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.2.0

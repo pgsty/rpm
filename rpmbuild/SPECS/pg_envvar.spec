@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.0.1
 Release:	1PIGSTY%{?dist}
 Summary:	Postgers extension to fetch the value of an environment variable
 License:	PostgreSQL
@@ -77,5 +77,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/*.md
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 1.0.1
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

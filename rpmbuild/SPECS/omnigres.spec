@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	20250120
+Version:	20250507
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres as a Platform
 License:	Apache-2.0
@@ -40,5 +40,6 @@ cp -a %{_builddir}/%{sname}-%{version}/pg%{pgmajorversion}/packaged/extension/* 
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 20250507
 * Mon Jan 20 2025 Vonng <rh@vonng.com> - 20250120
 - Initial RPM release, used by Pigsty <https://pigsty.io>

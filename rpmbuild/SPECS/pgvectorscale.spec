@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.0
+Version:	0.7.1
 Release:	1PIGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
@@ -40,6 +40,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 0.7.1
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.6.0
 - https://github.com/timescale/pgvectorscale/releases/tag/0.6.0
 * Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.5.1

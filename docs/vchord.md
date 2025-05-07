@@ -1,5 +1,9 @@
 # vchord building caveats
 
+EL 8/9 直接有 Clang ，无需特殊处理，Debian/Ubuntu 需要特殊处理
+
+
+
 Ubuntu 24 直接安装 Clang 即可
 
 ```bash
@@ -15,5 +19,5 @@ curl --proto '=https' --tlsv1.2 -sSf https://apt.llvm.org/llvm.sh | bash -s -- 1
 sudo update-alternatives --install /usr/bin/clang clang $(which clang-18) 255
 ```
 
-EL 9 直接有 Clang 18
+
 

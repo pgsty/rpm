@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.19.0
+Version:	1.21.0
 Release:	1PIGSTY%{?dist}
 Summary:	Extension for more hyperfunctions, fully compatible with TimescaleDB and PostgreSQL
 License:	Timescale
@@ -39,5 +39,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed May 07 2025 Vonng <rh@vonng.com> - 2.21.0
 * Thu Jan 23 2025 Vonng <rh@vonng.com> - 1.19.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -428,6 +428,8 @@ pg_kaboom:
 	./build pg_kaboom 13 14 15 16
 jsonb_apply:
 	./build jsonb_apply
+sqlite_fdw:
+	./build sqlite_fdw
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #

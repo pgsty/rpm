@@ -18,7 +18,7 @@ Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0
 Get timezone via longitude and latitude in PostgreSQL in a fast way
 
 %prep
-%setup -q -n tzf-pg-%{version}
+%setup -q -n pg-tzf-%{version}
 
 %build
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
@@ -26,9 +26,9 @@ PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/tzf-pg-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/tzf-pg-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/tzf-pg-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %doc README.md

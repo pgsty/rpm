@@ -4,12 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	0.2.2
 Release:	1PIGSTY%{?dist}
 Summary:	Fast PG extension to lookup timezone name by GPS coordinates
 License:	MIT
 URL:		https://github.com/ringsaturn/tzf-pg
-Source0:	tzf-pg-%{version}.tar.gz
+Source0:	pg-tzf-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0
@@ -39,5 +39,6 @@ cp -a %{_builddir}/tzf-pg-%{version}/target/release/%{pname}-pg%{pgmajorversion}
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu May 22 2025 Vonng <rh@vonng.com> - 0.2.2
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.2.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

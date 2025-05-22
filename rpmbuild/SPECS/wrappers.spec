@@ -4,12 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.6
+Version:	0.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
 SOURCE0:    wrappers-%{version}.tar.gz
+#PGRX_VER:  0.12.9
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -41,6 +42,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu May 22 2025 Vonng <rh@vonng.com> - 0.5.0
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.4.6
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.4.5
 * Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.4.4

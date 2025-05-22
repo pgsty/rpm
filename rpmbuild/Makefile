@@ -114,7 +114,7 @@ pg_duckdb:
 pgroonga:
 	./build pgroonga 13 14 15 16 17
 timescaledb:
-	./build timescaledb nodebug 14 15 16 17
+	./build timescaledb nodebug 15 16 17
 citus:
 	./build citus nodebug 15 16 17
 

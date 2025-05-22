@@ -5,15 +5,16 @@
 
 Summary:	SQLite Foreign Data Wrapper for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.5.1
+Version:	2.5.0
 Release:	2PIGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/pgspider/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	postgresql%{pgmajorversion}-server sqlite-devel
-BuildRequires:	libspatialite-devel
+#BuildRequires:	libspatialite-devel
 Requires:	postgresql%{pgmajorversion}-server
+#Requires:	libspatialite
 
 %if 0%{?suse_version} >= 1500
 # Unfortunately SLES 15 ships the libraries with -devel subpackage:
@@ -47,11 +48,11 @@ This package provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 ENABLE_GIS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 ENABLE_GIS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 %{__install} -d %{buildroot}%{pginstdir}/doc/extension
 %{__install} -m 644 README.md %{buildroot}%{pginstdir}/doc/extension/README-%{sname}.md
 %{__rm} -f %{buildroot}%{pginstdir}/doc/extension/README.md
@@ -70,5 +71,5 @@ USE_PGXS=1 ENABLE_GIS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} i
 %endif
 
 %changelog
-* Wed May 21 2025 Vonng <rh@vonng.com> - 2.5.1-1PIGSTY
+* Thu May 22 2025 Vonng <rh@vonng.com> - 2.5.0-2PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

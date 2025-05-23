@@ -16,4 +16,5 @@ tf/*.tfstate*
 tf/.terraform*
 #tf/terraform.tf
 
-docs/*.md
+
+docs/*

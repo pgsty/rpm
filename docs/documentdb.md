@@ -30,7 +30,7 @@ make documentdb
 ## Debian
 
 ```bash
-cp ~/rpmbuild/SOURCES/documentdb-0.103.0-ferretdb-2.2.0.tar.gz /tmp/
+cp ~/deb/tarball/documentdb-0.103.0-ferretdb-2.2.0.tar.gz /tmp/
 cd /tmp/;
 tar -xf documentdb-0.103.0-ferretdb-2.2.0.tar.gz
 cp -r documentdb-0.103.0-ferretdb-2.2.0/scripts /tmp/install_setup

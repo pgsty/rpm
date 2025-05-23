@@ -2,17 +2,15 @@
 
 ## 2025-05-22
 
+- spat [0.1.0a4](https://github.com/Florents-Tselai/spat) new extension
+- pgsentinel [1.1.0](https://github.com/pgsentinel/pgsentinel/releases/tag/v1.1.0) new extension
 - timescaledb [2.20.0](https://github.com/timescale/timescaledb/releases/tag/2.20.0) DROP PG14 support
+- sqlite_fdw [2.5.0](https://github.com/pgspider/sqlite_fdw/releases/tag/v2.5.0)
+- documentdb [0.103.0](https://github.com/FerretDB/documentdb/releases/tag/v0.103.0-ferretdb-2.2.0) + aarch64
 - tzf [0.2.2](https://github.com/ringsaturn/pg-tzf/releases/tag/v0.2.2) 0.14.1
 - pg_vectorize [0.22.2](https://github.com/ChuckHend/pg_vectorize/releases/tag/v0.22.2) pgrx 0.13.1
 - wrappers [0.5.0](https://github.com/supabase/wrappers/releases/tag/v0.5.0) 0.12.9
-- sqlite_fdw [2.5.0](https://github.com/pgspider/sqlite_fdw/releases/tag/v2.5.0)
-- documentdb [0.103.0](https://github.com/FerretDB/documentdb/releases/tag/v0.103.0-ferretdb-2.2.0)
-
-```bash
-
-```
-
+- pgml [2.10.0](https://github.com/postgresml/postgresml/releases/tag/v2.10.0) pgrx 0.12.9
 
 ## 2025-05-07
 
@@ -23,7 +21,7 @@
 - tzf-pg [0.2.0](https://github.com/ringsaturn/tzf-pg/releases/tag/v0.2.0) (pgrx 0.14.1)
 - pg_search [0.15.18](https://github.com/paradedb/paradedb/releases/tag/v0.15.18) (pgrx 0.14.1)
 - anon [2.1.1](https://gitlab.com/dalibo/postgresql_anonymizer/-/tree/latest/debian?ref_type=heads) (pgrx 0.14.1)
-- pg_parquet [0.4.0](https://github.com/CrunchyData/pg_parquet/releases/tag/v0.3.2) (0.14.1) 
+- pg_parquet [0.4.0](https://github.com/CrunchyData/pg_parquet/releases/tag/v0.4.0) (0.14.1) 
 - pg_cardano [1.0.5](https://github.com/Fell-x27/pg_cardano/commits/master/) (pgrx 0.12) -> 0.14.1
 - pglite_fusion [0.0.5](https://github.com/frectonz/pglite-fusion/releases/tag/v0.0.5) (pgrx 0.12.8) -> 14.1
 - vchord_bm25 [0.2.1](https://github.com/tensorchord/VectorChord-bm25/releases/tag/0.2.1)  (pgrx 0.13.1)
@@ -131,7 +129,6 @@ TODO:
 - [ ] pgvector.rs https://github.com/tensorchord/pgvecto.rs
 - [ ] pg_stat_sysinfo https://github.com/postgresml/pg_stat_sysinfo
 - [ ] pg-jsonschema-boon : https://github.com/tembo-io/pg-jsonschema-boon
-
 - [ ] pg_xenophile https://github.com/bigsmoke/pg_xenophile
 - [ ] pg_uint128 https://github.com/pg-uint/pg-uint128 (el8 failed)
 - [ ] pg_task https://github.com/RekGRpth/pg_task

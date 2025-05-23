@@ -433,7 +433,7 @@ sqlite_fdw:
 pgsentinel:
 	./build pgsentinel
 spat:
-	./build spat
+	./build spat 17
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #

@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.5.2
+Version:	0.6.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Data Dictionary, Inspect data dictionary via SQL
 License:	Apache-2.0
 URL:		https://github.com/rustprooflabs/pgdd
 SOURCE0:    pgdd-%{version}.tar.gz
-#           https://github.com/rustprooflabs/pgdd/archive/refs/tags/0.5.2.tar.gz
+#           https://github.com/rustprooflabs/pgdd/archive/refs/tags/0.6.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -40,5 +40,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon May 26 2025 Vonng <rh@vonng.com> - 0.6.0
+- Add PostgreSQL 17 support with pgrx 0.14.1
 * Sun May 5 2024 Vonng <rh@vonng.com> - 0.5.2
 - Initial RPM release, used by Pigsty <https://pigsty.io>

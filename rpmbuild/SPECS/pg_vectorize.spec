@@ -8,9 +8,9 @@ Version:	0.22.2
 Release:	1PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
-URL:		https://github.com/tembo-io/pg_vectorize
+URL:		https://github.com/ChuckHend/pg_vectorize
 SOURCE0:    pg_vectorize-%{version}.tar.gz
-#           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.22.1.tar.gz
+#           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.22.2.tar.gz
 #PGRX_VER:  0.13.1
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

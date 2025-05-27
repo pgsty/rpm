@@ -9,8 +9,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Execute SQL now and get the results later.
 License:	PostgreSQL
 SOURCE0:    pg_later-%{version}.tar.gz
-URL:		https://github.com/tembo-io/pg_later
-#           https://github.com/tembo-io/pg_later/archive/refs/tags/v0.3.0.tar.gz
+URL:		https://github.com/ChuckHend/pg_later
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1

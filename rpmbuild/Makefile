@@ -498,18 +498,22 @@ vchord:
 vchord_bm25:
 	./build vchord_bm25 nodebug 14 15 16 17
 pg_tokenizer:
-	./build pg_tokenizer nodebug
+	./build pg_tokenizer nodebug 14 15 16 17
 pg_render:
-	./build pg_render nodebug
+	./build pg_render nodebug 14 15 16 17
 convert:
-	./build convert nodebug
+	./build convert nodebug 13 14 15 16 17
+pgdd:
+	./build pgdd nodebug
+pgx_ulid:
+	./build pgx_ulid nodebug
+
 
 # pgrx 0.11.4
 plprql:
 	./build plprql nodebug 12 13 14 15 16
-# pgrx 0.10.x
-pgdd:
-	./build pgdd nodebug
+
+
 
 ###############################################################
 #                       Kernels                               #
@@ -556,7 +560,7 @@ rmdbg:
 	sqlite_fdw jsonb_apply pgsentinel spat pgcollection pg_bzip pg_tle pg_incremental \
 	rust rust1 rust2 rust3 rusta rustb rustc rustd \
 	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_tzf pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord vchord_bm25 pg_tokenizer pg_render convert \
-	pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd \
+	pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd pgx_ulid \
 	openhalodb oriolepg orioledb \
 	ls-rpm ls-srpm rm-rpm rm-srpm
 

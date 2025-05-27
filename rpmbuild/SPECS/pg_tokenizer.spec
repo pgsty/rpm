@@ -3,7 +3,7 @@
 %global sname pg_tokenizer.rs
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-Name:		%{sname}_%{pgmajorversion}
+Name:		%{pname}_%{pgmajorversion}
 Version:	0.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL tokenizer extension for full-text search

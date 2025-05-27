@@ -3,12 +3,12 @@
 %global pgbaseinstdir	/usr/oriole-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	17.0
-Release:	6PIGSTY%{?dist}
+Version:	17.9
+Release:	1PIGSTY%{?dist}
 Summary:	Modern cloud-native storage engine for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/orioledb/orioledb
-Source0:	%{sname}-17.0.tar.gz
+Source0:	%{sname}-17.9.tar.gz
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm, clang-devel, llvm-devel
@@ -24,7 +24,7 @@ OrioleDB consists of an extension, building on the innovative table access metho
 By extending and enhancing the current table access methods, OrioleDB opens the door to a future of more powerful storage models that are optimized for cloud and modern hardware architectures.
 
 %prep
-%setup -q -n %{sname}-17.0
+%setup -q -n %{sname}-17.9
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"
@@ -91,5 +91,6 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
+* Tue May 27 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.9-1PIGSTY
 * Sat Apr 05 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.0-6PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

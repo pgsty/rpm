@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.4
+Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	pg_idkit is a Postgres extension for generating many popular types of identifiers
 License:	Apache-2.0
@@ -39,6 +39,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon May 26 2025 Vonng <rh@vonng.com> - 0.3.0
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.2.4
 * Sun May 5 2024 Vonng <rh@vonng.com> - 0.2.3
 - Initial RPM release, used by Pigsty <https://pigsty.io>

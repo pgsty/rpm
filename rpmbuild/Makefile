@@ -499,9 +499,10 @@ vchord_bm25:
 	./build vchord_bm25 nodebug 14 15 16 17
 pg_tokenizer:
 	./build pg_tokenizer nodebug
-pgfdb:
-	./build pgfdb nodebug
-
+pg_render:
+	./build pg_render nodebug
+convert:
+	./build convert nodebug
 
 # pgrx 0.11.4
 plprql:
@@ -554,7 +555,7 @@ rmdbg:
 	omnisketch ddsketch pg_duration ddl_historization data_historization pg_schedoc floatfile pg_upless vasco pg_xxhash pg_xenophile pg_drop_events documentdb pg_tracing pg_curl pgxicor pgsparql pgjq hashtypes db_migrator pg_bulkload pg_cooldown pg_mustach \
 	sqlite_fdw jsonb_apply pgsentinel spat pgcollection pg_bzip pg_tle pg_incremental \
 	rust rust1 rust2 rust3 rusta rustb rustc rustd \
-	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_tzf pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord vchord_bm25 pg_tokenizer pgfdb \
+	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_tzf pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord vchord_bm25 pg_tokenizer pg_render convert \
 	pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd \
 	openhalodb oriolepg orioledb \
 	ls-rpm ls-srpm rm-rpm rm-srpm

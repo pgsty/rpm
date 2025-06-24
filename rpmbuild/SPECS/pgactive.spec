@@ -60,8 +60,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %files
 %defattr(644,root,root,755)
 %license LICENSE
+%{pginstdir}/bin/*
 %{pginstdir}/lib/%{sname}.so
 %{pginstdir}/share/extension/%{sname}*.sql
+%{pginstdir}/share/extension/%{sname}.control
 %{pginstdir}/share/extension/%{sname}.control
 
 %if %llvm
@@ -70,6 +72,8 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %endif
 %exclude /usr/lib/.build-id/*
 %exclude %{pginstdir}/doc/extension/README.md
+%exclude /usr/lib/debug/*
+
 
 %changelog
 * Tue Jun 24 2025 Vonng <rh@vonng.com> - 2.1.5-1PIGSTY

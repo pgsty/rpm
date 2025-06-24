@@ -2,14 +2,12 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2025-05-23
+# Mtime     :   2025-06-24
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   AGPLv3
 #==============================================================#
-
-
-ARCH=x86_64
+ARCH=$(shell uname -m)
 
 ###############################################################
 #                        1. Info                              #
@@ -434,8 +432,16 @@ pgsentinel:
 	./build pgsentinel
 spat:
 	./build spat 17
+libpgfeutils:
+	./build libpgfeutils14 14
+	./build libpgfeutils15 15
+	./build libpgfeutils16 16
+	./build libpgfeutils17 17
+feutils-install:
+	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/libpgfeutils*$(ARCH).rpm
 pgactive:
 	./build pgactive
+
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #

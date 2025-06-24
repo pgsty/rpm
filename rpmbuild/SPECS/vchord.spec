@@ -39,7 +39,7 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 %exclude /usr/lib/.build-id
 
 %changelog
-* Tue Jue 24 2025 Vonng <rh@vonng.com> - 0.4.3
+* Tue Jun 24 2025 Vonng <rh@vonng.com> - 0.4.3
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.3.0
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.2.2
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.2.1

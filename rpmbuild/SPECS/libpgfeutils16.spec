@@ -6,7 +6,7 @@
 %global sname postgresql
 %global pginstdir /usr/pgsql-16
 
-Name:		libpgfeutils
+Name:		libpgfeutils16
 Version:	16.9
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Front-End Utils Library

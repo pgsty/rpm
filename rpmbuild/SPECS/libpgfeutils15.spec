@@ -6,7 +6,7 @@
 %global sname postgresql
 %global pginstdir /usr/pgsql-15
 
-Name:		libpgfeutils
+Name:		libpgfeutils15
 Version:	15.13
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Front-End Utils Library

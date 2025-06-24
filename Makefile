@@ -60,10 +60,16 @@ push8:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el8:~/rpmbuild/
 push9:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9:~/rpmbuild/
+push10:
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el10:~/rpmbuild/
 push8a:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el8a:~/rpmbuild/
 push9a:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9a:~/rpmbuild/
+push10a:
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el10a:~/rpmbuild/
+pushm:
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ meta:~/rpmbuild/
 
 # fetch RPMS from bucilding VMs
 pull-el: pull9 pull8 pull7

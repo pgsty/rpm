@@ -1,6 +1,13 @@
 # Changelog & Todolist
 
 
+## 2025-06-24
+
+- citus 13.0.3 -> 13.1.0
+- timescaledb 2.20.0 -> 2.21.0
+- vchord 0.3.0 -> [0.4.3](https://github.com/tensorchord/VectorChord/releases/tag/0.4.3)
+- pgactive 2.1.5
+
 ## 2025-05-26
 
 - pgdd [0.6.0](https://github.com/rustprooflabs/pgdd) (pgrx 0.14.1)

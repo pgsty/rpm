@@ -18,8 +18,8 @@ locals {
   spot_policy = "SpotWithPriceLimit"    # NoSpot, SpotWithPriceLimit, SpotAsPriceGo
   spot_price_limit = 5                  # only valid when spot_policy is SpotWithPriceLimit
   instance_type_map = {
-    amd64 = "ecs.c8i.4xlarge"
-    arm64 = "ecs.c8y.4xlarge"
+    amd64 = "ecs.c8i.2xlarge"
+    arm64 = "ecs.c8y.2xlarge"
   }
   amd64_instype = local.instance_type_map["amd64"]
   arm64_instype = local.instance_type_map["arm64"]
@@ -53,6 +53,7 @@ data "alicloud_images" "el9_arm64_img" {
 provider "alicloud" {
   # access_key = "????????????????????"
   # secret_key = "????????????????????"
+  region = "cn-shanghai"
 }
 
 
@@ -69,7 +70,7 @@ resource "alicloud_vpc" "vpc" {
 resource "alicloud_vswitch" "vsw" {
   vpc_id     = "${alicloud_vpc.vpc.id}"
   cidr_block = "10.10.10.0/24"
-  zone_id    = "cn-beijing-l"
+  zone_id    = "cn-shanghai-l"
 }
 
 # add default security group and allow all tcp traffic

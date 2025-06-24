@@ -437,7 +437,7 @@ libpgfeutils:
 	./build libpgfeutils15 15
 	./build libpgfeutils16 16
 	./build libpgfeutils17 17
-feutils-install:
+libpgfeutils-install:
 	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/libpgfeutils*$(ARCH).rpm
 pgactive:
 	./build pgactive

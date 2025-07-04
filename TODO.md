@@ -7,6 +7,39 @@
 - timescaledb 2.20.0 -> 2.21.0
 - vchord 0.3.0 -> [0.4.3](https://github.com/tensorchord/VectorChord/releases/tag/0.4.3)
 - pgactive 2.1.5
+- documentdb 0.104.0
+
+
+```bash
+pig build get timescaledb
+pig build get citus
+pig build get vchord
+pig build get postgresql
+
+pig build get pgvectorscale
+pig build ext pgvectorscale
+
+cd deb
+100  apt update
+106  wget https://repo.pigsty.io/apt/pgsql/bookworm/pool/main/p/pgvectorscale/postgresql-16-pgvectorscale_0.7.1-1PIGSTY~bookworm_amd64.deb
+153  apt-get install -y wget build-essential git clang lld flex libreadline-dev zlib1g-dev libssl-dev tmux lldb gdb make perl python3-dev python3-venv python3-pip netcat-traditional bison
+
+apt install -y libselinux1-dev  libpam0g-dev  libxslt1-dev  libxml2-dev  libssl-dev  libreadline-dev  zlib1g-dev  liblz4-dev  libzstd-dev  krb5-multidev
+
+pig build dep oriolepg_17
+pig build dep citus
+pig build dep timescaledb
+
+pig build get pgactive
+pig build ext pgactive
+rm -rf /tmp/rpm; pig build spec
+
+./build libpgfeutils14 14
+./build libpgfeutils15 15
+./build libpgfeutils16 16
+./build libpgfeutils17 17
+```
+
 
 ## 2025-05-26
 

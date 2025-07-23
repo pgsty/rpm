@@ -28,10 +28,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 %install
 %{__rm} -rf %{buildroot}
 install -d -m 755 %{buildroot}%{pginstdir}/lib/
-install -m 755 build/%{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
+install -m 755 %{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
 
 %files
-%doc README.md
+%license LICENSE
 %{pginstdir}/lib/%{pname}.so
 %exclude /usr/lib/.build-id/*
 

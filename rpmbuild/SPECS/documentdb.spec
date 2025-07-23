@@ -18,7 +18,7 @@ Release:	0PIGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/FerretDB/documentdb
-Source0:	%{sname}-%{version}.0-ferretdb-2.3.0.tar.gz
+Source0:	%{sname}-%{version}.0-ferretdb-2.4.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -66,7 +66,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{pname}-%{version}.0-ferretdb-2.3.0
+%setup -q -n %{pname}-%{version}.0-ferretdb-2.4.0
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}

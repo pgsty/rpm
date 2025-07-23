@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.104
+Version:	0.105
 Release:	0PIGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
@@ -93,6 +93,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Wed Jul 23 2025 Vonng <rh@vonng.com> - 0.105-0PIGSTY
+- work with ferretdb 2.4.0 https://github.com/FerretDB/documentdb/releases/tag/v0.105.0-ferretdb-2.4.0
 * Fri Jul 04 2025 Vonng <rh@vonng.com> - 0.104-0PIGSTY
 - add lots of new features
 * Thu May 22 2025 Vonng <rh@vonng.com> - 0.103-0PIGSTY

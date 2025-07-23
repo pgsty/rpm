@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.2.3
+Version:	3.2.4
 Release:	1PIGSTY%{?dist}
 Summary:	V8 Engine Javascript Procedural Language add-on for PostgreSQL
 License:	BSD
 URL:		https://github.com/plv8/plv8
 SOURCE0:    plv8-%{version}.tar.gz
-#           https://github.com/plv8/plv8/archive/refs/tags/v3.2.3.tar.gz
+#           https://github.com/plv8/plv8/archive/refs/tags/v3.2.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -78,6 +78,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Jul 23 2025 Vonng <rh@vonng.com> - 3.2.4
 * Sun Oct 13 2024 Vonng <rh@vonng.com> - 3.2.3
 * Sun May 5 2024 Vonng <rh@vonng.com> - 3.2.2
 - Initial RPM release, used by Pigsty <https://pigsty.io>

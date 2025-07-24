@@ -56,7 +56,6 @@ grep OrioleDB  ${POSTGRES_DIR}/meson.build
 
 
 echo package ${PACKAGE_NAME}
-rm -rf ${POSTGRES_DIR}/.git
 mv ${POSTGRES_DIR} ${SRC_DIR}/${PACKAGE_NAME}
 
 cd ${SRC_DIR}

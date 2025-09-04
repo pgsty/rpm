@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension that adds native support for unsigned integers and 128-bit signed/unsigned integer types.
 License:	PostgreSQL
@@ -79,5 +79,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Sep 04 2025 Vonng <rh@vonng.com> - 1.1.0
 * Sun Oct 20 2024 Vonng <rh@vonng.com> - 1.0.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

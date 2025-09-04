@@ -156,10 +156,10 @@ pgpcre:
 	./build pgpcre
 
 icu_ext:
-	./build icu_ext
+	./build icu_ext 13 14 15 16 17 18
 
 asn1oid:
-	./build asn1oid
+	./build asn1oid 13 14 15 16 17 18
 
 numeral:
 	./build numeral
@@ -186,7 +186,7 @@ pgextwlist:
 	./build pgextwlist
 
 toastinfo:
-	./build toastinfo
+	./build toastinfo 13 14 15 16 17 18
 
 
 
@@ -303,7 +303,7 @@ plproxy:
 table_version:
 	./build table_version   # el8/el9
 ddlx:
-	./build ddlx
+	./build ddlx 13 14 15 16 17 18
 postgresql_anonymizer:
 	./build postgresql_anonymizer
 count_distinct:
@@ -349,7 +349,7 @@ pg_timeseries:
 pg_plan_filter:
 	./build pg_plan_filter
 pg_uint128:
-	./build pg_uint128
+	./build pg_uint128 13 14 15 16 17 18
 pg_relusage:
 	./build pg_relusage
 pg_net:
@@ -502,7 +502,7 @@ pg_smtp_client:
 pgml:
 	./build pgml nodebug 14 15 16 17
 vchord:
-	./build vchord nodebug 14 15 16 17
+	./build vchord nodebug 14 15 16 17 18
 vchord_bm25:
 	./build vchord_bm25 nodebug 14 15 16 17
 pg_tokenizer:

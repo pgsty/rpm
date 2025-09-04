@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.3
+Version:	0.5.1
 Release:	1PIGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0
@@ -39,10 +39,11 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 %exclude /usr/lib/.build-id
 
 %changelog
-* Tue Jun 24 2025 Vonng <rh@vonng.com> - 0.4.3
-* Wed May 07 2025 Vonng <rh@vonng.com> - 0.3.0
-* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.2.2
-* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.2.1
-* Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.2.0
-* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.1.0
+* Thu Sep 04 2025 Vonng <rh@vonng.com> - 0.5.1-1PIGSTY
+* Tue Jun 24 2025 Vonng <rh@vonng.com> - 0.4.3-1PIGSTY
+* Wed May 07 2025 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.2.2-1PIGSTY
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.2.1-1PIGSTY
+* Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
+* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

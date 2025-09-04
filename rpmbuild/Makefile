@@ -502,7 +502,7 @@ pg_smtp_client:
 pgml:
 	./build pgml nodebug 14 15 16 17
 vchord:
-	./build vchord nodebug 14 15 16 17 18
+	./build vchord nodebug 14 15 16 17
 vchord_bm25:
 	./build vchord_bm25 nodebug 14 15 16 17
 pg_tokenizer:

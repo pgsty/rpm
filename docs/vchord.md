@@ -3,6 +3,10 @@
 EL 8/9 直接有 Clang ，无需特殊处理，Debian/Ubuntu 需要特殊处理
 
 
+```bash
+yum install clang
+```
+
 
 Ubuntu 24 直接安装 Clang 即可
 

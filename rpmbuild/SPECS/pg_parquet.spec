@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.0
+Version:	0.4.3
 Release:	1PIGSTY%{?dist}
 Summary:	Copy to/from Parquet in S3 from within PostgreSQL
 License:	PostgreSQL
@@ -39,6 +39,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu Sep 04 2025 Vonng <rh@vonng.com> - 0.4.3
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.4.0
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.3.1
 * Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.2.0

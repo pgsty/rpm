@@ -18,8 +18,8 @@ RPMS_DIR="${PROG_DIR}/RPMS"
 # Usage
 #--------------------------------------------------------------#
 # build [nodebug] <extension> <versions...>
-# ./build pg_roaringbitmap         13 14 15 16 17
-# ./build pgjwt            nodebug 13 14 15 16 17
+# ./build pg_roaringbitmap         13 14 15 16 17 18
+# ./build pgjwt            nodebug 13 14 15 16 17 18
 
 #--------------------------------------------------------------#
 # Log Util
@@ -59,7 +59,7 @@ if [ $# -eq 0 ]; then
 else
 
     # Validate versions
-    VALID_VERSIONS="10 11 12 13 14 15 16 17"
+    VALID_VERSIONS="10 11 12 13 14 15 16 17 18 19"
     for arg in "$@"; do
         found=false
         for ver in ${VALID_VERSIONS}; do

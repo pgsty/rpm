@@ -20,7 +20,7 @@ License:	PostgreSQL
 URL:		https://github.com/petere/pguri
 Source0:	pguri-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 uriparser-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

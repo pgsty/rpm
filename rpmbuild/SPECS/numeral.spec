@@ -20,7 +20,7 @@ License:	GPL
 URL:		https://github.com/df7cb/postgresql-numeral
 Source0:	%{pname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 flex bison
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

@@ -20,7 +20,7 @@ License:	GPLv3
 URL:		https://github.com/chanukyasds/pg_math
 Source0:	%{sname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 gsl-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

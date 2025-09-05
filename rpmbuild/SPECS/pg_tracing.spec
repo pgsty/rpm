@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.3
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Distributed Tracing for PostgreSQL
 License:	MIT
 URL:		https://github.com/DataDog/pg_tracing
@@ -78,6 +78,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.1.3
-* Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.1.2
+* Fri Sep 05 2025 Vonng <rh@vonng.com> - 0.1.3-2PIGSTY
+- pg18 support with https://github.com/DataDog/pg_tracing/commit/
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.1.3-1PIGSTY
+* Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.1.2-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -20,7 +20,7 @@ License:	MIT
 URL:		https://github.com/brettlaforge/pg_redis_pubsub
 Source0:	%{sname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 hiredis-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -76,5 +76,5 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.1
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

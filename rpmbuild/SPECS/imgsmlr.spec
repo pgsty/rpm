@@ -21,7 +21,7 @@ URL:		https://github.com/postgrespro/imgsmlr
 Source0:	imgsmlr-%{version}.tar.gz
 #           https://github.com/postgrespro/imgsmlr/archive/refs/heads/master.zip
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 gd-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

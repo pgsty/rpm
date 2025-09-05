@@ -20,7 +20,7 @@ License:	PostgreSQL
 URL:		https://github.com/pg-redis-fdw/redis_fdw
 Source0:	%{sname}-1.0-%{pgmajorversion}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 hiredis-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

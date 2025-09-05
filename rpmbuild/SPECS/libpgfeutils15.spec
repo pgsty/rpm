@@ -7,7 +7,7 @@
 %global pginstdir /usr/pgsql-15
 
 Name:		libpgfeutils15
-Version:	15.13
+Version:	15.14
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
@@ -32,5 +32,6 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %{pginstdir}/lib/libpgfeutils.a
 
 %changelog
+* Fri Sep 05 2025 Vonng <rh@vonng.com> - 15.14-1PIGSTY
 * Tue Jun 24 2025 Vonng <rh@vonng.com> - 15.13-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

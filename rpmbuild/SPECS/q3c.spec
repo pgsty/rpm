@@ -20,7 +20,7 @@ License:	GPL 2.0
 URL:		https://github.com/segasai/q3c
 Source0:	q3c-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 numactl-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

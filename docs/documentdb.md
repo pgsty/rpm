@@ -8,10 +8,10 @@
 Run with root
 
 ```bash
-cp ~/rpmbuild/SOURCES/documentdb-0.105.0-ferretdb-2.4.0.tar.gz /tmp/
+cp ~/rpmbuild/SOURCES/documentdb-0.106.0-ferretdb-2.5.0.tar.gz /tmp/
 cd /tmp/;
-tar -xf documentdb-0.105.0-ferretdb-2.4.0.tar.gz
-cp -r documentdb-0.105.0-ferretdb-2.4.0/scripts /tmp/install_setup
+tar -xf documentdb-0.106.0-ferretdb-2.5.0.tar.gz
+cp -r documentdb-0.106.0-ferretdb-2.5.0/scripts /tmp/install_setup
 cd /tmp/install_setup
 export CLEANUP_SETUP=1
 export INSTALL_DEPENDENCIES_ROOT=/tmp/install_setup
@@ -32,10 +32,10 @@ cd ~/rpmbuild; make documentdb
 ## Build with proxy and common user
 
 ```bash
-cp ~/rpmbuild/SOURCES/documentdb-0.105.0-ferretdb-2.4.0.tar.gz /tmp/
+cp ~/rpmbuild/SOURCES/documentdb-0.106.0-ferretdb-2.5.0.tar.gz /tmp/
 cd /tmp/;
-tar -xf documentdb-0.105.0-ferretdb-2.4.0.tar.gz
-cp -r documentdb-0.105.0-ferretdb-2.4.0/scripts /tmp/install_setup
+tar -xf documentdb-0.106.0-ferretdb-2.5.0.tar.gz
+cp -r documentdb-0.106.0-ferretdb-2.5.0/scripts /tmp/install_setup
 
 sudo su 
 po

@@ -49,5 +49,5 @@ cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgm
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.18.3
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.17.0
 * Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.16.0
-* Sun May 5 2024 Vonng <rh@vonng.com> - 0.15.0
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.15.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

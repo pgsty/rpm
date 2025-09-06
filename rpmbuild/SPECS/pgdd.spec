@@ -42,5 +42,5 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %changelog
 * Mon May 26 2025 Vonng <rh@vonng.com> - 0.6.0
 - Add PostgreSQL 17 support with pgrx 0.14.1
-* Sun May 5 2024 Vonng <rh@vonng.com> - 0.5.2
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.5.2
 - Initial RPM release, used by Pigsty <https://pigsty.io>

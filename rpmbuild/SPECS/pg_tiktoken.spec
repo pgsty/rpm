@@ -37,5 +37,5 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Sun May 5 2024 Vonng <rh@vonng.com> - 0.0.1
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.0.1
 - Initial RPM release, used by Pigsty <https://pigsty.io>

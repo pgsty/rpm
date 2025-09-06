@@ -9,8 +9,8 @@ Release:	1PIGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
-SOURCE0:    wrappers-%{version}.tar.gz
-#PGRX_VER:  0.12.9
+Source0:    wrappers-%{version}.tar.gz
+#PGRX_VER:  0.14.3
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

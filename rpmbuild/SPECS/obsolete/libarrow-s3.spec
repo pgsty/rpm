@@ -36,5 +36,5 @@ cp -a %{_sourcedir}/libarrow-s3/* %{buildroot}/usr/lib64/
 /sbin/ldconfig
 
 %changelog
-* Sun May 5 2024 Vonng <rh@vonng.com> - 17.0.0
+* Sun May 05 2024 Vonng <rh@vonng.com> - 17.0.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

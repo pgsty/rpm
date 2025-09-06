@@ -17,7 +17,7 @@ Source0:	postgresql-18rc1.tar.gz
 BuildRequires: perl-FindBin
 
 %description
-Add /usr/pgsql-17/lib/libpgfeutils.a for extension building
+Add /usr/pgsql-18/lib/libpgfeutils.a for extension building
 
 %prep
 %setup -q -n %{pname}-%{version}

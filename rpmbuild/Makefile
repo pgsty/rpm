@@ -388,7 +388,7 @@ pg_drop_events:
 documentdb:
 	./build documentdb 15 16 17
 pg_tracing:
-	./build pg_tracing 15 16 17
+	./build pg_tracing 14 15 16 17
 pg_curl:
 	./build pg_curl
 pgxicor:

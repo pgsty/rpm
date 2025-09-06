@@ -14,8 +14,6 @@ License:	PostgreSQL
 URL:		https://www.postgresql.org
 Source0:	%{sname}-%{version}.tar.gz
 
-BuildRequires: perl-FindBin
-
 %description
 Add /usr/pgsql-17/lib/libpgfeutils.a for extension building
 

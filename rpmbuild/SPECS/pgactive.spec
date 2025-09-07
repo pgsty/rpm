@@ -12,7 +12,10 @@ License:	Apache-2.0
 URL:		https://github.com/aws/pgactive
 SOURCE0:    %{sname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros libpgfeutils%{pgmajorversion}
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros libselinux-devel libxslt-devel pam-devel numactl-devel
+%if %{pgmajorversion} >= 14
+BuildRequires: libpgfeutils%{pgmajorversion}
+%endif
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

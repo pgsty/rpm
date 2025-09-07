@@ -13,13 +13,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
-Release:	4PIGSTY%{?dist}
+Version:	1.0.1
+Release:	1PIGSTY%{?dist}
 Summary:	Gzip compress and decompress for PostgreSQL
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-gzip
 Source0:	pgsql-gzip-%{version}.tar.gz
-#           https://github.com/pramsey/pgsql-gzip/archive/refs/tags/v1.0.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  zlib-devel
@@ -81,6 +80,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Sep 07 2025 Vonng <rh@vonng.com> - 1.0.1
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0
 - rename to pg_gzip
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0

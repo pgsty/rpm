@@ -1,5 +1,6 @@
 %global pname vector
 %global sname pgvector
+%global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %{!?llvm:%global llvm 1}
 
@@ -9,11 +10,10 @@ Release:	1PGDG%{?dist}
 Summary:	Open-source vector similarity search for Postgres
 License:	PostgreSQL
 URL:		https://github.com/%{sname}/%{sname}/
-Source0:	https://github.com/%{sname}/%{sname}/archive/refs/tags/v%{version}.tar.gz
+Source0:	pgvector-0.8.1.tar.gz
 
 # To be removed when upstream releases a version with this patch:
 # https://github.com/pgvector/pgvector/pull/311
-Patch0:		pgvector-0.6.2-fixillegalinstructionrror.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -55,9 +55,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 %install
 %{__rm} -rf %{buildroot}
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
-
-#Remove header file, we don't need it right now:
-%{__rm} %{buildroot}%{pginstdir}/include/server/extension/%{pname}/%{pname}.h
 
 %files
 %doc README.md

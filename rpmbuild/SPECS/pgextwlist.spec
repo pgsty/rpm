@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.17
+Version:	1.19
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Extension Whitelisting
 License:	PostgreSQL
@@ -78,5 +78,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/contrib/README.md
 
 %changelog
+* Sun Sep 07 2024 Vonng <rh@vonng.com> - 1.19
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.17
 - Initial RPM release, used by Pigsty <https://pigsty.io>

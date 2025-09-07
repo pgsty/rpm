@@ -3,6 +3,7 @@
 %global pgrwmajver 2
 %global pgrwmidver 0
 %global pgrwminver 0
+%global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %{!?llvm:%global llvm 1}
 
@@ -12,7 +13,7 @@ Version:	%{pgrwmajver}.%{pgrwmidver}.%{pgrwminver}
 Release:	1PIGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/cybertec-postgresql/%{sname}
-Source0:	https://github.com/cybertec-postgresql/pg_rewrite/archive/refs/tags/REL%{pgrwmajver}_%{pgrwmidver}_%{pgrwminver}.tar.gz
+Source0:	pg_rewrite-REL2_0_0.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
 

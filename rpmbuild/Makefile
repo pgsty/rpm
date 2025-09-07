@@ -442,7 +442,10 @@ libpgfeutils-install:
 	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/libpgfeutils*$(ARCH).rpm
 pgactive:
 	./build pgactive
-
+pg_rewrite:
+	./build pg_rewrite
+pgvector:
+	./build pgvector
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #

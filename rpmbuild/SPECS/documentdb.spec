@@ -21,6 +21,10 @@ URL:		https://github.com/FerretDB/documentdb
 Source0:	%{sname}-%{version}.0-ferretdb-2.5.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %{pgmajorversion} == 15
+BuildRequires: systemtap-sdt-devel
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 Requires:   postgresql%{pgmajorversion}-contrib
 Requires:   pg_cron_%{pgmajorversion}

@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	OpenAI tiktoken tokenizer for postgres
 License:	Apache-2.0
 URL:		https://github.com/kelvich/pg_tiktoken
@@ -37,5 +37,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Sun May 05 2024 Vonng <rh@vonng.com> - 0.0.1
+* Sat Oct 25 2025 Vonng <rh@vonng.com> - 0.0.1-2PIGSTY
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

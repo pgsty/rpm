@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.2
+Version:	0.2.3
 Release:	1PIGSTY%{?dist}
 Summary:	Fast PG extension to lookup timezone name by GPS coordinates
 License:	MIT
@@ -39,6 +39,7 @@ cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Oct 25 2025 Vonng <rh@vonng.com> - 0.2.3
 * Thu May 22 2025 Vonng <rh@vonng.com> - 0.2.2
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.2.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

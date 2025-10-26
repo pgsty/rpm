@@ -13,8 +13,8 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.1
-Release:	2PIGSTY%{?dist}
+Version:	1.5.2
+Release:	1PIGSTY%{?dist}
 Summary:	Trusted Language Extensions for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/aws/pg_tle
@@ -80,6 +80,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.5.2-1PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 1.5.1-2PIGSTY
 - pg18 rc1 support with 3c99c51086ae2d1ec7aeb0ecf186a1a29f465d2c
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.5.0-1PIGSTY

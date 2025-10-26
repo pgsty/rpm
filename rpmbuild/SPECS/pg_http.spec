@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.6.3
+Version:	1.7.0
 Release:	1PIGSTY%{?dist}
 Summary:	HTTP client for PostgreSQL, retrieve a web page from inside the database.
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-http
 Source0:	pgsql-http-%{version}.tar.gz
-#           https://github.com/pramsey/pgsql-http/archive/refs/tags/v1.6.3.tar.gz
+#           https://github.com/pramsey/pgsql-http/archive/refs/tags/v1.7.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -79,6 +79,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.7.0
+- Rename package name to pg_http
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.6.3
 - Rename package name to pg_http
 * Mon Dec 16 2024 Vonng <rh@vonng.com> - 1.6.1

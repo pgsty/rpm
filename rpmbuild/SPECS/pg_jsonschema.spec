@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.3
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	PostgreSQL extension providing JSON Schema validation
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_jsonschema
@@ -37,7 +37,8 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Thu Oct 17 2024 Vonng <rh@vonng.com> - 0.3.3
-* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.3.2
-* Sun May 05 2024 Vonng <rh@vonng.com> - 0.3.1
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.3.3-2PIGSTY
+* Thu Oct 17 2024 Vonng <rh@vonng.com> - 0.3.3-1PIGSTY
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.3.2-1PIGSTY
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension to add a collection data type
 License:	Apache-2.0
@@ -25,7 +25,8 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pgcollection is a memory optimized data type for PostgreSQL. The primary usage is a high performance data structure inside of plpglsql functions. Like other PostgreSQL data types, a collection can be a column of a table, but there are no operators.
-A collection is a set of key-value pairs. Each key is a unique string of type text. Entries are stored in creation order. A collection can hold an unlimited number of elements, constrained by the memory available to the database. A collection is stored as a PostgreSQL varlena limiting the maximum size to 1GB if the structure was persisted to a column in a table.
+A collection is a set of key-value pairs. Each key is a unique string of type text. Entries are stored in creation order. A collection can hold an unlimited number of elements, constrained by the memory available to the database.
+A collection is stored as a PostgreSQL varlena limiting the maximum size to 1GB if the structure was persisted to a column in a table.
 The value of an element can be any PostgreSQL type including composite types with a default of type text. All elements in a collection must be of the same type.
 
 %if %llvm
@@ -59,7 +60,9 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+# Generate required header file before parallel build
+PATH=%{pginstdir}/bin:$PATH %{__make} include/collection_config.h
+PATH=%{pginstdir}/bin:$PATH %{__make}
 
 %install
 %{__rm} -rf %{buildroot}
@@ -80,6 +83,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.0.0
-* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.9.1
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.9.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

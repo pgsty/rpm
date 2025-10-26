@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:    1.20231206
+Version:    1.20250815
 Release:    1PIGSTY%{?dist}
 License:    BSD
 Summary:	Unsigned and other extra integer types for PostgreSQL
@@ -26,7 +26,6 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 This extension provides additional integer types for PostgreSQL:
-
 * int1 (signed 8-bit integer)
 * uint1 (unsigned 8-bit integer)
 * uint2 (unsigned 16-bit integer)
@@ -82,5 +81,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.20231206
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.20250815-1PIGSTY
+* Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.20231206-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -13,8 +13,8 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.1
-Release:	1PIGSTY%{?dist}
+Version:	1.0.0
+Release:	2PIGSTY%{?dist}
 Summary:	Gzip compress and decompress for PostgreSQL
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-gzip
@@ -80,8 +80,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Sun Sep 07 2025 Vonng <rh@vonng.com> - 1.0.1
-* Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0
-- rename to pg_gzip
-* Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.0.0-2PIGSTY
+* Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
+* Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

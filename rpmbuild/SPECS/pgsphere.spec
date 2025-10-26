@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.1
+Version:	1.5.2
 Release:	1PIGSTY%{?dist}
 Summary:	PgSphere provides spherical data types, functions, operators, and indexing for PostgreSQL.
 License:	BSD 3-Clause
@@ -25,16 +25,6 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pgSphere is a PostgreSQL extension for spherical geometry.
-
-It provides:
-
-* New data types (points, spherical polygons, paths, circles, ellipses, coordinate ranges)
-* Input and output of data in various formats
-* Membership, overlap, and other operators
-* Circumference and area of objects
-* Object rotation by Euler angles
-* Indexing of spherical data types
-
 This is an R-tree implementation using GiST for spherical objects like
 spherical points and spherical circles with useful functions and operators.
 It also supports the Block Range INdexing (BRIN) for large datasets.
@@ -89,5 +79,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_HEALPIX=0 install DEST
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.5.1
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.5.2-1PIGSTY
+* Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.5.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

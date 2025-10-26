@@ -85,7 +85,7 @@ pg_similarity:	# covered by pgdg
 smlar:          # break for pg18
 	./build smlar 13 14 15 16 17
 
-pg_summarize:	# rust (missing 17/18) pgrx 0.11.4
+pg_summarize:	# rust pgrx 0.16.1 (forked)
 	./build pg_summarize nodebug 13 14 15 16 17
 
 pg_tiktoken:	# rust pgrx 0.16.1
@@ -150,6 +150,110 @@ hunspell_pt_pt:
 	./build hunspell_pt_pt     13 14 15 16 17 18
 
 ###############################################################
+#                       Category: FTS                         #
+###############################################################
+citus:			# not ready for pg18
+	./build citus nodebug 15 16 17
+
+hydra:
+	./build hydra 13 14 15 16 #17 not ready yet
+
+#pg_analytics:   # download, obsolete
+pg_duckdb:
+	./build pg_duckdb 14 15 16 17 18
+
+pg_mooncake:
+	./build pg_mooncake 14 15 16 17
+
+#duckdb_fdw
+
+pg_parquet:			# rust pgrx 0.16.1 (manually bump from 0.16.0)
+	./build pg_parquet 14 15 16 17 18
+
+# pg_fkpart
+# pg_partman
+# plproxy
+# pg_strom
+
+###############################################################
+#                       Category: FEAT                        #
+###############################################################
+age:
+	./build age 14 15 16 17
+
+#hll:
+#rum
+pg_graphql:		# rust pgrx 0.16.1 (build on unpublished-release)
+	./build pg_graphql nodebug 14 15 16 17 18
+
+pg_jsonschema:	# rust pgrx 0.16.1 (patch from 0.16.0)
+	./build pg_jsonschema nodebug 13 14 15 16 17 18
+
+#jsquery:
+#pg_hint_plan
+index_advisor:
+	./build index_advisor
+
+pg_plan_filter:
+	./build pg_plan_filter
+
+imgsmlr:
+	./build imgsmlr
+
+#pg_ivm
+pg_incremental:
+	./build pg_incremental 16 17
+
+pgmq:
+	./build pgmq nodebug
+
+# pgq
+# orioledb
+# pg_cardano
+# rdkit
+# omnigres
+
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+###############################################################
 #                        1. Info                              #
 ###############################################################
 default:
@@ -194,11 +298,8 @@ duckdb_fdw:
 
 
 
-hydra:
-	./build hydra 13 14 15 16 #17 not ready yet
 
-age:
-	./build age 13 14 15 16 17
+
 
 pg_tde:
 	./build pg_tde 16
@@ -213,23 +314,19 @@ vault:
 supautils:
 	./build supautils 13 14 15 16 17
 
-index_advisor:
-	./build index_advisor
+
 
 plv8:
 	./build plv8
 
 omnigres:
 	./build omnigres
-pg_mooncake:
-	./build pg_mooncake 14 15 16 17
-pg_duckdb:
-	./build pg_duckdb 14 15 16 17
+
+
 pgroonga:
 	./build pgroonga 13 14 15 16 17
 
-citus:
-	./build citus nodebug 15 16 17
+
 
 ###############################################################
 #                      The 2nd Batch                          #
@@ -252,8 +349,7 @@ postgres_shacrypt:
 permuteseq:
 	./build permuteseq
 
-imgsmlr:
-	./build imgsmlr
+
 
 
 
@@ -452,11 +548,8 @@ acl:
 pg_emailaddr:
 	./build pg_emailaddr
 
-pgmq:
-	./build pgmq nodebug
 
-pg_plan_filter:
-	./build pg_plan_filter
+
 pg_uint128:
 	./build pg_uint128 13 14 15 16 17 18
 pg_relusage:
@@ -524,8 +617,7 @@ pg_gzip:
 	./build pg_gzip
 pg_tle:
 	./build pg_tle
-pg_incremental:
-	./build pg_incremental 16 17
+
 
 # not included
 logfmt:
@@ -564,10 +656,7 @@ rustc: pg_cardano pg_base58 pg_parquet pg_vectorize pgvectorscale
 rustd: vchord pglite_fusion pg_bestmatch pg_session_jwt pg_smtp_client
 
 # pgrx 0.12.9
-pg_graphql:
-	./build pg_graphql nodebug 14 15 16 17
-pg_jsonschema:
-	./build pg_jsonschema nodebug
+
 wrappers:
 	./build wrappers nodebug 14 15 16 17
 pg_idkit:

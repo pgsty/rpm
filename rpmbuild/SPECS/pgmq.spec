@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.1
+Version:	1.7.0
 Release:	1PIGSTY%{?dist}
 Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
@@ -40,6 +40,7 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Oct 05 2025 Vonng <rh@vonng.com> - 1.7.0
 * Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.5.1
 * Fri Jan 10 2025 Vonng <rh@vonng.com> - 1.5.0
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.4.4

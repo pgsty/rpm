@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.5.4
+Version:	0.5.5
 Release:	1PIGSTY%{?dist}
 Summary:	RoaringBitmap extension for PostgreSQL.
 License:	Apache-2.0
 URL:		https://github.com/ChenHuajun/pg_roaringbitmap
 Source0:	pg_roaringbitmap-%{version}.tar.gz
-#           https://github.com/ChenHuajun/pg_roaringbitmap/archive/refs/tags/v0.5.4.tar.gz
+#           https://github.com/ChenHuajun/pg_roaringbitmap/archive/refs/tags/v0.5.5.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -83,5 +83,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
-* Wed Sep 13 2023 Vonng <rh@vonng.com> - 0.5.4
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.5.5-1PIGSTY
+* Wed Sep 13 2023 Vonng <rh@vonng.com> - 0.5.4-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL tokenizer extension for full-text search
 License:	Apache-2.0
@@ -37,5 +37,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Oct 25 2025 Vonng <rh@vonng.com> - 0.1.1
 * Mon May 26 2025 Vonng <rh@vonng.com> - 0.1.0
 - Initial RPM release, used by Pigsty <https://pigsty.io>

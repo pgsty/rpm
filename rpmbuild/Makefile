@@ -9,6 +9,146 @@
 #==============================================================#
 ARCH=$(shell uname -m)
 
+
+
+
+###############################################################
+#                       Category: TIME                        #
+###############################################################
+timescaledb:
+	./build timescaledb nodebug 15 16 17
+
+pg_timeseries:
+	./build pg_timeseries nodebug 13 14 15 16 17 18
+
+periods:
+	./build periods nodebug 13 14 15 16 17 18
+
+temporal_tables:
+	./build temporal_tables 13 14 15 16 17 18
+
+# emaj          (handled by PGDG)
+# table_version (handled by PGDG)
+# pg_cron       (handled by PGDG)
+# pg_task       (handled by PGDG)
+
+pg_later:       # rust 0.12.5 (TBD for 18)
+	./build pg_later nodebug 13 14 15 16 17
+
+# pg_background (handled by PGDG)
+
+
+###############################################################
+#                       Category: GIS                         #
+###############################################################
+
+# postgis
+# pgroutine
+# pointcloud
+# h3 (missing el8 17/18)
+# ogr_fdw
+
+q3c:
+	./build q3c 13 14 15 16 17 18
+
+geoip:
+	./build geoip 13 14 15 16 17 18
+
+pg_geohash:
+	./build pg_geohash 13 14 15 16 17 18
+
+pg_polyline:    # rust (TBD for 18)
+	./build pg_polyline nodebug 13 14 15 16 17
+
+pg_tzf:         # rust pgrx 0.16.1
+	./build pg_tzf nodebug 14 15 16 17 18
+
+
+###############################################################
+#                       Category: RAG                         #
+###############################################################
+pgvector:  # skip, handled by pgdg
+	./build pgvector nodebug 13 14 15 16 17 18
+
+vchord:    # rust pgrx 0.16.1
+	./build vchord nodebug 13 14 15 16 17 18
+
+pgvectorscale:  # rust 0.12.9 TBD for pg18
+	./build pgvectorscale nodebug 13 14 15 16 17
+
+pg_vectorize:	# rust 0.25.0 pgrx 0.13.1
+	./build pg_vectorize nodebug 14 15 16 17
+
+pg_similarity:	# covered by pgdg
+	./build pg_similarity 13 14 15 16 17 18
+
+smlar:          # break for pg18
+	./build smlar 13 14 15 16 17
+
+pg_summarize:	# rust (missing 17/18) pgrx 0.11.4
+	./build pg_summarize nodebug 13 14 15 16 17
+
+pg_tiktoken:	# rust pgrx 0.16.1
+	./build pg_tiktoken nodebug 13 14 15 16 17 18
+
+pg4ml:
+	./build pg4ml 13 14 15 16 17 18
+
+pgml:			# rust pgrx 0.12.9 (obsolete)
+	./build pgml nodebug 14 15 16 17
+
+
+
+###############################################################
+#                       Category: FTS                         #
+###############################################################
+# pg_search     # download directly
+pg_bigm:     	# covered by PGDG (deb break on 18)
+	./build pg_bigm nodebug 13 14 15 16 17 18
+
+# pgroonga: TBD
+
+# zhparser and scws deps
+scws:
+	rm -rf ~/rpmbuild/RPMS/$(ARCH)/scws*.rpm /tmp/pigsty-rpm/RPMS/scws*.rpm
+	QA_RPATHS=2 rpmbuild -ba ~/rpmbuild/SPECS/scws.spec
+scws-install:
+	sudo yum remove -y scws || /bin/true
+	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/scws-1.2.3-1PIGSTY.el*.$(ARCH).rpm
+zhparser:
+	QA_RPATHS=2 ./build zhparser 13 14 15 16 17 18
+
+pg_bestmatch:		# rust pgrx 0.12.7 (obsolete)
+	./build pg_bestmatch nodebug 13 14 15 16 17
+
+vchord_bm25:		# rust  pgrx 0.16.1
+	./build vchord_bm25 nodebug 13 14 15 16 17 18
+
+pg_tokenizer:		# rust pgrx 0.16.1
+	./build pg_tokenizer nodebug 13 14 15 16 17 18
+
+hunspell: hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_ru_ru hunspell_ru_ru_aot #hunspell_pt_pt
+hunspell_cs_cz:
+	./build hunspell_cs_cz     13 14 15 16 17 18
+hunspell_de_de:
+	./build hunspell_de_de     13 14 15 16 17 18
+hunspell_en_us:
+	./build hunspell_en_us     13 14 15 16 17 18
+hunspell_fr:
+	./build hunspell_fr        13 14 15 16 17 18
+hunspell_ne_np:
+	./build hunspell_ne_np     13 14 15 16 17 18
+hunspell_nl_nl:
+	./build hunspell_nl_nl     13 14 15 16 17 18
+hunspell_nn_no:
+	./build hunspell_nn_no     13 14 15 16 17 18
+hunspell_ru_ru:
+	./build hunspell_ru_ru     13 14 15 16 17 18
+hunspell_ru_ru_aot:
+	./build hunspell_ru_ru_aot 13 14 15 16 17 18
+hunspell_pt_pt:
+	./build hunspell_pt_pt     13 14 15 16 17 18
+
 ###############################################################
 #                        1. Info                              #
 ###############################################################
@@ -20,18 +160,6 @@ default:
 #                         2. Deps                             #
 ###############################################################
 deps: scws scws-install libduckdb libduckdb-install pg_filedump
-
-#---------------------------------------------#
-# scws (deps of zhparser)
-#---------------------------------------------#
-scws:
-	rm -rf ~/rpmbuild/RPMS/$(ARCH)/scws*.rpm /tmp/pigsty-rpm/RPMS/scws*.rpm
-	QA_RPATHS=2 rpmbuild -ba ~/rpmbuild/SPECS/scws.spec
-
-# scws is required when building zhparser
-scws-install:
-	sudo yum remove -y scws || /bin/true
-	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/scws-1.2.3-1PIGSTY.el*.$(ARCH).rpm
 
 #---------------------------------------------#
 # libduckdb (deps of duckdb_fdw)
@@ -58,25 +186,13 @@ pg_filedump:
 batch1: zhparser duckdb_fdw hunspell hydra age age15 pg_tde pgjwt vault supautils index_advisor
 batch1a: plv8 pg_duckdb pg_mooncake
 
-# depend on scws
-zhparser:
-	QA_RPATHS=2 ./build zhparser
+
 
 # depend on libduckdb
 duckdb_fdw:
 	./build duckdb_fdw
 
-hunspell:
-	./build hunspell_cs_cz
-	./build hunspell_de_de
-	./build hunspell_en_us
-	./build hunspell_fr
-	./build hunspell_ne_np
-	./build hunspell_nl_nl
-	./build hunspell_nn_no
-	./build hunspell_ru_ru
-	./build hunspell_ru_ru_aot
-	./build hunspell_pt_pt
+
 
 hydra:
 	./build hydra 13 14 15 16 #17 not ready yet
@@ -111,8 +227,7 @@ pg_duckdb:
 	./build pg_duckdb 14 15 16 17
 pgroonga:
 	./build pgroonga 13 14 15 16 17
-timescaledb:
-	./build timescaledb nodebug 15 16 17
+
 citus:
 	./build citus nodebug 15 16 17
 
@@ -140,8 +255,7 @@ permuteseq:
 imgsmlr:
 	./build imgsmlr
 
-pg_similarity:
-	./build pg_similarity
+
 
 md5hash:
 	./build md5hash
@@ -296,8 +410,7 @@ batch4: geoip plproxy table_version ddlx postgresql_anonymizer count_distinct \
 	pg_plan_filter pg_uint128 pg_relusage pg_net pg4ml pgpdf pglogical_ticker pgsodium pg_xenophile
 
 # missing packages in PGDG repo (with un-aligned versions)
-geoip:
-	./build geoip     # el8/el9
+
 plproxy:
 	./build plproxy   # el8/el9
 table_version:
@@ -318,8 +431,7 @@ pgmeminfo:
 	./build pgmeminfo
 pguint:
 	./build pguint
-temporal_tables:
-	./build temporal_tables
+
 sslutils:
 	./build sslutils
 pglogical_ticker:
@@ -334,18 +446,15 @@ pgqr:
 	./build pgqr
 pg_zstd:
 	./build pg_zstd
-pg_geohash:
-	./build pg_geohash
+
 acl:
 	./build acl
 pg_emailaddr:
 	./build pg_emailaddr
-smlar:
-	./build smlar 13 14 15 16 17
+
 pgmq:
 	./build pgmq nodebug
-pg_timeseries:
-	./build pg_timeseries nodebug
+
 pg_plan_filter:
 	./build pg_plan_filter
 pg_uint128:
@@ -354,8 +463,7 @@ pg_relusage:
 	./build pg_relusage
 pg_net:
 	./build pg_net
-pg4ml:
-	./build pg4ml
+
 pgpdf:
 	./build pgpdf
 pgsodium:
@@ -444,8 +552,6 @@ pgactive:
 	./build pgactive
 pg_rewrite:
 	./build pg_rewrite
-pgvector:
-	./build pgvector
 
 ###############################################################
 #               6. RUST / PGRX Extensions                     #
@@ -466,8 +572,7 @@ wrappers:
 	./build wrappers nodebug 14 15 16 17
 pg_idkit:
 	./build pg_idkit nodebug
-pg_later:
-	./build pg_later nodebug 13 14 15 16 17
+
 pg_anon:
 	./build pg_anon nodebug 13 14 15 16 17
 timescaledb_toolkit:
@@ -475,14 +580,9 @@ timescaledb_toolkit:
 
 pgsmcrypto:
 	./build pgsmcrypto nodebug
-pg_tiktoken:
-	./build pg_tiktoken nodebug
-pg_summarize:
-	./build pg_summarize nodebug
-pg_tzf:
-	./build pg_tzf nodebug
-pg_polyline:
-	./build pg_polyline nodebug
+
+
+
 pg_explain_ui:
 	./build pg_explain_ui nodebug
 pg_cardano:
@@ -491,26 +591,18 @@ pg_base58:
 	./build pg_base58 nodebug
 pg_parquet:
 	./build pg_parquet nodebug 14 15 16 17
-pg_vectorize:
-	./build pg_vectorize nodebug 14 15 16 17
-pgvectorscale:
-	./build pgvectorscale nodebug 13 14 15 16 17
+
+
 pg_session_jwt:
 	./build pg_session_jwt nodebug 14 15 16 17
 pglite_fusion:
 	./build pglite_fusion nodebug
-pg_bestmatch:
-	./build pg_bestmatch nodebug
+
 pg_smtp_client:
 	./build pg_smtp_client nodebug 14 15 16 17
-pgml:
-	./build pgml nodebug 14 15 16 17
-vchord:
-	./build vchord nodebug 14 15 16 17
-vchord_bm25:
-	./build vchord_bm25 nodebug 14 15 16 17
-pg_tokenizer:
-	./build pg_tokenizer nodebug 14 15 16 17
+
+
+
 pg_render:
 	./build pg_render nodebug 14 15 16 17
 convert:

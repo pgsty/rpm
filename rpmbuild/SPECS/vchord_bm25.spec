@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.1
+Version:	0.2.2
 Release:	1PIGSTY%{?dist}
 Summary:	Native BM25 Ranking Index in PostgreSQL
 License:	AGPL-3.0
@@ -43,6 +43,7 @@ cp -a %{_builddir}/VectorChord-bm25-%{version}/target/release/%{pname}-pg%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Oct 25 2025 Vonng <rh@vonng.com> - 0.2.2
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.2.1
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.1.1
 * Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.1.0

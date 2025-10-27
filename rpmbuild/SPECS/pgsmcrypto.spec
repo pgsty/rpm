@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL SM Algorithm Extension
 License:	MIT
@@ -38,6 +38,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.1.0 (pgrx 0.12.5)
-* Sun May 05 2024 Vonng <rh@vonng.com> - 0.1.0
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.1.1-1PIGSTY
+- pgrx 0.16.1 with pg18 support
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
+- pgrx 0.12.5 with pg17 support
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.22.2
+Version:	0.25.0
 Release:	1PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize
 SOURCE0:    pg_vectorize-%{version}.tar.gz
-#           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.22.2.tar.gz
+#           https://github.com/tembo-io/pg_vectorize/archive/refs/tags/v0.25.0.tar.gz
 #PGRX_VER:  0.13.1
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -42,12 +42,13 @@ cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgm
 %exclude /usr/lib/.build-id
 
 %changelog
-* Thu May 22 2025 Vonng <rh@vonng.com> - 0.22.2
-* Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.22.1
-* Tue Feb 11 2025 Vonng <rh@vonng.com> - 0.21.1
-* Wed Oct 30 2024 Vonng <rh@vonng.com> - 0.20.0
-* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.18.3
-* Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.17.0
-* Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.16.0
-* Sun May 05 2024 Vonng <rh@vonng.com> - 0.15.0
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.25.0-1PIGSTY
+* Thu May 22 2025 Vonng <rh@vonng.com> - 0.22.2-1PIGSTY
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.22.1-1PIGSTY
+* Tue Feb 11 2025 Vonng <rh@vonng.com> - 0.21.1-1PIGSTY
+* Wed Oct 30 2024 Vonng <rh@vonng.com> - 0.20.0-1PIGSTY
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.18.3-1PIGSTY
+* Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.17.0-1PIGSTY
+* Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.16.0-1PIGSTY
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.15.0-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -4,12 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.1
+Version:	0.0.2
 Release:	1PIGSTY%{?dist}
 Summary:	A Postgres extension that allows you to easily jump into a visual plan UI for any SQL query,
 License:	No License
-URL:		https://github.com/davidgomes/pg-explain-ui
-Source0:	pg_explain_ui-%{version}.tar.gz
+URL:		https://github.com/Vonng/pg-explain-ui
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -37,5 +37,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.0.1
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.0.2-1PIGSTY
+* Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

@@ -122,4 +122,4 @@ EOF
 %changelog
 * Tue Feb 11 2025 Vonng <rh@vonng.com> - 4.0.0
 * Sat Dec 21 2024 Vonng <rh@vonng.com> - 3.2.5
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

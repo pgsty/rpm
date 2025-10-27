@@ -81,4 +81,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_HEALPIX=0 install DEST
 %changelog
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.5.2-1PIGSTY
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.5.1-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

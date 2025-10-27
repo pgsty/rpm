@@ -39,4 +39,4 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %changelog
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.1.3-1PIGSTY
 * Mon May 26 2025 Vonng <rh@vonng.com> - 0.1.2-1PIGSTY
-- Initial RPM release, pgrx 0.12.8, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

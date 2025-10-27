@@ -94,4 +94,4 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 * Thu Jul 24 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11-1PIGSTY
 * Tue May 27 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.9-1PIGSTY
 * Sat Apr 05 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.0-6PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

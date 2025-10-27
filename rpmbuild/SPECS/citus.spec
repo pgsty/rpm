@@ -114,7 +114,7 @@ make %{?_smp_mflags}
 * Thu Jan 23 2025 Vonng <rh@vonng.com> - 13.0.0
 - Bump to 13.0.0 with PostgreSQL 17 support
 * Tue Dec 24 2024 Vonng <rh@vonng.com> - 12.1.6
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
 * Fri Mar 25 2016 - Devrim Gündüz <devrim@gunduz.org> 5.0.0-1
 - Initial RPM packaging for PostgreSQL RPM Repository,
   based on the spec file of Jason Petersen @ Citus.

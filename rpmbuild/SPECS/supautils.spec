@@ -44,4 +44,4 @@ install -m 755 %{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
 * Sun Oct 15 2023 Vonng <rh@vonng.com> - 2.5.0-1PIGSTY
 * Mon Oct 14 2023 Vonng <rh@vonng.com> - 2.4.0-1PIGSTY
 * Tue Jul 18 2023 Vonng <rh@vonng.com> - 2.2.1-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

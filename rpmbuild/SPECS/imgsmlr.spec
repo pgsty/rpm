@@ -81,4 +81,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 
 %changelog
 * Mon Jul 22 2024 Vonng <rh@vonng.com> - 1.0
-- patch for PostgreSQL 16
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

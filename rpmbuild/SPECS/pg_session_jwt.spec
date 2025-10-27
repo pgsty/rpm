@@ -44,4 +44,4 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 - https://github.com/neondatabase/pg_session_jwt/releases/tag/v0.2.0
 * Thu Oct 31 2024 Vonng <rh@vonng.com> - 0.1.2-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -77,4 +77,4 @@ PATH=%{pginstdir}/bin:$PATH make USE_PGXS=1 install DESTDIR=%{buildroot}
 
 %changelog
 * Thu Jul 22 2024 Vonng <rh@vonng.com> - 1.2.2
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -94,4 +94,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} -f Makefile USE_PGXS=1 %{?_smp_mflags} ins
 
 %changelog
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 5.5.3
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -83,4 +83,4 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %changelog
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.20250815-1PIGSTY
 * Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.20231206-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

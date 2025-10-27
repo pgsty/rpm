@@ -42,4 +42,4 @@ cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}
 * Sat Oct 25 2025 Vonng <rh@vonng.com> - 0.2.3
 * Thu May 22 2025 Vonng <rh@vonng.com> - 0.2.2
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.2.0
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

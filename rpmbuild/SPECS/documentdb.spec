@@ -109,4 +109,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 - FerretDB modified version: https://github.com/FerretDB/documentdb
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.101-0PIGSTY
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.100-0PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

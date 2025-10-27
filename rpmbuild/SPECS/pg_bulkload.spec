@@ -93,4 +93,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} DESTDIR=%{build
 
 %changelog
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 3.1.22
-- Update to 3.1.22 with pg17 support
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -47,4 +47,4 @@ cp -a %{_builddir}/VectorChord-bm25-%{version}/target/release/%{pname}-pg%{pgmaj
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.2.1
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.1.1
 * Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.1.0
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

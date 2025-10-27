@@ -34,4 +34,4 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %changelog
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 18.0-1PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 18rc1-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

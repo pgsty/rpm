@@ -83,4 +83,4 @@ PATH=%{pginstdir}/bin:$PATH USE_PGXS=1  %{__make} %{?_smp_mflags} install DESTDI
 
 %changelog
 * Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.1
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

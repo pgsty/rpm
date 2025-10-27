@@ -79,4 +79,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_PGXS=1 install DESTDIR
 
 %changelog
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.4
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

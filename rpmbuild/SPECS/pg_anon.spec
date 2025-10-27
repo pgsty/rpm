@@ -51,4 +51,4 @@ cp -a %{_builddir}/%{sname}-%{version}/data/en_US/fake/*.csv  %{buildroot}%{pgin
 * Wed Jan 08 2025 Vonng <rh@vonng.com> - 2.0.0-1PIGSTY
 - Rewrite in Rust
 * Wed Oct 11 2023 Vonng <rh@vonng.com> - 1.3.2-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -47,4 +47,4 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.2.1-1PIGSTY
 * Mon Feb 10 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 * Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -95,4 +95,4 @@ strip %{buildroot}%{pginstdir}/lib/*.so
 %changelog
 * Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.4
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.3
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

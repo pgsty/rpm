@@ -35,4 +35,4 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 
 %changelog
 * Mon Sep 18 2023 Vonng <rh@vonng.com> - 0.2.0
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

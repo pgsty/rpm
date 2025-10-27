@@ -83,7 +83,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 %changelog
 * Tue Jul 30 2024 Vonng <rh@vonng.com> - 7.7
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
 
 * Wed Jun 2 2021 Devrim Gündüz <devrim@gunduz.org> - 7.4-1
 - Update to 7.4

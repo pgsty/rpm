@@ -43,4 +43,4 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - pgrx 0.12.5 with pg17 support
 * Sun May 05 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

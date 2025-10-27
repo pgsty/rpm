@@ -87,4 +87,4 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 * Sat Jun 29 2024 Vonng <rh@vonng.com> - 1.0.0
 - Changing version schema to keep in sync with libduckdb
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.1
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -85,4 +85,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 
 %changelog
 * Tue Oct 22 2024 Vonng <rh@vonng.com> - 3.1.9
-- Initial RPM release, fill missing PG17 in PGDG, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

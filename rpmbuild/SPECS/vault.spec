@@ -87,4 +87,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.3.1
 - becoming a C extension with solib and llvmjit package
 * Mon Sep 18 2023 Vonng <rh@vonng.com> - 0.2.9
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

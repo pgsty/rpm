@@ -40,4 +40,4 @@ install -m 0755 libduckdb.so %{buildroot}/usr/lib64
 * Fri Jun 28 2024 Vonng <rh@vonng.com> - 1.0.0
 * Sat Apr 27 2024 Vonng <rh@vonng.com> - 0.10.2
 * Tue Jan 30 2024 Vonng <rh@vonng.com> - 0.9.2
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

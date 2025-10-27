@@ -50,4 +50,4 @@ cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversio
 * Sat Apr 27 2024 Vonng <rh@vonng.com> - 0.6.1
 * Sat Feb 17 2024 Vonng <rh@vonng.com> - 0.5.6
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 0.5.3
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

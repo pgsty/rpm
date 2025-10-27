@@ -82,4 +82,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 - pg18 support with https://github.com/DataDog/pg_tracing/commit/
 * Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.1.3-1PIGSTY
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.1.2-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

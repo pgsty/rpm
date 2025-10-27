@@ -83,4 +83,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.0.0-2PIGSTY
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

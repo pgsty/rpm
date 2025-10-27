@@ -83,4 +83,4 @@ cd build; %{__make} DESTDIR=%{buildroot} install
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.18.0
 - https://github.com/timescale/timescaledb/releases/tag/2.18.0
 * Mon Dec 16 2024 Vonng <rh@vonng.com> - 2.17.2
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

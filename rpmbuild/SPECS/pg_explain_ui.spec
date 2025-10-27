@@ -39,4 +39,4 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %changelog
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.0.2-1PIGSTY
 * Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

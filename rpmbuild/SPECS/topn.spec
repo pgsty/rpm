@@ -74,7 +74,7 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %make_install
 
 %changelog
 * Tue Dec 24 2024 Vonng <rh@vonng.com> - 2.17.2
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
 * Sat Oct 19 2024 Devrim Gündüz <devrim@gunduz.org> - 2.7.0-1PGDG
 - Update to 2.7.0
 * Tue Mar 27 2018 - Devrim Gündüz <devrim@gunduz.org> 2.0.1-1

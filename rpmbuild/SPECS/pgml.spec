@@ -48,4 +48,4 @@ cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 * Mon Jan 22 2024 Vonng <rh@vonng.com> - 2.8.1
 - Bump version to v2.8.2 with PG 16 support
 * Mon Sep 18 2023 Vonng <rh@vonng.com> - 2.7.9
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

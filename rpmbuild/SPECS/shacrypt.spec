@@ -1,6 +1,6 @@
 %define debug_package %{nil}
 %global pname shacrypt
-%global sname postgres_shacrypt
+%global sname shacrypt
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	PostgreSQL extension to generate SHA256-CRYPT and SHA512-CRYPT password hashes
 License:	PostgreSQL
 URL:		https://github.com/dverite/postgres-shacrypt
@@ -55,7 +55,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n postgres_shacrypt-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
@@ -74,5 +74,6 @@ PATH=%{pginstdir}/bin:$PATH make USE_PGXS=1 install DESTDIR=%{buildroot}
 %endif
 
 %changelog
-* Thu Jul 22 2024 Vonng <rh@vonng.com> - 1.1
+* Thu Jul 22 2024 Vonng <rh@vonng.com> - 1.1-2PIGSTY
+* Thu Jul 22 2024 Vonng <rh@vonng.com> - 1.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

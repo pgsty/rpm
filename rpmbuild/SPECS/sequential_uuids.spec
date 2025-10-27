@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.3
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	generator of sequential UUIDs
 License:	PostgreSQL
 URL:		https://github.com/tvondra/sequential-uuids
@@ -83,7 +83,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Thu Jan 09 2025 Vonng <rh@vonng.com> - 1.0.3
+* Mon Oct 26 2025 Vonng <rh@vonng.com> - 1.0.3-2PIGSTY
+- with official pg18 support
+* Thu Jan 09 2025 Vonng <rh@vonng.com> - 1.0.3-1PIGSTY
 - with official pg16/17 support
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0.2
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0.2-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

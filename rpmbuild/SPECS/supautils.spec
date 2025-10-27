@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.10.0
+Version:	3.0.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0
 URL:		https://github.com/supabase/supautils
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/supabase/supautils/archive/refs/tags/v2.10.0.tar.gz
+#           https://github.com/supabase/supautils/archive/refs/tags/v3.0.1.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
@@ -36,11 +36,12 @@ install -m 755 %{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Wed Jul 23 2025 Vonng <rh@vonng.com> - 2.10.0
-* Fri May 23 2025 Vonng <rh@vonng.com> - 2.9.2
-* Wed May 07 2025 Vonng <rh@vonng.com> - 2.9.1
-* Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.6.0
-* Sun Oct 15 2023 Vonng <rh@vonng.com> - 2.5.0
-* Mon Oct 14 2023 Vonng <rh@vonng.com> - 2.4.0
-* Tue Jul 18 2023 Vonng <rh@vonng.com> - 2.2.1
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 3.0.1-1PIGSTY
+* Wed Jul 23 2025 Vonng <rh@vonng.com> - 2.10.0-1PIGSTY
+* Fri May 23 2025 Vonng <rh@vonng.com> - 2.9.2-1PIGSTY
+* Wed May 07 2025 Vonng <rh@vonng.com> - 2.9.1-1PIGSTY
+* Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.6.0-1PIGSTY
+* Sun Oct 15 2023 Vonng <rh@vonng.com> - 2.5.0-1PIGSTY
+* Mon Oct 14 2023 Vonng <rh@vonng.com> - 2.4.0-1PIGSTY
+* Tue Jul 18 2023 Vonng <rh@vonng.com> - 2.2.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

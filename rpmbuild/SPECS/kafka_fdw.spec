@@ -14,10 +14,10 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	kafka foreign database wrapper for postresql
 License:	PostgreSQL
-URL:		https://github.com/adjust/kafka_fdw
+URL:		https://github.com/Vonng/kafka_fdw
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 librdkafka-devel >= 1.6.0
@@ -77,5 +77,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.3
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.0.3-2PIGSTY
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.3-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

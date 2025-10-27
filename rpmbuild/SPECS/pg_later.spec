@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.0
+Version:	0.3.1
 Release:	1PIGSTY%{?dist}
 Summary:	Execute SQL now and get the results later.
 License:	PostgreSQL
@@ -39,9 +39,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.3.0
-* Thu Oct 31 2024 Vonng <rh@vonng.com> - 0.2.0
-* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.1.3
-* Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.1.1
-* Sun May 05 2024 Vonng <rh@vonng.com> - 0.1.0
-- Initial RPM release, used by Pigsty <https://pigsty.io>
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
+* Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
+* Thu Oct 31 2024 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.1.3-1PIGSTY
+* Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.1.1-1PIGSTY
+* Sun May 05 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
+- Initial RPM release, used by Pigsty <https://pgsty.com>

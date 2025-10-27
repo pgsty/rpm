@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		pg_%{pname}_%{pgmajorversion}
-Version:	2.3.0
+Version:	2.4.1
 Release:	1PIGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL
 License:	PostgreSQL
@@ -45,9 +45,10 @@ cp -a %{_builddir}/%{sname}-%{version}/data/en_US/fake/*.csv  %{buildroot}%{pgin
 %exclude /usr/lib/.build-id
 
 %changelog
-* Wed Jul 17 2025 Vonng <rh@vonng.com> - 2.3.0
-* Wed May 07 2025 Vonng <rh@vonng.com> - 2.1.1
-* Wed Jan 08 2025 Vonng <rh@vonng.com> - 2.0.0
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 2.4.1-1PIGSTY
+* Wed Jul 17 2025 Vonng <rh@vonng.com> - 2.3.0-1PIGSTY
+* Wed May 07 2025 Vonng <rh@vonng.com> - 2.1.1-1PIGSTY
+* Wed Jan 08 2025 Vonng <rh@vonng.com> - 2.0.0-1PIGSTY
 - Rewrite in Rust
-* Wed Oct 11 2023 Vonng <rh@vonng.com> - 1.3.2
+* Wed Oct 11 2023 Vonng <rh@vonng.com> - 1.3.2-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

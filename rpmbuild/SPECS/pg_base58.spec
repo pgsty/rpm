@@ -5,10 +5,10 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Base58 Encoder/Decoder Extension for PostgreSQL
 License:	MIT
-URL:		https://github.com/Fell-x27/pg_base58
+URL:		https://github.com/Vonng/pg_base58
 Source0:	pg_base58-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -37,5 +37,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.0.1
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.0.1-2PIGSTY
+* Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

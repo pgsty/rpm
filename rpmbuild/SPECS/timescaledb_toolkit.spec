@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.21.0
+Version:	1.22.0
 Release:	1PIGSTY%{?dist}
 Summary:	Extension for more hyperfunctions, fully compatible with TimescaleDB and PostgreSQL
 License:	Timescale
@@ -12,7 +12,7 @@ URL:		https://github.com/timescale/timescaledb-toolkit
 SOURCE0:    %{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1.1.1 pgvector_%{pgmajorversion} >= 0.7.0 pg_cron_%{pgmajorversion}
+Requires:	postgresql%{pgmajorversion}-server
 Recommends: pg_cron_%{pgmajorversion}
 
 %description
@@ -39,6 +39,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Wed May 07 2025 Vonng <rh@vonng.com> - 2.21.0
-* Thu Jan 23 2025 Vonng <rh@vonng.com> - 1.19.0
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 1.22.0-1PIGSTY
+* Wed May 07 2025 Vonng <rh@vonng.com> - 1.21.0-1PIGSTY
+* Thu Jan 23 2025 Vonng <rh@vonng.com> - 1.19.0-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

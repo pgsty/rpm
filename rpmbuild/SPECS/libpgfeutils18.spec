@@ -7,12 +7,12 @@
 %global pginstdir /usr/pgsql-18
 
 Name:		libpgfeutils18
-Version:	18rc1
+Version:	18.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org
-Source0:	postgresql-18rc1.tar.gz
+Source0:	postgresql-%{version}.tar.gz
 
 %description
 Add /usr/pgsql-18/lib/libpgfeutils.a for extension building
@@ -32,5 +32,6 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %{pginstdir}/lib/libpgfeutils.a
 
 %changelog
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 18.0-1PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 18rc1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

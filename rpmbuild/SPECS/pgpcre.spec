@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1
+Version:	0.20190509
 Release:	1PIGSTY%{?dist}
 Summary:	PCRE functions for PostgreSQL
 License:	PostgreSQL
@@ -76,5 +76,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Mon Jul 29 2024 Vonng <rh@vonng.com> - 1
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.20190509-1PIGSTY
+* Mon Jul 29 2024 Vonng <rh@vonng.com> - 0.1-1PIGSTY
 - Initial RPM release, used by Pigsty <https://pigsty.io>

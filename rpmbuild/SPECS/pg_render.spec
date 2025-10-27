@@ -4,11 +4,11 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.2
+Version:	0.1.3
 Release:	1PIGSTY%{?dist}
 Summary:	Render HTML in SQL
 License:	MIT
-URL:		https://github.com/mkaski/pg_render
+URL:		https://github.com/Vonng/pg_render
 SOURCE0:    %{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -37,5 +37,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Mon May 26 2025 Vonng <rh@vonng.com> - 0.1.2
+* Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.1.3-1PIGSTY
+* Mon May 26 2025 Vonng <rh@vonng.com> - 0.1.2-1PIGSTY
 - Initial RPM release, pgrx 0.12.8, used by Pigsty <https://pigsty.io>

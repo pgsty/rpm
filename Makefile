@@ -5,7 +5,7 @@
 # Mtime     :   2024-07-28
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
-# License   :   AGPLv3
+# License   :   Apache-2.0
 #==============================================================#
 
 DEVEL_PATH = sv:/data/rpm

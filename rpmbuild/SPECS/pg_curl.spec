@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.4.5
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	PostgreSQL tool for transferring data with URL syntax
 License:	MIT
 URL:		https://github.com/RekGRpth/pg_curl
@@ -80,6 +80,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 2.4.5-2PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 2.4.5-1PIGSTY
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 2.4.2-1PIGSTY
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.4.1-1PIGSTY

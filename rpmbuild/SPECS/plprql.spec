@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	18.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Use PRQL in PostgreSQL
 License:	Apache-2.0
@@ -43,5 +43,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Sun May 05 2024 Vonng <rh@vonng.com> - 1.0.0
+* Wed Oct 29 2025 Vonng <rh@vonng.com> - 18.0.0-1PIGSTY
+* Sun May 05 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

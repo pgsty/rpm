@@ -4,7 +4,7 @@
 # File      :   dep
 # Desc      :   install dependencies for an extension
 # Ctime     :   2025-02-09
-# Mtime     :   2025-02-09
+# Mtime     :   2025-10-29
 # Usage     :   dep <extension>
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -18,8 +18,8 @@ RPMS_DIR="${PROG_DIR}/RPMS"
 # Usage
 #--------------------------------------------------------------#
 # build [nodebug] <extension> <versions...>
-# ./build pg_roaringbitmap         13 14 15 16 17
-# ./build pgjwt            nodebug 13 14 15 16 17
+# ./dep pg_roaringbitmap         13 14 15 16 17 18
+# ./dep pgjwt            nodebug 13 14 15 16 17 18
 
 #--------------------------------------------------------------#
 # Log Util

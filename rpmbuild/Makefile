@@ -229,8 +229,8 @@ plv8:
 
 # pllua
 
-plprql: 		# rust pgrx 0.11.4
-	./build plprql nodebug 13 14 15 16
+plprql: 		# rust pgrx 0.16.1
+	./build plprql nodebug 13 14 15 16 17 18
 
 # plprofiler
 # plsh

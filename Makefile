@@ -70,6 +70,8 @@ push10a:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el10a:~/rpmbuild/
 pushm:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ meta:~/rpmbuild/
+pm:
+	rsync -avc --delete rpmbuild/SPECS/ meta:~/rpmbuild/SPECS/
 
 # fetch RPMS from bucilding VMs
 pull-el: pull9 pull8 pull7

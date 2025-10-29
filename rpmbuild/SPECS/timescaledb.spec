@@ -9,23 +9,14 @@ Release:	1PIGSTY%{?dist}
 License:	Timescale
 Source0:	%{sname}-%{version}.tar.gz
 URL:		https://github.com/timescale/timescaledb
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros
+BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	openssl-devel
-
-%if 0%{?rhel} && 0%{?rhel} == 7
-BuildRequires:	cmake3
-%else
 BuildRequires:	cmake >= 3.4
-%endif
-
 Requires:	postgresql%{pgmajorversion}-server
 Conflicts:	%{sname}_%{pgmajorversion}
 
 %description
-TimescaleDB is an open-source database designed to make SQL scalable for
-time-series data. It is engineered up from PostgreSQL, providing automatic
-partitioning across time and space (partitioning key), as well as full SQL
-support.
+TimescaleDB is an open-source database designed to make SQL scalable for time-series data.
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -41,11 +32,14 @@ CXXFLAGS="$RPM_OPT_FLAGS -fPIC -pie"
 export CFLAGS
 export CXXFLAGS
 
-cd build; %{__make}
+cd build; %{__make} %{?_smp_mflags}
 
 %install
 export PATH=%{pginstdir}/bin:$PATH
-cd build; %{__make} DESTDIR=%{buildroot} install
+cd build; %{__make} %{?_smp_mflags} DESTDIR=%{buildroot} install
+
+# Remove test perl modules that shouldn't be packaged
+rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 
 %files
 %defattr(-, root, root)
@@ -54,10 +48,6 @@ cd build; %{__make} DESTDIR=%{buildroot} install
 %{pginstdir}/lib/%{sname}*.so
 %{pginstdir}/share/extension/%{sname}--*.sql
 %{pginstdir}/share/extension/%{sname}.control
-
-%exclude %{pginstdir}/lib/pgxs/src/test/perl/AccessNode.pm
-%exclude %{pginstdir}/lib/pgxs/src/test/perl/DataNode.pm
-%exclude %{pginstdir}/lib/pgxs/src/test/perl/TimescaleNode.pm
 
 %changelog
 * Sat Oct 25 2025 Vonng <rh@vonng.com> - 2.22.1

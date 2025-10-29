@@ -33,7 +33,7 @@ temporal_tables:
 # pg_cron       (handled by PGDG)
 # pg_task       (handled by PGDG)
 
-pg_later:       # rust 0.12.5 (TBD for 18)
+pg_later:       # rust 0.16.1
 	./build pg_later nodebug 13 14 15 16 17
 
 # pg_background (handled by PGDG)
@@ -77,7 +77,7 @@ vchord:    # rust pgrx 0.16.1
 pgvectorscale:  # rust 0.12.9 TBD for pg18
 	./build pgvectorscale nodebug 13 14 15 16 17
 
-pg_vectorize:	# rust 0.25.0 pgrx 0.13.1
+pg_vectorize:	# rust 0.16.1
 	./build pg_vectorize nodebug 14 15 16 17
 
 pg_similarity:	# covered by pgdg

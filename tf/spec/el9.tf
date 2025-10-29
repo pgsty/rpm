@@ -2,7 +2,7 @@
 # File      :   terraform.tf
 # Desc      :   5-node oss building env for x86_64/aarch64
 # Ctime     :   2024-12-12
-# Mtime     :   2025-05-07
+# Mtime     :   2025-10-27
 # Path      :   tf/terraform
 # License   :   AGPLv3 @ https://pigsty.io/docs/about/license
 # Copyright :   2018-2025  Ruohang Feng / Vonng (rh@vonng.com)
@@ -35,13 +35,20 @@ data "alicloud_images" "el8_arm64_img" {
 }
 data "alicloud_images" "el9_amd64_img" {
   owners     = "system"
-  name_regex = "^rockylinux_9_5_x64"
+  name_regex = "^rockylinux_9_6_x64"
 }
 data "alicloud_images" "el9_arm64_img" {
   owners     = "system"
-  name_regex = "^rockylinux_9_5_arm64"
+  name_regex = "^rockylinux_9_6_arm64"
 }
-
+data "alicloud_images" "el10_amd64_img" {
+  owners     = "system"
+  name_regex = "^rockylinux_10_0_x64"
+}
+data "alicloud_images" "el10_arm64_img" {
+  owners     = "system"
+  name_regex = "^rockylinux_10_0_arm64"
+}
 
 #===========================================================#
 # Credentials
@@ -53,6 +60,7 @@ data "alicloud_images" "el9_arm64_img" {
 provider "alicloud" {
   # access_key = "????????????????????"
   # secret_key = "????????????????????"
+  region = "cn-hongkong"
 }
 
 
@@ -69,12 +77,12 @@ resource "alicloud_vpc" "vpc" {
 resource "alicloud_vswitch" "vsw" {
   vpc_id     = "${alicloud_vpc.vpc.id}"
   cidr_block = "10.10.10.0/24"
-  zone_id    = "cn-beijing-l"
+  zone_id    = "cn-hongkong-d"
 }
 
 # add default security group and allow all tcp traffic
 resource "alicloud_security_group" "default" {
-  name   = "default"
+  security_group_name   = "default"
   vpc_id = "${alicloud_vpc.vpc.id}"
 }
 resource "alicloud_security_group_rule" "allow_all_tcp" {
@@ -90,10 +98,6 @@ resource "alicloud_security_group_rule" "allow_all_tcp" {
 
 
 
-
-#======================================#
-# EL9 AMD64
-#======================================#
 resource "alicloud_instance" "pg-el9" {
   instance_name                 = "pg-el9"
   host_name                     = "pg-el9"

@@ -1,3 +1,44 @@
+
+
+
+## EL10
+
+```bash
+cat > /etc/yum.repos.d/groonga.repo <<-'EOF'
+[apache-arrow-almalinux]
+name=Apache Arrow for AlmaLinux $releasever - $basearch
+baseurl=https://apache.jfrog.io/artifactory/arrow/almalinux/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+
+[groonga-almalinux]
+name=The Groonga Project for AlmaLinux $releasever - $basearch
+baseurl=https://packages.groonga.org/almalinux/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+EOF
+
+cat /etc/yum.repos.d/groonga.repo
+yum makecache
+```
+
+```bash
+yum download arrow2100-libs arrow2100-compute-libs arrow-devel-21.0.0*
+
+dnf download arrow-compute-devel-21*
+```
+
+
+##
+
+
+
+
+
+
+
+
+
 #!/bin/bash
 
 

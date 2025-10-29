@@ -20,8 +20,7 @@ Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT License
 URL:		https://github.com/duckdb/pg_duckdb
 Source0:	%{sname}-%{version}.tar.gz
-
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 libcurl-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -84,10 +83,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
-* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.0.0
-* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.3.1
-* Wed Dec 11 2024 Vonng <rh@vonng.com> - 0.2.0
-* Thu Oct 24 2024 Vonng <rh@vonng.com> - 0.1.0
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
+* Wed Dec 11 2024 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
+* Thu Oct 24 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - the first public release, used by Pigsty <https://pigsty.io>
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.1-initial
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

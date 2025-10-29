@@ -119,7 +119,7 @@ scws-install:
 zhparser:
 	QA_RPATHS=2 ./build zhparser 13 14 15 16 17 18
 
-pg_bestmatch:		# rust pgrx 0.12.7 (obsolete)
+pg_bestmatch:		# rust pgrx 0.16.1
 	./build pg_bestmatch nodebug 13 14 15 16 17
 
 vchord_bm25:		# rust  pgrx 0.16.1
@@ -591,7 +591,7 @@ pgmeminfo:
 toastinfo:
 	./build toastinfo nodebug 13 14 15 16 17 18
 
-pg_explain_ui:		# rust pgrx 0.12.9
+pg_explain_ui:		# rust pgrx 0.16.1
 	./build pg_explain_ui nodebug 13 14 15 16 17 18
 
 pg_relusage:
@@ -781,6 +781,8 @@ rmdbg:
 	mv RPMS/el9.aarch64/*debug* RPMS/el9.aarch64/tmp/
 
 
+rust: pg_polyline pg_tzf vchord pg_summarize pg_tiktoken pg_bestmatch vchord_bm25 pg_tokenizer pg_parquet pg_graphql pg_jsonschema plprql pg_smtp_client pg_idkit pgx_ulid pg_base58 pg_convert pgdd pg_explain_ui pg_session_jwt pg_anon pgsmcrypto wrappers
+# pgml pgrx 0.12.9 archived
 
 ###############################################################
 #                      Inventory                              #

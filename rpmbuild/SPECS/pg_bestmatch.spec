@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.1
+Version:	0.0.2
 Release:	1PIGSTY%{?dist}
 Summary:	Generate BM25 sparse vector inside PostgreSQL
 License:	Apache-2.0
@@ -38,5 +38,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.0.1
+* Wed Oct 29 2025 Vonng <rh@vonng.com> - 0.0.2-1PIGSTY
+* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

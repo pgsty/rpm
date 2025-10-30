@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-07-28
+# Mtime     :   2024-10-30
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -51,6 +51,12 @@ pull:
 pulld:
 	rsync -avc --delete $(DEVEL_PATH)/ ./
 
+# push to the "meta" server
+pushm:
+	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ meta:~/rpmbuild/
+pm:
+	rsync -avc --delete rpmbuild/SPECS/ meta:~/rpmbuild/SPECS/
+
 # push SRC to building VMs
 push-el: push8 push9 #push7
 push7:
@@ -68,12 +74,8 @@ push9a:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9a:~/rpmbuild/
 push10a:
 	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el10a:~/rpmbuild/
-pushm:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ meta:~/rpmbuild/
-pm:
-	rsync -avc --delete rpmbuild/SPECS/ meta:~/rpmbuild/SPECS/
 
-# fetch RPMS from bucilding VMs
+# fetch RPMS from building VMs
 pull-el: pull9 pull8 pull7
 pull7:
 	mkdir -p rpmbuild/RPMS/el7.x86_64/
@@ -84,14 +86,23 @@ pull8:
 pull9:
 	mkdir -p rpmbuild/RPMS/el9.x86_64/
 	rsync -avc el9:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el9.x86_64/ || true
+pull10:
+	mkdir -p rpmbuild/RPMS/el10.x86_64/
+	rsync -avc el10:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el10.x86_64/ || true
 
 pull-ela: pull9 pull8 #pull7
 pull7a:
+	mkdir -p rpmbuild/RPMS/el7.aarch64/
 	rsync -avc el7a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el7.aarch64/ || true
 pull8a:
+	mkdir -p rpmbuild/RPMS/el8.aarch64/
 	rsync -avc el8a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el8.aarch64/ || true
 pull9a:
+	mkdir -p rpmbuild/RPMS/el9.aarch64/
 	rsync -avc el9a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el9.aarch64/ || true
+pull10a:
+	mkdir -p rpmbuild/RPMS/el10.aarch64/
+	rsync -avc el10a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el10.aarch64/ || true
 
 # sync building specs with el VMs
 el-dir:
@@ -127,29 +138,6 @@ pull-ssp:
 	ssh -t sv "cd /data/rpm && make pull-el repo7 repo8 repo9"
 	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
 
-
-###############################################################
-#                   5. Build Repo                             #
-###############################################################
-repo7:
-	mkdir -p rpmbuild/RPMS/el7.x86_64/debug
-	mv -f rpmbuild/RPMS/el7.x86_64/*debug*.rpm rpmbuild/RPMS/el7.x86_64/debug/ || true
-	./build	rpmbuild/RPMS/el7.x86_64       sign
-	./build	rpmbuild/RPMS/el7.x86_64/debug sign
-
-repo8:
-	mkdir -p rpmbuild/RPMS/el8.x86_64/debug
-	mv -f rpmbuild/RPMS/el8.x86_64/*debug*.rpm rpmbuild/RPMS/el8.x86_64/debug/ || true
-	./build	rpmbuild/RPMS/el8.x86_64       sign
-	./build	rpmbuild/RPMS/el8.x86_64/debug sign
-
-repo9:
-	mkdir -p rpmbuild/RPMS/el9.x86_64/debug
-	mv -f rpmbuild/RPMS/el9.x86_64/*debug*.rpm rpmbuild/RPMS/el9.x86_64/debug/ || true
-	./build	rpmbuild/RPMS/el9.x86_64       sign
-	./build	rpmbuild/RPMS/el9.x86_64/debug sign
-
-
 ###############################################################
 #                         Terraform                           #
 ###############################################################
@@ -178,4 +166,4 @@ r:
 #                         Inventory                           #
 ###############################################################
 .PHONY: init build build-amd64 build-arm64 builds builds-amd64 builds-arm64 \
-	push pushd pull pulld push7 push8 push9 push-el pushss
+	push pushd pull pulld push7 push8 push9 push10  push-el pushss

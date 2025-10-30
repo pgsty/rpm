@@ -827,21 +827,53 @@ rmdbg:
 
 
 ###############################################################
-#                      Inventory                              #
+#                      .PHONY Targets                         #
 ###############################################################
-.PHONY: default deps scws scws-install libduckdb libduckdb-install \
-	deps scws scws-install libduckdb libduckdb-install pg_filedump \
-	batch1 zhparser duckdb_fdw hunspell hydra age pg_tde pgjwt vault supautils index_advisor plv8 pg_duckdb pgroonga timescaledb citus omnigres pg_mooncake \
-	batch2 pg_roaringbitmap pg_sqlog pg_hashids postgres_shacrypt permuteseq imgsmlr pg_similarity md5hash preprepare first_last_agg pgpcre icu_ext asn1oid numeral pg_rational q3c pgsphere pgfaceting mimeo table_log pg_snakeoil pgextwlist toastinfo \
-	batch3 pg_orphaned pgcozy decoder_raw pg_failover_slots pg_financial pg_savior aggs_for_vecs pg_base36 pg_base62 pg_envvar pg_html5_email_address quantile lower_quantile pg_timeit pg_random session_variable chkpass pg_currency pg_uri cryptint floatvec pg_auditor noset redis_fdw \
-	aggs_for_arrays pg_meta pg_redis_pubsub pg_arraymath pagevis pg_ecdsa pg_cheat_funcs pg_crash pg_math firebird_fdw sequential_uuids pgnodemx pg_hashlib pg_protobuf pg_country pg_fio aws_s3 \
-	batch4 geoip plproxy table_version kafka_fdw log_fdw pgqr pg_zstd pg_geohash acl pg_emailaddr smlar pgmq pg_timeseries pg_plan_filter pg_relusage pg_uint128 pg4ml pgpdf pgsodium \
-	omnisketch ddsketch pg_duration ddl_historization data_historization pg_schedoc floatfile pg_upless vasco pg_xxhash pg_xenophile pg_drop_events documentdb pg_tracing pg_curl pgxicor pgsparql pgjq hashtypes db_migrator pg_bulkload pg_cooldown pg_mustach \
-	sqlite_fdw jsonb_apply pgsentinel spat libpgfeutils libpgfeutils-install pgactive pgcollection pg_bzip pg_tle pg_incremental \
-	rust rust1 rust2 rust3 rusta rustb rustc rustd \
-	pg_graphql pg_jsonschema wrappers pg_idkit pgsmcrypto pg_tiktoken pg_summarize pg_tzf pg_polyline pg_explain_ui pg_cardano pg_base58 pg_parquet pg_vectorize timescaledb_toolkit pgvectorscale vchord vchord_bm25 pg_tokenizer pg_render convert \
-	pglite_fusion pg_bestmatch pgml plprql pg_later pg_smtp_client pgdd pgx_ulid \
-	openhalodb oriolepg orioledb \
-	ls-rpm ls-srpm rm-rpm rm-srpm
+# All targets declared as .PHONY to ensure make always runs them
+# even if a file with the same name exists
+
+.PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0129
+
+.PHONY: deps scws scws-install libduckdb libduckdb-install \
+	libpgfeutils libpgfeutils-install pg_filedump
+
+.PHONY: age aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
+	chkpass citus count_distinct cryptint \
+	data_historization db_migrator ddl_historization ddlx ddsketch \
+	decoder_raw documentdb firebird_fdw first_last_agg floatvec \
+	geoip hashtypes hunspell hunspell_cs_cz hunspell_de_de \
+	hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
+	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
+	hydra icu_ext imgsmlr index_advisor kafka_fdw \
+	lower_quantile md5hash mimeo numeral omnisketch \
+	openhalodb orioledb oriolepg oriolepg-install pagevis \
+	periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
+	pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_bulkload \
+	pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
+	pg_country pg_crash pg_curl pg_currency pg_drop_events \
+	pg_duckdb pg_duration pg_ecdsa pg_emailaddr pg_envvar \
+	pg_explain_ui pg_failover_slots pg_financial pg_fio \
+	pg_geohash pg_graphql pg_gzip pg_hashids pg_hashlib \
+	pg_html5_email_address pg_http pg_idkit pg_incremental \
+	pg_jsonschema pg_later pg_math pg_meta pg_mooncake \
+	pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter \
+	pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub \
+	pg_relusage pg_render pg_roaringbitmap pg_savior pg_schedoc \
+	pg_semver pg_session_jwt pg_similarity pg_smtp_client \
+	pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
+	pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing \
+	pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_vectorize \
+	pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
+	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt \
+	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
+	pgqr pgroonga pgsentinel pgsmcrypto pgsodium pgsparql \
+	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \
+	plproxy plprql plv8 prefix preprepare q3c quantile \
+	redis_fdw sequential_uuids session_variable shacrypt \
+	smlar spat sqlite_fdw sslutils supautils table_log \
+	temporal_tables timescaledb timescaledb_toolkit toastinfo \
+	url_encode vasco vchord vchord_bm25 wrappers zhparser \
+	pglogical_ticker omnigres \
+	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg
 
 

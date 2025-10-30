@@ -7,6 +7,11 @@
 
 Run with root
 
+
+```bash
+pig build get documentdb-0.106.0-ferretdb-2.5.0.tar.gz
+```
+
 ```bash
 cp ~/rpmbuild/SOURCES/documentdb-0.106.0-ferretdb-2.5.0.tar.gz /tmp/
 cd /tmp/;
@@ -21,7 +26,10 @@ export MAKE_PROGRAM=cmake
 ./install_setup_pcre2.sh
 ./install_setup_intel_decimal_math_lib.sh
 ./install_citus_indent.sh
-cd ~/rpmbuild; make documentdb
+cd ~/rpmbuild; 
+
+make documentdb
+pig build all documentdb
 ```
 
 

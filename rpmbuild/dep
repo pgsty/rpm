@@ -4,8 +4,8 @@
 # File      :   dep
 # Desc      :   install dependencies for an extension
 # Ctime     :   2025-02-09
-# Mtime     :   2025-10-29
-# Usage     :   dep <extension>
+# Mtime     :   2025-10-30
+# Usage     :   dep <pkg> [versions...]
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
 #==============================================================#
@@ -17,9 +17,10 @@ RPMS_DIR="${PROG_DIR}/RPMS"
 #--------------------------------------------------------------#
 # Usage
 #--------------------------------------------------------------#
-# build [nodebug] <extension> <versions...>
-# ./dep pg_roaringbitmap         13 14 15 16 17 18
-# ./dep pgjwt            nodebug 13 14 15 16 17 18
+# dep <extension> [versions...]
+# ./dep zhparser           # Install deps for PG16 (default)
+# ./dep zhparser 17        # Install deps for PG17
+# ./dep zhparser 18 17     # Install deps for PG18 and PG17
 
 #--------------------------------------------------------------#
 # Log Util
@@ -31,20 +32,43 @@ if [[ -t 1 ]]; then
 else
     __CN='';__CB='';__CR='';__CG='';__CY='';__CB='';__CM='';__CC='';__CW='';
 fi
-function log_info()  { printf "[${__CG} OK ${__CN}] ${__CG}$*${__CN}\n"; }
-function log_warn()  { printf "[${__CY}WARN${__CN}] ${__CY}$*${__CN}\n"; }
-function log_error() { printf "[${__CR}FAIL${__CN}] ${__CR}$*${__CN}\n"; }
-function log_red()   { printf "[${__CR}WARN${__CN}] ${__CR}$*${__CN}\n"; }
-function log_debug() { printf "[${__CB}HINT${__CN}] ${__CB}$*${__CN}\n"; }
-function log_title() { printf "[${__CG}$1${__CN}] ${__CG}$2${__CN}\n";   }
-function log_hint()  { printf "${__CB}$*${__CN}\n"; }
-function log_line()  { printf "${__CM}[$*] ===========================================${__CN}\n"; }
+function log_info()  { printf "[${__CG} OK ${__CN}] ${__CG}%s${__CN}\n" "$*"; }
+function log_warn()  { printf "[${__CY}WARN${__CN}] ${__CY}%s${__CN}\n" "$*"; }
+function log_error() { printf "[${__CR}FAIL${__CN}] ${__CR}%s${__CN}\n" "$*"; }
+function log_red()   { printf "[${__CR}WARN${__CN}] ${__CR}%s${__CN}\n" "$*"; }
+function log_debug() { printf "[${__CB}HINT${__CN}] ${__CB}%s${__CN}\n" "$*"; }
+function log_title() { printf "[${__CG}%s${__CN}] ${__CG}%s${__CN}\n" "$1" "$2"; }
+function log_hint()  { printf "${__CB}%s${__CN}\n" "$*"; }
+function log_line()  { printf "${__CM}[%s] ===========================================${__CN}\n" "$*"; }
 
 
 #--------------------------------------------------------------#
 # ARGS
 #--------------------------------------------------------------#
 EXTENSION_NAME=$1
+shift
+
+# Parse PostgreSQL versions (default to 16 if none provided)
+VERSIONS=""
+if [ $# -eq 0 ]; then
+    VERSIONS="16"
+else
+    # Validate versions
+    VALID_VERSIONS="10 11 12 13 14 15 16 17 18 19"
+    for arg in "$@"; do
+        found=false
+        for ver in ${VALID_VERSIONS}; do
+            if [ "${ver}" = "${arg}" ]; then
+                found="true"
+            fi
+        done
+        if [[ "${found}" != "true" ]]; then
+            log_error "invalid pg version: ${arg}"
+            exit 1
+        fi
+    done
+    VERSIONS=$@
+fi
 
 #--------------------------------------------------------------#
 # Check Spec
@@ -59,7 +83,10 @@ else
 fi
 
 #--------------------------------------------------------------#
-# Building for each pgmajorversion
+# Install dependencies for each pgmajorversion
 #--------------------------------------------------------------#
-log_info "install dependencies for ${EXTENSION_NAME}"
-sudo dnf builddep -y --define "pgmajorversion 16" SPECS/${EXTENSION_NAME}.spec
+for ver in $VERSIONS; do
+    log_info "install dependencies for ${EXTENSION_NAME} (PG${ver})"
+    log_hint "\$" sudo dnf builddep -y --define \"pgmajorversion ${ver}\" "SPECS/${EXTENSION_NAME}.spec"
+    sudo dnf builddep -y --define "pgmajorversion ${ver}" "${SPEC_FILE}"
+done

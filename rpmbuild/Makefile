@@ -11,19 +11,59 @@ ARCH=$(shell uname -m)
 
 
 ###############################################################
+#                            Prepare                          #
+###############################################################
+env: pig setup
+pig:
+	curl https://repo.pigsty.cc/pig | bash -s 0.7.0
+pig:
+	curl https://repo.pigsty.cc/pig | bash -s 0.7.0
+setup: repo tool spec rust pgrx
+repo:
+	pig build repo
+tool:
+	pig build tool
+spec:
+	pig build spec
+rust:
+	pig build rust
+pgrx: pgrx0161
+pgrx0161:
+	pig build pgrx -v 0.16.1
+pgrx0129:
+	pig build pgrx -v 0.12.9 # by pgvectorscale
+
+
+
+###############################################################
+#                            Summary                          #
+###############################################################
+rust1: timescaledb_toolkit pg_polyline pg_tzf
+rust2: vchord pg_summarize pg_tiktoken
+rust3: vchord_bm25 pg_tokenizer pg_bestmatch
+rust4: pg_graphql pg_jsonschema wrappers
+rust5: pg_parquet pg_render
+rust6: plprql pg_smtp_client pg_idkit pgx_ulid
+rust7: pg_base58 pg_convert pgdd pg_explain_ui
+rust8: pg_session_jwt pg_anon pgsmcrypto
+
+time: timescaledb pg_timeseries periods temporal_tables
+
+
+###############################################################
 #                       Category: TIME                        #
 ###############################################################
 timescaledb:
-	./build timescaledb nodebug 15 16 17
+	./build timescaledb 15 16 17
 
-timescaledb_toolkit:
-	./build timescaledb nodebug 15 16 17 18
+timescaledb_toolkit:	# rust pgrx 0.16.1
+	./build timescaledb 15 16 17 18
 
 pg_timeseries:
-	./build pg_timeseries nodebug 13 14 15 16 17 18
+	./build pg_timeseries 13 14 15 16 17 18
 
 periods:
-	./build periods nodebug 13 14 15 16 17 18
+	./build periods 13 14 15 16 17 18
 
 temporal_tables:
 	./build temporal_tables 13 14 15 16 17 18
@@ -34,7 +74,7 @@ temporal_tables:
 # pg_task       (handled by PGDG)
 
 pg_later:       # rust 0.16.1
-	./build pg_later nodebug 13 14 15 16 17
+	./build pg_later 13 14 15 16 17
 
 # pg_background (handled by PGDG)
 
@@ -59,26 +99,26 @@ pg_geohash:
 	./build pg_geohash 13 14 15 16 17 18
 
 pg_polyline:    # rust pgrx 0.16.1
-	./build pg_polyline nodebug 13 14 15 16 17 18
+	./build pg_polyline 13 14 15 16 17 18
 
 pg_tzf:         # rust pgrx 0.16.1
-	./build pg_tzf nodebug 14 15 16 17 18
+	./build pg_tzf 14 15 16 17 18
 
 
 ###############################################################
 #                       Category: RAG                         #
 ###############################################################
 pgvector:  # skip, handled by pgdg
-	./build pgvector nodebug 13 14 15 16 17 18
+	./build pgvector 13 14 15 16 17 18
 
 vchord:    # rust pgrx 0.16.1
-	./build vchord nodebug 13 14 15 16 17 18
+	./build vchord 13 14 15 16 17 18
 
 pgvectorscale:  # rust 0.12.9 TBD for pg18
-	./build pgvectorscale nodebug 13 14 15 16 17
+	./build pgvectorscale 13 14 15 16 17
 
 pg_vectorize:	# rust 0.16.1
-	./build pg_vectorize nodebug 14 15 16 17
+	./build pg_vectorize 14 15 16 17
 
 pg_similarity:	# covered by pgdg
 	./build pg_similarity 13 14 15 16 17 18
@@ -87,16 +127,16 @@ smlar:          # break for pg18
 	./build smlar 13 14 15 16 17
 
 pg_summarize:	# rust pgrx 0.16.1 (forked)
-	./build pg_summarize nodebug 13 14 15 16 17
+	./build pg_summarize 13 14 15 16 17
 
 pg_tiktoken:	# rust pgrx 0.16.1
-	./build pg_tiktoken nodebug 13 14 15 16 17 18
+	./build pg_tiktoken 13 14 15 16 17 18
 
 pg4ml:
 	./build pg4ml 13 14 15 16 17 18
 
 pgml:			# rust pgrx 0.12.9 (obsolete)
-	./build pgml nodebug 14 15 16 17
+	./build pgml 14 15 16 17
 
 
 
@@ -105,7 +145,7 @@ pgml:			# rust pgrx 0.12.9 (obsolete)
 ###############################################################
 # pg_search     # download directly
 pg_bigm:     	# covered by PGDG (deb break on 18)
-	./build pg_bigm nodebug 13 14 15 16 17 18
+	./build pg_bigm 13 14 15 16 17 18
 
 # pgroonga: TBD
 
@@ -120,13 +160,13 @@ zhparser:
 	QA_RPATHS=2 ./build zhparser 13 14 15 16 17 18
 
 pg_bestmatch:		# rust pgrx 0.16.1
-	./build pg_bestmatch nodebug 13 14 15 16 17
+	./build pg_bestmatch 13 14 15 16 17
 
 vchord_bm25:		# rust  pgrx 0.16.1
-	./build vchord_bm25 nodebug 13 14 15 16 17 18
+	./build vchord_bm25 13 14 15 16 17 18
 
 pg_tokenizer:		# rust pgrx 0.16.1
-	./build pg_tokenizer nodebug 13 14 15 16 17 18
+	./build pg_tokenizer 13 14 15 16 17 18
 
 hunspell: hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_ru_ru hunspell_ru_ru_aot #hunspell_pt_pt
 hunspell_cs_cz:
@@ -154,7 +194,7 @@ hunspell_pt_pt:
 #                       Category: FTS                         #
 ###############################################################
 citus:			# not ready for pg18
-	./build citus nodebug 15 16 17
+	./build citus 15 16 17
 
 hydra:
 	./build hydra 13 14 15 16 #17 not ready yet
@@ -186,10 +226,10 @@ age:
 #hll:
 #rum
 pg_graphql:		# rust pgrx 0.16.1 (build on unpublished-release)
-	./build pg_graphql nodebug 14 15 16 17 18
+	./build pg_graphql 14 15 16 17 18
 
 pg_jsonschema:	# rust pgrx 0.16.1 (patch from 0.16.0)
-	./build pg_jsonschema nodebug 13 14 15 16 17 18
+	./build pg_jsonschema 13 14 15 16 17 18
 
 #jsquery:
 #pg_hint_plan
@@ -207,13 +247,13 @@ pg_incremental:
 	./build pg_incremental 16 17 18
 
 pgmq:
-	./build pgmq nodebug 13 14 15 16 17 18
+	./build pgmq 13 14 15 16 17 18
 
 # pgq
 # orioledb
 
 pg_cardano:
-	./build pg_cardano nodebug 13 14 15 16 17 18
+	./build pg_cardano 13 14 15 16 17 18
 
 # rdkit
 # omnigres
@@ -230,7 +270,7 @@ plv8:
 # pllua
 
 plprql: 		# rust pgrx 0.16.1
-	./build plprql nodebug 13 14 15 16 17 18
+	./build plprql 13 14 15 16 17 18
 
 # plprofiler
 # plsh
@@ -245,81 +285,78 @@ plprql: 		# rust pgrx 0.16.1
 #                       Category: TYPE                        #
 ###############################################################
 prefix:
-	./build prefix nodebug 13 14 15 16 17 18
+	./build prefix 13 14 15 16 17 18
 
 pg_semver:
-	./build pg_semver nodebug 13 14 15 16 17 18
+	./build pg_semver 13 14 15 16 17 18
 
 #unit:
 pgpdf: 		# covered by PGDG
-	./build pgpdf nodebug 13 14 15 16 17 18
+	./build pgpdf 13 14 15 16 17 18
 
 pglite_fusion:
-	./build pglite_fusion nodebug 13 14 15 16 17 18
+	./build pglite_fusion 13 14 15 16 17 18
 
 md5hash:
-	./build md5hash nodebug 13 14 15 16 17 18
+	./build md5hash 13 14 15 16 17 18
 
 asn1oid:
-	./build asn1oid nodebug 13 14 15 16 17 18
+	./build asn1oid 13 14 15 16 17 18
 
 pg_roaringbitmap:
-	./build pg_roaringbitmap nodebug 13 14 15 16 17 18
+	./build pg_roaringbitmap 13 14 15 16 17 18
 
 pgfaceting:
-	./build pgfaceting nodebug 13 14 15 16 17 18
+	./build pgfaceting 13 14 15 16 17 18
 
 pgsphere:
-	./build pgsphere nodebug 13 14 15 16 17 18
-
-pgsphere:
-	./build pgsphere nodebug 13 14 15 16 17 18
+	./build pgsphere 13 14 15 16 17 18
 
 pg_country:
-	./build pg_country nodebug 13 14 15 16 17 18
+	./build pg_country 13 14 15 16 17 18
 
 pg_xenophile:
-	./build pg_xenophile nodebug 13 14 15 16 17 18
+	./build pg_xenophile 13 14 15 16 17 18
 
 pg_currency:
-	./build pg_currency nodebug 13 14 15 16 17 18
+	./build pg_currency 13 14 15 16 17 18
 
 pgcollection:
-	./build pgcollection nodebug 14 15 16 17 18
+	./build pgcollection 14 15 16 17 18
 
 numeral:
-	./build numeral nodebug 13 14 15 16 17 18
+	./build numeral 13 14 15 16 17 18
 
 pg_rational:
-	./build pg_rational nodebug 13 14 15 16 17 18
+	./build pg_rational 13 14 15 16 17 18
 
 pguint:
-	./build pguint nodebug 13 14 15 16 17 18
+	./build pguint 13 14 15 16 17 18
 
 pg_uint128:
-	./build pg_uint128 nodebug 13 14 15 16 17 18
+	./build pg_uint128 13 14 15 16 17 18
 
 hashtypes:
-	./build hashtypes nodebug 13 14 15 16 17 18
+	./build hashtypes 13 14 15 16 17 18
 
 pg_duration:
 	./build pg_duration 17 18
 
 pg_uri:
-	./build pg_uri nodebug 13 14 15 16 17 18
+	./build pg_uri 13 14 15 16 17 18
 
 pg_emailaddr:
-	./build pg_emailaddr nodebug 13 14 15 16 17 18
+	./build pg_emailaddr 13 14 15 16 17 18
 
 pg_acl:
-	./build pg_acl nodebug 13 14 15 16 17 18
+	./build pg_acl 13 14 15 16 17 18
 
 #debversion:
 #pg_rrule:
 #timestamp9:
 
 chkpass:
-	./build chkpass nodebug 13 14 15 16 17 18
+	./build chkpass 13 14 15 16 17 18
 
 
 
@@ -328,89 +365,89 @@ chkpass:
 #                       Category: UTIL                        #
 ###############################################################
 pg_gzip:
-	./build pg_gzip nodebug 13 14 15 16 17 18
+	./build pg_gzip 13 14 15 16 17 18
 
 pg_bzip:
-	./build pg_bzip nodebug 13 14 15 16 17 18
+	./build pg_bzip 13 14 15 16 17 18
 
 pg_zstd:
-	./build pg_zstd nodebug 13 14 15 16 17 18
+	./build pg_zstd 13 14 15 16 17 18
 
 pg_http:
-	./build pg_http nodebug 13 14 15 16 17 18
+	./build pg_http 13 14 15 16 17 18
 
 pg_net:
-	./build pg_net nodebug 13 14 15 16 17 18
+	./build pg_net 13 14 15 16 17 18
 pg_net2:
-	./build pg_net2 nodebug 13 14 15 16 17 18
+	./build pg_net2 13 14 15 16 17 18
 
 pg_curl:
-	./build pg_curl nodebug 13 14 15 16 17 18
+	./build pg_curl 13 14 15 16 17 18
 
 pgjq:
-	./build pgjq nodebug 14 15 16 17
+	./build pgjq 14 15 16 17
 
 pgjwt:
-	./build pgjwt nodebug 13 14 15 16 17 18
+	./build pgjwt 13 14 15 16 17 18
 
 pg_smtp_client:		# rust pgrx
-	./build pg_smtp_client nodebug 14 15 16 17
+	./build pg_smtp_client 14 15 16 17
 
 pg_html5_email_address:
-	./build pg_html5_email_address nodebug 13 14 15 16 17 18
+	./build pg_html5_email_address 13 14 15 16 17 18
 
 url_encode:
-	./build url_encode nodebug 13 14 15 16 17 18
+	./build url_encode 13 14 15 16 17 18
 
 #pgsql_tweaks (TODO)
 #pg_extra_time
 
 pgpcre:
-	./build pgpcre nodebug 13 14 15 16 17 18
+	./build pgpcre 13 14 15 16 17 18
 
 icu_ext:
-	./build icu_ext nodebug 13 14 15 16 17 18
+	./build icu_ext 13 14 15 16 17 18
 
 pgqr:
-	./build pgqr nodebug 13 14 15 16 17 18
+	./build pgqr 13 14 15 16 17 18
 
 pg_protobuf:
-	./build pg_protobuf nodebug 13 14 15 16 17 18
+	./build pg_protobuf 13 14 15 16 17 18
 
 pg_envvar:
-	./build pg_envvar nodebug 13 14 15 16 17 18
+	./build pg_envvar 13 14 15 16 17 18
 
-pg_render:		# rust
-	./build pg_render nodebug 14 15 16 17
+pg_render:		# rust pgrx 0.16.1
+	./build pg_render 14 15 16 17
 
 #pg_readme
 
 ddl_historization:
-	./build ddl_historization nodebug 13 14 15 16 17 18
+	./build ddl_historization 13 14 15 16 17 18
 
 data_historization:
-	./build data_historization nodebug 13 14 15 16 17 18
+	./build data_historization 13 14 15 16 17 18
 
 pg_schedoc:
-	./build pg_schedoc nodebug 13 14 15 16 17 18
+	./build pg_schedoc 13 14 15 16 17 18
 
 pg_hashlib:
-	./build pg_hashlib nodebug 13 14 15 16 17 18
+	./build pg_hashlib 13 14 15 16 17 18
 
 pg_xxhash:
-	./build pg_xxhash nodebug 13 14 15 16 17 18
+	./build pg_xxhash 13 14 15 16 17 18
 
 shacrypt:
-	./build shacrypt nodebug 13 14 15 16 17 18
+	./build shacrypt 13 14 15 16 17 18
 
 cryptint:
-	./build cryptint nodebug 13 14 15 16 17 18
+	./build cryptint 13 14 15 16 17 18
 
 pg_ecdsa:
-	./build pg_ecdsa nodebug 13 14 15 16 17 18
+	./build pg_ecdsa 13 14 15 16 17 18
 
 pgsparql:
-	./build pgsparql nodebug 13 14 15 16 17 18
+	./build pgsparql 13 14 15 16 17 18
 
 
 ###############################################################
@@ -418,83 +455,83 @@ pgsparql:
 ###############################################################
 
 pg_idkit:			# rust pgrx 0.16.1 (bump from 0.16.0)
-	./build pg_idkit nodebug 13 14 15 16 17 18
+	./build pg_idkit 13 14 15 16 17 18
 
 pgx_ulid:			# rust pgrx 0.16.1
-	./build pgx_ulid  nodebug 14 15 16 17 18
+	./build pgx_ulid  14 15 16 17 18
 
 #pg_uuidv7
 
 permuteseq:
-	./build permuteseq nodebug 13 14 15 16 17 18
+	./build permuteseq 13 14 15 16 17 18
 
 pg_hashids:
-	./build pg_hashids nodebug 13 14 15 16 17 18
+	./build pg_hashids 13 14 15 16 17 18
 
 sequential_uuids:
-	./build sequential_uuids nodebug 13 14 15 16 17 18
+	./build sequential_uuids 13 14 15 16 17 18
 
 quantile:
-	./build quantile nodebug 13 14 15 16 17 18
+	./build quantile 13 14 15 16 17 18
 
 lower_quantile:
-	./build lower_quantile nodebug 13 14 15 16 17 18
+	./build lower_quantile 13 14 15 16 17 18
 
 count_distinct:
-	./build count_distinct nodebug 13 14 15 16 17 18
+	./build count_distinct 13 14 15 16 17 18
 
 omnisketch:
-	./build omnisketch nodebug 13 14 15 16 17 18
+	./build omnisketch 13 14 15 16 17 18
 
 ddsketch:
-	./build ddsketch nodebug 13 14 15 16 17 18
+	./build ddsketch 13 14 15 16 17 18
 
 vasco:
-	./build vasco nodebug 13 14 15 16 17 18
-	./build vasco nodebug 13 14 15 16 17 18
+	./build vasco 13 14 15 16 17 18
+	./build vasco 13 14 15 16 17 18
 
 pgxicor:
-	./build pgxicor nodebug 13 14 15 16 17 18
+	./build pgxicor 13 14 15 16 17 18
 
 #tdigest
 
 first_last_agg:
-	./build first_last_agg nodebug 13 14 15 16 17 18
+	./build first_last_agg 13 14 15 16 17 18
 
 #extra_window_functions
 
 floatvec:
-	./build floatvec nodebug 13 14 15 16 17 18
+	./build floatvec 13 14 15 16 17 18
 
 aggs_for_vecs:
-	./build aggs_for_vecs nodebug 13 14 15 16 17 18
+	./build aggs_for_vecs 13 14 15 16 17 18
 
 aggs_for_arrays:
-	./build aggs_for_arrays nodebug 13 14 15 16 17 18
+	./build aggs_for_arrays 13 14 15 16 17 18
 
 pg_arraymath:
-	./build pg_arraymath nodebug 13 14 15 16 17 18
+	./build pg_arraymath 13 14 15 16 17 18
 
 pg_math:
-	./build pg_math nodebug 13 14 15 16 17 18
+	./build pg_math 13 14 15 16 17 18
 
 pg_random:
-	./build pg_random nodebug 13 14 15 16 17 18
+	./build pg_random 13 14 15 16 17 18
 
 pg_base36:
-	./build pg_base36 nodebug 13 14 15 16 17 18
+	./build pg_base36 13 14 15 16 17 18
 
 pg_base62:
-	./build pg_base62 nodebug 13 14 15 16 17 18
+	./build pg_base62 13 14 15 16 17 18
 
 pg_base58:		# rust (pgrx 0.16.1)
-	./build pg_base58 nodebug 13 14 15 16 17 18
+	./build pg_base58 13 14 15 16 17 18
 
 pg_financial:
-	./build pg_financial nodebug 13 14 15 16 17 18
+	./build pg_financial 13 14 15 16 17 18
 
 pg_convert:		# rust (pgrx 0.16.1)
-	./build pg_convert nodebug 13 14 15 16 17 18
+	./build pg_convert 13 14 15 16 17 18
 
 
 ###############################################################
@@ -517,43 +554,43 @@ pg_convert:		# rust (pgrx 0.16.1)
 # pgpool:
 
 pg_cooldown:
-	./build pg_cooldown nodebug 13 14 15 16 17 18
+	./build pg_cooldown 13 14 15 16 17 18
 
 ddlx:			# fix pgdg 18 missing
-	./build ddlx nodebug 13 14 15 16 17 18
+	./build ddlx 13 14 15 16 17 18
 
 pgdd:			# rust pgrx 0.16.1
-	./build pgdd nodebug 13 14 15 16 17 18
+	./build pgdd 13 14 15 16 17 18
 
 preprepare:
-	./build preprepare nodebug 13 14 15 16 17 18
+	./build preprepare 13 14 15 16 17 18
 
 pg_upless:
-	./build pg_upless nodebug 13 14 15 16 17 18
+	./build pg_upless 13 14 15 16 17 18
 
 pgcozy:
-	./build pgcozy nodebug 13 14 15 16 17 18
+	./build pgcozy 13 14 15 16 17 18
 
 pg_orphaned:
-	./build pg_orphaned nodebug 13 14 15 16 17 18
+	./build pg_orphaned 13 14 15 16 17 18
 
 pg_crash:
-	./build pg_crash nodebug 13 14 15 16 17 18
+	./build pg_crash 13 14 15 16 17 18
 
 pg_cheat_funcs:
-	./build pg_cheat_funcs nodebug 13 14 15 16 17 18
+	./build pg_cheat_funcs 13 14 15 16 17 18
 
 pg_fio:
-	./build pg_fio nodebug 13 14 15 16 17 18
+	./build pg_fio 13 14 15 16 17 18
 
 pg_savior:		# breaks on pg18
-	./build pg_savior nodebug 13 14 15 16 17
+	./build pg_savior 13 14 15 16 17
 
 pg_drop_events:
-	./build pg_drop_events nodebug 13 14 15 16 17 18
+	./build pg_drop_events 13 14 15 16 17 18
 
 table_log:
-	./build table_log nodebug 13 14 15 16 17 18
+	./build table_log 13 14 15 16 17 18
 
 ###############################################################
 #                       Category: STAT                         #
@@ -563,7 +600,6 @@ table_log:
 #pg_stat_kcache
 #pg_stat_monitor      	# break on pg18
 #pg_qualstats
-#pg_store_plans			# breaks on pg18
 #pg_track_settings
 #pg_wait_sampling
 #system_stats
@@ -571,41 +607,44 @@ table_log:
 #powa
 
 pg_tracing:
-	./build pg_tracing nodebug 14 15 16 17 18
+	./build pg_tracing 14 15 16 17 18
 
 pgsentinel:
-	./build pgsentinel nodebug 13 14 15 16 17 18
+	./build pgsentinel 13 14 15 16 17 18
 
 pg_meta:
-	./build pg_meta nodebug 13 14 15 16 17 18
+	./build pg_meta 13 14 15 16 17 18
 
 pgnodemx:
-	./build pgnodemx nodebug 13 14 15 16 17 18
+	./build pgnodemx 13 14 15 16 17 18
 
 pg_sqlog:
-	./build pg_sqlog nodebug 13 14 15 16 17 18
+	./build pg_sqlog 13 14 15 16 17 18
 
 pgmeminfo:
-	./build pgmeminfo nodebug 13 14 15 16 17 18
+	./build pgmeminfo 13 14 15 16 17 18
 
 toastinfo:
-	./build toastinfo nodebug 13 14 15 16 17 18
+	./build toastinfo 13 14 15 16 17 18
 
 pg_explain_ui:		# rust pgrx 0.16.1
-	./build pg_explain_ui nodebug 13 14 15 16 17 18
+	./build pg_explain_ui 13 14 15 16 17 18
+
+pg_store_plans:			# breaks on pg18
+	./build pg_store_plans 14 15 16 17 18
 
 pg_relusage:
-	./build pg_relusage nodebug 13 14 15 16 17 18
+	./build pg_relusage 13 14 15 16 17 18
 
 pagevis:
-	./build pagevis nodebug 13 14 15 16 17 18
+	./build pagevis 13 14 15 16 17 18
 
 
 ###############################################################
 #                       Category: SEC                         #
 ###############################################################
 #passwordcheck_cracklib
-#pg_vault
+
 #pg_tde
 #pgaudit
 #pgauditlogtofile
@@ -615,37 +654,42 @@ pagevis:
 #logerrors
 #login_hook
 #set_user
-#pg_noset
+
+pg_noset:
+	./build pg_noset 13 14 15 16 17 18
+
+pg_vault:
+	./build pg_vault 13 14 15 16 17 18
 
 supautils:
-	./build supautils nodebug 13 14 15 16 17 18
+	./build supautils 13 14 15 16 17 18
 
 pgsodium:
-	./build pgsodium nodebug 13 14 15 16 17 18
+	./build pgsodium 13 14 15 16 17 18
 
 pg_session_jwt:		# rust pgrx 0.16.1
-	./build pg_session_jwt nodebug 14 15 16 17 18
+	./build pg_session_jwt 14 15 16 17 18
 
 pg_anon:			# rust pgrx 0.16.1 (update from 0.16.0)
-	./build pg_anon nodebug 13 14 15 16 17 18
+	./build pg_anon 13 14 15 16 17 18
 
 pgsmcrypto:			# rust pgrx 0.16.1
-	./build pgsmcrypto nodebug 13 14 15 16 17 18
+	./build pgsmcrypto 13 14 15 16 17 18
 
 pgcryptokey:
-	./build pgcryptokey nodebug 13 14 15 16 17 18
+	./build pgcryptokey 13 14 15 16 17 18
 
 pg_snakeoil:
-	./build pg_snakeoil nodebug 13 14 15 16 17 18
+	./build pg_snakeoil 13 14 15 16 17 18
 
 pgextwlist:
-	./build pgextwlist nodebug 13 14 15 16 17 18
+	./build pgextwlist 13 14 15 16 17 18
 
 pg_auditor:
-	./build pg_auditor nodebug 13 14 15 16 17 18
+	./build pg_auditor 13 14 15 16 17 18
 
 sslutils:
-	./build sslutils nodebug 13 14 15 16 17 18
+	./build sslutils 13 14 15 16 17 18
 
 ###############################################################
 #                       Category: FDW                         #
@@ -663,25 +707,25 @@ sslutils:
 #hdfs_fdw
 
 wrappers:			# rust pgrx 0.16.1 (manual update from 0.16.0)
-	./build wrappers nodebug 14 15 16 17 18
+	./build wrappers 14 15 16 17 18
 
 sqlite_fdw:
-	./build sqlite_fdw nodebug 13 14 15 16 17 18
+	./build sqlite_fdw 13 14 15 16 17 18
 
 redis_fdw:
-	./build redis_fdw nodebug 13 14 15 16 17 18
+	./build redis_fdw 13 14 15 16 17 18
 
 pg_redis_pubsub:
-	./build pg_redis_pubsub nodebug 13 14 15 16 17 18
+	./build pg_redis_pubsub 13 14 15 16 17 18
 
 kafka_fdw:
-	./build kafka_fdw nodebug 13 14 15 16 17
+	./build kafka_fdw 13 14 15 16 17
 
 firebird_fdw:
-	./build firebird_fdw nodebug 13 14 15 16 17 18
+	./build firebird_fdw 13 14 15 16 17 18
 
 aws_s3:
-	./build aws_s3 nodebug 13 14 15 16 17 18
+	./build aws_s3 13 14 15 16 17 18
 
 ###############################################################
 #                       Category: SIM                         #
@@ -696,13 +740,13 @@ aws_s3:
 #pgmemcache
 
 documentdb:
-	./build documentdb nodebug 15 16 17
+	./build documentdb 15 16 17
 
 session_variable:
-	./build session_variable nodebug 13 14 15 16 17 18
+	./build session_variable 13 14 15 16 17 18
 
 spat:
-	./build spat nodebug 17
+	./build spat 17
 
 ###############################################################
 #                       Category: ETL                         #
@@ -716,13 +760,13 @@ spat:
 #pg_fact_loader
 
 pglogical_ticker:
-	./build pglogical_ticker nodebug 13 14 15 16 17 #18
+	./build pglogical_ticker 13 14 15 16 17 #18
 
 pg_failover_slots:
-	./build pg_failover_slots nodebug 13 14 15 16 17 18
+	./build pg_failover_slots 13 14 15 16 17 18
 
 db_migrator:
-	./build db_migrator nodebug 13 14 15 16 17 18
+	./build db_migrator 13 14 15 16 17 18
 
 libpgfeutils:	# require perl-FindBin
 	./build libpgfeutils14 14
@@ -735,19 +779,16 @@ libpgfeutils-install:
 	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/libpgfeutils*$(ARCH).rpm
 
 pgactive:
-	./build pgactive nodebug 13 14 15 16 17 18
+	./build pgactive 13 14 15 16 17 18
 
 decoder_raw:
-	./build decoder_raw nodebug 13 14 15 16 17 18
+	./build decoder_raw 13 14 15 16 17 18
 
 mimeo:
-	./build mimeo nodebug 13 14 15 16 17 18
+	./build mimeo 13 14 15 16 17 18
 
 pg_bulkload:
-	./build pg_bulkload nodebug 13 14 15 16 17 18
-
-
-
+	./build pg_bulkload 13 14 15 16 17 18
 
 
 
@@ -758,6 +799,9 @@ openhalodb:
 	rpmbuild -ba SPECS/openhalodb.spec
 oriolepg:
 	rpmbuild -ba SPECS/oriolepg_17.spec
+oriolepg-install:
+	sudo yum remove -y oriolepg_17 || /bin/true
+	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/oriolepg_17*.$(ARCH).rpm
 orioledb:
 	rpmbuild -ba SPECS/orioledb_17.spec
 
@@ -781,8 +825,6 @@ rmdbg:
 	mv RPMS/el9.aarch64/*debug* RPMS/el9.aarch64/tmp/
 
 
-rust: pg_polyline pg_tzf vchord pg_summarize pg_tiktoken pg_bestmatch vchord_bm25 pg_tokenizer pg_parquet pg_graphql pg_jsonschema plprql pg_smtp_client pg_idkit pgx_ulid pg_base58 pg_convert pgdd pg_explain_ui pg_session_jwt pg_anon pgsmcrypto wrappers
-# pgml pgrx 0.12.9 archived
 
 ###############################################################
 #                      Inventory                              #

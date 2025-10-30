@@ -5,7 +5,7 @@
 # Desc      :   build an extension (on el systems)
 # Ctime     :   2024-10-13
 # Mtime     :   2025-02-09
-# Usage     :   build [nodebug] <extension> <versions...>
+# Usage     :   build [debug] <extension> <versions...>
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
 #==============================================================#
@@ -17,9 +17,9 @@ RPMS_DIR="${PROG_DIR}/RPMS"
 #--------------------------------------------------------------#
 # Usage
 #--------------------------------------------------------------#
-# build [nodebug] <extension> <versions...>
+# build [debug] <extension> <versions...>
 # ./build pg_roaringbitmap         13 14 15 16 17 18
-# ./build pgjwt            nodebug 13 14 15 16 17 18
+# ./build pgjwt            debug   13 14 15 16 17 18
 
 #--------------------------------------------------------------#
 # Log Util
@@ -31,14 +31,14 @@ if [[ -t 1 ]]; then
 else
     __CN='';__CB='';__CR='';__CG='';__CY='';__CB='';__CM='';__CC='';__CW='';
 fi
-function log_info()  { printf "[${__CG} OK ${__CN}] ${__CG}$*${__CN}\n"; }
-function log_warn()  { printf "[${__CY}WARN${__CN}] ${__CY}$*${__CN}\n"; }
-function log_error() { printf "[${__CR}FAIL${__CN}] ${__CR}$*${__CN}\n"; }
-function log_red()   { printf "[${__CR}WARN${__CN}] ${__CR}$*${__CN}\n"; }
-function log_debug() { printf "[${__CB}HINT${__CN}] ${__CB}$*${__CN}\n"; }
-function log_title() { printf "[${__CG}$1${__CN}] ${__CG}$2${__CN}\n";   }
-function log_hint()  { printf "${__CB}$*${__CN}\n"; }
-function log_line()  { printf "${__CM}[$*] ===========================================${__CN}\n"; }
+function log_info()  { printf "[${__CG} OK ${__CN}] ${__CG}%s${__CN}\n" "$*"; }
+function log_warn()  { printf "[${__CY}WARN${__CN}] ${__CY}%s${__CN}\n" "$*"; }
+function log_error() { printf "[${__CR}FAIL${__CN}] ${__CR}%s${__CN}\n" "$*"; }
+function log_red()   { printf "[${__CR}WARN${__CN}] ${__CR}%s${__CN}\n" "$*"; }
+function log_debug() { printf "[${__CB}HINT${__CN}] ${__CB}%s${__CN}\n" "$*"; }
+function log_title() { printf "[${__CG}%s${__CN}] ${__CG}%s${__CN}\n" "$1" "$2"; }
+function log_hint()  { printf "${__CB}%s${__CN}\n" "$*"; }
+function log_line()  { printf "${__CM}[%s] ===========================================${__CN}\n" "$*"; }
 
 
 #--------------------------------------------------------------#
@@ -47,10 +47,20 @@ function log_line()  { printf "${__CM}[$*] =====================================
 EXTENSION_NAME=$1
 shift
 
-DEBUG_OPT="--with"
-if [[ "$1" == "nodebug" || "$1" == "nodbg" ]]; then
-    DEBUG_OPT="--without"
+# Build rpmbuild args array - default is to disable debug packages
+declare -a BUILD_ARGS=()
+if [[ "$1" == "debug" || "$1" == "dbg" ]]; then
+    # Enable debug packages by not adding the disable macro
     shift
+else
+    # Disable debug packages (default behavior)
+    BUILD_ARGS+=(--define "debug_package %{nil}")
+fi
+
+# Detect OS version for EL10+ special handling
+OS_VERSION=$(rpm -E '%{rhel}' 2>/dev/null || echo "0")
+if [[ "$OS_VERSION" =~ ^[0-9]+$ ]] && [[ "$OS_VERSION" -ge 10 ]]; then
+    export QA_RPATHS=3
 fi
 
 VERSIONS=""
@@ -59,7 +69,7 @@ if [ $# -eq 0 ]; then
 else
 
     # Validate versions
-    VALID_VERSIONS="10 11 12 13 14 15 16 17 18 19"
+    VALID_VERSIONS="10 11 12 13 14 15 16 17 18 19 20"
     for arg in "$@"; do
         found=false
         for ver in ${VALID_VERSIONS}; do
@@ -108,11 +118,12 @@ fi
 # Building for each pgmajorversion
 #--------------------------------------------------------------#
 for ver in $VERSIONS; do
-    MARCO="pgmajorversion $ver"
     log_line "${EXTENSION_NAME} for PG$ver"
     export PATH=/usr/bin:/usr/pgsql-${ver}/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;
-    log_hint "\$" rpmbuild "${DEBUG_OPT}" debuginfo --define \"${MARCO}\" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
-    rpmbuild ${DEBUG_OPT} debuginfo --define "${MARCO}" -ba "${SPEC_FILE}"
+
+    # Build command with proper argument expansion
+    log_hint "\$" rpmbuild "${BUILD_ARGS[@]}" --define "pgmajorversion ${ver}" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
+    rpmbuild "${BUILD_ARGS[@]}" --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
 done
 
 

@@ -21,10 +21,12 @@ URL:		https://github.com/petere/pgpcre
 Source0:	pgpcre-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	pcre-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-This is a module for PostgreSQL that exposes Perl-compatible regular expressions (PCRE) functionality as functions and operators. It is based on the popular PCRE library.
+This is a module for PostgreSQL that exposes Perl-compatible regular expressions (PCRE)
+functionality as functions and operators. It is based on the popular PCRE library.
 
 %if %llvm
 %package llvmjit

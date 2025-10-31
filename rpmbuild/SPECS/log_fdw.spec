@@ -14,11 +14,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	foreign-data wrapper for Postgres log file access
 License:	Apache-2.0
 URL:		https://github.com/aws/postgresql-logfdw
-Source0:	log-fdw-%{version}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -56,7 +56,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n log-fdw-%{version}
+%setup -q -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
@@ -78,5 +78,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_PGXS=1 install DESTDIR
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.4
+* Fri Oct 31 2025 Vonng <rh@vonng.com> - 1.4-2PIGSTY
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.4-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

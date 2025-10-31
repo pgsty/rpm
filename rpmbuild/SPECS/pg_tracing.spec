@@ -21,6 +21,7 @@ URL:		https://github.com/DataDog/pg_tracing
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	libcurl-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

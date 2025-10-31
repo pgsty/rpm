@@ -55,7 +55,7 @@ timescaledb:
 	./build timescaledb 15 16 17
 
 timescaledb_toolkit:	# rust pgrx 0.16.1
-	./build timescaledb 15 16 17 18
+	./build timescaledb_toolkit 15 16 17 18
 
 pg_timeseries:
 	./build pg_timeseries 13 14 15 16 17 18

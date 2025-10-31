@@ -4,7 +4,7 @@
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.22.1
+Version:	2.23.0
 Release:	1PIGSTY%{?dist}
 License:	Timescale
 Source0:	%{sname}-%{version}.tar.gz
@@ -50,27 +50,29 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
-* Sat Oct 25 2025 Vonng <rh@vonng.com> - 2.22.1
+* Fri Oct 31 2025 Vonng <rh@vonng.com> - 2.23.0-1PIGSTY
+- https://github.com/timescale/timescaledb/releases/tag/2.23.0
+* Sat Oct 25 2025 Vonng <rh@vonng.com> - 2.22.1-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.22.1
-* Thu Sep 04 2025 Vonng <rh@vonng.com> - 2.22.0
+* Thu Sep 04 2025 Vonng <rh@vonng.com> - 2.22.0-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.22.0
-* Wed Jul 23 2025 Vonng <rh@vonng.com> - 2.21.1
+* Wed Jul 23 2025 Vonng <rh@vonng.com> - 2.21.1-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.21.1
-* Tue Jun 24 2025 Vonng <rh@vonng.com> - 2.20.3
+* Tue Jun 24 2025 Vonng <rh@vonng.com> - 2.20.3-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.20.3
-* Fri May 23 2025 Vonng <rh@vonng.com> - 2.20.0
+* Fri May 23 2025 Vonng <rh@vonng.com> - 2.20.0-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.20.0
-* Wed May 07 2025 Vonng <rh@vonng.com> - 2.19.3
+* Wed May 07 2025 Vonng <rh@vonng.com> - 2.19.3-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.19.3
-* Sat Apr 05 2025 Vonng <rh@vonng.com> - 2.19.1
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 2.19.1-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.19.1
-* Thu Mar 20 2025 Vonng <rh@vonng.com> - 2.19.0
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 2.19.0-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.19.0
-* Fri Feb 21 2025 Vonng <rh@vonng.com> - 2.18.2
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 2.18.2-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.18.2
-* Tue Feb 11 2025 Vonng <rh@vonng.com> - 2.18.1
+* Tue Feb 11 2025 Vonng <rh@vonng.com> - 2.18.1-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.18.1
-* Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.18.0
+* Sun Feb 09 2025 Vonng <rh@vonng.com> - 2.18.0-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.18.0
-* Mon Dec 16 2024 Vonng <rh@vonng.com> - 2.17.2
+* Mon Dec 16 2024 Vonng <rh@vonng.com> - 2.17.2-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

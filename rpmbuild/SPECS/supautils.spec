@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.0.1
+Version:	3.0.2
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0
@@ -36,6 +36,7 @@ install -m 755 %{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Oct 31 2025 Vonng <rh@vonng.com> - 3.0.2-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 3.0.1-1PIGSTY
 * Wed Jul 23 2025 Vonng <rh@vonng.com> - 2.10.0-1PIGSTY
 * Fri May 23 2025 Vonng <rh@vonng.com> - 2.9.2-1PIGSTY

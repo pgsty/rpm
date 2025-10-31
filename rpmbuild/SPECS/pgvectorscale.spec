@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.8.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
 URL:		https://github.com/timescale/pgvectorscale
@@ -40,11 +40,12 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Wed Jul 23 2025 Vonng <rh@vonng.com> - 0.8.0
-* Wed May 07 2025 Vonng <rh@vonng.com> - 0.7.1
-* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.6.0
+* Fri Oct 31 2025 Vonng <rh@vonng.com> - 0.8.0-2PIGSTY
+* Wed Jul 23 2025 Vonng <rh@vonng.com> - 0.8.0-1PIGSTY
+* Wed May 07 2025 Vonng <rh@vonng.com> - 0.7.1-1PIGSTY
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.6.0-1PIGSTY
 - https://github.com/timescale/pgvectorscale/releases/tag/0.6.0
-* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.5.1
-* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.4.0
-* Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.2.0
+* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.5.1-1PIGSTY
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.4.0-1PIGSTY
+* Sat Jun 29 2024 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

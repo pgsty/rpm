@@ -16,8 +16,6 @@ ARCH=$(shell uname -m)
 env: pig setup
 pig:
 	curl https://repo.pigsty.cc/pig | bash -s 0.7.0
-pig:
-	curl https://repo.pigsty.cc/pig | bash -s 0.7.0
 setup: repo tool spec rust pgrx
 repo:
 	pig build repo

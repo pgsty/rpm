@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.0
+Version:	0.9.2
 Release:	2PIGSTY%{?dist}
 Summary:	A PostgreSQL extension that enables asynchronous (non-blocking) HTTP/HTTPS requests with SQL
 License:	Apache-2.0
@@ -22,7 +22,7 @@ Source0:	pg_net-%{version}.tar.gz
 #           https://github.com/supabase/pg_net/archive/refs/tags/v0.9.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	libcurl-devel >= 7.83
+BuildRequires:	libcurl-devel
 Requires:	    postgresql%{pgmajorversion}-server
 
 %description
@@ -81,9 +81,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.20.0
-* Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.9.2
-* Thu May 09 2024 Vonng <rh@vonng.com> - 0.9.1
-* Sat Feb 17 2024 Vonng <rh@vonng.com> - 0.8.0
-* Mon Sep 18 2023 Vonng <rh@vonng.com> - 0.7.3
+* Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.9.2-1PIGSTY
+* Thu May 09 2024 Vonng <rh@vonng.com> - 0.9.1-1PIGSTY
+* Sat Feb 17 2024 Vonng <rh@vonng.com> - 0.8.0-1PIGSTY
+* Mon Sep 18 2023 Vonng <rh@vonng.com> - 0.7.3-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

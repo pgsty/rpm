@@ -14,11 +14,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	A PostgreSQL foreign data wrapper for Redis
 License:	PostgreSQL
 URL:		https://github.com/pg-redis-fdw/redis_fdw
-Source0:	%{sname}-1.0-%{pgmajorversion}.tar.gz
+Source0:	%{sname}-1.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 hiredis-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -57,6 +57,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n redis_fdw-%{version}
+git checkout REL_%{pgmajorversion}_STABLE
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
@@ -78,7 +79,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_PGXS=1 install DESTDIR
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Fri Sep 05 2025 Vonng <rh@vonng.com> - 1.0-1PIGSTY
-- With PG 18 support
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0
+* Fri Sep 05 2025 Vonng <rh@vonng.com> - 1.0-2PIGSTY
+- add PG 18 support, merge into one source tarball
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

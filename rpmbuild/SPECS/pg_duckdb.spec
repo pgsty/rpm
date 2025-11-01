@@ -1,4 +1,7 @@
 %define debug_package %{nil}
+%global _unique_build_ids 1
+# libduckdb has same build-id which require unique build id to avoid conflict
+
 %global pname pg_duckdb
 %global sname pg_duckdb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -14,7 +17,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT License
@@ -59,7 +62,6 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-#git submodule update --init --recursive
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} || /bin/true
 
 %install
@@ -79,10 +81,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
    %{pginstdir}/lib/bitcode/*
 %endif
 
-
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
+* Sun Nov 01 2025 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
+- this is not published yet, but for pg_mooncake building 7daa8e53a
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
 * Wed Dec 11 2024 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY

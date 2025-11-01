@@ -9,6 +9,7 @@ Release:	4PIGSTY%{?dist}
 License:	PostgreSQL
 Summary:	Prefix Range module for PostgreSQL
 Source0:	prefix-%{version}.tar.gz
+
 URL:		https://github.com/dimitri/prefix
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -28,8 +29,8 @@ BuildRequires:	llvm17-devel clang17-devel
 Requires:	llvm17
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 17.0 clang-devel >= 17.0
-Requires:	llvm => 17.0
+BuildRequires:	llvm-devel >= 17.0 clang-devel >= 19.0
+Requires:	llvm => 19.0
 %endif
 
 %description llvmjit
@@ -65,5 +66,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %make_install DESTDIR=%{buildroot}
 %endif
 
 %changelog
-* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.5.2-1PIGSTY
+* Sat Nov 01 2025 Vonng <rh@vonng.com> - 1.2.10-1PIGSTY
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.2.5-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

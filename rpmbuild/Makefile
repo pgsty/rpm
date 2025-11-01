@@ -651,8 +651,10 @@ pagevis:
 #credcheck
 #pg_jobmon
 #logerrors
-#login_hook
 #set_user
+
+login_hook:
+	./build login_hook 13 14 15 16 17 18
 
 pg_noset:
 	./build pg_noset 13 14 15 16 17 18

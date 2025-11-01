@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	PostgreSQL extension for spatial indexing on a sphere
 License:	Apache-2.0
 URL:		https://github.com/viggy28/pg_savior
@@ -76,5 +76,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.1
+* Sat Nov 01 2025 Vonng <rh@vonng.com> - 0.0.1-2PIGSTY
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

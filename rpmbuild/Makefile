@@ -121,8 +121,8 @@ pg_vectorize:	# rust 0.16.1
 pg_similarity:	# covered by pgdg
 	./build pg_similarity 13 14 15 16 17 18
 
-smlar:          # break for pg18
-	./build smlar 13 14 15 16 17
+smlar:          # break for pg18, fixed
+	./build smlar 13 14 15 16 17 18
 
 pg_summarize:	# rust pgrx 0.16.1 (forked)
 	./build pg_summarize 13 14 15 16 17
@@ -203,7 +203,7 @@ pg_duckdb:
 	./build pg_duckdb 14 15 16 17 18
 
 pg_mooncake:
-	./build pg_mooncake 14 15 16 17
+	./build pg_mooncake 14 15 16 17 18
 
 #duckdb_fdw:
 #	./build duckdb_fdw
@@ -283,8 +283,8 @@ plprql: 		# rust pgrx 0.16.1
 ###############################################################
 #                       Category: TYPE                        #
 ###############################################################
-prefix:
-	./build prefix 13 14 15 16 17 18
+pg_prefix:
+	./build pg_prefix 13 14 15 16 17 18
 
 pg_semver:
 	./build pg_semver 13 14 15 16 17 18
@@ -350,14 +350,14 @@ pg_emailaddr:
 pg_acl:
 	./build pg_acl 13 14 15 16 17 18
 
-#debversion:
-#pg_rrule:
-#timestamp9:
+pg_rrule:
+	./build pg_rrule 13 14 15 16 17 18
 
 chkpass:
 	./build chkpass 13 14 15 16 17 18
 
-
+#debversion:
+#timestamp9:
 
 
 ###############################################################
@@ -629,8 +629,8 @@ toastinfo:
 pg_explain_ui:		# rust pgrx 0.16.1
 	./build pg_explain_ui 13 14 15 16 17 18
 
-pg_store_plans:			# breaks on pg18
-	./build pg_store_plans 14 15 16 17 18
+pg_store_plans:			# breaks on older version
+	./build pg_store_plans 17 18 #14 15 16
 
 pg_relusage:
 	./build pg_relusage 13 14 15 16 17 18

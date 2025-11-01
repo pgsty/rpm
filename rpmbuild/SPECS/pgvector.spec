@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.8.1
-Release:	1PGDG%{?dist}
+Release:	1PIGSTY%{?dist}
 Summary:	Open-source vector similarity search for Postgres
 License:	PostgreSQL
 URL:		https://github.com/%{sname}/%{sname}/

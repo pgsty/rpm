@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.7
-Release:	3PGDG%{?dist}
+Release:	3PIGSTY%{?dist}
 Summary:	Postgres database extension to execute some code on user login, comparable to Oracle's after logon trigger.License:	GPLv3
 License:	GPLv3
 URL:		https://github.com/splendiddata/%{sname}

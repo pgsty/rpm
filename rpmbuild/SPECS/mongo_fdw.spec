@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{mongofdwmajver}.%{mongofdwmidver}.%{mongofdwminver}
-Release:	1PGDG%{?dist}
+Release:	1PIGSTY%{?dist}
 License:	LGPLv3
 Summary:	PostgreSQL foreign data wrapper for MongoDB
 URL:		https://github.com/EnterpriseDB/%{sname}

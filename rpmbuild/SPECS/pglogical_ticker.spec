@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Have an accurate view on pglogical replication delay
 License:	MIT
 URL:		https://github.com/enov/%{sname}
@@ -79,5 +79,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sun Nov 03 2024 Vonng <rh@vonng.com> - 1.4.1
+* Sat Nov 01 2025 Vonng <rh@vonng.com> - 1.4.1-2PIGSTY
+- patch for pg 18 support
+* Sun Nov 03 2024 Vonng <rh@vonng.com> - 1.4.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -145,7 +145,8 @@ pgml:			# rust pgrx 0.12.9 (obsolete)
 pg_bigm:     	# covered by PGDG (deb break on 18)
 	./build pg_bigm 13 14 15 16 17 18
 
-# pgroonga: TBD
+pgroonga:
+	./build pgroonga 13 14 15 16 17 18
 
 # zhparser and scws deps
 scws:
@@ -581,8 +582,8 @@ pg_cheat_funcs:
 pg_fio:
 	./build pg_fio 13 14 15 16 17 18
 
-pg_savior:		# breaks on pg18
-	./build pg_savior 13 14 15 16 17
+pg_savior:		# breaks on pg18 (fixed)
+	./build pg_savior 13 14 15 16 17 18
 
 pg_drop_events:
 	./build pg_drop_events 13 14 15 16 17 18

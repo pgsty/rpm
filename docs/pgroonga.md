@@ -23,20 +23,27 @@ yum makecache
 ```
 
 ```bash
-yum download arrow2100-libs arrow2100-compute-libs arrow-devel-21.0.0*
-
-dnf download arrow-compute-devel-21*
+cd /tmp
+yum download arrow2100-libs arrow2100-compute-libs 
+yum download arrow-compute-devel-21*
+yum download arrow-devel-21.0.0* 
 ```
 
 
-##
+## Manual Download
 
+https://apache.jfrog.io/ui/native/arrow/almalinux/10/x86_64/Packages/
+https://apache.jfrog.io/artifactory/arrow/almalinux/9/x86_64/Packages/arrow-devel-21.0.0-1.el9.x86_64.rpm
+https://apache.jfrog.io/artifactory/arrow/almalinux/9/aarch64/Packages/arrow-devel-21.0.0-1.el9.aarch64.rpm
+https://apache.jfrog.io/artifactory/arrow/almalinux/8/x86_64/Packages/arrow-devel-21.0.0-1.el8.x86_64.rpm
+https://apache.jfrog.io/artifactory/arrow/almalinux/8/aarch64/Packages/arrow-devel-21.0.0-1.el8.aarch64.rpm
 
-
-
-
-
-
+```bash
+wget https://apache.jfrog.io/artifactory/arrow/almalinux/9/x86_64/Packages/arrow-devel-21.0.0-1.el9.x86_64.rpm
+wget https://apache.jfrog.io/artifactory/arrow/almalinux/9/aarch64/Packages/arrow-devel-21.0.0-1.el9.aarch64.rpm
+wget https://apache.jfrog.io/artifactory/arrow/almalinux/8/x86_64/Packages/arrow-devel-21.0.0-1.el8.x86_64.rpm
+wget https://apache.jfrog.io/artifactory/arrow/almalinux/8/aarch64/Packages/arrow-devel-21.0.0-1.el8.aarch64.rpm
+```
 
 
 #!/bin/bash

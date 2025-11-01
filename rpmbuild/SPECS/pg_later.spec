@@ -16,7 +16,6 @@ Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1
 
 %description
 Execute SQL now and get the results later.
-
 A postgres extension to execute queries asynchronously. Built on pgmq.
 
 %prep

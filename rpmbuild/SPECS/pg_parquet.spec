@@ -22,6 +22,13 @@ pg_parquet is a PostgreSQL extension that allows you to read and write Parquet f
 %setup -q -n %{sname}-%{version}
 
 %build
+# Disable system LTO for Rust/pgrx builds (Cargo handles its own LTO)
+# EL10+ uses -flto=auto which conflicts with pgrx linking against PostgreSQL static libs
+%if 0%{?rhel} >= 10
+export CFLAGS=$(echo "${CFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')
+export CXXFLAGS=$(echo "${CXXFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')
+export LDFLAGS=$(echo "${LDFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g')
+%endif
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 
 %install
@@ -39,11 +46,11 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.5.1
-* Thu Sep 04 2025 Vonng <rh@vonng.com> - 0.4.3
-* Wed May 07 2025 Vonng <rh@vonng.com> - 0.4.0
-* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.3.1
-* Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.2.0
-* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.1.1
-* Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.1.0
+* Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.5.1-1PIGSTY
+* Thu Sep 04 2025 Vonng <rh@vonng.com> - 0.4.3-1PIGSTY
+* Wed May 07 2025 Vonng <rh@vonng.com> - 0.4.0-1PIGSTY
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
+* Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
+* Tue Dec 10 2024 Vonng <rh@vonng.com> - 0.1.1-1PIGSTY
+* Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

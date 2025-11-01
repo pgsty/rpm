@@ -21,6 +21,11 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 %setup -q -n VectorChord-%{version}
 
 %build
+%if 0%{?rhel} >= 10
+export CFLAGS=$(echo "${CFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')
+export CXXFLAGS=$(echo "${CXXFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')
+export LDFLAGS=$(echo "${LDFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g')
+%endif
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 
 %install

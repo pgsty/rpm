@@ -3,7 +3,7 @@
 %global pname anon
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-Name:		pg_%{pname}_%{pgmajorversion}
+Name:		pg_anon_%{pgmajorversion}
 Version:	2.4.1
 Release:	1PIGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL

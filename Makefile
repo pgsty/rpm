@@ -15,7 +15,7 @@ setup:
 	@echo "pig build tool"
 	@echo "pig build rust"
 	@echo "pig build pgrx"
-	@echo "pig build pkg <name...>"
+	@echo "#pig build pkg <name...>"
 
 ###############################################################
 #                      Prepare Environment                    #
@@ -119,6 +119,9 @@ ssh:
 	tf/ssh
 rs:
 	git restore tf/terraform.tf
+upload:
+	bin/upload.sh
+
 
 
 ###############################################################

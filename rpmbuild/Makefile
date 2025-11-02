@@ -1,8 +1,8 @@
 #==============================================================#
 # File      :   Makefile
-# Desc      :   pgsty/pgsql-rpm repo shortcuts
+# Desc      :   pgsty/rpm make shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2025-10-27
+# Mtime     :   2025-11-02
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -31,8 +31,6 @@ pgrx0161:
 pgrx0129:
 	pig build pgrx -v 0.12.9 # by pgvectorscale
 
-
-
 ###############################################################
 #                            Summary                          #
 ###############################################################
@@ -44,7 +42,6 @@ rust5: pg_parquet pg_render
 rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto
-
 time: timescaledb pg_timeseries periods temporal_tables
 
 

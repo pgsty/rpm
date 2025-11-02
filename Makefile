@@ -2,168 +2,128 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2024-10-30
+# Mtime     :   2025-11-02
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
 #==============================================================#
 
-DEVEL_PATH = sv:/data/rpm
+setup:
+	@echo "curl https://repo.pigsty.cc/pig | bash -s 0.7.0"
+	@echo "pig build spec"
+	@echo "pig build repo"
+	@echo "pig build tool"
+	@echo "pig build rust"
+	@echo "pig build pgrx"
+	@echo "pig build pkg <name...>"
 
 ###############################################################
-#                        1. Building                          #
+#                      Prepare Environment                    #
 ###############################################################
-init:
-	mkdir -p rpm rpm/{el7.x86_64,el8.x86_64,el9.x86_64}
-	mkdir -p rpm rpm/{el7.aarch64,el8.aarch64,el9.aarch64}
-
-build: build-amd64 build-arm64
-build-amd64:
-	./build	rpm/el7.x86_64
-	./build	rpm/el8.x86_64
-	./build	rpm/el9.x86_64
-build-arm64:
-	./build	rpm/el7.aarch64
-	./build	rpm/el8.aarch64
-	./build	rpm/el9.aarch64
-
-builds: builds-amd64 builds-arm64
-builds-amd64:
-	./build	rpm/el7.x86_64 sign
-	./build	rpm/el8.x86_64 sign
-	./build	rpm/el9.x86_64 sign
-builds-arm64:
-	./build	rpm/el7.aarch64 sign
-	./build	rpm/el8.aarch64 sign
-	./build	rpm/el9.aarch64 sign
-
+pm:   specm   srcm
+p8:   spec8   src8
+p9:   spec9   src9    
+p10:  spec10  src10   
+p8a:  spec8a  src8a   
+p9a:  spec9a  src9a   
+p10a: spec10a src10a
 
 ###############################################################
-#                        2. Syncing                           #
+#                      Push SPEC to Remote                    #
 ###############################################################
-# push/pull project to/from building host
-push:
-	rsync -avc ./ $(DEVEL_PATH)/
-pushd:
-	rsync -avc --delete ./ $(DEVEL_PATH)/
-pull:
-	rsync -avc $(DEVEL_PATH)/ ./
-pulld:
-	rsync -avc --delete $(DEVEL_PATH)/ ./
+spec: spec8 spec9 spec10 spec8a spec9a spec10a
+specm:
+	rsync -az rpmbuild/ meta:~/rpmbuild/
+spec8:
+	rsync -az rpmbuild/ el8:~/rpmbuild/
+spec9:
+	rsync -az rpmbuild/ el9:~/rpmbuild/
+spec10:
+	rsync -az rpmbuild/ el10:~/rpmbuild/
 
-# push to the "meta" server
-pushm:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ meta:~/rpmbuild/
-pm:
-	rsync -avc --delete rpmbuild/SPECS/ meta:~/rpmbuild/SPECS/
+spec8a:
+	rsync -az rpmbuild/ el8a:~/rpmbuild/
+spec9a:
+	rsync -az rpmbuild/ el9a:~/rpmbuild/
+spec10a:
+	rsync -az rpmbuild/ el10a:~/rpmbuild/
 
-# push SRC to building VMs
-push-el: push8 push9 #push7
-push7:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el7:~/rpmbuild/
-	ssh el7 'cp -f ~/rpmbuild/Makefile.el7 ~/rpmbuild/Makefile'
-push8:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el8:~/rpmbuild/
-push9:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9:~/rpmbuild/
-push10:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el10:~/rpmbuild/
-push8a:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el8a:~/rpmbuild/
-push9a:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el9a:~/rpmbuild/
-push10a:
-	rsync -avc --exclude=RPMS --exclude=SRPMS --exclude=BUILD --exclude=BUILDROOT --delete rpmbuild/ el10a:~/rpmbuild/
+###############################################################
+#                      Push SRC to Remote                     #
+###############################################################
+# Update remote source tarball
+srcm:
+	rsync -avz src/ meta:~/rpmbuild/SOURCES/
+src8:
+	rsync -avz src/ el8:~/rpmbuild/SOURCES/
+src9:
+	rsync -avz src/ el9:~/rpmbuild/SOURCES/
+src10:
+	rsync -avz src/ el10:~/rpmbuild/SOURCES/
 
-# fetch RPMS from building VMs
-pull-el: pull9 pull8 pull7
-pull7:
-	mkdir -p rpmbuild/RPMS/el7.x86_64/
-	rsync -avc el7:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el7.x86_64/ || true
-pull8:
-	mkdir -p rpmbuild/RPMS/el8.x86_64/
-	rsync -avc el8:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el8.x86_64/ || true
-pull9:
-	mkdir -p rpmbuild/RPMS/el9.x86_64/
-	rsync -avc el9:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el9.x86_64/ || true
-pull10:
-	mkdir -p rpmbuild/RPMS/el10.x86_64/
-	rsync -avc el10:~/rpmbuild/RPMS/x86_64/ rpmbuild/RPMS/el10.x86_64/ || true
+src8a:
+	rsync -avz src/ el8a:~/rpmbuild/SOURCES/
+src9a:
+	rsync -avz src/ el9a:~/rpmbuild/SOURCES/
+src10a:
+	rsync -avz src/ el10a:~/rpmbuild/SOURCES/
 
-pull-ela: pull9 pull8 #pull7
-pull7a:
-	mkdir -p rpmbuild/RPMS/el7.aarch64/
-	rsync -avc el7a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el7.aarch64/ || true
-pull8a:
-	mkdir -p rpmbuild/RPMS/el8.aarch64/
-	rsync -avc el8a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el8.aarch64/ || true
-pull9a:
-	mkdir -p rpmbuild/RPMS/el9.aarch64/
-	rsync -avc el9a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el9.aarch64/ || true
-pull10a:
-	mkdir -p rpmbuild/RPMS/el10.aarch64/
-	rsync -avc el10a:~/rpmbuild/RPMS/aarch64/ rpmbuild/RPMS/el10.aarch64/ || true
+###############################################################
+#                      Pull RPM from Remote                   #
+###############################################################
+yum-new: yum-clean yum-init
+yum-init:
+	mkdir -p yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64  meta
+	mkdir -p yum/el8.aarch64 yum/el9.aarch64 yum/el10.aarch64
+yum-clean:
+	rm -rf   yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64
+	rm -rf   yum/el8.aarch64 yum/el9.aarch64 yum/el10.aarch64
+yum-pull: yum8 yum9 yum10 yum8a yum9a yum10a
 
-# sync building specs with el VMs
-el-dir:
-	ssh el9 'rpmdev-setuptree'
-	ssh el8 'rpmdev-setuptree'
-	ssh el7 'rpmdev-setuptree'
-el-spec:
-	rsync -avc --delete rpmbuild/SPECS/   el7:~/rpmbuild/SPECS/
-	rsync -avc --delete rpmbuild/SPECS/   el8:~/rpmbuild/SPECS/
-	rsync -avc --delete rpmbuild/SPECS/   el9:~/rpmbuild/SPECS/
-el-src:
-	rsync -avc rpmbuild/SOURCES/ el7:~/rpmbuild/SOURCES/
-	rsync -avc rpmbuild/SOURCES/ el8:~/rpmbuild/SOURCES/
-	rsync -avc rpmbuild/SOURCES/ el9:~/rpmbuild/SOURCES/
+yumm:
+	rsync -avc meta:~/rpmbuild/RPMS/x86_64/  yum/meta/
+	rsync -avc meta:~/rpmbuild/RPMS/aarch64/ yum/meta/
+yum8:
+	rsync -avc el8:~/rpmbuild/RPMS/x86_64/   yum/el8.x86_64/
+yum9:
+	rsync -avc el9:~/rpmbuild/RPMS/x86_64/   yum/el9.x86_64/
+yum10:
+	rsync -avc el10:~/rpmbuild/RPMS/x86_64/  yum/el10.x86_64/
+yum8a:
+	rsync -avc el8a:~/rpmbuild/RPMS/x86_64/  yum/el8a.x86_64/
+yum9a:
+	rsync -avc el9a:~/rpmbuild/RPMS/x86_64/  yum/el9a.x86_64/
+yum10a:
+	rsync -avc el10a:~/rpmbuild/RPMS/x86_64/ yum/el10a.x86_64/
 
-# push to building server, then deliver to el building VMs
-ps: push-ss
-push-ss: push
-	ssh -t sv "cd /data/rpm && make push-el"
-psa: push-ssa
-push-ssa: push
-	ssh -t sv "cd /data/rpm && make push-el"
-
-pl: pull-ss
-pull-ss:
-	ssh -t sv "cd /data/rpm && make pull-el"
-	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
-pull-rpm:
-	rsync -avc --delete sv:/data/rpm/rpmbuild/RPMS/ rpmbuild/RPMS/
-
-pp: pull-ssp
-pull-ssp:
-	ssh -t sv "cd /data/rpm && make pull-el repo7 repo8 repo9"
-	rsync -avc --delete $(DEVEL_PATH)/rpmbuild/RPMS/ rpmbuild/RPMS/
 
 ###############################################################
 #                         Terraform                           #
 ###############################################################
-u:
+u: up
+up:
 	cd tf && terraform apply -auto-approve
 	sleep 5
 	tf/ssh
 	sleep 15
 	tf/ssh
-a:
+a: apply
+apply:
 	cd tf && terraform apply
-d:
+d: destory
+destory:
 	cd tf && terraform destroy -auto-approve
-destroy:
-	cd tf && terraform destroy
 out:
 	cd tf && terraform output
 ssh:
 	tf/ssh
-r:
+rs:
 	git restore tf/terraform.tf
-
 
 
 ###############################################################
 #                         Inventory                           #
 ###############################################################
-.PHONY: init build build-amd64 build-arm64 builds builds-amd64 builds-arm64 \
-	push pushd pull pulld push7 push8 push9 push10  push-el pushss
+.PHONY: setup \
+	p8 p9 p10 p8a p9a p10a \
+	

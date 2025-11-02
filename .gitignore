@@ -5,10 +5,10 @@ infra-pkg.iml
 .DS_Store
 rpmbuild/SOURCES
 rpmbuild/RPMS
-rpm/
+yum/
 tmp/
 
-docs/pig.md
+doc/pig.md
 
 tf/.terraform/
 tf/*.hcl
@@ -16,5 +16,9 @@ tf/*.tfstate*
 tf/.terraform*
 #tf/terraform.tf
 
+CLAUDE.md
 
-docs/*
+doc/*
+src/
+
+doc/

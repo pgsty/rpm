@@ -97,15 +97,16 @@ resource "alicloud_security_group_rule" "allow_all_tcp" {
 }
 
 
+
 #======================================#
-# EL9 AMD64
+# EL8 AMD64
 #======================================#
-resource "alicloud_instance" "pg-el9" {
-  instance_name                 = "pg-el9"
-  host_name                     = "pg-el9"
-  private_ip                    = "10.10.10.9"
+resource "alicloud_instance" "pg-el8" {
+  instance_name                 = "pg-el8"
+  host_name                     = "pg-el8"
+  private_ip                    = "10.10.10.8"
   instance_type                 = local.amd64_instype
-  image_id                      = "${data.alicloud_images.el9_amd64_img.images.0.id}"
+  image_id                      = "${data.alicloud_images.el8_amd64_img.images.0.id}"
   vswitch_id                    = "${alicloud_vswitch.vsw.id}"
   security_groups               = ["${alicloud_security_group.default.id}"]
   password                      = "PigstyDemo4"
@@ -119,21 +120,20 @@ resource "alicloud_instance" "pg-el9" {
   system_disk_size              = local.disk_size
 }
 
-output "el9_ip" {
-  value = "${alicloud_instance.pg-el9.public_ip}"
+output "el8_ip" {
+  value = "${alicloud_instance.pg-el8.public_ip}"
 }
 
 
-
 #======================================#
-# EL9 ARM64
+# EL8 ARM64
 #======================================#
-resource "alicloud_instance" "pg-el9a" {
-  instance_name                 = "pg-el9a"
-  host_name                     = "pg-el9a"
-  private_ip                    = "10.10.10.109"
+resource "alicloud_instance" "pg-el8a" {
+  instance_name                 = "pg-el8a"
+  host_name                     = "pg-el8a"
+  private_ip                    = "10.10.10.108"
   instance_type                 = local.arm64_instype
-  image_id                      = "${data.alicloud_images.el9_arm64_img.images.0.id}"
+  image_id                      = "${data.alicloud_images.el8_arm64_img.images.0.id}"
   vswitch_id                    = "${alicloud_vswitch.vsw.id}"
   security_groups               = ["${alicloud_security_group.default.id}"]
   password                      = "PigstyDemo4"
@@ -147,11 +147,12 @@ resource "alicloud_instance" "pg-el9a" {
   system_disk_size              = local.disk_size
 }
 
-output "el9a_ip" {
-  value = "${alicloud_instance.pg-el9a.public_ip}"
+output "el8a_ip" {
+  value = "${alicloud_instance.pg-el8a.public_ip}"
 }
 
 
-# sshpass -p PigstyDemo4 ssh-copy-id el9
-# sshpass -p PigstyDemo4 ssh-copy-id el9a
+
+# sshpass -p PigstyDemo4 ssh-copy-id el8
+# sshpass -p PigstyDemo4 ssh-copy-id el8a
 

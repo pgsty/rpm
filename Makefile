@@ -53,7 +53,7 @@ spec10a:
 ###############################################################
 # Update remote source tarball
 srcm:
-	rsync -avz src/ meta:~/rpmbuild/SOURCES/
+	rsync -avz src/ meta:~/ext/src/
 src8:
 	rsync -avz src/ el8:~/rpmbuild/SOURCES/
 src9:

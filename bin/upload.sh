@@ -22,6 +22,7 @@ ls -alh "${TARBALL_NAME}"
 md5sum  "${TARBALL_NAME}"
 
 # upload to cloud
+cp "${TARBALL_NAME}" ~/pgsty/repo/ext/spec/${TARBALL_NAME}
 rclone copyto "${TARBALL_NAME}" "cos:/repo-1304744452/ext/spec/${TARBALL_NAME}"
 rclone copyto "${TARBALL_NAME}" "cf:/repo/ext/spec/${TARBALL_NAME}"
 

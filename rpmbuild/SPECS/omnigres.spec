@@ -4,14 +4,14 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	20251025
+Version:	20251108
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres as a Platform
 License:	Apache-2.0
 URL:		https://github.com/omnigres/omnigres
 Source0:	omnigres-%{version}.tar.gz
 BuildRequires:	pgdg-srpm-macros >= 1.0.27 cmake postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-devel postgresql%{pgmajorversion}-contrib postgresql%{pgmajorversion}-plpython3 cpan
-BuildRequires: python3.11-devel python3.11-pyparsing python3.11-pip
+#BuildRequires: python3.11-devel python3.11-pyparsing python3.11-pip
 Requires:	postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-contrib postgresql%{pgmajorversion}-plpython3
 
 %description
@@ -41,6 +41,7 @@ cp -a %{_builddir}/%{sname}-%{version}/pg%{pgmajorversion}/packaged/extension/* 
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Nov 08 2025 Vonng <rh@vonng.com> - 20251108-1PIGSTY
 * Sat Oct 25 2025 Vonng <rh@vonng.com> - 20251025-1PIGSTY
 * Wed May 07 2025 Vonng <rh@vonng.com> - 20250507-1PIGSTY
 * Mon Jan 20 2025 Vonng <rh@vonng.com> - 20250120-1PIGSTY

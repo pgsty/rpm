@@ -104,17 +104,14 @@ make %{?_smp_mflags}
 %endif
 
 %changelog
-* Thu Sep 04 2025 Vonng <rh@vonng.com> - 13.2.0
-* Tue Jun 24 2025 Vonng <rh@vonng.com> - 13.1.0
-* Sat Apr 05 2025 Vonng <rh@vonng.com> - 13.0.3
-* Thu Mar 20 2025 Vonng <rh@vonng.com> - 13.0.2
+* Tue Nov 11 2025 Vonng <rh@vonng.com> - 13.2.0-9PIGSTY
+* Tue Jun 24 2025 Vonng <rh@vonng.com> - 13.1.0-9PIGSTY
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 13.0.3-9PIGSTY
+* Thu Mar 20 2025 Vonng <rh@vonng.com> - 13.0.2-9PIGSTY
 - https://github.com/citusdata/citus/blob/release-13.0/CHANGELOG.md
-* Sun Feb 09 2025 Vonng <rh@vonng.com> - 13.0.1
+* Sun Feb 09 2025 Vonng <rh@vonng.com> - 13.0.1-9PIGSTY
 - Bump to 13.0.1 and drop PostgreSQL 14 support
-* Thu Jan 23 2025 Vonng <rh@vonng.com> - 13.0.0
+* Thu Jan 23 2025 Vonng <rh@vonng.com> - 13.0.0-9PIGSTY
 - Bump to 13.0.0 with PostgreSQL 17 support
-* Tue Dec 24 2024 Vonng <rh@vonng.com> - 12.1.6
+* Tue Dec 24 2024 Vonng <rh@vonng.com> - 12.1.6-9PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
-* Fri Mar 25 2016 - Devrim Gündüz <devrim@gunduz.org> 5.0.0-1
-- Initial RPM packaging for PostgreSQL RPM Repository,
-  based on the spec file of Jason Petersen @ Citus.

@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.1
+Version:	0.2.2
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres extension for ulid
 License:	MIT
@@ -43,6 +43,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 17 2025 Vonng <rh@vonng.com> - 0.2.2-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.2.1-1PIGSTY
 * Tue May 27 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

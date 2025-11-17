@@ -32,7 +32,7 @@ RRULE data type for PostgreSQL
 Summary:	Just-in-time compilation support for %{sname}
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 %if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 17.0 clang-devel >= 19.0
+BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
 Requires:	llvm => 19.0
 %endif
 

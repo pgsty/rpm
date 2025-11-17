@@ -4,8 +4,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.8.0
-Release:	2PIGSTY%{?dist}
+Version:	0.9.0
+Release:	1PIGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
 URL:		https://github.com/timescale/pgvectorscale
@@ -40,6 +40,8 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 17 2025 Vonng <rh@vonng.com> - 0.9.0-1PIGSTY
+- add pg18 support, drop pg13 support
 * Fri Oct 31 2025 Vonng <rh@vonng.com> - 0.8.0-2PIGSTY
 * Wed Jul 23 2025 Vonng <rh@vonng.com> - 0.8.0-1PIGSTY
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.7.1-1PIGSTY

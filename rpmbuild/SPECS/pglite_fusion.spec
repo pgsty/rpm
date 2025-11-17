@@ -5,7 +5,7 @@
 
 Name:		%{pname}_%{pgmajorversion}
 Version:	0.0.6
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Embed an SQLite database in your PostgreSQL table. AKA multitenancy has been solved.
 License:	MIT
 URL:		https://github.com/frectonz/%{sname}
@@ -38,6 +38,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 
 %changelog
 * Tue Nov 11 2025 Vonng <rh@vonng.com> - 0.0.6-1PIGSTY
+- move from patched version to upstream official tag
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.0.5-2PIGSTY
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.0.5-1PIGSTY
 * Sat Apr 05 2025 Vonng <rh@vonng.com> - 0.0.4-1PIGSTY

@@ -28,8 +28,7 @@ rust:
 pgrx: pgrx0161
 pgrx0161:
 	pig build pgrx -v 0.16.1
-pgrx0129:
-	pig build pgrx -v 0.12.9 # by pgvectorscale
+
 
 ###############################################################
 #                            Summary                          #
@@ -109,8 +108,8 @@ pgvector:  # skip, handled by pgdg
 vchord:    # rust pgrx 0.16.1
 	./build vchord 13 14 15 16 17 18
 
-pgvectorscale:  # rust 0.12.9 TBD for pg18
-	./build pgvectorscale 13 14 15 16 17
+pgvectorscale:  # rust 0.16.1
+	./build pgvectorscale 14 15 16 17 18
 
 pg_vectorize:	# rust 0.16.1
 	./build pg_vectorize 14 15 16 17

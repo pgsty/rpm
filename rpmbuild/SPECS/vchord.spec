@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.5.3
+Version:	1.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0
@@ -12,7 +12,7 @@ URL:		https://github.com/tensorchord/VectorChord
 Source0:	VectorChord-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0
+Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.8.0
 
 %description
 VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-performance, and disk-efficient vector similarity search, and serves as the successor to pgvecto.rs.
@@ -44,6 +44,7 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 17 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.5.3-1PIGSTY
 * Thu Sep 04 2025 Vonng <rh@vonng.com> - 0.5.1-1PIGSTY
 * Tue Jun 24 2025 Vonng <rh@vonng.com> - 0.4.3-1PIGSTY

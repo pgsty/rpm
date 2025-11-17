@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.1
+Version:	0.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	Execute SQL now and get the results later.
 License:	PostgreSQL
@@ -38,6 +38,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 17 2025 Vonng <rh@vonng.com> - 0.4.0-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
 * Wed Jan 08 2025 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 * Thu Oct 31 2024 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY

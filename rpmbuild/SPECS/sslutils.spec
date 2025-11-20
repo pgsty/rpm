@@ -20,7 +20,7 @@ License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/sslutils
 Source0:	sslutils-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 openssl-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

@@ -567,6 +567,9 @@ pg_cooldown:
 ddlx:			# fix pgdg 18 missing
 	./build ddlx 13 14 15 16 17 18
 
+pglinter:
+	./build pglinter 13 14 15 16 17 18
+
 pgdd:			# rust pgrx 0.16.1
 	./build pgdd 13 14 15 16 17 18
 
@@ -855,7 +858,7 @@ rmdbg:
 
 .PHONY: age aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
 	chkpass citus count_distinct cryptint \
-	data_historization db_migrator ddl_historization ddlx ddsketch \
+	data_historization db_migrator ddl_historization ddlx pglinter ddsketch \
 	decoder_raw documentdb firebird_fdw first_last_agg floatvec \
 	geoip hashtypes hunspell hunspell_cs_cz hunspell_de_de \
 	hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \

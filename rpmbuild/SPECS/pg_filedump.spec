@@ -3,13 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}
-Version:	17.1
+Version:	17.4
 Release:	1PIGSTY%{?dist}
 Summary:	Display formatted contents of a PostgreSQL heap, index, or control file
 License:	GPL v2.0+
 URL:		https://github.com/df7cb/pg_filedump
-Source0:	pg_filedump-REL_17_1.tar.gz
-#           https://github.com/df7cb/pg_filedump/archive/refs/tags/REL_17_1.tar.gz
+Source0:	pg_filedump-REL_17_4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 
@@ -18,7 +17,7 @@ pg_filedump is a utility to format PostgreSQL heap/index/control files into a hu
 You can format/dump the files several ways, as listed in the Invocation section, as well as dumping straight binary.
 
 %prep
-%setup -q -n %{sname}-REL_17_1
+%setup -q -n %{sname}-REL_17_4
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -33,5 +32,6 @@ cp pg_filedump %{buildroot}/usr/bin/pg_filedump
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Nov 20 2025 Vonng <rh@vonng.com> - 17.4
 * Sat Sep 23 2023 Vonng <rh@vonng.com> - 17.1
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

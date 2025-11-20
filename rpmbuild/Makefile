@@ -35,12 +35,12 @@ pgrx0161:
 ###############################################################
 rust1: timescaledb_toolkit pg_polyline pg_tzf
 rust2: vchord pg_summarize pg_tiktoken
-rust3: vchord_bm25 pg_tokenizer pg_bestmatch
-rust4: pg_graphql pg_jsonschema wrappers
+rust3: pg_search vchord_bm25 pg_tokenizer pg_bestmatch
+rust4: pglite_fusion pg_graphql pg_jsonschema wrappers
 rust5: pg_parquet pg_render
 rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
-rust8: pg_session_jwt pg_anon pgsmcrypto
+rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 time: timescaledb pg_timeseries periods temporal_tables
 
 
@@ -137,9 +137,14 @@ pgml:			# rust pgrx 0.12.9 (obsolete)
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
-# pg_search     # download directly
+ pg_search:      # rust pgrx 0.16.1
+	./build pg_search 14 15 16 17
+
 pg_bigm:     	# covered by PGDG (deb break on 18)
 	./build pg_bigm 13 14 15 16 17 18
+
+pg_biscuit:
+	./build pg_biscuit 16 17 18
 
 pgroonga:
 	./build pgroonga 13 14 15 16 17 18
@@ -359,6 +364,9 @@ chkpass:
 ###############################################################
 #                       Category: UTIL                        #
 ###############################################################
+pg_retry:
+	./build pg_retry 17 18
+
 pg_gzip:
 	./build pg_gzip 13 14 15 16 17 18
 
@@ -448,6 +456,8 @@ pgsparql:
 ###############################################################
 #                       Category: FUNC                        #
 ###############################################################
+pg_weighted_statistics:
+	./build pg_weighted_statistics 13 14 15 16 17 18
 
 pg_idkit:			# rust pgrx 0.16.1 (bump from 0.16.0)
 	./build pg_idkit 13 14 15 16 17 18
@@ -465,6 +475,9 @@ pg_hashids:
 
 sequential_uuids:
 	./build sequential_uuids 13 14 15 16 17 18
+
+pg_typeid:
+	./build pg_typeid 13 14 15 16 17 18
 
 quantile:
 	./build quantile 13 14 15 16 17 18
@@ -676,6 +689,9 @@ pg_anon:			# rust pgrx 0.16.1 (update from 0.16.0)
 pgsmcrypto:			# rust pgrx 0.16.1
 	./build pgsmcrypto 13 14 15 16 17 18
 
+pg_enigma:			# rust pgrx 0.16.1
+	./build pgsmcrypto 14 15 16 17 18
+
 pgcryptokey:
 	./build pgcryptokey 13 14 15 16 17 18
 
@@ -848,7 +864,7 @@ rmdbg:
 	lower_quantile md5hash mimeo numeral omnisketch \
 	openhalodb orioledb oriolepg oriolepg-install pagevis \
 	periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
-	pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_bulkload \
+	pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_bulkload \
 	pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
 	pg_country pg_crash pg_curl pg_currency pg_drop_events \
 	pg_duckdb pg_duration pg_ecdsa pg_emailaddr pg_envvar \
@@ -858,18 +874,18 @@ rmdbg:
 	pg_jsonschema pg_later pg_math pg_meta pg_mooncake \
 	pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter \
 	pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub \
-	pg_relusage pg_render pg_roaringbitmap pg_savior pg_schedoc \
+	pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc \
 	pg_semver pg_session_jwt pg_similarity pg_smtp_client \
 	pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
 	pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing \
 	pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_vectorize \
-	pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
+	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
 	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt \
 	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
-	pgqr pgroonga pgsentinel pgsmcrypto pgsodium pgsparql \
+	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \
 	plproxy plprql plv8 prefix preprepare q3c quantile \
-	redis_fdw sequential_uuids session_variable shacrypt \
+	redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
 	smlar spat sqlite_fdw sslutils supautils table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \
 	url_encode vasco vchord vchord_bm25 wrappers zhparser \

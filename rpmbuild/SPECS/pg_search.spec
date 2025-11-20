@@ -20,7 +20,7 @@ the state-of-the-art ranking function for full text search.
 It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, using pgrx.
 
 %prep
-%setup -q -n paradedb-%{version}
+%setup -q -n pg_search-%{version}
 
 
 %build

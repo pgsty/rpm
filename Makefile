@@ -90,11 +90,11 @@ yum9:
 yum10:
 	rsync -avc el10:~/rpmbuild/RPMS/x86_64/  yum/el10.x86_64/
 yum8a:
-	rsync -avc el8a:~/rpmbuild/RPMS/x86_64/  yum/el8a.x86_64/
+	rsync -avc el8a:~/rpmbuild/RPMS/aarch64/  yum/el8.aarch64/
 yum9a:
-	rsync -avc el9a:~/rpmbuild/RPMS/x86_64/  yum/el9a.x86_64/
+	rsync -avc el9a:~/rpmbuild/RPMS/aarch64/  yum/el9.aarch64/
 yum10a:
-	rsync -avc el10a:~/rpmbuild/RPMS/x86_64/ yum/el10a.x86_64/
+	rsync -avc el10a:~/rpmbuild/RPMS/aarch64/ yum/el10.aarch64/
 
 
 ###############################################################

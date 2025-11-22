@@ -30,7 +30,7 @@ Requires:   postgresql%{pgmajorversion}-contrib
 Requires:   pg_cron_%{pgmajorversion}
 Requires:   pgvector_%{pgmajorversion}
 Requires:   rum_%{pgmajorversion}
-Recommends: postgis35_%{pgmajorversion}
+#Recommends: postgis36_%{pgmajorversion}
 
 # Require extra dependencies for building: https://github.com/microsoft/documentdb/tree/main/scripts
 # Available for PostgreSQL 15,16,17

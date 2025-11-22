@@ -70,7 +70,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{pname}-%{version}.0-ferretdb-2.5.0
+%setup -q -n %{pname}-%{version}.0-ferretdb-2.7.0
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}

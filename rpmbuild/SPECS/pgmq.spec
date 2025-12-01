@@ -4,13 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7.0
+Version:	1.8.0
 Release:	1PIGSTY%{?dist}
 Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
 URL:		https://github.com/pgmq/pgmq
 SOURCE0:    pgmq-%{version}.tar.gz
-#           https://github.com/tembo-io/pgmq/archive/refs/tags/v1.5.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -40,10 +39,11 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Sun Oct 05 2025 Vonng <rh@vonng.com> - 1.7.0
-* Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.5.1
-* Fri Jan 10 2025 Vonng <rh@vonng.com> - 1.5.0
-* Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.4.4
-* Sat Jun 29 2024 Vonng <rh@vonng.com> - 1.2.1
-* Sun May 05 2024 Vonng <rh@vonng.com> - 1.1.1
+* Mon Dec 01 2025 Vonng <rh@vonng.com> - 1.8.0-1PIGSTY
+* Sun Oct 05 2025 Vonng <rh@vonng.com> - 1.7.0-1PIGSTY
+* Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.5.1-1PIGSTY
+* Fri Jan 10 2025 Vonng <rh@vonng.com> - 1.5.0-1PIGSTY
+* Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.4.4-1PIGSTY
+* Sat Jun 29 2024 Vonng <rh@vonng.com> - 1.2.1-1PIGSTY
+* Sun May 05 2024 Vonng <rh@vonng.com> - 1.1.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

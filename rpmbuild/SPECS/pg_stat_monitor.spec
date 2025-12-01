@@ -5,7 +5,7 @@
 
 Summary:	PostgreSQL Query Performance Monitoring Tool
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.3.0
+Version:	2.3.1
 Release:	1PIGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/percona/%{sname}
@@ -83,5 +83,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Mon Dec 01 2025 Vonng <rh@vonng.com> - 2.3.1-1PIGSTY
 * Sat Nov 08 2025 Vonng <rh@vonng.com> - 2.3.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

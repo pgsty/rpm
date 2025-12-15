@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.3
+Version:	0.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres Extension for JWT Sessions
 License:	Apache-2.0
@@ -39,6 +39,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.4.0-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.3.3-1PIGSTY
 * Wed May 07 2025 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY

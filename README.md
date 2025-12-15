@@ -1,51 +1,33 @@
-# PGSTY/RPM: build rpm for PostgreSQL Extensions
+# PGSTY RPM Package Builder
 
-PostgreSQL Supplementary Extensions Repository Building Specs
+Extensions Building Scripts for PostgreSQL 13 - 18 on EL 8/9/10
 
-- PostgreSQL Extension Catalog : https://pig.pgsty.com
-
-Related Projects:
-
-- [`infra_pkg`](https://github.com/pgsty/infra-pkg): Building observability stack & modules from tarball
-- [`rpm`](https://github.com/pgsty/rpm): Building PostgreSQL RPM packages from source code
-- [`deb`](https://github.com/pgsty/deb): Building PostgreSQL DEB packages from source code
-- [`pgsql-deb`](https://github.com/pgsty/pgsql-deb): Building PostgreSQL DEB packages from source code
-
---------
-
-## FHS
-
-- `rpmbuild` : the building directory that put to `~/rpmbuild` on building machine
-- `yum` : the built artifact directory
-- `src` : the source tarball directory
+- [Pigsty PGSQL Repo](https://pgext.cloud/repo/pgsql)
+- [RPM Change Log](https://pgext.cloud/release/rpm)
 
 
---------
+## How to use?
 
-## Get Started
-
-Prepare the environment with:
+You can build extension RPMs with [pig](https://pgext.cloud/pig).
 
 ```bash
-curl https://repo.pigsty.cc/pig | bash -s 0.7.0
-pig build spec   # <---- download the rpmbuild.tar.gz from repo
+curl https://repo.pigsty.cc/pig | bash -s 0.7.5
 pig build repo
 pig build tool
+pig build spec # <--- get this repo, setup building environment
 pig build rust
 pig build pgrx
-```
 
-Then build specific extension with:
-
-```bash
-pig build pkg citus
+# then build packages
 pig build pkg timescaledb
-pig build pkg some_other_extension....
+pig build pkg pg_search
 ```
 
 
+## Signature
 
---------
+All Deb Packages are signed with GPG key `9592A7BC7A682E7333376E09E7935D8DB9BD8B20` (`B9BD8B20` [Public key](KEYS))
+
 
 ## License
 

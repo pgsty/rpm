@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		pg_anon_%{pgmajorversion}
-Version:	2.4.1
+Version:	2.5.1
 Release:	1PIGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL
 License:	PostgreSQL
@@ -45,6 +45,7 @@ cp -a %{_builddir}/%{sname}-%{version}/data/en_US/fake/*.csv  %{buildroot}%{pgin
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Dec 15 2025 Vonng <rh@vonng.com> - 2.5.1-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 2.4.1-1PIGSTY
 * Wed Jul 17 2025 Vonng <rh@vonng.com> - 2.3.0-1PIGSTY
 * Wed May 07 2025 Vonng <rh@vonng.com> - 2.1.1-1PIGSTY

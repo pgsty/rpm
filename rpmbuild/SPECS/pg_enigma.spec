@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.0
+Version:	0.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	Encrypted data type for PostgreSQL with PGP and RSA support
 License:	MIT
@@ -42,5 +42,6 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.5.0-1PIGSTY
 * Sun Nov 17 2025 Vonng <rh@vonng.com> - 0.4.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -4,8 +4,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.4
-Release:	2PIGSTY%{?dist}
+Version:	0.0.5
+Release:	1PIGSTY%{?dist}
 Summary:	Postgres extension for common conversions when working with spatial data.
 License:	MIT
 URL:		https://github.com/Vonng/%{pname}
@@ -37,6 +37,7 @@ cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.0.5-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.0.4-2PIGSTY
 * Tue May 27 2025 Vonng <rh@vonng.com> - 0.0.4-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

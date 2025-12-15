@@ -4,8 +4,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.0
-Release:	2PIGSTY%{?dist}
+Version:	0.6.1
+Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Data Dictionary, Inspect data dictionary via SQL
 License:	Apache-2.0
 URL:		https://github.com/Vonng/pgdd
@@ -40,6 +40,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.6.1-1PIGSTY
 * Mon Oct 26 2025 Vonng <rh@vonng.com> - 0.6.0-2PIGSTY
 - Add PostgreSQL 18 support with pgrx 0.16.1
 * Mon May 26 2025 Vonng <rh@vonng.com> - 0.6.0-1PIGSTY

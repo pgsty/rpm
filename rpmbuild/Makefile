@@ -539,7 +539,7 @@ pg_financial:
 	./build pg_financial 13 14 15 16 17 18
 
 pg_convert:		# rust (pgrx 0.16.1)
-	./build pg_convert 13 14 15 16 17 18
+	./build pg_convert 14 15 16 17 18
 
 
 ###############################################################
@@ -571,7 +571,7 @@ pglinter:
 	./build pglinter 13 14 15 16 17 18
 
 pgdd:			# rust pgrx 0.16.1
-	./build pgdd 13 14 15 16 17 18
+	./build pgdd 14 15 16 17 18
 
 preprepare:
 	./build preprepare 13 14 15 16 17 18

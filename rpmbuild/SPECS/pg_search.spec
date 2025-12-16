@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.3
+Version:	0.20.4
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPLv3 license
@@ -42,16 +42,17 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.20.3
-* Sat Nov 22 2025 Vonng <rh@vonng.com> - 0.20.0
-* Tue Nov 18 2025 Vonng <rh@vonng.com> - 0.19.7
-* Fri Jul 26 2024 Vonng <rh@vonng.com> - 0.8.6
-* Mon Jul 22 2024 Vonng <rh@vonng.com> - 0.8.5
-* Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.8.4
-* Fri Jul 05 2024 Vonng <rh@vonng.com> - 0.8.2
-* Sun Jun 30 2024 Vonng <rh@vonng.com> - 0.8.1
-* Sat May 15 2024 Vonng <rh@vonng.com> - 0.7.0
-* Sat Apr 27 2024 Vonng <rh@vonng.com> - 0.6.1
-* Sat Feb 17 2024 Vonng <rh@vonng.com> - 0.5.6
-* Mon Jan 29 2024 Vonng <rh@vonng.com> - 0.5.3
+* Tue Dec 16 2025 Vonng <rh@vonng.com> - 0.20.4-1PIGSTY
+* Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.20.3-1PIGSTY
+* Sat Nov 22 2025 Vonng <rh@vonng.com> - 0.20.0-1PIGSTY
+* Tue Nov 18 2025 Vonng <rh@vonng.com> - 0.19.7-1PIGSTY
+* Fri Jul 26 2024 Vonng <rh@vonng.com> - 0.8.6-1PIGSTY
+* Mon Jul 22 2024 Vonng <rh@vonng.com> - 0.8.5-1PIGSTY
+* Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.8.4-1PIGSTY
+* Fri Jul 05 2024 Vonng <rh@vonng.com> - 0.8.2-1PIGSTY
+* Sun Jun 30 2024 Vonng <rh@vonng.com> - 0.8.1-1PIGSTY
+* Sat May 15 2024 Vonng <rh@vonng.com> - 0.7.0-1PIGSTY
+* Sat Apr 27 2024 Vonng <rh@vonng.com> - 0.6.1-1PIGSTY
+* Sat Feb 17 2024 Vonng <rh@vonng.com> - 0.5.6-1PIGSTY
+* Mon Jan 29 2024 Vonng <rh@vonng.com> - 0.5.3-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

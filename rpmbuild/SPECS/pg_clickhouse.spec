@@ -88,11 +88,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
-%license LICENSE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*.sql
-%exclude /usr/lib/.build-id/*
+%{pginstdir}/doc/extension/%{pname}.md
+%exclude %{pginstdir}/doc/extension/tutorial.md
 
 %if %llvm
 %files llvmjit

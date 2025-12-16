@@ -146,6 +146,9 @@ pg_bigm:     	# covered by PGDG (deb break on 18)
 pg_biscuit:
 	./build pg_biscuit 16 17 18
 
+pg_textsearch:
+	./build pg_textsearch 17 18
+
 pgroonga:
 	./build pgroonga 13 14 15 16 17 18
 
@@ -206,6 +209,9 @@ pg_duckdb:
 pg_mooncake:
 	./build pg_mooncake 14 15 16 17 18
 
+pg_clickhouse:
+	./build pg_clickhouse 13 14 15 16 17 18
+
 #duckdb_fdw:
 #	./build duckdb_fdw
 
@@ -225,6 +231,9 @@ age:
 
 #hll:
 #rum
+pg_ai_query:
+	./build pg_ai_query 14 15 16 17 18
+
 pg_graphql:		# rust pgrx 0.16.1 (build on unpublished-release)
 	./build pg_graphql 14 15 16 17 18
 
@@ -872,14 +881,14 @@ rmdbg:
 	lower_quantile md5hash mimeo numeral omnisketch \
 	openhalodb orioledb oriolepg oriolepg-install pagevis \
 	periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
-	pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_bulkload \
+	pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch pg_bulkload \
 	pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
 	pg_country pg_crash pg_curl pg_currency pg_drop_events \
 	pg_duckdb pg_duration pg_ecdsa pg_emailaddr pg_envvar \
 	pg_explain_ui pg_failover_slots pg_financial pg_fio \
-	pg_geohash pg_graphql pg_gzip pg_hashids pg_hashlib \
+	pg_geohash pg_ai_query pg_graphql pg_gzip pg_hashids pg_hashlib \
 	pg_html5_email_address pg_http pg_idkit pg_incremental \
-	pg_jsonschema pg_later pg_math pg_meta pg_mooncake \
+	pg_jsonschema pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 	pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter \
 	pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub \
 	pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc \

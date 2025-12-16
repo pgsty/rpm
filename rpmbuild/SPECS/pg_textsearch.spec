@@ -1,0 +1,94 @@
+%define debug_package %{nil}
+%global pname pg_textsearch
+%global sname pg_textsearch
+%global pginstdir /usr/pgsql-%{pgmajorversion}
+
+%ifarch ppc64 ppc64le s390 s390x armv7hl
+ %if 0%{?rhel} && 0%{?rhel} == 7
+  %{!?llvm:%global llvm 0}
+ %else
+  %{!?llvm:%global llvm 1}
+ %endif
+%else
+ %{!?llvm:%global llvm 1}
+%endif
+
+Name:		%{sname}_%{pgmajorversion}
+Version:	0.1.0
+Release:	1PIGSTY%{?dist}
+Summary:	BM25-based full-text search for PostgreSQL
+License:	PostgreSQL
+URL:		https://github.com/timescale/pg_textsearch
+Source0:	%{sname}-%{version}.tar.gz
+#           https://github.com/timescale/pg_textsearch/archive/refs/tags/v0.1.0.tar.gz
+#           Supported: PostgreSQL 17, 18 only
+
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	gcc
+
+Requires:	postgresql%{pgmajorversion}-server
+
+%description
+pg_textsearch is a PostgreSQL extension providing BM25-based full-text search
+functionality with relevance ranking. Developed by Timescale.
+
+Features:
+- Simple query syntax: ORDER BY content <@> 'search terms'
+- Configurable BM25 parameters (k1, b)
+- Support for multiple language configurations
+- Partitioned table compatibility
+- PostgreSQL 17 and 18 compatible
+
+%if %llvm
+%package llvmjit
+Summary:	Just-in-time compilation support for %{sname}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+%if 0%{?rhel} && 0%{?rhel} == 7
+%ifarch aarch64
+Requires:	llvm-toolset-7.0-llvm >= 7.0.1
+%else
+Requires:	llvm5.0 >= 5.0
+%endif
+%endif
+%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
+BuildRequires:	llvm6-devel clang6-devel
+Requires:	llvm6
+%endif
+%if 0%{?suse_version} >= 1500
+BuildRequires:	llvm15-devel clang15-devel
+Requires:	llvm15
+%endif
+%if 0%{?fedora} || 0%{?rhel} >= 8
+Requires:	llvm >= 19.0
+%endif
+
+%description llvmjit
+This packages provides JIT support for %{sname}
+%endif
+
+%prep
+%setup -q -n %{sname}-%{version}
+
+%build
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+
+%install
+%{__rm} -rf %{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
+
+%files
+%doc README.md
+%license LICENSE
+%{pginstdir}/lib/%{pname}.so
+%{pginstdir}/share/extension/%{pname}.control
+%{pginstdir}/share/extension/%{pname}*.sql
+%exclude /usr/lib/.build-id/*
+
+%if %llvm
+%files llvmjit
+   %{pginstdir}/lib/bitcode/%{pname}*
+%endif
+
+%changelog
+* Mon Dec 16 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
+- Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

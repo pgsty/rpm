@@ -4,7 +4,7 @@
 
 Summary:	A semantic version data type for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.40.0
+Version:	0.41.0
 Release:	1PIGSTY%{?dist}
 License:	PostgreSQL
 Source0:	pg-semver-%{version}.tar.gz
@@ -61,5 +61,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %endif
 
 %changelog
+* Wed Dec 24 2025 Vonng <rh@vonng.com> - 0.41.0-1PIGSTY
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.40.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

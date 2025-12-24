@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.7
+Version:	0.1.8
 Release:	1PIGSTY%{?dist}
 Summary:	Simple and focused time-series tables for PostgreSQL, from Tembo
 License:	PostgreSQL
@@ -42,6 +42,7 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Dec 24 2025 Vonng <rh@vonng.com> - 0.1.8-1PIGSTY
 * Sat Oct 25 2025 Vonng <rh@vonng.com> - 0.1.7-1PIGSTY
 * Fri Jan 10 2025 Vonng <rh@vonng.com> - 0.1.6-2PIGSTY
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 0.1.6-1PIGSTY

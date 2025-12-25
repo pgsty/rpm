@@ -48,10 +48,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 
 %files
 %defattr(644,root,root,755)
-%doc %{pginstdir}/doc/%{sname}/%{sname}.mmd
+%doc %{pginstdir}/doc/extension/%{sname}.md
 %license LICENSE
 %{pginstdir}/lib/%{sname}.so
-%{pginstdir}/share/%{sname}/%{sname}*.sql
+%{pginstdir}/share/extension/%{sname}*sql
 %{pginstdir}/share/extension/%{sname}.control
 
 %if %llvm

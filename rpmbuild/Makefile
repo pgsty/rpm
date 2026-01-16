@@ -563,7 +563,6 @@ pg_convert:		# rust (pgrx 0.16.1)
 # pg_rewrite:
 # pg_squeeze:
 # pg_dirtyread:
-# pgfincore:
 # pg_prioritize:
 # pg_checksums:
 # pg_readonly:
@@ -583,6 +582,9 @@ ddlx:			# fix pgdg 18 missing
 
 pglinter:
 	./build pglinter 13 14 15 16 17 18
+
+pgfincore:
+	./build pgfincore 13 14 15 16 17 18
 
 pgdd:			# rust pgrx 0.16.1
 	./build pgdd 14 15 16 17 18

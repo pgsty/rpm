@@ -20,7 +20,10 @@ License:	Apache-2.0
 URL:		https://github.com/apache/age
 Source0:	%{pname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 perl-FindBin flex bison
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 flex bison
+%if 0%{?fedora} || 0%{?rhel} >= 9
+BuildRequires:	perl-FindBin
+%endif
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

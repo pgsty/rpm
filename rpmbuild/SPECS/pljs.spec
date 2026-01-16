@@ -17,7 +17,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.4
 Release:	1PIGSTY%{?dist}
 Summary:	Trusted JavaScript Language Extension for PostgreSQL
-License:	BSD
+License:	PostgreSQL
 URL:		https://github.com/plv8/%{sname}
 SOURCE0:	%{sname}-%{version}.tar.gz
 #           https://github.com/plv8/pljs/archive/refs/tags/v1.0.4.tar.gz

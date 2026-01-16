@@ -13,14 +13,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.0
-Release:	2PIGSTY%{?dist}
+Version:	1.6.0
+Release:	1PIGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/apache/age
 Source0:	%{pname}-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 perl-FindBin
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 perl-FindBin flex bison
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -60,7 +60,7 @@ This packages provides JIT support for %{sname}
 %prep
 %setup -q -n %{pname}-%{version}
 
-git checkout PG%{pgmajorversion}/v%{version}-rc0
+git checkout PG%{pgmajorversion}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -81,6 +81,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Fri Jan 16 2026 Vonng <rh@vonng.com> - 1.6.0-1PIGSTY
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.5.0-2PIGSTY
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.5.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

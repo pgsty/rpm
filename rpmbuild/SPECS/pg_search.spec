@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.5
+Version:	0.21.2
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPLv3 license
@@ -42,6 +42,8 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Jan 16 2026 Vonng <rh@vonng.com> - 0.21.2-1PIGSTY
+- bump to 0.21.2 with PG 15-18 support
 * Wed Dec 24 2025 Vonng <rh@vonng.com> - 0.20.5-1PIGSTY
 * Tue Dec 16 2025 Vonng <rh@vonng.com> - 0.20.4-1PIGSTY
 * Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.20.3-1PIGSTY

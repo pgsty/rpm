@@ -138,7 +138,7 @@ pgml:			# rust pgrx 0.12.9 (obsolete)
 #                       Category: FTS                         #
 ###############################################################
  pg_search:      # rust pgrx 0.16.1
-	./build pg_search 14 15 16 17
+	./build pg_search 15 16 17 18
 
 pg_bigm:     	# covered by PGDG (deb break on 18)
 	./build pg_bigm 13 14 15 16 17 18

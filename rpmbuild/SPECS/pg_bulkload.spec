@@ -2,7 +2,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global pgbulkloadmajver 3
 %global pgbulkloadmidver 1
-%global pgbulkloadminver 22
+%global pgbulkloadminver 23
 %global	pgbulkloadpackagever %{pgbulkloadmajver}_%{pgbulkloadmidver}_%{pgbulkloadminver}
 
 %{!?llvm:%global llvm 1}
@@ -16,7 +16,7 @@ Source0:	https://repo.pigsty.cc/ext/%{sname}-VERSION%{pgbulkloadpackagever}.tar.
 #           https://github.com/ossc-db/%{sname}/archive/VERSION%{pgbulkloadpackagever}.tar.gz
 License:	BSD
 BuildRequires:	postgresql%{pgmajorversion}-devel openssl-devel pam-devel
-BuildRequires:	libsepol-devel readline-devel krb5-devel
+BuildRequires:	libsepol-devel readline-devel krb5-devel numactl-devel
 Requires:	postgresql%{pgmajorversion}-server %{sname}_%{pgmajorversion}-client
 
 %description
@@ -92,5 +92,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} DESTDIR=%{build
 %endif
 
 %changelog
-* Sun Feb 09 2025 Vonng <rh@vonng.com> - 3.1.22
+* Fri Jan 16 2026 Vonng <rh@vonng.com> - 3.1.23-1PIGSTY
+* Sun Feb 09 2025 Vonng <rh@vonng.com> - 3.1.22-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -2,7 +2,7 @@
 # File      :   meta.yml
 # Desc      :   1-node env for x86_64/aarch64
 # Ctime     :   2020-05-12
-# Mtime     :   2025-11-01
+# Mtime     :   2026-01-16
 # Path      :   terraform/spec/aliyun-meta.yml
 # Docs      :   https://doc.pgsty.com/prepare/terraform
 # License   :   AGPLv3 @ https://doc.pgsty.com/about/license
@@ -32,7 +32,7 @@ locals {
   spot_policy = "SpotWithPriceLimit"    # NoSpot, SpotWithPriceLimit, SpotAsPriceGo
   spot_price_limit = 5                  # only valid when spot_policy is SpotWithPriceLimit
   instance_type_map = {
-    amd64 = "ecs.c8i.xlarge"
+    amd64 = "ecs.c9i.xlarge"
     arm64 = "ecs.c8y.xlarge"
   }
   image_regex_map = {

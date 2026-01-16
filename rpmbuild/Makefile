@@ -219,7 +219,9 @@ pg_parquet:			# rust pgrx 0.16.1 (manually bump from 0.16.0)
 	./build pg_parquet 14 15 16 17 18
 
 # pg_fkpart
-# pg_partman
+pg_partman:
+	./build pg_partman 14 15 16 17 18
+
 # plproxy
 # pg_strom
 
@@ -227,7 +229,7 @@ pg_parquet:			# rust pgrx 0.16.1 (manually bump from 0.16.0)
 #                       Category: FEAT                        #
 ###############################################################
 age:
-	./build age 14 15 16 17
+	./build age 14 15 16 17 18
 
 #hll:
 #rum
@@ -275,6 +277,9 @@ pg_tle:
 
 plv8:
 	./build plv8 13 14 15 16 17 18
+
+pljs:
+	./build pljs 14 15 16 17 18
 
 # pllua
 
@@ -768,7 +773,7 @@ aws_s3:
 #pgmemcache
 
 documentdb:
-	./build documentdb 15 16 17
+	./build documentdb 15 16 17 18
 
 session_variable:
 	./build session_variable 13 14 15 16 17 18
@@ -901,7 +906,7 @@ rmdbg:
 	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \
-	plproxy plprql plv8 prefix preprepare q3c quantile \
+	pg_partman pljs plproxy plprql plv8 prefix preprepare q3c quantile \
 	redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
 	smlar spat sqlite_fdw sslutils supautils table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \

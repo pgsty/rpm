@@ -13,14 +13,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.107
+Version:	0.109
 Release:	0PIGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
-URL:		https://github.com/FerretDB/documentdb
-Source0:	%{sname}-%{version}.0-ferretdb-2.7.0.tar.gz
+URL:		https://github.com/documentdb/documentdb
+Source0:	%{sname}-%{version}-0.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 mongo-c-driver-devel
 %if %{pgmajorversion} == 15
 BuildRequires: systemtap-sdt-devel
 %endif
@@ -33,7 +33,7 @@ Requires:   rum_%{pgmajorversion}
 #Recommends: postgis36_%{pgmajorversion}
 
 # Require extra dependencies for building: https://github.com/microsoft/documentdb/tree/main/scripts
-# Available for PostgreSQL 15,16,17
+# Available for PostgreSQL 15,16,17,18
 
 %description
 DocumentDB offers a native implementation of document-oriented NoSQL database,
@@ -70,7 +70,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{pname}-%{version}.0-ferretdb-2.7.0
+%setup -q -n %{pname}-%{version}-0
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -97,6 +97,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Fri Jan 16 2026 Vonng <rh@vonng.com> - 0.109-0PIGSTY
+- switch to microsoft documentdb v0.109.0
 * Tue Nov 11 2025 Vonng <rh@vonng.com> - 0.107-0PIGSTY
 - work with ferretdb 2.7.0 https://github.com/FerretDB/documentdb/releases/tag/v0.107.0-ferretdb-2.7.0
 * Thu Sep 04 2025 Vonng <rh@vonng.com> - 0.106-0PIGSTY

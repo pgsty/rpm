@@ -4,19 +4,14 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.8
+Version:	0.2.0
 Release:	1PIGSTY%{?dist}
-Summary:	Simple and focused time-series tables for PostgreSQL, from Tembo
+Summary:	Simple and focused time-series tables for PostgreSQL
 License:	PostgreSQL
-URL:		https://github.com/tembo-io/pg_timeseries
+URL:		https://github.com/ChuckHend/pg_timeseries
 SOURCE0:    pg_timeseries-%{version}.tar.gz
-#           https://github.com/tembo-io/pg_timeseries/archive/refs/tags/v0.1.7.tar.gz
-
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion}  pg_ivm_%{pgmajorversion}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Recommends: pg_partman_%{pgmajorversion} hydra_%{pgmajorversion}
-%endif
+Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion} pg_partman_%{pgmajorversion}
 
 %description
 The purpose of this extension is to provide a cohesive user experience around the creation, maintenance,
@@ -42,6 +37,7 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jan 16 2026 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 * Wed Dec 24 2025 Vonng <rh@vonng.com> - 0.1.8-1PIGSTY
 * Sat Oct 25 2025 Vonng <rh@vonng.com> - 0.1.7-1PIGSTY
 * Fri Jan 10 2025 Vonng <rh@vonng.com> - 0.1.6-2PIGSTY

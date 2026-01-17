@@ -40,5 +40,5 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Sat Jan 17 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
+* Sat Jan 17 2026 Vonng <rh@vonng.com> - 0.0.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

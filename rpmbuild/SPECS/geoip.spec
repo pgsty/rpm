@@ -8,7 +8,7 @@ Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension for GeoIP geolocation
 
-License:	BSD-Like
+License:	BSD-2-Clause
 URL:		https://github.com/tvondra/geoip
 Source0:	geoip-%{version}.tar.gz
 

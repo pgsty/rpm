@@ -18,7 +18,7 @@ Version:	1.11.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL table versioning management software
 
-License:	BSD-Like
+License:	BSD-3-Clause
 URL:		https://github.com/linz/postgresql-tableversion
 Source0:	postgresql-tableversion-%{version}.tar.gz
 

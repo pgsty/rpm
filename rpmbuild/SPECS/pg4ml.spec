@@ -7,7 +7,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	2.0
 Release:	1PIGSTY%{?dist}
 Summary:	Machine Learning Framework for PostgreSQL
-License:	AGPLv3
+License:	AGPL-3.0
 URL:		https://gitee.com/guotiecheng/plpgsql_pg4ml
 Source0:	pg4ml-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

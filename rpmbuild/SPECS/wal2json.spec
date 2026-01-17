@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	2.6
 Release:	1PIGSTY%{?dist}
 Summary:	JSON output plugin for logical decoding changeset extraction
-License:	BSD
+License:	BSD-3-Clause
 URL:		https://github.com/eulerto/wal2json
 Source0:	wal2json-%{version}.tar.gz
 #           https://github.com/eulerto/wal2json/archive/refs/tags/wal2json_2_6.tar.gz

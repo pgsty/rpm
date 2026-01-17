@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/rpm make shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2025-11-02
+# Mtime     :   2026-01-17
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -241,6 +241,9 @@ pg_graphql:		# rust pgrx 0.16.1 (build on unpublished-release)
 
 pg_jsonschema:	# rust pgrx 0.16.1 (patch from 0.16.0)
 	./build pg_jsonschema 13 14 15 16 17 18
+
+pg_ttl_index:
+	./build pg_ttl_index 15 16 17 18
 
 #jsquery:
 #pg_hint_plan
@@ -753,6 +756,9 @@ redis_fdw:
 pg_redis_pubsub:
 	./build pg_redis_pubsub 13 14 15 16 17 18
 
+etcd_fdw:
+	./build etcd_fdw 13 14 15 16 17 18
+
 kafka_fdw:
 	./build kafka_fdw 13 14 15 16 17
 
@@ -884,7 +890,7 @@ rmdbg:
 	geoip hashtypes hunspell hunspell_cs_cz hunspell_de_de \
 	hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
-	hydra icu_ext imgsmlr index_advisor kafka_fdw \
+	hydra icu_ext imgsmlr pg_ttl_index index_advisor etcd_fdw kafka_fdw \
 	lower_quantile md5hash mimeo numeral omnisketch \
 	openhalodb orioledb oriolepg oriolepg-install pagevis \
 	periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \

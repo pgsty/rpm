@@ -79,6 +79,8 @@ yum-clean:
 	rm -rf   yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64
 	rm -rf   yum/el8.aarch64 yum/el9.aarch64 yum/el10.aarch64
 yum-pull: yum8 yum9 yum10 yum8a yum9a yum10a
+pullx: yum8  yum9  yum10
+pulla: yum8a yum9a yum10a
 
 yumm:
 	rsync -avc meta:~/rpmbuild/RPMS/x86_64/  yum/meta/
@@ -100,9 +102,17 @@ yum10a:
 ###############################################################
 #                      Build Shortcuts                        #
 ###############################################################
+pg_ttl_index:
+	for pg in 18 17 16 15 14 13; do \
+		ssh meta "cd ~/rpmbuild && rpmbuild --define 'pgmajorversion $$pg' -ba SPECS/pg_ttl_index.spec"; \
+	done
 pgfincore:
 	for pg in 18 17 16 15 14 13; do \
 		ssh meta "cd ~/rpmbuild && rpmbuild --define 'pgmajorversion $$pg' -ba SPECS/pgfincore.spec"; \
+	done
+etcd_fdw:
+	for pg in 18 17 16 15 14 13; do \
+		ssh meta "cd ~/rpmbuild && rpmbuild --define 'pgmajorversion $$pg' -ba SPECS/etcd_fdw.spec"; \
 	done
 
 ###############################################################

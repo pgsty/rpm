@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.5
 Release:	1PIGSTY%{?dist}
 Summary:	Show storage structure of varlena datatypes in PostgreSQL
-License:	BSD 2-Clause
+License:	PostgreSQL
 URL:		https://github.com/credativ/toastinfo
 Source0:	toastinfo-%{version}.tar.gz
 

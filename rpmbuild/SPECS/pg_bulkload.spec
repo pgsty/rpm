@@ -14,7 +14,7 @@ Release:	1PIGSTY%{?dist}
 URL:		https://github.com/ossc-db/%{sname}
 Source0:	https://repo.pigsty.cc/ext/%{sname}-VERSION%{pgbulkloadpackagever}.tar.gz
 #           https://github.com/ossc-db/%{sname}/archive/VERSION%{pgbulkloadpackagever}.tar.gz
-License:	BSD
+License:	BSD-3-Clause
 BuildRequires:	postgresql%{pgmajorversion}-devel openssl-devel pam-devel
 BuildRequires:	libsepol-devel readline-devel krb5-devel numactl-devel
 Requires:	postgresql%{pgmajorversion}-server %{sname}_%{pgmajorversion}-client

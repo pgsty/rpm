@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.2
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search capability with create 2-gram (bigram) index.
-License:	PostgreSQL License
+License:	PostgreSQL
 URL:		https://github.com/pgbigm/pg_bigm
 Source0:	pg_bigm-%{version}-20240606.tar.gz
 #           https://github.com/pgbigm/pg_bigm/archive/refs/tags/v1.2-20240606.tar.gz

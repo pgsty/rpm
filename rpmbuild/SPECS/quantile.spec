@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.8
 Release:	1PIGSTY%{?dist}
 Summary:	Quantile aggregation function for PostgreSQL
-License:	BSD
+License:	BSD-2-Clause
 URL:		https://github.com/tvondra/quantile
 Source0:	quantile-%{version}.tar.gz
 

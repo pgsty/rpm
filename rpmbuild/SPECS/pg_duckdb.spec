@@ -20,7 +20,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
-License:	MIT License
+License:	MIT
 URL:		https://github.com/duckdb/pg_duckdb
 Source0:	%{sname}-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 libcurl-devel

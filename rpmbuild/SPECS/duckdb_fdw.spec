@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.2
 Release:	1PIGSTY%{?dist}
 Summary:	DuckDB Foreign data wrapper extension for PostgreSQL.
-License:	MIT License
+License:	MIT
 URL:		https://github.com/alitrack/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
 # https://github.com/alitrack/duckdb_fdw/archive/refs/tags/v1.1.2.tar.gz

@@ -1,20 +1,23 @@
 %define debug_package %{nil}
-%global pname uri
-%global sname uri
+%global pname pgai
+%global sname pgai
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0
+Version:	0.8.1
 Release:	1PIGSTY%{?dist}
-Summary:	TODO
+Summary:	Bring AI models to PostgreSQL with pgai
 License:	PostgreSQL
-URL:		https://github.com/
-Source0:	%{sname}-%{version}.tar.gz
+URL:		https://github.com/timescale/pgai
+Source0:	pgai-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
+pgai is a PostgreSQL extension that brings AI models closer to your data.
+It enables vector embeddings generation, semantic search, and RAG capabilities
+directly within PostgreSQL.
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -35,5 +38,5 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sat Aug 10 2024 Vonng <rh@vonng.com> -
+* Fri Jan 17 2026 Vonng <rh@vonng.com> - 0.8.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

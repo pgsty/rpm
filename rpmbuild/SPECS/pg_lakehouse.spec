@@ -7,7 +7,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	0.8.6
 Release:	1PIGSTY%{?dist}
 Summary:	Query engine over object stores like S3 and table formats like Delta Lake
-License:	GNU Affero General Public License v3.0
+License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb
 SOURCE0:    paradedb-%{version}.tar.gz
 

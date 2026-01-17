@@ -6,7 +6,7 @@
 Name:		%{sname}_%{pgmajorversion}
 Version:    1.7.0
 Release:    1PIGSTY%{?dist}
-License:    GPLv2
+License:    GPL-2.0
 Summary:	Unsigned and other extra integer types for PostgreSQL
 URL:		https://github.com/lemoineat/%{sname}
 Source0:    %{sname}-%{version}.tar.gz

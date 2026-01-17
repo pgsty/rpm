@@ -6,7 +6,7 @@ Name:		%{sname}
 Version:	14.10
 Release:	1PIGSTY%{?dist}
 Summary:	MySQL wire protocol support for PostgreSQL
-License:	GPL-3.0 License
+License:	GPL-3.0
 URL:		https://github.com/HaloTech-Co-Ltd/openHalo
 Source0:	%{sname}-1.0.tar.gz
 

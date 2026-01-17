@@ -7,8 +7,8 @@
 
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
-Version:	13.2.0
-Release:	8PIGSTY%{dist}
+Version:	14.0.0
+Release:	1PIGSTY%{dist}
 License:	AGPLv3
 URL:		https://github.com/citusdata/%{sname}
 Source0:    https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
@@ -104,6 +104,7 @@ make %{?_smp_mflags}
 %endif
 
 %changelog
+* Fri Jan 16 2026 Vonng <rh@vonng.com> - 14.0.0-1PIGSTY
 * Tue Nov 11 2025 Vonng <rh@vonng.com> - 13.2.0-8PIGSTY
 * Tue Jun 24 2025 Vonng <rh@vonng.com> - 13.1.0-9PIGSTY
 * Sat Apr 05 2025 Vonng <rh@vonng.com> - 13.0.3-9PIGSTY

@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	3.1.9
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension for high level cryptographic algorithms
-License:	BSD
+License:	BSD-3-Clause
 URL:		https://github.com/michelp/pgsodium
 Source0:	%{sname}-%{version}.tar.gz
 

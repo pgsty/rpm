@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.4
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension providing first and last aggregate functions.
-License:	BSD 2-Clause
+License:	PostgreSQL
 URL:		https://github.com/wulczer/first_last_agg
 Source0:	first_last_agg-%{version}.tar.gz
 

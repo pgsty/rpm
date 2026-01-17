@@ -7,7 +7,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.5.1
 Release:	1PIGSTY%{?dist}
 Summary:	Extension for specialized, per-table replication between PostgreSQL instances
-License:	BSD 2-Clause
+License:	PostgreSQL
 URL:		https://github.com/omniti-labs/mimeo
 Source0:	mimeo-%{version}.tar.gz
 

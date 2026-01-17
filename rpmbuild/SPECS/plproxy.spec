@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	2.11.0
 Release:	1PIGSTY%{?dist}
 Summary:	PL/Proxy development
-License:	BSD Clause
+License:	BSD-0-Clause
 URL:		https://github.com/plproxy/plproxy
 Source0:	plproxy-%{version}.tar.gz
 

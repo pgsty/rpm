@@ -24,7 +24,9 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-DONT_FORGET_TO_REPLACE_DESCRIPTION_TEXT_HERE
+pg_country provides a country data type for PostgreSQL based on ISO 3166-1.
+It supports country codes (2-letter, 3-letter, and numeric) with validation
+and conversion functions.
 
 %if %llvm
 %package llvmjit

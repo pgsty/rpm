@@ -7,7 +7,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.6
 Release:	1PIGSTY%{?dist}
 Summary:	Provide SQL interface to PostgreSQL logs
-License:	BSD 3-Clause License
+License:	BSD-3-Clause
 URL:		https://github.com/kouber/pg_sqlog
 Source0:	pg_sqlog-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

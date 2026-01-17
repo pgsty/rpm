@@ -7,7 +7,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL Extension for Text Summarization using Rust and OpenAI
-License:	Unlicensed
+License:	PostgreSQL
 URL:		https://github.com/HexaCluster/pg_summarize
 Source0:	%{sname}-%{version}.tar.gz
 

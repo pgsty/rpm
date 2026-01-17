@@ -17,7 +17,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	3.2.4
 Release:	1PIGSTY%{?dist}
 Summary:	V8 Engine Javascript Procedural Language add-on for PostgreSQL
-License:	BSD
+License:	PostgreSQL
 URL:		https://github.com/plv8/plv8
 SOURCE0:    plv8-%{version}.tar.gz
 #           https://github.com/plv8/plv8/archive/refs/tags/v3.2.4.tar.gz

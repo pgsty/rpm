@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	0.9
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL prepare statements made pooling friendly
-License:	BSD 2-Clause
+License:	BSD-2-Clause
 URL:		https://github.com/dimitri/preprepare
 Source0:	preprepare-%{version}.tar.gz
 

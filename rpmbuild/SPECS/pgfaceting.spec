@@ -7,7 +7,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.0
 Release:	1PIGSTY%{?dist}
 Summary:	A custom data type for storing MD5 hashes (instead of the native TEXT varlena type).
-License:	BSD 3-Clause
+License:	BSD-3-Clause
 URL:		https://github.com/cybertec-postgresql/pgfaceting
 Source0:	pgfaceting-%{version}.tar.gz
 

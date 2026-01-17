@@ -232,7 +232,9 @@ age:
 	./build age 14 15 16 17 18
 
 #hll:
-#rum
+rum:
+	./build run 16 17 18
+
 pg_ai_query:
 	./build pg_ai_query 14 15 16 17 18
 
@@ -899,7 +901,7 @@ rmdbg:
 	pg_country pg_crash pg_curl pg_currency pg_drop_events \
 	pg_duckdb pg_duration pg_ecdsa pg_emailaddr pg_envvar \
 	pg_explain_ui pg_failover_slots pg_financial pg_fio \
-	pg_geohash pg_ai_query pg_graphql pg_gzip pg_hashids pg_hashlib \
+	pg_geohash rum pg_ai_query pg_graphql pg_gzip pg_hashids pg_hashlib \
 	pg_html5_email_address pg_http pg_idkit pg_incremental \
 	pg_jsonschema pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 	pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter \

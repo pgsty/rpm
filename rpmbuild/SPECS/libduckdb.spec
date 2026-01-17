@@ -3,7 +3,7 @@ Name:           libduckdb
 Version:        1.1.2
 Release:        1PIGSTY%{?dist}
 Summary:        In-process SQL OLAP Database Management System
-License:        MIT License
+License:        MIT
 URL:            https://github.com/duckdb/duckdb/
 Source0:        libduckdb-%{version}.tar.gz
 # https://github.com/duckdb/duckdb/releases/download/v1.1.2/libduckdb-src.zip

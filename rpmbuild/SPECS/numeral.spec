@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.3
 Release:	1PIGSTY%{?dist}
 Summary:	Textual numeric datatypes for PostgreSQL
-License:	GPL
+License:	GPL-2.0
 URL:		https://github.com/df7cb/postgresql-numeral
 Source0:	postgresql-%{pname}-%{version}.tar.gz
 

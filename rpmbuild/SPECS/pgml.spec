@@ -7,7 +7,7 @@ Name:		%{pname}_%{pgmajorversion}
 Version:	2.10.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgresML is a complete MLOps platform in a PostgreSQL extension. Build simpler, faster and more scalable models right inside your database.
-License:	MIT license
+License:	MIT
 URL:		https://github.com/postgresml/postgresml
 Source0:    pgml-%{version}.tar.gz
 

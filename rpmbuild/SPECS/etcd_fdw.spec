@@ -7,7 +7,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Foreign data wrapper for etcd
-License:	Apache-2.0
+License:	MIT
 URL:		https://github.com/cybertec-postgresql/etcd_fdw
 Source0:	etcd_fdw-%{version}.tar.gz
 

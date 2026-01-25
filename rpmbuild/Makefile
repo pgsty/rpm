@@ -230,6 +230,8 @@ pg_partman:
 ###############################################################
 age:
 	./build age 14 15 16 17 18
+age18:
+	./build age18 18
 
 #hll:
 rum:
@@ -885,7 +887,7 @@ rmdbg:
 .PHONY: deps scws scws-install libduckdb libduckdb-install \
 	libpgfeutils libpgfeutils-install pg_filedump
 
-.PHONY: age aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
+.PHONY: age age18 aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
 	chkpass citus count_distinct cryptint \
 	data_historization db_migrator ddl_historization ddlx pglinter ddsketch \
 	decoder_raw documentdb firebird_fdw first_last_agg floatvec \

@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.2
+Version:	0.1.3
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
@@ -100,6 +100,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Sun Jan 25 2026 Vonng <rh@vonng.com> - 0.1.3-1PIGSTY
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 0.1.2-1PIGSTY
 * Mon Dec 16 2025 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

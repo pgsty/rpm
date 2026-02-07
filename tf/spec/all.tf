@@ -35,19 +35,19 @@ data "alicloud_images" "el8_arm64_img" {
 }
 data "alicloud_images" "el9_amd64_img" {
   owners     = "system"
-  name_regex = "^rockylinux_9_6_x64"
+  name_regex = "^rockylinux_9_7_x64"
 }
 data "alicloud_images" "el9_arm64_img" {
   owners     = "system"
-  name_regex = "^rockylinux_9_6_arm64"
+  name_regex = "^rockylinux_9_7_arm64"
 }
 data "alicloud_images" "el10_amd64_img" {
   owners     = "system"
-  name_regex = "^rockylinux_10_0_x64"
+  name_regex = "^rockylinux_10_1_x64"
 }
 data "alicloud_images" "el10_arm64_img" {
   owners     = "system"
-  name_regex = "^rockylinux_10_0_arm64"
+  name_regex = "^rockylinux_10_1_arm64"
 }
 
 #===========================================================#

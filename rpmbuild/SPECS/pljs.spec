@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.4
+Version:	1.0.5
 Release:	1PIGSTY%{?dist}
 Summary:	Trusted JavaScript Language Extension for PostgreSQL
 License:	PostgreSQL
@@ -86,5 +86,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Feb 07 2026 Vonng <rh@vonng.com> - 1.0.5-1PIGSTY
+- https://github.com/plv8/pljs/releases/tag/v1.0.5
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 1.0.4-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

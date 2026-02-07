@@ -4,12 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.21.2
+Version:	0.21.6
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
-SOURCE0:    pg_search-%{version}.tar.gz
+SOURCE0:    paradedb-%{version}.tar.gz
+#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.21.6.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -20,7 +21,7 @@ the state-of-the-art ranking function for full text search.
 It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, using pgrx.
 
 %prep
-%setup -q -n pg_search-%{version}
+%setup -q -n paradedb-%{version}
 
 
 %build
@@ -31,9 +32,9 @@ PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -42,6 +43,8 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Feb 07 2026 Vonng <rh@vonng.com> - 0.21.6-1PIGSTY
+- https://github.com/paradedb/paradedb/releases/tag/v0.21.6
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 0.21.2-1PIGSTY
 - bump to 0.21.2 with PG 15-18 support
 * Wed Dec 24 2025 Vonng <rh@vonng.com> - 0.20.5-1PIGSTY

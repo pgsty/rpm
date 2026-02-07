@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.0
+Version:	0.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	BM25-based full-text search for PostgreSQL
 License:	PostgreSQL
@@ -90,6 +90,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Sat Feb 07 2026 Vonng <rh@vonng.com> - 0.5.0-1PIGSTY
+- https://github.com/timescale/pg_textsearch/releases/tag/v0.5.0
 * Sat Jan 17 2026 Vonng <rh@vonng.com> - 0.4.0-1PIGSTY
 * Mon Dec 16 2024 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

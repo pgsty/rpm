@@ -20,7 +20,7 @@ Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/ClickHouse/pg_clickhouse/archive/refs/tags/v0.1.2.tar.gz
+#           https://github.com/ClickHouse/pg_clickhouse/archive/refs/tags/v0.1.3.tar.gz
 #           Supported: PostgreSQL 13, 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

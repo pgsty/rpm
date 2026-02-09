@@ -309,7 +309,8 @@ pg_prefix:
 pg_semver:
 	./build pg_semver 13 14 15 16 17 18
 
-#unit:
+pgunit:
+	./build pgunit 13 14 15 16 17 18
 pgpdf: 		# covered by PGDG
 	./build pgpdf 13 14 15 16 17 18
 

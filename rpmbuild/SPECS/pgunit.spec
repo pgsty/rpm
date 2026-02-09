@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	7.7
+Version:	7.10
 Release:	1PIGSTY%{?dist}
 Summary:	SI Units for PostgreSQL
 License:	GPL-2.0
@@ -82,6 +82,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 7.10-1PIGSTY
+- https://github.com/df7cb/postgresql-unit/releases/tag/7.10
 * Tue Jul 30 2024 Vonng <rh@vonng.com> - 7.7
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
 

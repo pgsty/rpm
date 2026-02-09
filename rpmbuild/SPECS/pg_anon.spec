@@ -32,7 +32,6 @@ mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension/a
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 cp -a %{_builddir}/%{sname}-%{version}/data/*.csv             %{buildroot}%{pginstdir}/share/extension/anon/
 cp -a %{_builddir}/%{sname}-%{version}/data/en_US/fake/*.csv  %{buildroot}%{pginstdir}/share/extension/anon/
 

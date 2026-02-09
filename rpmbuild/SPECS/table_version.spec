@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.11.0
+Version:	1.11.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL table versioning management software
 
@@ -43,15 +43,23 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 %{__rm} -rf %{buildroot}
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
+# Upstream installs helper artifacts under /usr/local; PGDG relocates them under
+# %{pginstdir} to avoid conflicts when multiple PG major versions are installed.
+%{__install} -d %{buildroot}%{pginstdir}/share/extension
+%{__install} -d %{buildroot}%{pginstdir}/bin
+%{__mv} %{buildroot}/usr/local/bin/table_version-loader %{buildroot}%{pginstdir}/bin/
+%{__mv} %{buildroot}/usr/local/share/table_version/table_version-%{version}.sql.tpl %{buildroot}%{pginstdir}/share/extension/
+
 %files
 %doc README.md
 %{pginstdir}/share/extension/%{sname}.control
-%{pginstdir}/share/extension/%{sname}*sql
+%{pginstdir}/share/extension/%{sname}*sql*
 %{pginstdir}/doc/extension/table_version.md
-/usr/local/bin/table_version-loader
-/usr/local/share/table_version/table_version-%{version}.sql.tpl
+%{pginstdir}/bin/table_version-loader
 
 %changelog
-* Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.11.0
-* Tue Jul 30 2024 Vonng <rh@vonng.com> - 1.10.3
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.11.1-1PIGSTY
+- Align helper artifact install locations with PGDG packaging (avoid /usr/local conflicts)
+* Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.11.0-1PIGSTY
+* Tue Jul 30 2024 Vonng <rh@vonng.com> - 1.10.3-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

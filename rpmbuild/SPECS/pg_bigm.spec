@@ -14,12 +14,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Full text search capability with create 2-gram (bigram) index.
 License:	PostgreSQL
 URL:		https://github.com/pgbigm/pg_bigm
-Source0:	pg_bigm-%{version}-20240606.tar.gz
-#           https://github.com/pgbigm/pg_bigm/archive/refs/tags/v1.2-20240606.tar.gz
+Source0:	pg_bigm-%{version}-20250903.tar.gz
+#           https://github.com/pgbigm/pg_bigm/archive/refs/tags/v1.2-20250903.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -59,7 +59,7 @@ This packages provides JIT support for %{sname}
 
 
 %prep
-%setup -q -n pg_bigm-1.2-20240606
+%setup -q -n pg_bigm-1.2-20250903
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
@@ -80,6 +80,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.2-2PIGSTY
+- https://github.com/pgbigm/pg_bigm/releases/tag/v1.2-20250903
 * Sun Jul 28 2024 Vonng <rh@vonng.com> - v1.2-20240606
 * Mon Oct 16 2023 Vonng <rh@vonng.com> - 1.2.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

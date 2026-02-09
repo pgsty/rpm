@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	A Postgres extension for managing SSL certificates through SQL.
 License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/sslutils
@@ -62,7 +62,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{__make} %{?_smp_mflags} DESTDIR=%{buildroot} install
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} DESTDIR=%{buildroot} install
 
 # Install README-sslutils.txt
 %{__install} -d -m 755 %{buildroot}%{pginstdir}/share/doc/extension
@@ -93,6 +93,7 @@ strip %{buildroot}%{pginstdir}/lib/*.so
 %endif
 
 %changelog
-* Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.4
-* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.3
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.4-2PIGSTY
+* Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.4-1PIGSTY
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.3-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

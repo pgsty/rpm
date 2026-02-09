@@ -60,7 +60,7 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %doc README.md
 %license LICENSE
 %{pginstdir}/lib/%{pname}.so
-%{pginstdir}/share/extension//%{pname}.control
+%{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %dir %{pginstdir}/include/server/extension/vector/
 %{pginstdir}/include/server/extension/vector/*.h

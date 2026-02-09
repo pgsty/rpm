@@ -65,9 +65,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} clean
 # Build quickjs with -fPIC for shared library compatibility
 # closefrom() is only available in glibc 2.34+ (EL9+), not in EL8
 %if 0%{?rhel} >= 9 || 0%{?fedora}
-cd deps/quickjs && %{__make} CFLAGS="-fPIC -O2 -g -Wall -Wno-array-bounds -Wno-format-truncation -Wno-infinite-recursion -fwrapv -D_GNU_SOURCE -DCONFIG_VERSION=\\\"2025-04-26\\\" -DHAVE_CLOSEFROM" && cd ../..
+cd deps/quickjs && %{__make} libquickjs.a CFLAGS="-fPIC -O2 -g -Wall -Wno-array-bounds -Wno-format-truncation -Wno-infinite-recursion -fwrapv -D_GNU_SOURCE -DCONFIG_VERSION=\\\"2025-04-26\\\" -DHAVE_CLOSEFROM" && cd ../..
 %else
-cd deps/quickjs && %{__make} CFLAGS="-fPIC -O2 -g -Wall -Wno-array-bounds -Wno-format-truncation -Wno-infinite-recursion -fwrapv -D_GNU_SOURCE -DCONFIG_VERSION=\\\"2025-04-26\\\"" && cd ../..
+cd deps/quickjs && %{__make} libquickjs.a CFLAGS="-fPIC -O2 -g -Wall -Wno-array-bounds -Wno-format-truncation -Wno-infinite-recursion -fwrapv -D_GNU_SOURCE -DCONFIG_VERSION=\\\"2025-04-26\\\"" && cd ../..
 %endif
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 

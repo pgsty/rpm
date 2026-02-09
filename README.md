@@ -2,8 +2,8 @@
 
 Extensions Building Scripts for PostgreSQL 13 - 18 on EL 8/9/10
 
-- [Pigsty PGSQL Repo](https://pgext.cloud/repo/pgsql)
-- [RPM Change Log](https://pgext.cloud/release/rpm)
+- [Pigsty PGSQL Repo](https://pigsty.io/docs/repo/pgsql)
+- [RPM Change Log](https://pigsty.io/docs/repo/pgsql/rpm)
 
 
 ## How to use?
@@ -11,7 +11,7 @@ Extensions Building Scripts for PostgreSQL 13 - 18 on EL 8/9/10
 You can build extension RPMs with [pig](https://pgext.cloud/pig).
 
 ```bash
-curl https://repo.pigsty.cc/pig | bash -s 0.7.5
+curl https://repo.pigsty.cc/pig | bash -s 1.1.0
 pig build repo
 pig build tool
 pig build spec # <--- get this repo, setup building environment

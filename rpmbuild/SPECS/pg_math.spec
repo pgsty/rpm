@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0
+Version:	1.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	pg_math extension to support statistical distribution functions for PostgreSQL
 License:	GPL-3.0
@@ -76,5 +76,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
-* Sat Aug 10 2024 Vonng <rh@vonng.com> -
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
+- https://github.com/chanukyasds/pg_math/releases/tag/v1.1.0
+* Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

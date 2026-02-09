@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.1
+Version:	1.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Database Linting and Analysis Extension
 License:	PostgreSQL
@@ -40,6 +40,8 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
+- https://github.com/pmpetit/pglinter/releases/tag/1.1.0
 * Mon Dec 15 2025 Vonng <rh@vonng.com> - 1.0.1-1PIGSTY
 * Sun Nov 17 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

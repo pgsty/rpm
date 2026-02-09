@@ -2,14 +2,14 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2025-11-02
+# Mtime     :   2026-02-09
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
 #==============================================================#
 
 setup:
-	@echo "curl https://repo.pigsty.cc/pig | bash -s 0.7.0"
+	@echo "curl https://repo.pigsty.cc/pig | bash -s 1.1.0"
 	@echo "pig build spec"
 	@echo "pig build repo"
 	@echo "pig build tool"

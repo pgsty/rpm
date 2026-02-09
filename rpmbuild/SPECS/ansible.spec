@@ -1,6 +1,6 @@
 Name:           ansible
 Version:        2.16.14
-Release:        1%{?dist}
+Release:        1PIGSTY%{?dist}
 Summary:        Meta package for Pigsty Ansible stack on EL10
 
 License:        MIT
@@ -30,5 +30,5 @@ This package itself contains no files, only dependency information.
 # no files
 
 %changelog
-* Sun Nov 23 2025 Your Name <you@example.com> - 2.16.14-1PIGSTY
+* Sun Nov 23 2025 Ruohang Feng <rh@vonng.com> - 2.16.14-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

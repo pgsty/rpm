@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.20151224
+Version:	1.20251029
 Release:	1PIGSTY%{?dist}
 Summary:	URI Data type for PostgreSQL
 License:	PostgreSQL
@@ -85,5 +85,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.20251029-1PIGSTY
+- https://github.com/petere/pguri/releases/tag/1.20251029
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.20151224
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

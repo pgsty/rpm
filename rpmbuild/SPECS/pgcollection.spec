@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.1.0
+Version:	1.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension to add a collection data type
 License:	Apache-2.0
@@ -83,6 +83,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.1.1-1PIGSTY
+- https://github.com/aws/pgcollection/releases/tag/v1.1.1
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
 * Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.9.1-1PIGSTY

@@ -587,7 +587,7 @@ ddlx:			# fix pgdg 18 missing
 	./build ddlx 13 14 15 16 17 18
 
 pglinter:
-	./build pglinter 13 14 15 16 17 18
+	./build pglinter 14 15 16 17 18
 
 pgfincore:
 	./build pgfincore 13 14 15 16 17 18
@@ -709,7 +709,7 @@ pg_session_jwt:		# rust pgrx 0.16.1
 	./build pg_session_jwt 14 15 16 17 18
 
 pg_anon:			# rust pgrx 0.16.1 (update from 0.16.0)
-	./build pg_anon 13 14 15 16 17 18
+	./build pg_anon 14 15 16 17 18
 
 pgsmcrypto:			# rust pgrx 0.16.1
 	./build pgsmcrypto 13 14 15 16 17 18

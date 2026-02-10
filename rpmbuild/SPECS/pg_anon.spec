@@ -4,12 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		pg_anon_%{pgmajorversion}
-Version:	2.5.1
+Version:	3.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL
 License:	PostgreSQL
 URL:		https://gitlab.com/dalibo/%{sname}
-Source0:	%{sname}-%{version}.tar.gz
+Source0:	pg_anon-%{version}.tar.gz
 #Source0:   https://gitlab.com/dalibo/%{sname}/-/archive/%{version}/%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -21,7 +21,7 @@ identifiable information (PII) or commercially sensitive data from a
 PostgreSQL database.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n pg_anon-%{version}
 
 %build
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
@@ -29,11 +29,11 @@ PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension/anon
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/data/*.csv             %{buildroot}%{pginstdir}/share/extension/anon/
-cp -a %{_builddir}/%{sname}-%{version}/data/en_US/fake/*.csv  %{buildroot}%{pginstdir}/share/extension/anon/
+cp -a %{_builddir}/pg_anon-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/pg_anon-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/pg_anon-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/pg_anon-%{version}/data/*.csv             %{buildroot}%{pginstdir}/share/extension/anon/
+cp -a %{_builddir}/pg_anon-%{version}/data/en_US/fake/*.csv  %{buildroot}%{pginstdir}/share/extension/anon/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -44,6 +44,7 @@ cp -a %{_builddir}/%{sname}-%{version}/data/en_US/fake/*.csv  %{buildroot}%{pgin
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Feb 10 2026 Vonng <rh@vonng.com> - 3.0.0-1PIGSTY
 * Mon Dec 15 2025 Vonng <rh@vonng.com> - 2.5.1-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 2.4.1-1PIGSTY
 * Wed Jul 17 2025 Vonng <rh@vonng.com> - 2.3.0-1PIGSTY

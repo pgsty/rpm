@@ -4,13 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	18.0.0
+Version:	18.0.1
 Release:	1PIGSTY%{?dist}
 Summary:	Use PRQL in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/kaspermarstal/plprql
 SOURCE0:    plprql-%{version}.tar.gz
-#           https://github.com/kaspermarstal/plprql/archive/refs/tags/v1.0.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -43,6 +42,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Feb 10 2026 Vonng <rh@vonng.com> - 18.0.1-1PIGSTY
 * Wed Oct 29 2025 Vonng <rh@vonng.com> - 18.0.0-1PIGSTY
 * Sun May 05 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

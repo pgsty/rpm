@@ -9,7 +9,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
-SOURCE0:    paradedb-%{version}.tar.gz
+SOURCE0:    pg_search-%{version}.tar.gz
 #           https://github.com/paradedb/paradedb/archive/refs/tags/v0.21.6.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -21,20 +21,19 @@ the state-of-the-art ranking function for full text search.
 It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, using pgrx.
 
 %prep
-%setup -q -n paradedb-%{version}
+%setup -q -n pg_search-%{version}
 
 
 %build
 cd %{pname}
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo update
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/paradedb-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so

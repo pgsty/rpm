@@ -675,6 +675,9 @@ pg_store_plans:			# breaks on older version
 pg_relusage:
 	./build pg_relusage 13 14 15 16 17 18
 
+pg_track_optimizer:
+	./build pg_track_optimizer 17 18
+
 pagevis:
 	./build pagevis 13 14 15 16 17 18
 
@@ -920,7 +923,7 @@ rmdbg:
 	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \
-	pg_partman pljs plproxy plprql plv8 prefix preprepare q3c quantile \
+	pg_partman pljs plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \
 	redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
 	smlar spat sqlite_fdw sslutils supautils table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \

@@ -21,6 +21,10 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 %setup -q -n VectorChord-%{version}
 
 %build
+# EL8/EL9 system GCC is too old for AVX-512 FP16 intrinsics (requires GCC >= 12 or Clang >= 16)
+%if 0%{?rhel} >= 8 && 0%{?rhel} <= 9
+export CC=clang
+%endif
 %if 0%{?rhel} >= 10
 export CFLAGS=$(echo "${CFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')
 export CXXFLAGS=$(echo "${CXXFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')

@@ -262,6 +262,9 @@ imgsmlr:
 pg_incremental:
 	./build pg_incremental 16 17 18
 
+pgmb:
+	./build pgmb 13 14 15 16 17 18
+
 pgmq:
 	./build pgmq 13 14 15 16 17 18
 
@@ -913,7 +916,7 @@ rmdbg:
 	pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing \
 	pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_vectorize \
 	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
-	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt \
+	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
 	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \

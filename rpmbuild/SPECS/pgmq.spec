@@ -12,7 +12,7 @@ URL:		https://github.com/pgmq/pgmq
 SOURCE0:    %{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion}
 
 %description
 Postgres Message Queue (PGMQ) -- A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.

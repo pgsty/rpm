@@ -70,7 +70,7 @@ temporal_tables:
 pg_later:       # rust 0.16.1
 	./build pg_later 13 14 15 16 17
 
-# pg_background (handled by PGDG)
+# pg_background (deb only, skip RPM)
 
 
 ###############################################################
@@ -229,7 +229,7 @@ pg_partman:
 #                       Category: FEAT                        #
 ###############################################################
 age:
-	./build age 14 15 16 17 18
+	./build age 13 14 15 16 17 18
 
 #hll:
 rum:
@@ -425,7 +425,6 @@ pg_html5_email_address:
 url_encode:
 	./build url_encode 13 14 15 16 17 18
 
-#pgsql_tweaks (TODO)
 #pg_extra_time
 
 pgpcre:
@@ -647,6 +646,9 @@ pg_tracing:
 
 pgsentinel:
 	./build pgsentinel 13 14 15 16 17 18
+
+pg_ash:
+	./build pg_ash 14 15 16 17 18
 
 pg_meta:
 	./build pg_meta 13 14 15 16 17 18
@@ -913,7 +915,7 @@ rmdbg:
 	pg_jsonschema pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 	pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter \
 	pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub \
-	pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc \
+	pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
 	pg_semver pg_session_jwt pg_similarity pg_smtp_client \
 	pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
 	pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing \
@@ -930,5 +932,3 @@ rmdbg:
 	url_encode vasco vchord vchord_bm25 wrappers zhparser \
 	pglogical_ticker omnigres \
 	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg
-
-

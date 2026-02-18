@@ -1,8 +1,9 @@
 %global pname age
 %global sname apache-age
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global age_source_version 1.7.0
 
-%if 0%{?pgmajorversion} >= 18
+%if 0%{?pgmajorversion} >= 17
 %global age_version 1.7.0
 %else
 %global age_version 1.6.0
@@ -20,16 +21,13 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{age_version}
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases for PostgreSQL %{pgmajorversion}
 License:	Apache-2.0
 URL:		https://github.com/apache/age
-Source0:	%{pname}-1.7.0.tar.gz
+Source0:	age-%{age_source_version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 flex bison
-%if 0%{?pgmajorversion} < 18
-BuildRequires:	git
-%endif
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 flex bison git
 %if 0%{?fedora} || 0%{?rhel} >= 9
 BuildRequires:	perl-FindBin
 %endif
@@ -70,11 +68,9 @@ This packages provides JIT support for %{sname}
 
 
 %prep
-%setup -q -n %{pname}-1.7.0
+%setup -q -n age-%{age_source_version}
 
-%if 0%{?pgmajorversion} < 18
 git checkout PG%{pgmajorversion}
-%endif
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -95,9 +91,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
-%if 0%{?pgmajorversion} >= 18
-* Sat Jan 25 2026 Vonng <rh@vonng.com> - 1.7.0-1PIGSTY
-- Apache AGE 1.7.0 release for PostgreSQL 18
+%if 0%{?pgmajorversion} >= 17
+* Wed Feb 18 2026 Vonng <rh@vonng.com> - 1.7.0-2PIGSTY
+- Build from unified age-1.7.0 source package and checkout PG%{pgmajorversion} branch
+%else
+* Wed Feb 18 2026 Vonng <rh@vonng.com> - 1.6.0-2PIGSTY
+- Build from unified age-1.7.0 source package and checkout PG%{pgmajorversion} branch
 %endif
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 1.6.0-1PIGSTY
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.5.0-2PIGSTY

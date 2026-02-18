@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.2
+Version:	1.0.3
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension to prevent dangerous UPDATE and DELETE without WHERE clause
 License:	MIT
 URL:		https://github.com/spa5k/pg_strict
 SOURCE0:    pg_strict-%{version}.tar.gz
-#           https://github.com/spa5k/pg_strict/archive/refs/tags/v1.0.2.tar.gz
+#           https://github.com/spa5k/pg_strict/archive/refs/tags/v1.0.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -41,5 +41,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Feb 18 2026 Vonng <rh@vonng.com> - 1.0.3-1PIGSTY
+- https://github.com/spa5k/pg_strict/releases/tag/v1.0.3
 * Thu Feb 12 2026 Vonng <rh@vonng.com> - 1.0.2-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

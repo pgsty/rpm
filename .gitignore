@@ -16,6 +16,7 @@ tf/*.tfstate*
 tf/.terraform*
 #tf/terraform.tf
 
+AGENTS.md
 CLAUDE.md
 
 doc/*

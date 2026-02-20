@@ -9,7 +9,7 @@
 #==============================================================#
 
 setup:
-	@echo "curl https://repo.pigsty.cc/pig | bash -s 1.1.0"
+	@echo "curl https://repo.pigsty.cc/pig | bash"
 	@echo "pig build spec"
 	@echo "pig build repo"
 	@echo "pig build tool"

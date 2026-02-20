@@ -15,7 +15,7 @@ ARCH=$(shell uname -m)
 ###############################################################
 env: pig setup
 pig:
-	curl https://repo.pigsty.cc/pig | bash -s 0.7.0
+	curl https://repo.pigsty.cc/pig | bash
 setup: repo tool spec rust pgrx
 repo:
 	pig build repo
@@ -269,7 +269,6 @@ pgmq:
 	./build pgmq 13 14 15 16 17 18
 
 # pgq
-# orioledb
 
 pg_cardano:
 	./build pg_cardano 13 14 15 16 17 18

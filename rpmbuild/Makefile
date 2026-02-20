@@ -888,6 +888,13 @@ orioledb:
 	QA_RPATHS=3 rpmbuild -ba SPECS/orioledb.spec
 
 ###############################################################
+#                      Cloudberry Build                        #
+###############################################################
+cloudberry:
+	rpmbuild -ba SPECS/cloudberry.spec
+
+
+###############################################################
 #                     RPM & SRPM                              #
 ###############################################################
 ls-rpm:
@@ -957,4 +964,5 @@ rmdbg:
 	url_encode vasco vchord vchord_bm25 wrappers zhparser \
 	pglogical_ticker omnigres \
 	antlr4 babelfishpg babelfishpg_install babelfish \
+	cloudberry \
 	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg

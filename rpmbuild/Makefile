@@ -854,8 +854,31 @@ pg_filedump:
 ###############################################################
 openhalodb:
 	rpmbuild -ba SPECS/openhalodb.spec
+antlr4:
+	rpmbuild -ba SPECS/antlr4-runtime413.spec
 babelfishpg:
-	rpmbuild -ba SPECS/babelfishpg.spec
+	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
+		QA_RPATHS=3 rpmbuild -ba SPECS/babelfishpg.spec; \
+	else \
+		rpmbuild -ba SPECS/babelfishpg.spec; \
+	fi
+babelfishpg_install:
+	@set -e; \
+	ANTLR_RPM=$$(ls -1t ~/rpmbuild/RPMS/$(ARCH)/antlr4-runtime413-[0-9]*.rpm | head -n 1); \
+	ANTLR_DEV_RPM=$$(ls -1t ~/rpmbuild/RPMS/$(ARCH)/antlr4-runtime413-devel-*.rpm | head -n 1); \
+	KERNEL_RPM=$$(ls -1t ~/rpmbuild/RPMS/$(ARCH)/babelfishpg_17-[0-9]*.rpm | head -n 1); \
+	RHEL_MAJOR=$$(rpm -E '%{?rhel}'); \
+	if [ "$$RHEL_MAJOR" -ge 10 ]; then JAVA_RPM=java-21-openjdk-headless; else JAVA_RPM=java-17-openjdk-headless; fi; \
+	sudo dnf remove -y antlr4-runtime antlr4-runtime-devel || true; \
+	sudo dnf install -y $$ANTLR_RPM $$ANTLR_DEV_RPM $$KERNEL_RPM $$JAVA_RPM
+babelfish:
+	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
+		QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec; \
+	else \
+		rpmbuild -ba SPECS/babelfish.spec; \
+	fi
+babelfish_all: antlr4 babelfishpg babelfishpg_install babelfish
+
 oriolepg:
 	QA_RPATHS=3 rpmbuild -ba SPECS/oriolepg.spec
 oriolepg-install:
@@ -933,4 +956,5 @@ rmdbg:
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \
 	url_encode vasco vchord vchord_bm25 wrappers zhparser \
 	pglogical_ticker omnigres \
+	antlr4 babelfishpg babelfishpg_install babelfish \
 	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg

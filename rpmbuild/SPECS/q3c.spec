@@ -64,7 +64,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
-%doc README.md
+%doc q3c.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
@@ -73,7 +73,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
    %{pginstdir}/lib/bitcode/*
 %endif
 %exclude /usr/lib/.build-id/*
-%exclude %{pginstdir}/doc/extension/README.md
+%exclude %{pginstdir}/doc/extension/q3c.md
 
 %changelog
 * Wed Feb 25 2026 Vonng <rh@vonng.com> - 2.0.2-1PIGSTY

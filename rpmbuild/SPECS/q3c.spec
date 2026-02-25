@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.1
+Version:	2.0.2
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension for spatial indexing on a sphere
 License:	GPL-2.0
@@ -76,5 +76,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Wed Feb 25 2026 Vonng <rh@vonng.com> - 2.0.2-1PIGSTY
+- https://github.com/segasai/q3c/releases/tag/v2.0.2
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 2.0.1
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

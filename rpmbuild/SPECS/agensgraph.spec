@@ -10,7 +10,6 @@ Summary:        AgensGraph kernel (PG%{pgmajorversion} fork)
 License:        PostgreSQL
 URL:            https://github.com/skaiworldwide-oss/agensgraph
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         %{sname}-%{version}-meta-sql-only.patch
 
 BuildRequires:  glibc-devel, gettext >= 0.10.35
 BuildRequires:  gcc-c++, zlib-devel >= 1.0.4
@@ -25,7 +24,7 @@ Requires:       systemd, lz4-libs, libzstd >= 1.5.1, /sbin/ldconfig, libicu, ope
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 %else
-BuildRequires:  perl, perl-ExtUtils-Embed
+BuildRequires:  /usr/bin/perl
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 %endif
 Requires(pre):  shadow-utils
@@ -36,7 +35,8 @@ This package installs PostgreSQL binaries and libraries under %{pgbaseinstdir}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-%patch 0 -p1
+# meta is SQL-only extension, remove mistaken MODULE_big to avoid install failure
+sed -i '/^MODULE_big[[:space:]]*=[[:space:]]*meta$/d' contrib/meta/Makefile
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"

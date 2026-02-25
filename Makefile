@@ -52,21 +52,21 @@ spec10a:
 #                      Push SRC to Remote                     #
 ###############################################################
 # Update remote source tarball
-srcm:
-	rsync -avz src/ meta:~/ext/src/
-src8:
-	rsync -avz src/ el8:~/rpmbuild/SOURCES/
-src9:
-	rsync -avz src/ el9:~/rpmbuild/SOURCES/
-src10:
-	rsync -avz src/ el10:~/rpmbuild/SOURCES/
-
-src8a:
-	rsync -avz src/ el8a:~/rpmbuild/SOURCES/
-src9a:
-	rsync -avz src/ el9a:~/rpmbuild/SOURCES/
-src10a:
-	rsync -avz src/ el10a:~/rpmbuild/SOURCES/
+#srcm:
+#	rsync -avz src/ meta:~/ext/src/
+#src8:
+#	rsync -avz src/ el8:~/rpmbuild/SOURCES/
+#src9:
+#	rsync -avz src/ el9:~/rpmbuild/SOURCES/
+#src10:
+#	rsync -avz src/ el10:~/rpmbuild/SOURCES/
+#
+#src8a:
+#	rsync -avz src/ el8a:~/rpmbuild/SOURCES/
+#src9a:
+#	rsync -avz src/ el9a:~/rpmbuild/SOURCES/
+#src10a:
+#	rsync -avz src/ el10a:~/rpmbuild/SOURCES/
 
 ###############################################################
 #                      Pull RPM from Remote                   #

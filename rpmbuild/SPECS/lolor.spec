@@ -1,4 +1,4 @@
-%global sname pgedge-lolor
+%global sname lolor
 %global pname lolor
 %global pgmajorversion 17
 %global pgkernelversion 17.7

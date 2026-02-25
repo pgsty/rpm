@@ -1,4 +1,4 @@
-%global sname pgedge-spock
+%global sname spock
 %global pname spock
 %global pgmajorversion 17
 %global pgkernelversion 17.7

@@ -1,4 +1,4 @@
-%global sname pgedge-snowflake
+%global sname snowflake
 %global pname snowflake
 %global pgmajorversion 17
 %global pgkernelversion 17.7

@@ -18,7 +18,11 @@ BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm, clang
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
+%if 0%{?rhel} >= 9
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
+%else
+BuildRequires:  /usr/bin/perl
+%endif
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 Requires(pre):  shadow-utils
 
@@ -118,3 +122,6 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 %changelog
 * Tue Feb 24 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.7-1PIGSTY
 - Build pgEdge PostgreSQL kernel package and apply Spock PG17 patchset in prep stage
+- EL8: drop perl-FindBin BuildRequires to avoid perl module stream conflict
+- EL8: drop perl-ExtUtils-Embed BuildRequires to avoid perl module stream conflict
+- EL8: use /usr/bin/perl BuildRequires to avoid perl module stream pull-up

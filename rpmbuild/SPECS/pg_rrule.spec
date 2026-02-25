@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	RRULE data type for PostgreSQL
 License:	MIT
@@ -63,5 +63,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Feb 25 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
+- Bump to 0.3.0
 * Sat Nov 01 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -874,6 +874,12 @@ spock:
 	else \
 		rpmbuild -ba SPECS/spock.spec; \
 	fi
+snowflake:
+	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
+		QA_RPATHS=3 rpmbuild -ba SPECS/snowflake.spec; \
+	else \
+		rpmbuild -ba SPECS/snowflake.spec; \
+	fi
 antlr4:
 	rpmbuild -ba SPECS/antlr4-runtime413.spec
 babelfishpg:
@@ -955,7 +961,7 @@ rmdbg:
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
 	hydra icu_ext imgsmlr pg_ttl_index index_advisor etcd_fdw kafka_fdw \
 	lower_quantile md5hash mimeo numeral omnisketch \
-	openhalodb agensgraph pgedge pgedge-install spock babelfishpg orioledb oriolepg oriolepg-install pagevis \
+	openhalodb agensgraph pgedge pgedge-install spock snowflake babelfishpg orioledb oriolepg oriolepg-install pagevis \
 	periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
 	pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch pg_bulkload \
 	pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \

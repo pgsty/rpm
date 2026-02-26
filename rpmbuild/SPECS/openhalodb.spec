@@ -1,15 +1,14 @@
-%global sname openhalo
-%global openhaloversion 1.0
+%global sname openhalodb
 %global pgmajorversion 14
 %global pgbaseinstdir	/usr/halo-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	%{openhaloversion}
+Version:	1.0
 Release:	beta1PIGSTY%{?dist}
 Summary:	MySQL wire protocol support for PostgreSQL
 License:	GPL-3.0
 URL:		https://github.com/HaloTech-Co-Ltd/openHalo
-Source0:	%{sname}-%{openhaloversion}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -29,11 +28,12 @@ Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, ope
 Requires(pre):  shadow-utils
 
 %description
-Adding capability for PostgreSQL to work with applications written for MySQL but provides much more better performance than MySQL!
+Adding MySQL Wire-compatibility for PostgreSQL to work with applications written for MySQL,
+but provides much more better performance than MySQL!
 
 %prep
-%setup -q -n %{sname}-%{openhaloversion}
-patch -p1 < %{_specdir}/patches/%{sname}-%{openhaloversion}.patch
+%setup -q -n %{sname}-%{version}
+patch -p1 < %{_specdir}/patches/%{sname}-%{version}.patch
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"

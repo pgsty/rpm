@@ -851,8 +851,8 @@ pg_filedump:
 ###############################################################
 #                       Kernels                               #
 ###############################################################
-openhalo:
-	rpmbuild -ba SPECS/openhalo.spec
+openhalodb:
+	rpmbuild -ba SPECS/openhalodb.spec
 agensgraph:
 	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
 		QA_RPATHS=3 rpmbuild -ba SPECS/agensgraph.spec; \

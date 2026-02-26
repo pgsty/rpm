@@ -15,60 +15,13 @@ Prefix:         /usr/local
 # Skip generating debugsource package content.
 %define _debugsource_template %{nil}
 
-BuildRequires:  apr-devel
-BuildRequires:  bison
-BuildRequires:  bzip2-devel
-BuildRequires:  cmake
-BuildRequires:  flex
-BuildRequires:  gcc
-BuildRequires:  gcc-c++
-BuildRequires:  krb5-devel
-BuildRequires:  libcurl-devel
-BuildRequires:  libevent-devel
-BuildRequires:  libicu-devel
-BuildRequires:  libuv-devel
-BuildRequires:  libxml2-devel
-BuildRequires:  libyaml-devel
-BuildRequires:  libzstd-devel
-BuildRequires:  lz4-devel
-BuildRequires:  make
-BuildRequires:  openldap-devel
-BuildRequires:  openssl-devel
-BuildRequires:  pam-devel
-BuildRequires:  protobuf-devel >= 3.5.0
-BuildRequires:  protobuf-compiler
-BuildRequires:  perl
-BuildRequires:  python3-devel
-BuildRequires:  readline-devel
-BuildRequires:  xerces-c-devel
-BuildRequires:  zlib-devel
+BuildRequires:  apr-devel bison bzip2-devel cmake flex gcc gcc-c++ krb5-devel libcurl-devel libevent-devel libicu-devel libuv-devel libxml2-devel libyaml-devel libzstd-devel lz4-devel make openldap-devel openssl-devel pam-devel protobuf-devel >= 3.5.0 protobuf-compiler perl python3-devel readline-devel xerces-c-devel zlib-devel
+Requires:       apr bash bzip2 iproute iputils libcurl libevent libidn2 libstdc++ libuv libxml2 libyaml libzstd lz4 openldap openssh openssh-clients openssh-server pam perl python3 readline rsync
 
-Requires:       apr
-Requires:       bash
-Requires:       bzip2
-Requires:       iproute
-Requires:       iputils
 %if 0%{?rhel} <= 8
 Requires:       keyutils
 %endif
-Requires:       libcurl
-Requires:       libevent
-Requires:       libidn2
-Requires:       libstdc++
-Requires:       libuv
-Requires:       libxml2
-Requires:       libyaml
-Requires:       libzstd
-Requires:       lz4
-Requires:       openldap
-Requires:       openssh
-Requires:       openssh-clients
-Requires:       openssh-server
-Requires:       pam
-Requires:       perl
-Requires:       python3
-Requires:       readline
-Requires:       rsync
+
 Requires(pre):  shadow-utils
 
 %description

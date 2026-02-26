@@ -50,7 +50,7 @@ export CFLAGS
 --with-libxml \
 --with-libxslt \
 --with-icu \
---with-llvm \
+--without-llvm \
 --with-python \
 --with-tcl \
 --with-openssl \

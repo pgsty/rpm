@@ -22,7 +22,7 @@ Requires:       systemd, lz4-libs, libzstd >= 1.5.1, /sbin/ldconfig, libicu, ope
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 %else
-BuildRequires:  /usr/bin/perl
+BuildRequires:  perl-interpreter < 4:5.30
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 %endif
 Requires(pre):  shadow-utils
@@ -33,7 +33,7 @@ but provides much more better performance than MySQL!
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 < %{_specdir}/patches/%{sname}-%{version}.patch
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch || true
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"

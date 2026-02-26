@@ -22,7 +22,7 @@ BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin, perl-interpreter
 %elif 0%{?rhel} == 9
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
 %else
-BuildRequires:  /usr/bin/perl
+BuildRequires:  perl-interpreter < 4:5.30
 %endif
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 Requires(pre):  shadow-utils

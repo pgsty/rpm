@@ -83,10 +83,21 @@ else
 fi
 
 #--------------------------------------------------------------#
+# DNF builddep options
+#--------------------------------------------------------------#
+# EL8 may have perl module streams that conflict with installed perl 5.26.
+# Use --nobest so builddep can keep compatible installed packages.
+RHEL_MAJOR=$(rpm -E '%{?rhel}' 2>/dev/null || echo "")
+declare -a DNF_BUILDDEP_OPTS=()
+if [[ "${RHEL_MAJOR}" == "8" ]]; then
+    DNF_BUILDDEP_OPTS+=(--nobest)
+fi
+
+#--------------------------------------------------------------#
 # Install dependencies for each pgmajorversion
 #--------------------------------------------------------------#
 for ver in $VERSIONS; do
     log_info "install dependencies for ${EXTENSION_NAME} (PG${ver})"
-    log_hint "\$" sudo dnf builddep -y --define \"pgmajorversion ${ver}\" "SPECS/${EXTENSION_NAME}.spec"
-    sudo dnf builddep -y --define "pgmajorversion ${ver}" "${SPEC_FILE}"
+    log_hint "\$" sudo dnf builddep -y "${DNF_BUILDDEP_OPTS[@]}" --define \"pgmajorversion ${ver}\" "SPECS/${EXTENSION_NAME}.spec"
+    sudo dnf builddep -y "${DNF_BUILDDEP_OPTS[@]}" --define "pgmajorversion ${ver}" "${SPEC_FILE}"
 done

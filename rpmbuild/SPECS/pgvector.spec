@@ -5,7 +5,7 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.8.1
+Version:	0.8.2
 Release:	1PIGSTY%{?dist}
 Summary:	Open-source vector similarity search for Postgres
 License:	PostgreSQL
@@ -72,5 +72,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Thu Feb 26 2026 Ruohang Feng <rh@vonng.com> - 0.8.2-1PIGSTY
 * Sun Sep 07 2025 Ruohang Feng <rh@vonng.com> - 0.8.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

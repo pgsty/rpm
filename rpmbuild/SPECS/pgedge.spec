@@ -14,7 +14,7 @@ Source0:        postgresql-%{pgversion}.tar.gz
 Source1:        spock-%{spockversion}.tar.gz
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
-BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm, clang-devel, llvm-devel
+BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
@@ -70,6 +70,7 @@ export CFLAGS
 --libdir=%{pgbaseinstdir}/lib \
 --docdir=%{pgbaseinstdir}/doc \
 --htmldir=%{pgbaseinstdir}/doc/html \
+--with-extra-version=" (pgEdge %{spockversion})" \
 --with-system-tzdata=/usr/share/zoneinfo \
 --with-lz4 \
 --with-zstd \
@@ -77,7 +78,6 @@ export CFLAGS
 --with-libxml \
 --with-libxslt \
 --with-icu \
---with-llvm \
 --with-python \
 --with-tcl \
 --with-openssl \

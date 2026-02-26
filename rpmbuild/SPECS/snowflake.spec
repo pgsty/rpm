@@ -37,7 +37,7 @@ USE_PGXS=1 %{__make} install DESTDIR=%{buildroot}
 %{pginstdir}/lib/postgresql/%{pname}.so
 %{pginstdir}/share/postgresql/extension/%{pname}.control
 %{pginstdir}/share/postgresql/extension/%{pname}*.sql
-%{pginstdir}/lib/postgresql/bitcode/*
+%exclude %{pginstdir}/lib/postgresql/bitcode/*
 %exclude /usr/lib/.build-id/*
 
 %changelog

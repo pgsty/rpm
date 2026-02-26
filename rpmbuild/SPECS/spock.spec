@@ -40,7 +40,7 @@ USE_PGXS=1 %{__make} install DESTDIR=%{buildroot}
 %{pginstdir}/share/postgresql/extension/spock*.sql
 %{pginstdir}/bin/spockctrl
 %{pginstdir}/share/postgresql/spock
-%{pginstdir}/lib/postgresql/bitcode/*
+%exclude %{pginstdir}/lib/postgresql/bitcode/*
 %exclude /usr/lib/.build-id/*
 
 %changelog

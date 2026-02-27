@@ -1,6 +1,6 @@
 %global sname pgedge
 %global pgmajorversion 17
-%global pgversion 17.7
+%global pgversion 17.9
 %global spockversion 5.0.5
 %global pgbaseinstdir /usr/pgedge-%{pgmajorversion}
 
@@ -120,6 +120,7 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
+* Fri Feb 27 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.9-1PIGSTY
 * Tue Feb 24 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.7-1PIGSTY
 - Build pgEdge PostgreSQL kernel package and apply Spock PG17 patchset in prep stage
 - EL8: drop perl-FindBin BuildRequires to avoid perl module stream conflict

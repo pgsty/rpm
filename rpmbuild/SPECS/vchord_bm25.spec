@@ -23,9 +23,13 @@ The interface may change in the future.
 
 %prep
 %setup -q -n VectorChord-bm25-%{version}
+sed -i -E '/^\[package\]/,/^\[/{s/^version = ".*"/version = "%{version}"/}' Cargo.toml
 
 %build
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension
+grep -q "default_version = '%{version}'" ${EXT_DIR}/%{pname}.control
+test -f ${EXT_DIR}/%{pname}--%{version}.sql
 
 %install
 rm -rf %{buildroot}

@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.1.0
+Version:	1.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0
@@ -19,6 +19,7 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 
 %prep
 %setup -q -n VectorChord-%{version}
+sed -i -E '/^\[workspace.package\]/,/^\[/{s/^version = ".*"/version = "%{version}"/}' Cargo.toml
 
 %build
 # EL8/EL9 system GCC is too old for AVX-512 FP16 intrinsics (requires GCC >= 12 or Clang >= 16)
@@ -31,6 +32,11 @@ export CXXFLAGS=$(echo "${CXXFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ 
 export LDFLAGS=$(echo "${LDFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g')
 %endif
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension
+cp -f sql/upgrade/%{pname}--*.sql ${EXT_DIR}/
+cp -f sql/install/%{pname}--%{version}.sql ${EXT_DIR}/%{pname}--%{version}.sql
+grep -q "default_version = '%{version}'" ${EXT_DIR}/%{pname}.control
+test -f ${EXT_DIR}/%{pname}--%{version}.sql
 
 %install
 rm -rf %{buildroot}
@@ -48,6 +54,8 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Mar 04 2026 Vonng <rh@vonng.com> - 1.1.1-1PIGSTY
+- https://github.com/tensorchord/VectorChord/releases/tag/1.1.1
 * Thu Feb 12 2026 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
 * Mon Nov 17 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.5.3-1PIGSTY

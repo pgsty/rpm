@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.0
+Version:	1.4.1
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres C extension with aggregate functions for array inputs
 License:	MIT
@@ -78,6 +78,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Wed Mar 04 2026 Vonng <rh@vonng.com> - 1.4.1-1PIGSTY
+- https://pgxn.org/dist/aggs_for_vecs/1.4.1/
 * Sat Apr 05 2025 Vonng <rh@vonng.com> - 1.4.0
 * Wed Dec 11 2024 Vonng <rh@vonng.com> - 1.3.2
 * Tue Oct 29 2024 Vonng <rh@vonng.com> - 1.3.1

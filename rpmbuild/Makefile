@@ -28,6 +28,8 @@ rust:
 pgrx: pgrx0161
 pgrx0161:
 	pig build pgrx -v 0.16.1
+pgrx0170:
+	pig build pgrx -v 0.17.0
 
 
 ###############################################################
@@ -41,6 +43,7 @@ rust5: pg_parquet pg_render
 rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
+rust9: pg_pinyin pg_eviltransform
 time: timescaledb pg_timeseries periods temporal_tables
 
 
@@ -97,6 +100,9 @@ pg_polyline:    # rust pgrx 0.16.1
 
 pg_tzf:         # rust pgrx 0.16.1
 	./build pg_tzf 14 15 16 17 18
+
+pg_eviltransform:	# rust pgrx 0.17.0
+	./build pg_eviltransform 14 15 16 17 18
 
 
 ###############################################################
@@ -170,6 +176,9 @@ vchord_bm25:		# rust  pgrx 0.16.1
 
 pg_tokenizer:		# rust pgrx 0.16.1
 	./build pg_tokenizer 13 14 15 16 17 18
+
+pg_pinyin:			# rust pgrx 0.17.0
+	./build pg_pinyin 14 15 16 17 18
 
 hunspell: hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_ru_ru hunspell_ru_ru_aot #hunspell_pt_pt
 hunspell_cs_cz:
@@ -954,7 +963,7 @@ rmdbg:
 # All targets declared as .PHONY to ensure make always runs them
 # even if a file with the same name exists
 
-.PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0129
+.PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0129
 
 .PHONY: deps scws scws-install libduckdb libduckdb-install \
 	libpgfeutils libpgfeutils-install pg_filedump
@@ -973,13 +982,13 @@ rmdbg:
 	pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch pg_bulkload \
 	pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
 	pg_country pg_crash pg_curl pg_currency pg_drop_events \
-	pg_duckdb pg_duration pg_ecdsa pg_emailaddr pg_envvar \
+	pg_duckdb pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
 	pg_explain_ui pg_failover_slots pg_financial pg_fio \
 	pg_geohash rum pg_ai_query pg_graphql pg_gzip pg_hashids pg_hashlib \
 	pg_html5_email_address pg_http pg_idkit pg_incremental \
 	pg_jsonschema pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 	pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter \
-	pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub \
+	pg_pinyin pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub \
 	pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
 	pg_semver pg_session_jwt pg_similarity pg_smtp_client \
 	pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \

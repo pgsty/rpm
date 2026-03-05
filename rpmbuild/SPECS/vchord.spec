@@ -11,7 +11,7 @@ License:	AGPL-3.0
 URL:		https://github.com/tensorchord/VectorChord
 Source0:	VectorChord-%{version}.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 clang
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.8.0
 
 %description

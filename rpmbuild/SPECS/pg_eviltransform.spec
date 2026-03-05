@@ -12,6 +12,7 @@ URL:		https://github.com/aiyou178/pg_eviltransform
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	librttopo-devel geos-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description

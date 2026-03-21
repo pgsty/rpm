@@ -857,6 +857,9 @@ pg_bulkload:
 ###############################################################
 #                          Misc                               #
 ###############################################################
+pdu:
+	./build pdu 14 15 16 17 18
+
 pg_filedump:
 	./build pg_filedump 18
 
@@ -969,7 +972,7 @@ rmdbg:
 .PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0129
 
 .PHONY: deps scws scws-install libduckdb libduckdb-install \
-	libpgfeutils libpgfeutils-install pg_filedump
+	libpgfeutils libpgfeutils-install pdu pg_filedump
 
 .PHONY: age age18 aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
 	chkpass citus count_distinct cryptint \

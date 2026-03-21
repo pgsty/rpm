@@ -15,6 +15,7 @@ Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/wublabdubdub/PDU-PostgreSQLDataUnloader
 
 BuildRequires:	gcc make lz4-devel zlib-devel
+Requires:	postgresql%{pgmajorversion}-server
 
 %description
 PDU (PostgreSQL Data Unloader) is a standalone disaster recovery and data
@@ -53,3 +54,4 @@ install -pm 0644 pdu.ini %{buildroot}%{pginstdir}/share/%{sname}/pdu.ini.example
 %changelog
 * Sat Mar 21 2026 Vonng <rh@vonng.com> - 3.0.25.12-1PIGSTY
 - Initial RPM release for version-bound PDU binaries under %%{pginstdir}/bin
+- Require the matching PostgreSQL server package for the versioned install root

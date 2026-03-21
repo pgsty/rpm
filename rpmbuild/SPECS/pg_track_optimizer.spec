@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.9.1
+Version:	0.9.2
 Release:	1PIGSTY%{?dist}
 Summary:	Track planning decisions in comparison with execution reality
 License:	MIT
 URL:		https://github.com/danolivo/pg_track_optimizer
 Source0:	pg_track_optimizer-%{version}.tar.gz
-#           https://github.com/danolivo/pg_track_optimizer/archive/refs/tags/v0.9.1.tar.gz
+#           https://github.com/danolivo/pg_track_optimizer/archive/refs/tags/v0.9.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -82,5 +82,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Mar 21 2026 Vonng <rh@vonng.com> - 0.9.2-1PIGSTY
 * Thu Feb 12 2026 Vonng <rh@vonng.com> - 0.9.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

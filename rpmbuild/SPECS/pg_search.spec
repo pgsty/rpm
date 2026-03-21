@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.21.12
+Version:	0.22.2
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 SOURCE0:    pg_search-%{version}.tar.gz
-#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.21.12.tar.gz
+#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.22.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -39,10 +39,10 @@ cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversi
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%exclude /usr/lib/.build-id
 
 %changelog
-* Thu Mar 05 2026 Vonng <rh@vonng.com> - 0.22.12-1PIGSTY
+* Sat Mar 21 2026 Vonng <rh@vonng.com> - 0.22.2-1PIGSTY
+* Thu Mar 05 2026 Vonng <rh@vonng.com> - 0.21.12-1PIGSTY
 * Wed Feb 18 2026 Vonng <rh@vonng.com> - 0.21.8-1PIGSTY
 - https://github.com/paradedb/paradedb/releases/tag/v0.21.8
 * Sat Feb 07 2026 Vonng <rh@vonng.com> - 0.21.6-1PIGSTY
@@ -59,7 +59,7 @@ cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversi
 * Thu Jul 18 2024 Vonng <rh@vonng.com> - 0.8.4-1PIGSTY
 * Fri Jul 05 2024 Vonng <rh@vonng.com> - 0.8.2-1PIGSTY
 * Sun Jun 30 2024 Vonng <rh@vonng.com> - 0.8.1-1PIGSTY
-* Sat May 15 2024 Vonng <rh@vonng.com> - 0.7.0-1PIGSTY
+* Wed May 15 2024 Vonng <rh@vonng.com> - 0.7.0-1PIGSTY
 * Sat Apr 27 2024 Vonng <rh@vonng.com> - 0.6.1-1PIGSTY
 * Sat Feb 17 2024 Vonng <rh@vonng.com> - 0.5.6-1PIGSTY
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 0.5.3-1PIGSTY

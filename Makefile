@@ -52,21 +52,22 @@ spec10a:
 #                      Push SRC to Remote                     #
 ###############################################################
 # Update remote source tarball
-#srcm:
-#	rsync -avz src/ meta:~/ext/src/
-#src8:
-#	rsync -avz src/ el8:~/rpmbuild/SOURCES/
-#src9:
-#	rsync -avz src/ el9:~/rpmbuild/SOURCES/
-#src10:
-#	rsync -avz src/ el10:~/rpmbuild/SOURCES/
-#
-#src8a:
-#	rsync -avz src/ el8a:~/rpmbuild/SOURCES/
-#src9a:
-#	rsync -avz src/ el9a:~/rpmbuild/SOURCES/
-#src10a:
-#	rsync -avz src/ el10a:~/rpmbuild/SOURCES/
+src: src8 src9 src10 src8a src9a src10a
+srcm:
+	rsync -avz src/ meta:~/ext/src/
+src8:
+	rsync -avz src/ el8:~/rpmbuild/SOURCES/
+src9:
+	rsync -avz src/ el9:~/rpmbuild/SOURCES/
+src10:
+	rsync -avz src/ el10:~/rpmbuild/SOURCES/
+
+src8a:
+	rsync -avz src/ el8a:~/rpmbuild/SOURCES/
+src9a:
+	rsync -avz src/ el9a:~/rpmbuild/SOURCES/
+src10a:
+	rsync -avz src/ el10a:~/rpmbuild/SOURCES/
 
 ###############################################################
 #                      Pull RPM from Remote                   #
@@ -146,5 +147,10 @@ upload:
 #                         Inventory                           #
 ###############################################################
 .PHONY: setup \
-	p8 p9 p10 p8a p9a p10a \
-	
+	pm p8 p9 p10 p8a p9a p10a \
+	spec specm spec8 spec9 spec10 spec8a spec9a spec10a \
+	src srcm src8 src9 src10 src8a src9a src10a \
+	yum-new yum-init yum-clean yum-pull pullx pulla \
+	yumm yum8 yum9 yum10 yum8a yum9a yum10a \
+	pg_ttl_index pgfincore etcd_fdw \
+	u up a apply d destory out ssh rs upload

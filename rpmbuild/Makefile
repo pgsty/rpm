@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/rpm make shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2026-01-17
+# Mtime     :   2026-03-21
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -860,6 +860,12 @@ pg_bulkload:
 pdu:
 	./build pdu 14 15 16 17 18
 
+pgdog:
+	rpmbuild -ba SPECS/pgdog.spec
+pgdog-install:
+	sudo yum remove -y pgdog || /bin/true
+	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/pgdog-[0-9]*.$(ARCH).rpm
+
 pg_filedump:
 	./build pg_filedump 18
 
@@ -972,7 +978,7 @@ rmdbg:
 .PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0129
 
 .PHONY: deps scws scws-install libduckdb libduckdb-install \
-	libpgfeutils libpgfeutils-install pdu pg_filedump
+	libpgfeutils libpgfeutils-install pdu pgdog pgdog-install pg_filedump
 
 .PHONY: age age18 aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
 	chkpass citus count_distinct cryptint \

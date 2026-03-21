@@ -1,0 +1,74 @@
+diff --git a/packaging/rpm/pgdog.service b/packaging/rpm/pgdog.service
+new file mode 100644
+index 0000000..05624f0
+--- /dev/null
++++ b/packaging/rpm/pgdog.service
+@@ -0,0 +1,22 @@
++[Unit]
++Description=PgDog PostgreSQL proxy and pooler
++After=network-online.target
++Wants=network-online.target
++
++[Service]
++Type=simple
++User=postgres
++Group=postgres
++WorkingDirectory=/var/lib/pgsql/pgdog
++Environment=LD_LIBRARY_PATH=/usr/lib64/pgdog/plugins
++ExecStartPre=/usr/bin/pgdog -c /etc/pgdog/pgdog.toml -u /etc/pgdog/users.toml configcheck
++ExecStart=/usr/bin/pgdog -c /etc/pgdog/pgdog.toml -u /etc/pgdog/users.toml run
++ExecReload=/bin/kill -HUP $MAINPID
++KillSignal=SIGINT
++Restart=on-failure
++RestartSec=3s
++LimitNOFILE=1048576
++TimeoutStopSec=75s
++
++[Install]
++WantedBy=multi-user.target
+diff --git a/packaging/rpm/pgdog.toml b/packaging/rpm/pgdog.toml
+new file mode 100644
+index 0000000..d640e2b
+--- /dev/null
++++ b/packaging/rpm/pgdog.toml
+@@ -0,0 +1,27 @@
++# Default PgDog configuration installed by the PGSTY RPM.
++# Edit this file before starting the service in production.
++
++[general]
++host = "0.0.0.0"
++port = 6432
++workers = 2
++default_pool_size = 10
++min_pool_size = 1
++pooler_mode = "transaction"
++shutdown_timeout = 60_000
++log_format = "text"
++log_level = "info"
++
++[admin]
++name = "admin"
++user = "admin"
++password = "change-me"
++
++[replication]
++pg_dump_path = "/usr/pgsql-18/bin/pg_dump"
++
++[[databases]]
++name = "pgdog"
++host = "127.0.0.1"
++port = 5432
++role = "primary"
+diff --git a/packaging/rpm/users.toml b/packaging/rpm/users.toml
+new file mode 100644
+index 0000000..55261fd
+--- /dev/null
++++ b/packaging/rpm/users.toml
+@@ -0,0 +1,7 @@
++# Default PgDog user configuration installed by the PGSTY RPM.
++# Edit this file before starting the service in production.
++
++[[users]]
++name = "pgdog"
++database = "pgdog"
++password = "change-me"

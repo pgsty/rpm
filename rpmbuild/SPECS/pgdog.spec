@@ -13,7 +13,7 @@ Source0:        pgdog-%{version}.tar.gz
 
 # cargo/rust are provisioned manually on builders via `pig build rust`,
 # so they are intentionally not declared as BuildRequires here.
-BuildRequires:  clang, cmake, gcc, gcc-c++, git, openssl-devel, pkgconf-pkg-config
+BuildRequires:  clang, cmake, gcc, gcc-c++, git, openssl-devel, pkgconf-pkg-config, protobuf-compiler
 BuildRequires:  systemd-rpm-macros
 # Default pg_dump provider for schema-sync / resharding workflows and
 # the default postgres service account expected by the systemd unit.
@@ -31,6 +31,9 @@ patch -p1 --forward -f < %{_specdir}/patches/%{sname}.patch || true
 %build
 if [ "%{_arch}" = "aarch64" ]; then
   export RUSTFLAGS="${RUSTFLAGS:+$RUSTFLAGS }-Ctarget-feature=+lse"
+fi
+if [ "%{_arch}" = "x86_64" ] && [ -f .cargo/config.toml ]; then
+  rm -f .cargo/config.toml
 fi
 PATH=~/.cargo/bin:$PATH cargo build --release --locked \
   -p pgdog

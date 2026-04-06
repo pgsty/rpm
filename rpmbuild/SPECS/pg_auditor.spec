@@ -13,6 +13,7 @@ Source0:	pg_auditor-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 PostgreSQL auditing extension that records each data modification statement of specific tables,

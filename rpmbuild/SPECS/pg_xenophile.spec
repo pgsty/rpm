@@ -8,11 +8,12 @@ Version:	0.8.3
 Release:	1PIGSTY%{?dist}
 Summary:	More than the bare necessities for PostgreSQL i18n and l10n.
 License:	PostgreSQL
-URL:		https://github.com/michelp/pg_xenophile
+URL:		https://github.com/bigsmoke/pg_xenophile
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 The pg_xenophile PostgreSQL extension bundles a bunch of data,

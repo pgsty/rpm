@@ -12,6 +12,8 @@ URL:		https://gitee.com/guotiecheng/plpgsql_pg4ml
 Source0:	pg4ml-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
+Requires:	postgresql%{pgmajorversion}-plpython3
 
 %description
 Machine Learning Framework for PostgreSQL

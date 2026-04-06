@@ -17,7 +17,7 @@ Version:	1.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Experimental encrypted access method for PostgreSQ
 License:	Apache-2.0
-URL:		https://github.com/Percona-Lab/pg_tde
+URL:		https://github.com/percona/pg_tde
 Source0:	pg_tde-1.0.0.tar.gz
 #           https://github.com/Percona-Lab/pg_tde/archive/refs/tags/1.0.0-beta.tar.gz
 

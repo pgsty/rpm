@@ -13,6 +13,7 @@ Source0:	mimeo-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 Mimeo is an extension that provides specialized, per-table replication between PostgreSQL instances. It currently provides snapshot (whole table copy), incremental (based on an incrementing timestamp or id), and DML (inserts, updates and deletes).

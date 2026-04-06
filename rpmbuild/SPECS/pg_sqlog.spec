@@ -12,6 +12,7 @@ URL:		https://github.com/kouber/pg_sqlog
 Source0:	pg_sqlog-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 pg_sqlog allows to query a foreign table, pointing to a log, recorded in a CSV format.

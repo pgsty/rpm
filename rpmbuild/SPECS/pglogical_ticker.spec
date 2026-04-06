@@ -17,7 +17,7 @@ Version:	1.4.1
 Release:	2PIGSTY%{?dist}
 Summary:	Have an accurate view on pglogical replication delay
 License:	MIT
-URL:		https://github.com/enov/%{sname}
+URL:		https://github.com/enova/pglogical_ticker
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros

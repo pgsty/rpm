@@ -13,6 +13,7 @@ Source0:	pgcozy-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 https://ui.adsabs.harvard.edu/abs/2006ASPC..351..735K/abstract

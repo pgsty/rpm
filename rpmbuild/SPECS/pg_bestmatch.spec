@@ -8,7 +8,7 @@ Version:	0.0.2
 Release:	1PIGSTY%{?dist}
 Summary:	Generate BM25 sparse vector inside PostgreSQL
 License:	Apache-2.0
-URL:		https://github.com/tensorchord/%{sname}
+URL:		https://github.com/tensorchord/pg_bestmatch.rs
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

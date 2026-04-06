@@ -8,7 +8,7 @@ Version:	0.0.1
 Release:	1PIGSTY%{?dist}
 Summary:	Cross documentation between Django and DBT projects
 License:	GPL-3.0
-URL:		https://github.com/bigsmoke/%{sname}
+URL:		https://github.com/ZeroGachis/pg_schedoc
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

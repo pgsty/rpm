@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.2
 Release:	1PIGSTY%{?dist}
 Summary:	A Postgres extension for managing SSL certificates through SQL.
-License:	PostgreSQL
+License:	BSD-2-Clause
 URL:		https://github.com/arkhipov/%{sname}
 Source0:	temporal_tables-%{version}.tar.gz
 

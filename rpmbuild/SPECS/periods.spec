@@ -13,6 +13,7 @@ Source0:	periods-1.2.3.tar.gz
 BuildRequires:	postgresql%{pgmajorversion} postgresql%{pgmajorversion}-devel
 BuildRequires:	pgdg-srpm-macros
 Requires:	postgresql%{pgmajorversion}
+Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 This extension recreates the behavior defined in SQL:2016 (originally in SQL:2011)

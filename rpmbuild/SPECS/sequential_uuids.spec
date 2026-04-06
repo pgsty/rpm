@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.3
 Release:	2PIGSTY%{?dist}
 Summary:	generator of sequential UUIDs
-License:	PostgreSQL
+License:	MIT
 URL:		https://github.com/tvondra/sequential-uuids
 Source0:	sequential-uuids-%{version}.tar.gz
 

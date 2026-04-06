@@ -8,7 +8,7 @@ Version:	0.2.3
 Release:	1PIGSTY%{?dist}
 Summary:	Fast PG extension to lookup timezone name by GPS coordinates
 License:	MIT
-URL:		https://github.com/ringsaturn/tzf-pg
+URL:		https://github.com/ringsaturn/pg-tzf
 Source0:	pg-tzf-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

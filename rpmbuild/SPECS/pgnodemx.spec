@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.7
 Release:	1PIGSTY%{?dist}
 Summary:	Capture node OS metrics via SQL queries
-License:	PostgreSQL
+License:	Apache-2.0
 URL:		https://github.com/CrunchyData/pgnodemx
 Source0:	%{sname}-%{version}.tar.gz
 

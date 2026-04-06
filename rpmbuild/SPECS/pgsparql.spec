@@ -13,6 +13,7 @@ Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-plperl
 
 %description
 It helps one query SPARQL datasources. SPARQL queries are compiled into Postgres views, so you can use them nicely in SQL.

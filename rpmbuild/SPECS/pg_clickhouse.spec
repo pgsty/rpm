@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.5
+Version:	0.1.6
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/ClickHouse/pg_clickhouse/archive/refs/tags/v0.1.5.tar.gz
+#           repacked from https://github.com/ClickHouse/pg_clickhouse/releases/download/v0.1.6/pg_clickhouse-0.1.6.zip
 #           Supported: PostgreSQL 13, 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -106,6 +106,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Mon Apr 06 2026 Vonng <rh@vonng.com> - 0.1.6-1PIGSTY
+- https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.1.6
 * Sat Mar 21 2026 Vonng <rh@vonng.com> - 0.1.5-1PIGSTY
 * Wed Feb 18 2026 Vonng <rh@vonng.com> - 0.1.4-1PIGSTY
 * Sun Jan 25 2026 Vonng <rh@vonng.com> - 0.1.3-1PIGSTY

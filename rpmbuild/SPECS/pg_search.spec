@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.22.2
+Version:	0.22.5
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 SOURCE0:    pg_search-%{version}.tar.gz
-#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.22.2.tar.gz
+#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.22.5.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -26,7 +26,7 @@ It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, usin
 
 %build
 cd %{pname}
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v
 
 %install
 rm -rf %{buildroot}
@@ -41,6 +41,8 @@ cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversi
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Mon Apr 06 2026 Vonng <rh@vonng.com> - 0.22.5-1PIGSTY
+- https://github.com/paradedb/paradedb/releases/tag/v0.22.5
 * Sat Mar 21 2026 Vonng <rh@vonng.com> - 0.22.2-1PIGSTY
 * Thu Mar 05 2026 Vonng <rh@vonng.com> - 0.21.12-1PIGSTY
 * Wed Feb 18 2026 Vonng <rh@vonng.com> - 0.21.8-1PIGSTY

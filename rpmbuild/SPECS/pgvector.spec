@@ -10,7 +10,7 @@ Release:	1PIGSTY%{?dist}
 Summary:	Open-source vector similarity search for Postgres
 License:	PostgreSQL
 URL:		https://github.com/%{sname}/%{sname}/
-Source0:	pgvector-0.8.1.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 
 # To be removed when upstream releases a version with this patch:
 # https://github.com/pgvector/pgvector/pull/311

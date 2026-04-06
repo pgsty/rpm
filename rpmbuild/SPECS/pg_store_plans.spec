@@ -5,7 +5,7 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.9
+Version:	1.10
 Release:	1PIGSTY%{?dist}
 Summary:	Store execution plans like pg_stat_statements does for queries
 License:	PostgreSQL
@@ -77,6 +77,8 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Apr 06 2026 Vonng <rh@vonng.com> - 1.10-1PIGSTY
+- https://github.com/ossc-db/pg_store_plans/releases/tag/1.10
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 1.9-1PIGSTY
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 1.8-2PIGSTY
 * Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.8-1PIGSTY

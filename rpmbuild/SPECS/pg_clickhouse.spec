@@ -14,13 +14,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.6
+Version:	0.1.10
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-#           repacked from https://github.com/ClickHouse/pg_clickhouse/releases/download/v0.1.6/pg_clickhouse-0.1.6.zip
+#           repacked from git tag https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.1.10
+#           with vendor/clickhouse-cpp submodule included via recursive clone + gtar
 #           Supported: PostgreSQL 13, 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -77,12 +78,7 @@ This packages provides JIT support for %{sname}
 
 # Skip git submodule command since vendor/clickhouse-cpp is already included in tarball
 sed -i 's/git submodule update --init/@echo "Skipping submodule (included in tarball)"/' Makefile
-# libcurl before 7.87.0 does not define CURL_WRITEFUNC_ERROR.
-# Returning 0 still signals a write callback failure on older releases.
-sed -i '/#include <internal.h>/a\
-#ifndef CURL_WRITEFUNC_ERROR\
-#define CURL_WRITEFUNC_ERROR 0\
-#endif' src/http.c
+patch -p1 --forward -f < %{_specdir}/patches/pg_clickhouse-0.1.10-define-curl-writefunc-error.patch
 
 %build
 # Makefile will auto-build vendor/clickhouse-cpp via cmake
@@ -106,6 +102,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Wed Apr 08 2026 Vonng <rh@vonng.com> - 0.1.10-1PIGSTY
+- https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.1.10
+- Repacked recursive git clone with vendored clickhouse-cpp submodule
+
 * Mon Apr 06 2026 Vonng <rh@vonng.com> - 0.1.6-1PIGSTY
 - https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.1.6
 * Sat Mar 21 2026 Vonng <rh@vonng.com> - 0.1.5-1PIGSTY

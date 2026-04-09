@@ -1,0 +1,20 @@
+Subject: Define CURL_WRITEFUNC_ERROR for older EL9 libcurl
+
+pg_clickhouse 0.1.10 added a fallback define in src/http.c, but the new
+streaming HTTP driver in src/http_streaming.c still uses the same macro
+through internal.h. Define it centrally in the shared internal header so
+both translation units build against EL9's libcurl 7.76.
+
+--- a/src/include/internal.h
++++ b/src/include/internal.h
+@@ -2,6 +2,10 @@
+ #define CLICKHOUSE_INTERNAL_H
+
+ #include "curl/curl.h"
++
++#ifndef CURL_WRITEFUNC_ERROR
++#define CURL_WRITEFUNC_ERROR 0xFFFFFFFF
++#endif
+
+ typedef struct ch_http_connection_t
+ {

@@ -44,6 +44,7 @@ rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
+rust10: pg_command_fw pg_trickle
 time: timescaledb pg_timeseries periods temporal_tables
 
 
@@ -103,6 +104,12 @@ pg_tzf:         # rust pgrx 0.16.1
 
 pg_eviltransform:	# rust pgrx 0.17.0
 	./build pg_eviltransform 14 15 16 17 18
+
+pg_command_fw:		# rust pgrx 0.17.0
+	./build pg_command_fw 15 16 17 18
+
+pg_trickle:		# rust pgrx 0.17.0, PG18 only
+	./build pg_trickle 18
 
 
 ###############################################################
@@ -605,6 +612,9 @@ pgfincore:
 pgdd:			# rust pgrx 0.16.1
 	./build pgdd 14 15 16 17 18
 
+pgclone:
+	./build pgclone 14 15 16 17 18
+
 preprepare:
 	./build preprepare 14 15 16 17 18
 
@@ -808,6 +818,9 @@ documentdb:
 session_variable:
 	./build session_variable 14 15 16 17 18
 
+pg_variables:
+	./build pg_variables 14 15 16 17 18
+
 spat:
 	./build spat 17
 
@@ -941,6 +954,12 @@ oriolepg-install:
 orioledb:
 	QA_RPATHS=3 rpmbuild -ba SPECS/orioledb.spec
 
+parray_gin:
+	./build parray_gin 14 15 16 17 18
+
+postgresbson:
+	./build postgresbson 14 15 16 17 18
+
 ###############################################################
 #                      Cloudberry Build                        #
 ###############################################################
@@ -1005,9 +1024,10 @@ rmdbg:
 	pg_semver pg_session_jwt pg_similarity pg_smtp_client \
 	pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
 	pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing \
-	pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_vectorize \
+	pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_variables pg_vectorize \
 	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
 	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
+	pgclone \
 	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \
@@ -1016,6 +1036,7 @@ rmdbg:
 	smlar spat sqlite_fdw sslutils supautils table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \
 	url_encode vasco vchord vchord_bm25 wrappers zhparser \
+	parray_gin postgresbson \
 	pglogical_ticker omnigres \
 	antlr4 babelfishpg babelfishpg_install babelfish \
 	cloudberry \

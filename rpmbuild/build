@@ -105,13 +105,15 @@ cat ${SPEC_FILE} | grep -E '^Version:|^Release:|^Summary:|^License:|^URL:|^Sourc
 # Check RPMs
 #--------------------------------------------------------------#
 ARCH=$(uname -m)
-if [ -d "${RPMS_DIR}/${ARCH}" ]; then
-    log_line "${EXTENSION_NAME} rpms dir"
-    ls -alh ${RPMS_DIR}/${ARCH} | grep "${EXTENSION_NAME}"
-    log_warn "existing ${EXTENSION_NAME} rpms will be removed"
-    log_hint rm -rf "${RPMS_DIR}/${ARCH}/${EXTENSION_NAME}*.rpm"
-    #rm -rf "${RPMS_DIR}/${ARCH}/${EXTENSION_NAME}*.rpm"
-fi
+for RPM_OUT_DIR in "${RPMS_DIR}/${ARCH}" "${RPMS_DIR}/noarch"; do
+    if [ -d "${RPM_OUT_DIR}" ]; then
+        log_line "${EXTENSION_NAME} rpms dir"
+        ls -alh "${RPM_OUT_DIR}" | grep "${EXTENSION_NAME}"
+        log_warn "existing ${EXTENSION_NAME} rpms will be removed"
+        log_hint rm -rf "${RPM_OUT_DIR}/${EXTENSION_NAME}"*.rpm
+        #rm -rf "${RPM_OUT_DIR}/${EXTENSION_NAME}"*.rpm
+    fi
+done
 
 
 #--------------------------------------------------------------#
@@ -124,6 +126,11 @@ for ver in $VERSIONS; do
     # Build command with proper argument expansion
     log_hint "\$" rpmbuild "${BUILD_ARGS[@]}" --define "pgmajorversion ${ver}" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
     rpmbuild "${BUILD_ARGS[@]}" --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
+    RC=$?
+    if [ "${RC}" -ne 0 ]; then
+        log_error "${EXTENSION_NAME} build failed for PG${ver}"
+        exit "${RC}"
+    fi
 done
 
 
@@ -133,7 +140,9 @@ done
 log_line "${EXTENSION_NAME} rpms"
 log_info "${RPMS_DIR}"
 ARCH=$(uname -m)
-if [ -d "${RPMS_DIR}/${ARCH}" ]; then
-    ls -alh ${RPMS_DIR}/${ARCH} | grep "${EXTENSION_NAME}"
-fi
+for RPM_OUT_DIR in "${RPMS_DIR}/${ARCH}" "${RPMS_DIR}/noarch"; do
+    if [ -d "${RPM_OUT_DIR}" ]; then
+        ls -alh "${RPM_OUT_DIR}" | grep "${EXTENSION_NAME}"
+    fi
+done
 log_line "${EXTENSION_NAME} done"

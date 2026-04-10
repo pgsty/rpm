@@ -695,8 +695,8 @@ pg_explain_ui:		# rust pgrx 0.16.1
 pg_stat_monitor:
 	./build pg_stat_monitor 18 # fix the missing pgdg
 
-pg_store_plans:			# breaks on older version
-	./build pg_store_plans 17 18 #14 15 16
+pg_store_plans:
+	./build pg_store_plans 14 15 16 17 18
 
 pg_relusage:
 	./build pg_relusage 14 15 16 17 18

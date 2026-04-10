@@ -660,7 +660,8 @@ pg_qos:
 #pg_qualstats
 #pg_track_settings
 #pg_wait_sampling
-#system_stats
+system_stats:
+	./build system_stats 14 15 16 17 18
 #bgw_replstatus
 #powa
 
@@ -1035,7 +1036,7 @@ rmdbg:
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \
 	pg_partman pljs plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \
 	redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
-	smlar spat sqlite_fdw sslutils supautils table_log \
+	smlar spat sqlite_fdw sslutils supautils system_stats table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \
 	url_encode vasco vchord vchord_bm25 wrappers zhparser \
 	parray_gin postgresbson \

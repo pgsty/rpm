@@ -18,10 +18,9 @@ Release:	1PIGSTY%{?dist}
 Summary:	Liquid-inspired Datalog graph query extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/michael-golfi/pg_liquid
-Source0:	%{sname}-%{version}.zip
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	unzip
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -57,8 +56,8 @@ This package provides JIT support for %{sname}.
 
 %prep
 %{__rm} -rf %{_builddir}/%{sname}-%{version}
-cd %{_builddir}
-unzip -q %{SOURCE0}
+mkdir -p %{_builddir}/%{sname}-%{version}
+tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 cd %{_builddir}/%{sname}-%{version}
 patch -p1 --forward -f < %{_specdir}/patches/pg_liquid-0.1.7-set-default-goal-to-all.patch
 

@@ -9,11 +9,10 @@ Release:	1PIGSTY%{?dist}
 Summary:	Asynchronous SQL dispatcher
 License:	PostgreSQL
 URL:		https://github.com/Snehil-Shah/pg_dispatch
-Source0:	%{sname}-%{version}.zip
+Source0:	%{sname}-%{version}.tar.gz
 BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	unzip
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	postgresql%{pgmajorversion}-contrib
 Requires:	pg_cron_%{pgmajorversion}
@@ -23,8 +22,8 @@ pg_dispatch is an asynchronous SQL dispatcher built on top of pg_cron.
 
 %prep
 %{__rm} -rf %{_builddir}/%{sname}-%{version}
-cd %{_builddir}
-unzip -q %{SOURCE0}
+mkdir -p %{_builddir}/%{sname}-%{version}
+tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}

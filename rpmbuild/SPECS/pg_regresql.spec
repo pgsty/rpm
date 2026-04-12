@@ -18,10 +18,9 @@ Release:	1PIGSTY%{?dist}
 Summary:	Trust pg_class statistics for query planning instead of physical file size
 License:	PostgreSQL
 URL:		https://github.com/boringsql/regresql
-Source0:	%{sname}-%{version}.zip
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	unzip
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -57,8 +56,8 @@ This package provides JIT support for %{sname}.
 
 %prep
 %{__rm} -rf %{_builddir}/%{sname}-%{version}
-cd %{_builddir}
-unzip -q %{SOURCE0}
+mkdir -p %{_builddir}/%{sname}-%{version}
+tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 cd %{_builddir}/%{sname}-%{version}
 patch -p1 --forward -f < %{_specdir}/patches/pg_regresql-2.0.0-set-default-goal-to-all.patch
 

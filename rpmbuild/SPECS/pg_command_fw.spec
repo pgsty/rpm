@@ -13,15 +13,14 @@ Release:	1PIGSTY%{?dist}
 Summary:	DDL and utility command firewall for PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/rustwizard/pg_command_fw
-Source0:	%{sname}-%{version}.zip
-#           https://api.pgxn.org/dist/pg_command_fw/0.1.0/pg_command_fw-0.1.0.zip
+Source0:	%{sname}-%{version}.tar.gz
+#           normalized source tarball from the upstream PGXN release archive
 
 # cargo/rust/cargo-pgrx/rustfmt are provisioned manually on builders via
 # `pig build rust` and `pig build pgrx -v 0.17.0`, so they are intentionally
 # not declared as BuildRequires here.
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang
-BuildRequires:	unzip
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -31,8 +30,8 @@ hooks.
 
 %prep
 %{__rm} -rf %{_builddir}/%{sname}-%{version}
-cd %{_builddir}
-unzip -q %{SOURCE0}
+mkdir -p %{_builddir}/%{sname}-%{version}
+tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}

@@ -18,12 +18,11 @@ Release:	1PIGSTY%{?dist}
 Summary:	RDF triplestore foreign data wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/rdf_fdw
-Source0:	%{sname}-%{version}.zip
-#           https://api.pgxn.org/dist/rdf_fdw/2.4.0/rdf_fdw-2.4.0.zip
+Source0:	%{sname}-%{version}.tar.gz
+#           normalized source tarball from the upstream GitHub tag archive
 #           Supported: PostgreSQL 9.5+
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	unzip
 BuildRequires:	libxml2-devel
 BuildRequires:	libcurl-devel
 BuildRequires:	pkgconf-pkg-config
@@ -62,8 +61,8 @@ This package provides JIT support for %{sname}.
 
 %prep
 %{__rm} -rf %{_builddir}/%{sname}-%{version}
-cd %{_builddir}
-unzip -q %{SOURCE0}
+mkdir -p %{_builddir}/%{sname}-%{version}
+tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}

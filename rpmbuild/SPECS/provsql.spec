@@ -4,6 +4,10 @@
 %global sname provsql
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14
+%{error:provsql only supports PostgreSQL 14+}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.2
 Release:	1PIGSTY%{?dist}
@@ -45,5 +49,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 %changelog
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.2.2-1PIGSTY
+- Restrict builds to PostgreSQL 14+ to match extension metadata and tested support
 - Initial RPM release
 - https://github.com/PierreSenellart/provsql/releases/tag/v1.2.2

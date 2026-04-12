@@ -1,0 +1,49 @@
+%define debug_package %{nil}
+%global _build_id_links none
+%global pname provsql
+%global sname provsql
+%global pginstdir /usr/pgsql-%{pgmajorversion}
+
+Name:		%{sname}_%{pgmajorversion}
+Version:	1.2.2
+Release:	1PIGSTY%{?dist}
+Summary:	Semiring provenance and uncertainty management for PostgreSQL
+License:	MIT
+URL:		https://github.com/PierreSenellart/provsql
+Source0:	%{sname}-%{version}.tar.gz
+
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	gcc-c++ boost-devel
+Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
+
+%description
+ProvSQL adds semiring provenance and uncertainty management to PostgreSQL.
+It rewrites queries to track tuple provenance and provides probability,
+Shapley value, where-provenance, and temporal provenance evaluation.
+
+ProvSQL must be loaded through shared_preload_libraries before running
+CREATE EXTENSION provsql CASCADE.
+
+%prep
+%setup -q -n %{sname}-%{version}
+
+%build
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+
+%install
+%{__rm} -rf %{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+
+%files
+%license LICENSE
+%doc README.md
+%{pginstdir}/lib/%{pname}.so
+%{pginstdir}/share/extension/%{pname}.control
+%{pginstdir}/share/extension/%{pname}--*.sql
+%{pginstdir}/doc/extension/%{pname}.md
+
+%changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.2.2-1PIGSTY
+- Initial RPM release
+- https://github.com/PierreSenellart/provsql/releases/tag/v1.2.2

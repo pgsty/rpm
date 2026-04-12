@@ -13,17 +13,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.2.0
+Version:	3.6.0
 Release:	1PIGSTY%{?dist}
 Summary:	Clone PostgreSQL databases, schemas, and tables across environments
 License:	PostgreSQL
 URL:		https://github.com/valehdba/pgclone
-Source0:	%{sname}-%{version}.zip
-#           https://api.pgxn.org/dist/pgclone/2.2.0/pgclone-2.2.0.zip
+Source0:	%{sname}-%{version}.tar.gz
+#           normalized source tarball: pgclone-3.6.0.tar.gz
 #           Supported: PostgreSQL 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	unzip
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -58,9 +57,7 @@ This package provides JIT support for %{sname}.
 %endif
 
 %prep
-%{__rm} -rf %{_builddir}/%{sname}-%{version}
-cd %{_builddir}
-unzip -q %{SOURCE0}
+%setup -q -n %{sname}-%{version}
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -89,5 +86,8 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 3.6.0-1PIGSTY
+- Update to upstream 3.6.0 with the normalized pgclone-3.6.0.tar.gz source tarball
+
 * Sun Apr 05 2026 Vonng <rh@vonng.com> - 2.2.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

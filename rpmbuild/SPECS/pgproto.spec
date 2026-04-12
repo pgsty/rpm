@@ -13,12 +13,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.1
-Release:	2PIGSTY%{?dist}
+Version:	0.2.4
+Release:	1PIGSTY%{?dist}
 Summary:	Native Protobuf support for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/Apaezmx/pgproto
-Source0:	%{sname}-%{version}-vendor.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -41,7 +41,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pgproto-0.2.1-force-naive-utf8-range.patch
+patch -p1 --forward -f < %{_specdir}/patches/pgproto-0.2.4-force-naive-utf8-range.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make}
@@ -63,6 +63,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.2.4-1PIGSTY
+- Update to upstream 0.2.4 with the normalized pgproto-0.2.4.tar.gz source tarball
+- Keep forcing vendored utf8_range to the bundled naive implementation on
+  EL9A because upstream still only links naive.o during the PGXS build
+- Build pgproto serially to avoid EL9 make jobserver/LTO failures seen with
+  the vendored upb build
+
 * Thu Apr 09 2026 Vonng <rh@vonng.com> - 0.2.1-2PIGSTY
 - Force vendored utf8_range to use the bundled naive implementation because
   the mirrored source tarball does not include the SIMD utf8_range2 sources.

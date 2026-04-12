@@ -1,6 +1,7 @@
 %define debug_package %{nil}
 %global pname pg_trickle
 %global sname pg_trickle
+%global srcdir pg-trickle-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} != 18
@@ -8,12 +9,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.16.0
+Version:	0.17.0
 Release:	1PIGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/grove/pg-trickle
-Source0:	%{sname}-%{version}-complete.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -24,10 +25,11 @@ pg_trickle turns PostgreSQL 18 into a real-time data platform with streaming
 tables and incremental view maintenance, implemented as a pgrx extension.
 
 %prep
-%setup -q -n pg_trickle-src
-patch -p1 --forward -f < %{_specdir}/patches/pg_trickle-0.16.0-trim-packaging-only-targets.patch
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{_specdir}/patches/pg_trickle-0.17.0-trim-packaging-only-targets.patch
 
 %build
+cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
 # cargo-pgrx is provisioned manually on builders.
@@ -47,19 +49,28 @@ cargo pgrx package --pg-config %{pginstdir}/bin/pg_config
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/pg_trickle-src/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/pg_trickle-src/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/pg_trickle-src/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
+mkdir -p %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
+install -m 644 %{_builddir}/%{srcdir}/README.md %{buildroot}%{_docdir}/%{name}/
+install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}/
 
 %files
-%doc README.md
-%license LICENSE
+%doc %{_docdir}/%{name}/README.md
+%license %{_licensedir}/%{name}/LICENSE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%exclude /usr/lib/.build-id
+%exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.17.0-1PIGSTY
+- Update to upstream 0.17.0 with the normalized pg_trickle-0.17.0.tar.gz source tarball
+- Keep trimming the non-extension workspace/test targets for EL9A package builds
+- Keep patching cached pgrx 0.17.0 to avoid the Rust toolchain
+  NonNull::from_mut incompatibility on the current EL9A builders
+
 * Wed Apr 08 2026 Vonng <rh@vonng.com> - 0.16.0-1PIGSTY
 - https://github.com/grove/pg-trickle/releases/tag/v0.16.0
 

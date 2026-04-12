@@ -12,13 +12,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.1
+Version:	1.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	Incremental Data Processing in PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/CrunchyData/pg_incremental
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/CrunchyData/pg_incremental/archive/refs/tags/v1.4.1.tar.gz
+#           https://github.com/CrunchyData/pg_incremental/archive/refs/tags/v1.5.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -48,7 +48,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -80,6 +80,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.5.0-1PIGSTY
+- https://github.com/CrunchyData/pg_incremental/releases/tag/v1.5.0
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.4.1-1PIGSTY
 - https://github.com/CrunchyData/pg_incremental/releases/tag/v1.4.1
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.2.0

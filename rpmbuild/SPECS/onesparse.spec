@@ -26,8 +26,11 @@ Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc pkgconf-pkg-config
-BuildRequires:	pkgconfig(GraphBLAS) pkgconfig(LAGraph)
+BuildRequires:	graphblas-devel >= 10.2.0
+BuildRequires:	lagraph-devel >= 1.2.1
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	graphblas%{?_isa} >= 10.2.0
+Requires:	lagraph%{?_isa} >= 1.2.1
 
 %description
 OneSparse exposes sparse vectors, matrices, and graph algorithms to PostgreSQL
@@ -67,11 +70,11 @@ This package provides JIT support for %{sname}.
 patch -p1 --forward -f < %{_specdir}/patches/onesparse-1.0.0-use-system-suitesparse-packages.patch
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH PKG_CONFIG_LIBDIR=%{_libdir}/pkgconfig:%{_datadir}/pkgconfig %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH PKG_CONFIG_LIBDIR=%{_libdir}/pkgconfig:%{_datadir}/pkgconfig %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -88,5 +91,5 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %changelog
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Package official upstream release v1.0.0 for PostgreSQL 18
-- Keep the system GraphBLAS/LAGraph patch shared with Debian packaging
+- Depend on packaged GraphBLAS/LAGraph RPMs and use only system pkg-config metadata
 - Note that upstream release v1.0.0 ships extension SQL version 0.1.0

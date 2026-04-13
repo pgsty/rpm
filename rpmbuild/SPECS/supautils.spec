@@ -4,13 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.1.0
+Version:	3.2.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0
 URL:		https://github.com/supabase/supautils
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/supabase/supautils/archive/refs/tags/v3.1.0.tar.gz
+#           https://github.com/supabase/supautils/archive/refs/tags/v3.2.1.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
@@ -36,6 +36,7 @@ install -m 755 %{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 3.2.1-1PIGSTY
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 3.1.0-1PIGSTY
 * Fri Oct 31 2025 Vonng <rh@vonng.com> - 3.0.2-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 3.0.1-1PIGSTY

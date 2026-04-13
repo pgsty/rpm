@@ -17,14 +17,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.1
-Release:	1.git20251102.870bc43PIGSTY%{?dist}
+Version:	1.4.3
+Release:	1PIGSTY%{?dist}
 Summary:	DuckDB foreign data wrapper for PostgreSQL via pg_duckdb
 License:	MIT
 URL:		https://github.com/alitrack/%{sname}
-Source0:	%{sname}-%{snapshot}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 Source1:	pg_duckdb-%{pg_duckdb_version}.tar.gz
-# Source0 is a main-branch snapshot from commit %{snapshot_commit}
+# Source0 is a repacked main-branch snapshot from commit %{snapshot_commit}
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	pg_duckdb_%{pgmajorversion} = %{pg_duckdb_version}
@@ -67,7 +67,7 @@ This package provides JIT support for %{sname}.
 %endif
 
 %prep
-%setup -q -n %{sname}-%{snapshot}
+%setup -q -n %{sname}-%{version}
 
 mkdir -p duckdb-headers
 tar -C duckdb-headers --strip-components=5 -xf %{SOURCE1} \
@@ -79,6 +79,7 @@ test -f duckdb-headers/duckdb.hpp
 
 patch -p1 --forward -f < %{_specdir}/patches/duckdb_fdw-git20251102-870bc43-duckdb-1.4.3-compat.patch
 patch -p1 --forward -f < %{_specdir}/patches/duckdb_fdw-git20251102-870bc43-pg_duckdb-linkage.patch
+patch -p1 --forward -f < %{_specdir}/patches/duckdb_fdw-git20251102-870bc43-cxx11-abi.patch
 
 %build
 test -f %{pginstdir}/lib/libduckdb.so
@@ -105,7 +106,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH PG_CPPFLAGS="-I$(pwd)/duckdb-headers" %{_
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
-* Mon Apr 13 2026 Vonng <rh@vonng.com> - 1.4.1-1.git20251102.870bc43PIGSTY
+* Mon Apr 13 2026 Vonng <rh@vonng.com> - 1.4.3
+- Drop the x86_64 legacy libstdc++ ABI override to match pg_duckdb libduckdb.so
+- Standardize package version and source tarball name to 1.4.3
+- Keep source fixed to duckdb_fdw main snapshot 870bc43
 - Rebase to duckdb_fdw main at 870bc43 for PostgreSQL 18 support
 - Build against DuckDB 1.4.3 headers and libduckdb.so from pg_duckdb 1.1.1
 - Stop installing a second copy of libduckdb.so from duckdb_fdw

@@ -4,9 +4,9 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.2
+Version:	0.2.3
 Release:	1PIGSTY%{?dist}
-Summary:	Postgres extension for ulid
+Summary:	ULID type and functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/pksunkara/%{pname}
 SOURCE0:    %{sname}-%{version}.tar.gz
@@ -15,19 +15,27 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-There are several different postgres extensions for ulid, but all of them have feature gaps. A good extension should have:
-Generator: A generator function to generate ulid identifiers.
-Binary: Data be stored as binary and not text.
-Type: A postgres type ulid which is displayed as ulid text.
-Uuid: Support for casting between UUID and ulid
-Timestamp: Support to cast an ulid to a timestamp
-Monotonic: Support monotonicity
+pgx_ulid provides a native ULID type for PostgreSQL together with
+generator functions, monotonic generation, and casts to or from UUID
+and timestamp values.
 
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+cd %{_builddir}/%{sname}-%{version}
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo fetch
+# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
+# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
+# preserves semantics and keeps the extension buildable on EL9A.
+PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
+test -n "$PBOX"
+if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
+    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+fi
+cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -43,6 +51,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.2.3-1PIGSTY
+- https://github.com/pksunkara/pgx_ulid/releases/tag/v0.2.3
+- Build with cargo-pgrx 0.17.0 and patch cached pgrx for EL9A Rust compatibility
 * Mon Nov 17 2025 Vonng <rh@vonng.com> - 0.2.2-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.2.1-1PIGSTY
 * Tue May 27 2025 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY

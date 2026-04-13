@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.5.7
+Version:	0.6.0
 Release:	1PIGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
@@ -16,16 +16,27 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 Wrappers is a development framework for Postgres Foreign Data Wrappers (FDW), written in Rust.
-Its goal is to make Postgres FDW development easier while keeping Rust language's modern capabilities,
-such as high performance, strong types, and safety.
-HelloWorld, BigQuery, Clickhouse, Stripe, Firebase, Airtable, S3, Logflare, Auth0, SQL, Redis, AWS Cognito, Notion, Snowflake, Paddle
+Its goal is to make Postgres FDW development easier while keeping Rust's
+strong performance, type safety, and modern tooling. The project bundles
+and supports a growing set of FDWs for external services and data platforms.
 
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-cd %{pname}
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+cd %{_builddir}/%{sname}-%{version}/%{pname}
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo fetch
+# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
+# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
+# preserves semantics and keeps the extension buildable on EL9A.
+PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
+test -n "$PBOX"
+if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
+    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+fi
+cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -41,6 +52,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.6.0-1PIGSTY
+- https://github.com/supabase/wrappers/releases/tag/v0.6.0
+- Build with cargo-pgrx 0.17.0 and patch cached pgrx for EL9A Rust compatibility
 * Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.5.7-1PIGSTY
 * Wed Oct 29 2025 Vonng <rh@vonng.com> - 0.5.6-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.5.5-1PIGSTY

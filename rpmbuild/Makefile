@@ -45,7 +45,7 @@ rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
 rust10: pg_command_fw pg_trickle
-time: timescaledb pg_timeseries periods temporal_tables
+time: timescaledb pg_timeseries periods temporal_tables pg_when
 
 
 ###############################################################
@@ -74,6 +74,9 @@ temporal_tables:
 pg_later:       # rust 0.16.1
 	./build pg_later 14 15 16 17
 
+pg_when:        # rust pgrx 0.17.0
+	./build pg_when 14 15 16 17 18
+
 pg_background:
 	./build pg_background 14 15 16 17 18
 
@@ -100,7 +103,7 @@ pg_geohash:
 pg_polyline:    # rust pgrx 0.16.1
 	./build pg_polyline 14 15 16 17 18
 
-pg_tzf:         # rust pgrx 0.16.1
+pg_tzf:         # rust pgrx 0.17.0
 	./build pg_tzf 14 15 16 17 18
 
 pg_eviltransform:	# rust pgrx 0.17.0
@@ -125,8 +128,11 @@ vchord:    # rust pgrx 0.16.1
 pgvectorscale:  # rust 0.16.1
 	./build pgvectorscale 14 15 16 17 18
 
-pg_vectorize:	# rust 0.16.1
-	./build pg_vectorize 14 15 16 17
+pg_vectorize:	# rust pgrx 0.17.0
+	./build pg_vectorize 14 15 16 17 18
+
+pg_rrf:			# rust pgrx 0.17.0
+	./build pg_rrf 14 15 16 17
 
 pg_similarity:	# covered by pgdg
 	./build pg_similarity 14 15 16 17 18
@@ -185,6 +191,9 @@ vchord_bm25:		# rust  pgrx 0.16.1
 pg_tokenizer:		# rust pgrx 0.16.1
 	./build pg_tokenizer 14 15 16 17 18
 
+pg_kazsearch:		# rust pgrx 0.17.0
+	./build pg_kazsearch 16 17 18
+
 pg_pinyin:			# rust pgrx 0.17.0
 	./build pg_pinyin 14 15 16 17 18
 
@@ -218,6 +227,9 @@ citus:			# not ready for pg18
 
 hydra:
 	./build hydra 14 15 16 #17 not ready yet
+
+pghydro:
+	./build pghydro 14 15 16 17 18
 
 #pg_analytics:   # download, obsolete
 pg_duckdb:
@@ -292,7 +304,7 @@ pgmqtt:			# rust pgrx 0.17.0
 # pgq
 
 pg_cardano:
-	./build pg_cardano 14 15 16 17 18
+	./build pg_cardano 15 16 17 18
 
 # rdkit
 # omnigres
@@ -308,6 +320,9 @@ plv8:
 
 pljs:
 	./build pljs 14 15 16 17 18
+
+pg_typescript:		# rust pgrx 0.17.0
+	./build pg_typescript 16 17 18
 
 # pllua
 
@@ -331,6 +346,9 @@ pg_prefix:
 
 pg_semver:
 	./build pg_semver 14 15 16 17 18
+
+pg_text_semver:
+	./build pg_text_semver 14 15 16 17 18
 
 pgunit:
 	./build pgunit 14 15 16 17 18
@@ -462,6 +480,12 @@ pg_protobuf:
 pg_envvar:
 	./build pg_envvar 14 15 16 17 18
 
+pg_byteamagic:
+	./build pg_byteamagic 14 15 16 17 18
+
+external_file:
+	./build external_file 14 15 16 17 18
+
 pg_render:		# rust pgrx 0.16.1
 	./build pg_render 14 15 16 17
 
@@ -504,7 +528,7 @@ pg_weighted_statistics:
 pg_idkit:			# rust pgrx 0.16.1 (bump from 0.16.0)
 	./build pg_idkit 14 15 16 17 18
 
-pgx_ulid:			# rust pgrx 0.16.1
+pgx_ulid:			# rust pgrx 0.17.0
 	./build pgx_ulid  14 15 16 17 18
 
 #pg_uuidv7
@@ -532,6 +556,9 @@ count_distinct:
 
 omnisketch:
 	./build omnisketch 14 15 16 17 18
+
+datasketches:
+	./build datasketches 14 15 16 17 18
 
 ddsketch:
 	./build ddsketch 14 15 16 17 18
@@ -665,6 +692,9 @@ pg_qos:
 #pg_wait_sampling
 system_stats:
 	./build system_stats 14 15 16 17 18
+
+pg_datasentinel:
+	./build pg_datasentinel 15 16 17 18
 #bgw_replstatus
 #powa
 
@@ -710,6 +740,12 @@ pg_track_optimizer:
 pagevis:
 	./build pagevis 14 15 16 17 18
 
+pg_stat_ch:
+	./build pg_stat_ch 16 17 18
+
+pg_isok:
+	./build pg_isok 14 15 16 17 18
+
 
 ###############################################################
 #                       Category: SEC                         #
@@ -740,10 +776,13 @@ supautils:
 pgsodium:
 	./build pgsodium 14 15 16 17 18
 
+block_copy_command:	# rust pgrx 0.17.0
+	./build block_copy_command 14 15 16 17 18
+
 pg_session_jwt:		# rust pgrx 0.16.1
 	./build pg_session_jwt 14 15 16 17 18
 
-pg_anon:			# rust pgrx 0.16.1 (update from 0.16.0)
+pg_anon:			# rust pgrx 0.17.0 (manual update from 0.16.1)
 	./build pg_anon 14 15 16 17 18
 
 pgsmcrypto:			# rust pgrx 0.16.1
@@ -782,7 +821,7 @@ sslutils:
 #mongo_fdw
 #hdfs_fdw
 
-wrappers:			# rust pgrx 0.16.1 (manual update from 0.16.0)
+wrappers:			# rust pgrx 0.17.0 (manual update from 0.16.1)
 	./build wrappers 14 15 16 17 18
 
 sqlite_fdw:
@@ -802,6 +841,9 @@ kafka_fdw:
 
 firebird_fdw:
 	./build firebird_fdw 14 15 16 17 18
+
+nominatim_fdw:
+	./build nominatim_fdw 14 15 16 17 18
 
 aws_s3:
 	./build aws_s3 14 15 16 17 18
@@ -826,6 +868,9 @@ session_variable:
 
 pg_variables:
 	./build pg_variables 14 15 16 17 18
+
+provsql:
+	./build provsql 14 15 16 17 18
 
 spat:
 	./build spat 17
@@ -872,8 +917,14 @@ mimeo:
 pg_bulkload:
 	./build pg_bulkload 14 15 16 17 18
 
+logical_ddl:
+	./build logical_ddl 14 15 16 17 18
+
 pg_query_rewrite:
 	./build pg_query_rewrite 14 15 16 17 18
+
+onesparse:
+	./build onesparse 18
 
 
 ###############################################################
@@ -1010,37 +1061,43 @@ rmdbg:
 
 .PHONY: age age18 aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
 	chkpass citus count_distinct cryptint \
-	data_historization db_migrator ddl_historization ddlx pglinter ddsketch \
-	decoder_raw documentdb firebird_fdw first_last_agg floatvec \
+	data_historization datasketches db_migrator ddl_historization ddlx pglinter ddsketch \
+	decoder_raw documentdb external_file firebird_fdw first_last_agg floatvec \
 	geoip hashtypes hunspell hunspell_cs_cz hunspell_de_de \
 	hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
-	hydra icu_ext imgsmlr pg_ttl_index index_advisor etcd_fdw kafka_fdw \
+	hydra pghydro icu_ext imgsmlr pg_ttl_index index_advisor etcd_fdw kafka_fdw \
 	lower_quantile md5hash mimeo numeral omnisketch \
 	openhalo agensgraph pgedge pgedge-install spock snowflake lolor pgedge-all babelfishpg orioledb oriolepg oriolepg-install pagevis \
-	periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
-	pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch pg_bulkload \
-	pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
-	pg_country pg_crash pg_curl pg_currency pg_drop_events \
-	pg_duckdb pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
-	pg_explain_ui pg_failover_slots pg_financial pg_fio \
-	pg_geohash rum pg_ai_query pg_graphql pg_gzip pg_hashids pg_hashlib \
-	pg_html5_email_address pg_http pg_idkit pg_incremental pg_ivm \
-	pg_jsonschema pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
-	pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter \
-	pg_pinyin pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub \
-	pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
-	pg_semver pg_session_jwt pg_similarity pg_smtp_client \
-	pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
-	pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing \
-	pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_variables pg_vectorize \
+		periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
+		pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch pg_bulkload block_copy_command \
+		pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
+		pg_country pg_crash pg_curl pg_currency pg_drop_events \
+		pg_duckdb pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
+		pg_byteamagic \
+		pg_explain_ui pg_failover_slots pg_financial pg_fio \
+		pg_geohash rum pg_ai_query pg_graphql pg_gzip pg_hashids pg_hashlib \
+		pg_html5_email_address pg_http pg_idkit pg_incremental pg_ivm \
+		pg_jsonschema pg_kazsearch pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
+		pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter pg_rrf \
+		pg_pinyin pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub pgmqtt \
+		pg_when \
+		pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
+		pg_isok \
+		pg_query_rewrite \
+		pg_semver pg_session_jwt pg_similarity pg_smtp_client \
+		pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
+		pg_text_semver pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing pg_datasentinel pg_typescript \
+		pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_variables pg_vectorize \
 	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
 	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
 	pgclone \
 	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
-	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor \
+	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor pg_stat_ch \
+	logical_ddl \
 	pg_partman pljs plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \
+	onesparse \
 	redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
 	smlar spat sqlite_fdw sslutils supautils system_stats table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \

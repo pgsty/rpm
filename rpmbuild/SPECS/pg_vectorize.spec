@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.26.0
+Version:	0.26.1
 Release:	1PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
@@ -23,8 +23,19 @@ This allows you to do vector search and build LLM applications on existing data 
 %setup -q -n %{sname}-%{version}
 
 %build
-cd extension
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+cd %{_builddir}/%{sname}-%{version}/extension
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo fetch
+# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
+# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
+# preserves semantics and keeps the extension buildable on EL9A.
+PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
+test -n "$PBOX"
+if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
+    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+fi
+cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -40,6 +51,9 @@ cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgm
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.26.1-1PIGSTY
+- https://github.com/ChuckHend/pg_vectorize/releases/tag/v0.26.1
+- Build with cargo-pgrx 0.17.0 and patch cached pgrx for EL9A Rust compatibility
 * Tue Nov 18 2025 Vonng <rh@vonng.com> - 0.26.0-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.25.0-1PIGSTY
 * Thu May 22 2025 Vonng <rh@vonng.com> - 0.22.2-1PIGSTY

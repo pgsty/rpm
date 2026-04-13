@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.0
+Version:	1.2.1
 Release:	1PIGSTY%{?dist}
 Summary:	PG Failover Slots extension
 License:	PostgreSQL
@@ -59,7 +59,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -87,6 +87,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.2.1-1PIGSTY
+- Fix assertion failure while synchronizing logical replication slots on standby
+- https://github.com/EnterpriseDB/pg_failover_slots/releases/tag/v1.2.1
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 1.2.0-1PIGSTY
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0.1-1PIGSTY

@@ -286,6 +286,9 @@ pgmb:
 pgmq:
 	./build pgmq 14 15 16 17 18
 
+pgmqtt:			# rust pgrx 0.17.0
+	./build pgmqtt 14 15 16 17 18
+
 # pgq
 
 pg_cardano:
@@ -868,6 +871,9 @@ mimeo:
 
 pg_bulkload:
 	./build pg_bulkload 14 15 16 17 18
+
+pg_query_rewrite:
+	./build pg_query_rewrite 14 15 16 17 18
 
 
 ###############################################################

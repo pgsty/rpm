@@ -65,7 +65,7 @@ fi
 
 VERSIONS=""
 if [ $# -eq 0 ]; then
-    VERSIONS="13 14 15 16 17"
+    VERSIONS="14 15 16 17 18"
 else
 
     # Validate versions

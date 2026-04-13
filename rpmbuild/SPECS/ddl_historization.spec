@@ -4,7 +4,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.7
+Version:	0.2
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Extension to historize in a table all DDL changes made on a database
 License:	GPL-2.0
@@ -35,5 +35,7 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.2-1PIGSTY
+- https://github.com/rodo/pg_ddl_historization/releases/tag/0.2
 * Fri Jan 10 2025 Vonng <rh@vonng.com> - 0.0.7-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

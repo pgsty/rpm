@@ -18,8 +18,8 @@ locals {
   spot_policy = "SpotAsPriceGo"                # NoSpot, SpotWithPriceLimit, SpotAsPriceGo
   spot_price_limit = 5                  # only valid when spot_policy is SpotWithPriceLimit
   instance_type_map = {
-    amd64 = "ecs.c9i.2xlarge"
-    arm64 = "ecs.c8y.2xlarge"
+    amd64 = "ecs.c9i.4xlarge"
+    arm64 = "ecs.c8y.4xlarge"
   }
   amd64_instype = local.instance_type_map["amd64"]
   arm64_instype = local.instance_type_map["arm64"]
@@ -60,7 +60,7 @@ data "alicloud_images" "el10_arm64_img" {
 provider "alicloud" {
   # access_key = "????????????????????"
   # secret_key = "????????????????????"
-  region = "cn-shanghai"
+  region = "cn-hongkong"
 }
 
 
@@ -77,7 +77,7 @@ resource "alicloud_vpc" "vpc" {
 resource "alicloud_vswitch" "vsw" {
   vpc_id     = "${alicloud_vpc.vpc.id}"
   cidr_block = "10.10.10.0/24"
-  zone_id    = "cn-shanghai-l"
+  zone_id    = "cn-hongkong-d"
 }
 
 # add default security group and allow all tcp traffic
@@ -214,7 +214,7 @@ resource "alicloud_instance" "pg-el10" {
   instance_name                 = "pg-el10"
   host_name                     = "pg-el10"
   private_ip                    = "10.10.10.10"
-  instance_type                 = local.amd64_instype
+  instance_type                 = "ecs.c8y.8xlarge"
   image_id                      = "${data.alicloud_images.el10_amd64_img.images.0.id}"
   vswitch_id                    = "${alicloud_vswitch.vsw.id}"
   security_groups               = ["${alicloud_security_group.default.id}"]
@@ -241,7 +241,7 @@ resource "alicloud_instance" "pg-el10a" {
   instance_name                 = "pg-el10a"
   host_name                     = "pg-el10a"
   private_ip                    = "10.10.10.110"
-  instance_type                 = local.arm64_instype
+  instance_type                 = "ecs.c8y.4xlarge"
   image_id                      = "${data.alicloud_images.el10_arm64_img.images.0.id}"
   vswitch_id                    = "${alicloud_vswitch.vsw.id}"
   security_groups               = ["${alicloud_security_group.default.id}"]

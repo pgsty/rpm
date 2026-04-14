@@ -16,6 +16,8 @@ Source0:        rdkit_%{version}.orig.tar.xz
 # mirrored from the PGDG/Debian source package orig tarball
 Source1:        better-enums-0.11.3-enum.h
 # mirrored from the upstream better-enums 0.11.3 header used by RDKit
+Source2:        rapidjson-1.1.0.tar.gz
+# mirrored from the upstream RapidJSON v1.1.0 source archive used by RDKit
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
@@ -62,6 +64,10 @@ search, and InChI / InChIKey functions to PostgreSQL %{pgmajorversion}.
 %setup -q -n rdkit-Release_2025_03_6
 patch -p1 --forward -f < %{_specdir}/patches/rdkit-202503.6-skip-catch2-fetch-when-tests-disabled.patch
 cp -f %{SOURCE1} Code/RDGeneral/enum.h
+%{__mkdir_p} External
+tar -xzf %{SOURCE2} -C External
+sed -i 's/length = rhs.length;/\/\* length = rhs.length; \*\//' \
+  External/rapidjson-1.1.0/include/rapidjson/document.h
 
 %build
 PATH=%{pginstdir}/bin:$PATH cmake -S . -B build \
@@ -128,6 +134,7 @@ DESTDIR=%{buildroot} cmake --install build
 
 %changelog
 * Mon Apr 13 2026 Vonng <rh@vonng.com> - 202503.6-1PIGSTY
+- Vendor RapidJSON 1.1.0 as a build input to keep MolInterchange offline
 - Package RDKit 202503.6 for EL10 with system InChI 1.07.3 enabled
 - Ship runtime libraries, devel headers, and PostgreSQL cartridge subpackage
 - Avoid FetchContent downloading Catch2 when C++ tests are disabled

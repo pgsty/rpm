@@ -33,7 +33,7 @@ cd %{_builddir}/%{sname}-%{version}
 %{__mkdir_p} %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name}
 %{__mkdir_p} %{buildroot}%{_licensedir}/%{name}
-PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config install DESTDIR=%{buildroot}
 install -m 644 README.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 

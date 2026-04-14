@@ -26,7 +26,7 @@ tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}
-:
+PATH=%{pginstdir}/bin:$PATH %{__make} prepare
 
 %install
 %{__rm} -rf %{buildroot}

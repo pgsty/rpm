@@ -307,6 +307,12 @@ pg_cardano:
 	./build pg_cardano 15 16 17 18
 
 # rdkit
+inchi:
+	./build inchi 18
+
+rdkit:
+	./build rdkit 18
+
 # omnigres
 
 ###############################################################
@@ -776,6 +782,9 @@ supautils:
 pgsodium:
 	./build pgsodium 14 15 16 17 18
 
+column_encrypt:
+	./build column_encrypt 14 15 16 17 18
+
 block_copy_command:	# rust pgrx 0.17.0
 	./build block_copy_command 14 15 16 17 18
 
@@ -1094,6 +1103,7 @@ rmdbg:
 	pgclone \
 	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
+	column_encrypt \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor pg_stat_ch \
 	logical_ddl \
 	pg_partman pljs plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \

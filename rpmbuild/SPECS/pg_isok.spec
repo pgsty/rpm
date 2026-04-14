@@ -11,7 +11,6 @@ URL:		https://codeberg.org/kop/pg_isok
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized source tarball from the upstream PGXN release archive
 #           Supported: PostgreSQL 10+
-BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

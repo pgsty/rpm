@@ -10,7 +10,6 @@ License:	GPL-2.0-only
 URL:		https://github.com/pghydro/pghydro
 Source0:	%{sname}-%{version}.tar.gz
 #           repacked from upstream release https://github.com/pghydro/pghydro/releases/tag/v.6.6x
-BuildArch:	noarch
 
 BuildRequires:	pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

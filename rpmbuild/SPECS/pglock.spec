@@ -10,7 +10,6 @@ License:	PostgreSQL
 URL:		https://github.com/fraruiz/pglock
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized source tarball from the upstream PGXN release archive
-BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

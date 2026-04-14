@@ -11,7 +11,6 @@ URL:		https://github.com/anfiau/pgelog
 Source0:	%{sname}-%{version}.tar.gz
 #           official source tarball mirrored from the upstream GitHub tag archive
 #           Supported: PostgreSQL 11+
-BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-contrib pg_variables_%{pgmajorversion}

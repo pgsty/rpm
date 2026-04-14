@@ -10,7 +10,6 @@ License:	PostgreSQL
 URL:		https://github.com/darold/external_file
 Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/darold/external_file/archive/refs/tags/v1.2.tar.gz
-BuildArch:	noarch
 
 BuildRequires:	pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

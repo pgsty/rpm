@@ -665,6 +665,9 @@ re2:
 preprepare:
 	./build preprepare 14 15 16 17 18
 
+ulak:
+	./build ulak 14 15 16 17 18
+
 pg_upless:
 	./build pg_upless 14 15 16 17 18
 
@@ -1120,7 +1123,7 @@ rmdbg:
 	re2 redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
 	smlar spat sqlite_fdw sslutils supautils system_stats table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \
-	url_encode vasco vchord vchord_bm25 wrappers zhparser \
+	ulak url_encode vasco vchord vchord_bm25 wrappers zhparser \
 	parray_gin postgresbson \
 	pglogical_ticker omnigres \
 	antlr4 babelfishpg babelfishpg_install babelfish \

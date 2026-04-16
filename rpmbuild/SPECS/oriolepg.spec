@@ -1,16 +1,18 @@
 %global sname oriolepg
 %global pgmajorversion 17
 %global pgbaseinstdir	/usr/oriole-%{pgmajorversion}
-%global orioledb_patchset 16
+%global orioledb_patchset 18
+%global upstream_pgver 17.7
+%global srcdir postgres-patches17_%{orioledb_patchset}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	17.16
+Version:	17.%{orioledb_patchset}
 Release:	1PIGSTY%{?dist}
 Summary:	Modern cloud-native storage engine for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/orioledb/orioledb
-Source0:	%{sname}-%{version}.tar.gz
-# git clone --branch patches17_16 https://github.com/orioledb/postgres.git oriolepg-17.6
+Source0:	%{srcdir}.tar.gz
+# upstream codeload tarball from https://github.com/orioledb/postgres/tree/patches17_18
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -28,13 +30,15 @@ Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, ope
 Requires(pre):  shadow-utils
 
 %description
-This is the patched PostgreSQL %{pgmajorversion} kernel package for OrioleDB extension.
+This is the patched PostgreSQL %{pgmajorversion} kernel package for OrioleDB extension
+based on PostgreSQL %{upstream_pgver} and upstream OrioleDB patchset %{orioledb_patchset}.
 OrioleDB is a new storage engine for PostgreSQL, bringing a modern approach to database capacity, capabilities and performance to the world's most-loved database platform.
 OrioleDB consists of an extension, building on the innovative table access method framework and other standard Postgres extension interfaces.
 By extending and enhancing the current table access methods, OrioleDB opens the door to a future of more powerful storage models that are optimized for cloud and modern hardware architectures.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{_specdir}/patches/oriolepg-postgresql-branding.patch
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"
@@ -51,7 +55,7 @@ export CFLAGS
 --docdir=%{pgbaseinstdir}/doc \
 --htmldir=%{pgbaseinstdir}/doc/html \
 --with-system-tzdata=/usr/share/zoneinfo \
---with-extra-version=" (OrioleDB 1.6-beta14)" \
+--with-extra-version=" (OrioleDB 1.7-beta15)" \
 --with-lz4 \
 --with-zstd \
 --with-uuid=e2fs \
@@ -105,6 +109,10 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
+* Thu Apr 16 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.18-1PIGSTY
+- Rebase the PG17 kernel package to upstream patches17_18 (PostgreSQL 17.7)
+- Apply the OrioleDB branding change as a packaging patch instead of repacking the source tarball
+
 * Thu Feb 26 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.16-1PIGSTY
 * Thu Jul 24 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11-1PIGSTY
 * Tue May 27 2025 Ruohang Feng (Vonng) <rh@vonng.com> - 17.9-1PIGSTY

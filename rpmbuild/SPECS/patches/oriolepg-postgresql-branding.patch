@@ -1,0 +1,22 @@
+--- a/configure	2026-04-07 06:54:54
++++ b/configure	2026-04-16 21:19:42
+@@ -19362,7 +19362,7 @@
+ 
+ 
+ cat >>confdefs.h <<_ACEOF
+-#define PG_VERSION_STR "PostgreSQL $PG_VERSION on $host, compiled by $cc_string, `expr $ac_cv_sizeof_void_p \* 8`-bit"
++#define PG_VERSION_STR "OrioleDB $PG_VERSION on $host, compiled by $cc_string, `expr $ac_cv_sizeof_void_p \* 8`-bit"
+ _ACEOF
+ 
+ 
+--- a/configure.ac	2026-04-07 06:54:54
++++ b/configure.ac	2026-04-16 21:19:42
+@@ -2450,7 +2450,7 @@
+ fi
+ 
+ AC_DEFINE_UNQUOTED(PG_VERSION_STR,
+-                   ["PostgreSQL $PG_VERSION on $host, compiled by $cc_string, `expr $ac_cv_sizeof_void_p \* 8`-bit"],
++                   ["OrioleDB $PG_VERSION on $host, compiled by $cc_string, `expr $ac_cv_sizeof_void_p \* 8`-bit"],
+                    [A string containing the version number, platform, and C compiler])
+ 
+ # Supply a numeric version string for use by 3rd party add-ons

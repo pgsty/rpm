@@ -14,20 +14,19 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.10
+Version:	0.2.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-#           repacked from git tag https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.1.10
-#           with vendor/clickhouse-cpp submodule included via recursive clone + gtar
+#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.2.0/pg_clickhouse-0.2.0.zip
+#           vendor/clickhouse-cpp is already included in the PGXN source bundle
 #           Supported: PostgreSQL 13, 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc-c++
 BuildRequires:	cmake
-BuildRequires:	automake
 BuildRequires:	openssl-devel
 BuildRequires:	libcurl-devel
 BuildRequires:	libuuid-devel
@@ -78,7 +77,6 @@ This packages provides JIT support for %{sname}
 
 # Skip git submodule command since vendor/clickhouse-cpp is already included in tarball
 sed -i 's/git submodule update --init/@echo "Skipping submodule (included in tarball)"/' Makefile
-patch -p1 --forward -f < %{_specdir}/patches/pg_clickhouse-0.1.10-define-curl-writefunc-error.patch
 
 %build
 # Makefile will auto-build vendor/clickhouse-cpp via cmake
@@ -102,6 +100,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
+- Update to upstream 0.2.0 using the normalized PGXN source tarball with the vendored clickhouse-cpp tree
+- Drop the local libcurl compatibility patch because upstream now defines CURL_WRITEFUNC_ERROR in both HTTP drivers
+
 * Wed Apr 08 2026 Vonng <rh@vonng.com> - 0.1.10-1PIGSTY
 - https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.1.10
 - Repacked recursive git clone with vendored clickhouse-cpp submodule

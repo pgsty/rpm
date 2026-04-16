@@ -656,6 +656,9 @@ pgdd:			# rust pgrx 0.16.1
 pgclone:
 	./build pgclone 14 15 16 17 18
 
+pgproto:
+	./build pgproto 14 15 16 17 18
+
 preprepare:
 	./build preprepare 14 15 16 17 18
 
@@ -1092,7 +1095,7 @@ rmdbg:
 		pg_html5_email_address pg_http pg_idkit pg_incremental pg_ivm \
 		pg_jsonschema pg_kazsearch pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 		pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter pg_rrf \
-		pg_pinyin pg_polyline pg_protobuf pg_random pg_rational pg_redis_pubsub pgmqtt \
+		pg_pinyin pg_polyline pg_protobuf pgproto pg_random pg_rational pg_redis_pubsub pgmqtt \
 		pg_when \
 		pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
 		pg_isok \

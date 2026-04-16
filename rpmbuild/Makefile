@@ -659,6 +659,9 @@ pgclone:
 pgproto:
 	./build pgproto 14 15 16 17 18
 
+re2:
+	./build re2 16 17 18
+
 preprepare:
 	./build preprepare 14 15 16 17 18
 
@@ -1114,7 +1117,7 @@ rmdbg:
 	logical_ddl \
 	pg_partman pljs plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \
 	onesparse \
-	redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
+	re2 redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
 	smlar spat sqlite_fdw sslutils supautils system_stats table_log \
 	temporal_tables timescaledb timescaledb_toolkit toastinfo \
 	url_encode vasco vchord vchord_bm25 wrappers zhparser \

@@ -8,12 +8,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.4
+Version:	0.3.6
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL query telemetry exporter to ClickHouse
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_stat_ch
 Source0:	%{sname}-%{version}.tar.gz
+#           normalized from https://api.pgxn.org/dist/pg_stat_ch/0.3.6/pg_stat_ch-0.3.6.zip
 
 BuildRequires:	cmake gcc-c++ ninja-build openssl-devel pkgconf-pkg-config
 BuildRequires:	protobuf-devel protobuf-compiler grpc-devel grpc-plugins abseil-cpp-devel
@@ -26,7 +27,7 @@ ClickHouse in real time.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{_specdir}/patches/pg_stat_ch-0.3.4-use-system-grpc-absl-and-std-unordered-map.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg_stat_ch-0.3.6-use-system-grpc-absl.patch
 
 %build
 git config --global http.version HTTP/1.1
@@ -49,6 +50,10 @@ DESTDIR=%{buildroot} cmake --install build
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.3.6-1PIGSTY
+- Update to upstream 0.3.6 using the normalized PGXN source tarball
+- Keep EL9 builds on the packaged gRPC/abseil stack instead of the vendored FetchContent path
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.3.4-1PIGSTY
 - Update to upstream 0.3.4 using the normalized pg_stat_ch-0.3.4.tar.gz source tarball
 - Keep EL9 builds on system gRPC/abseil with the shared rpm/deb patch

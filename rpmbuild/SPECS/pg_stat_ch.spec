@@ -27,7 +27,7 @@ ClickHouse in real time.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{_specdir}/patches/pg_stat_ch-0.3.6-use-system-grpc-absl.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg_stat_ch-0.3.6.patch
 
 %build
 git config --global http.version HTTP/1.1

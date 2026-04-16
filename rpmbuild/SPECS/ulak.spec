@@ -69,7 +69,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/ulak-0.0.2-hiredis-compat.patch
+patch -p1 --forward -f < %{_specdir}/patches/ulak-0.0.2.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 ENABLE_REDIS=1 ENABLE_AMQP=1 %{?_smp_mflags}

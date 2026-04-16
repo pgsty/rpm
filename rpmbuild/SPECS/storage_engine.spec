@@ -67,7 +67,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.0.5-build-compat.patch
+patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.0.5.patch
 
 %build
 %configure PG_CONFIG=%{pginstdir}/bin/pg_config

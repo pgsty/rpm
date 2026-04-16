@@ -42,7 +42,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pgproto-0.2.18-force-naive-utf8-range.patch
+patch -p1 --forward -f < %{_specdir}/patches/pgproto-0.2.18.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make}

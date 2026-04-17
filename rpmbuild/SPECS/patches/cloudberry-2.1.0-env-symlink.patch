@@ -1,0 +1,11 @@
+--- a/gpMgmt/bin/generate-cloudberry-env.sh
++++ b/gpMgmt/bin/generate-cloudberry-env.sh
+@@ -22,7 +22,7 @@
+ if [ ! -L "${SCRIPT_DIR}" ]; then
+     GPHOME=${SCRIPT_DIR}
+ else
+-    GPHOME=$(readlink "${SCRIPT_DIR}")
++    GPHOME=$(readlink -f "${SCRIPT_DIR}")
+ fi
+ EOF
+ 

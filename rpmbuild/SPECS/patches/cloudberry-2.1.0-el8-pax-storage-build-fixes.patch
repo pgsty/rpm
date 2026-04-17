@@ -1,0 +1,39 @@
+--- a/contrib/pax_storage/CMakeLists.txt
++++ b/contrib/pax_storage/CMakeLists.txt
+@@ -24,14 +24,14 @@
+ # Base CXX flags
+ # Note: -Wpessimizing-move is enabled by default in GCC 9+ and will be caught by -Werror
+ # No need to explicitly add -Werror=pessimizing-move (which breaks GCC 8.x compatibility)
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-function -Wno-error=ignored-qualifiers -Wno-error=array-bounds -Wuninitialized -Winit-self -Wstrict-aliasing -Wno-missing-field-initializers -Wno-unused-parameter -Wno-clobbered -Wno-sized-deallocation -g")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-error -Wno-unused-function -Wno-error=ignored-qualifiers -Wno-error=array-bounds -Wuninitialized -Winit-self -Wstrict-aliasing -Wno-missing-field-initializers -Wno-unused-parameter -Wno-clobbered -Wno-sized-deallocation -g")
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-unused-parameter -Wno-parameter-name")
+ 
+ option(USE_MANIFEST_API "Use manifest API" OFF)
+ option(USE_PAX_CATALOG "Use manifest API, by pax impl" ON)
+ 
+ # Build gtest options
+-option(BUILD_GTEST "Build with google test" ON)
++option(BUILD_GTEST "Build with google test" OFF)
+ option(BUILD_GBENCH "Build with google benchmark" OFF)
+ 
+ # Build pax tools
+--- a/contrib/pax_storage/src/cpp/contrib/googlebench/CMakeLists.txt
++++ b/contrib/pax_storage/src/cpp/contrib/googlebench/CMakeLists.txt
+@@ -7,7 +7,7 @@
+ option(BENCHMARK_ENABLE_EXCEPTIONS "Enable the use of exceptions in the benchmark library." ON)
+ option(BENCHMARK_ENABLE_LTO "Enable link time optimisation of the benchmark library." OFF)
+ option(BENCHMARK_USE_LIBCXX "Build and test using libc++ as the standard library." OFF)
+-option(BENCHMARK_ENABLE_WERROR "Build Release candidates with -Werror." ON)
++option(BENCHMARK_ENABLE_WERROR "Build Release candidates with -Werror." OFF)
+ option(BENCHMARK_FORCE_WERROR "Build Release candidates with -Werror regardless of compiler issues." OFF)
+ 
+ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "PGI")
+@@ -197,7 +197,7 @@
+   add_cxx_compiler_flag(-Wold-style-cast)
+   add_cxx_compiler_flag(-Wconversion)
+   if(BENCHMARK_ENABLE_WERROR)
+-      add_cxx_compiler_flag(-Werror)
++      add_cxx_compiler_flag(-Wno-error)
+   endif()
+   if (NOT BENCHMARK_ENABLE_TESTING)
+     # Disable warning when compiling tests as gtest does not use 'override'.

@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	XI (ξ) Correlation Coefficient in Postgres
 License:	GPL-3.0
@@ -83,5 +83,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 18 2026 Vonng <rh@vonng.com> - 0.1.1
+- Update to upstream 0.1.1
+
 * Sun Feb 09 2025 Vonng <rh@vonng.com> - 0.1.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

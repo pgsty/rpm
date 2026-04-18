@@ -4,14 +4,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.22.6
+Version:	0.23.0
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
-SOURCE0:    pg_search-%{version}.tar.gz
-#           repacked from git tag https://github.com/paradedb/paradedb/releases/tag/v0.22.6
-#           into pg_search-0.22.6.tar.gz via recursive checkout + gtar
+Source0:	pg_search-%{version}.tar.gz
+#           normalized from https://api.pgxn.org/dist/pg_search/0.23.0/pg_search-0.23.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -42,6 +41,9 @@ cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversi
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Fri Apr 17 2026 Vonng <rh@vonng.com> - 0.23.0-1PIGSTY
+- Update to upstream 0.23.0 from the normalized PGXN source bundle
+
 * Fri Apr 10 2026 Vonng <rh@vonng.com> - 0.22.6-1PIGSTY
 - https://github.com/paradedb/paradedb/releases/tag/v0.22.6
 - Repacked upstream tag with gtar into pg_search-0.22.6.tar.gz

@@ -1047,6 +1047,9 @@ postgresbson:
 cloudberry:
 	rpmbuild -ba SPECS/cloudberry.spec
 
+cloudberry-backup:
+	rpmbuild -ba SPECS/cloudberry-backup.spec
+
 
 ###############################################################
 #                     RPM & SRPM                              #
@@ -1127,5 +1130,5 @@ rmdbg:
 	parray_gin postgresbson \
 	pglogical_ticker omnigres \
 	antlr4 babelfishpg babelfishpg_install babelfish \
-	cloudberry \
+	cloudberry cloudberry-backup \
 	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg

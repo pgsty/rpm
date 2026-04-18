@@ -1,0 +1,49 @@
+%global debug_package %{nil}
+
+Name:           cloudberry-backup
+Version:        2.1.0
+Release:        1PIGSTY%{?dist}
+Summary:        Backup and restore utilities for Apache Cloudberry
+
+License:        Apache-2.0
+URL:            https://cloudberry.apache.org
+Source0:        apache-cloudberry-backup-2.1.0-incubating-src.tar.gz
+ExclusiveArch:  x86_64 aarch64
+
+BuildRequires:  gcc golang >= 1.21 make sqlite-devel
+Requires:       bash
+Requires:       cloudberry = %{version}-%{release}
+
+%description
+Cloudberry Backup packages the gpbackup, gprestore, gpbackup_helper, and
+gpbackup_s3_plugin utilities for Apache Cloudberry.
+
+%prep
+%setup -q -n apache-cloudberry-backup-%{version}
+
+%build
+export GOPATH=%{_builddir}/go
+export PATH=${GOPATH}/bin:/usr/local/go/bin:$PATH
+make depend
+make build
+
+%install
+rm -rf %{buildroot}
+install -Dpm 0755 %{_builddir}/go/bin/gpbackup %{buildroot}/usr/local/cloudberry-%{version}/bin/gpbackup
+install -Dpm 0755 %{_builddir}/go/bin/gprestore %{buildroot}/usr/local/cloudberry-%{version}/bin/gprestore
+install -Dpm 0755 %{_builddir}/go/bin/gpbackup_helper %{buildroot}/usr/local/cloudberry-%{version}/bin/gpbackup_helper
+install -Dpm 0755 %{_builddir}/go/bin/gpbackup_s3_plugin %{buildroot}/usr/local/cloudberry-%{version}/bin/gpbackup_s3_plugin
+install -Dpm 0644 LICENSE %{buildroot}/usr/share/licenses/%{name}/LICENSE
+install -Dpm 0644 NOTICE %{buildroot}%{_docdir}/%{name}/NOTICE
+
+%files
+/usr/local/cloudberry-%{version}/bin/gpbackup
+/usr/local/cloudberry-%{version}/bin/gprestore
+/usr/local/cloudberry-%{version}/bin/gpbackup_helper
+/usr/local/cloudberry-%{version}/bin/gpbackup_s3_plugin
+%license /usr/share/licenses/%{name}/LICENSE
+%doc %{_docdir}/%{name}/NOTICE
+
+%changelog
+* Thu Apr 16 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PIGSTY
+- Initial RPM package for Apache Cloudberry Backup 2.1.0 (incubating)

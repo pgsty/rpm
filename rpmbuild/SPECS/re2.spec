@@ -17,13 +17,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.1.1
 Release:	1PIGSTY%{?dist}
 Summary:	ClickHouse-compatible regular expression functions powered by RE2
 License:	PostgreSQL
 URL:		https://github.com/ClickHouse/pg_re2
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/re2/0.1.0/re2-0.1.0.zip
+#           normalized from https://api.pgxn.org/dist/re2/0.1.1/re2-0.1.1.zip
 #           Supported: PostgreSQL 16, 17, 18
 
 BuildRequires:	gcc-c++
@@ -85,6 +85,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Apr 17 2026 Vonng <rh@vonng.com> - 0.1.1-1PIGSTY
+- Update to upstream 0.1.1 with the normalized PGXN source bundle
+
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Initial RPM release from the official PGXN 0.1.0 source bundle
-

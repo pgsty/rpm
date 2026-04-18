@@ -14,15 +14,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.5
-Release:	1PIGSTY%{?dist}
+Version:	1.0.6
+Release:	2PIGSTY%{?dist}
 Summary:	Column-oriented and row-compressed table access methods for PostgreSQL
 License:	AGPL-3.0
 URL:		https://github.com/saulojb/storage_engine
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/saulojb/storage_engine/archive/refs/tags/v1.0.5.tar.gz
+#           https://github.com/saulojb/storage_engine/archive/refs/tags/v1.0.6.tar.gz
 #           Supported: PostgreSQL 13, 14, 15, 16, 17, 18
-#           Patch: shared build compatibility patch for configure metadata and PG16-18 headers
+#           Patch: shared 1.0.6 compatibility patch for configure metadata and PostgreSQL 14-18 compatibility
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel
@@ -67,7 +67,8 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.0.5.patch
+patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.0.6.patch
+touch configure
 
 %build
 %configure PG_CONFIG=%{pginstdir}/bin/pg_config
@@ -75,6 +76,7 @@ patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.0.5.patch
 
 %install
 %make_install
+rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 
 %files
 %license LICENSE
@@ -82,7 +84,6 @@ patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.0.5.patch
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*.sql
-%{pginstdir}/include/server/citus_version.h
 %exclude /usr/lib/.build-id/*
 %if %llvm
 %files llvmjit
@@ -90,6 +91,16 @@ patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.0.5.patch
 %endif
 
 %changelog
+* Thu Apr 16 2026 Vonng <rh@vonng.com> - 1.0.6-2PIGSTY
+- Remove private citus_version.h from the runtime package to avoid Citus file conflicts
+
+* Thu Apr 16 2026 Vonng <rh@vonng.com> - 1.0.6-1PIGSTY
+- Update storage_engine to upstream v1.0.6
+- Rename the shared RPM/DEB compatibility patch to storage_engine-1.0.6.patch
+- Keep the shared configure metadata and PostgreSQL 14-18 compatibility fixes for the new release
+- Refresh configure timestamp in %prep to avoid spurious autoreconf on the release tarball
+- Extend the shared patch with PG14/15 rowcompress compatibility shims and RelationPhysicalIdentifier_compat() usage
+
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 1.0.5-1PIGSTY
 - Initial RPM release for saulojb/storage_engine v1.0.5
 - Package the Hydra-derived storage engine fork with PostgreSQL 13-18 support

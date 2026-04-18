@@ -9,12 +9,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.17.0
+Version:	0.20.0
 Release:	1PIGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/grove/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
+#           normalized from https://api.pgxn.org/dist/pg_trickle/0.20.0/pg_trickle-0.20.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -26,7 +27,7 @@ tables and incremental view maintenance, implemented as a pgrx extension.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{_specdir}/patches/pg_trickle-0.17.0-trim-packaging-only-targets.patch
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
 
 %build
 cd %{_builddir}/%{srcdir}
@@ -65,6 +66,12 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Apr 17 2026 Vonng <rh@vonng.com> - 0.20.0-1PIGSTY
+- Update to upstream 0.20.0 with the normalized PGXN source bundle
+- Refresh the packaging-only Cargo target trim patch for the expanded bench set
+- Keep patching cached pgrx 0.17.0 to avoid the Rust toolchain
+  NonNull::from_mut incompatibility on the current EL builders
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.17.0-1PIGSTY
 - Update to upstream 0.17.0 with the normalized pg_trickle-0.17.0.tar.gz source tarball
 - Keep trimming the non-extension workspace/test targets for EL9A package builds

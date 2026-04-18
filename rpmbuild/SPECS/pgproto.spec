@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.18
+Version:	0.3.3
 Release:	1PIGSTY%{?dist}
 Summary:	Native Protobuf support for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/Apaezmx/pgproto
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgproto/0.2.18/pgproto-0.2.18.zip
+#           normalized from https://api.pgxn.org/dist/pgproto/0.3.3/pgproto-0.3.3.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -42,7 +42,6 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pgproto-0.2.18.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make}
@@ -64,6 +63,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 18 2026 Vonng <rh@vonng.com> - 0.3.3-1PIGSTY
+- Update to upstream 0.3.3 with the normalized PGXN source tarball
+- Switch to the vendored protobuf tree used by the current Debian recipe
+- Drop the obsolete utf8_range header patch because upstream now links the
+  bundled utf8_range implementation directly
+
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.2.18-1PIGSTY
 - Update to upstream 0.2.18 with the normalized PGXN source tarball
 - Keep forcing utf8_range to the bundled naive path because the PGXS build still only links naive.o

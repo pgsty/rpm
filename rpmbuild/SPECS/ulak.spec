@@ -1,6 +1,11 @@
 %global pname ulak
 %global sname ulak
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global redis_make_flags ENABLE_REDIS=1
+
+%if 0%{?rhel} && 0%{?rhel} < 9
+%global redis_make_flags %{nil}
+%endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -27,7 +32,9 @@ BuildRequires:	libcurl-devel
 BuildRequires:	openssl-devel
 BuildRequires:	librdkafka-devel
 BuildRequires:	mosquitto-devel
+%if 0%{?rhel} >= 9 || 0%{?rhel} == 0
 BuildRequires:	hiredis-devel
+%endif
 BuildRequires:	librabbitmq-devel
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -36,9 +43,11 @@ Requires:	postgresql%{pgmajorversion}-server
 ulak implements the transactional outbox pattern inside PostgreSQL, committing
 messages atomically with business transactions and delivering them
 asynchronously from background workers. This package enables the HTTP, Kafka,
-MQTT, Redis Streams, and AMQP dispatchers on EL builders; upstream NATS support
-remains disabled until cnats development packages are available in the build
-environment.
+MQTT, and AMQP dispatchers on all EL builders. Redis Streams support stays
+enabled on EL9+ where the packaged hiredis headers include TLS support;
+EL8 falls back to the other dispatchers because EPEL's hiredis 0.13 headers do
+not ship `hiredis_ssl.h`. Upstream NATS support remains disabled until cnats
+development packages are available in the build environment.
 
 %if %llvm
 %package llvmjit
@@ -72,11 +81,11 @@ This package provides JIT support for %{sname}.
 patch -p1 --forward -f < %{_specdir}/patches/ulak-0.0.2.patch
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 ENABLE_REDIS=1 ENABLE_AMQP=1 %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 %{?redis_make_flags} ENABLE_AMQP=1 %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 ENABLE_REDIS=1 ENABLE_AMQP=1 install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 %{?redis_make_flags} ENABLE_AMQP=1 install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -92,6 +101,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 ENABLE_REDIS=
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 18 2026 Vonng <rh@vonng.com> - 0.0.2-1PIGSTY
+- Disable the Redis dispatcher on EL8, where the available hiredis 0.13 headers do not ship hiredis_ssl.h
+
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.0.2-1PIGSTY
 - Initial RPM release from the official PGXN 0.0.2 source bundle
 - Build the HTTP, Kafka, MQTT, Redis, and AMQP dispatchers on EL9; leave NATS disabled until cnats packages are available

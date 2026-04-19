@@ -7,6 +7,10 @@
 %{error:pg_stat_ch only supports PostgreSQL 16+}
 %endif
 
+%if 0%{?rhel} && 0%{?rhel} < 9
+%{error:pg_stat_ch requires EL9+ packaged gRPC/abseil stack}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.6
 Release:	1PIGSTY%{?dist}
@@ -50,6 +54,9 @@ DESTDIR=%{buildroot} cmake --install build
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 18 2026 Vonng <rh@vonng.com> - 0.3.6-1PIGSTY
+- Restrict RPM builds to EL9+ because EL8 builder repos do not ship the gRPC stack required by the packaged opentelemetry path
+
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.3.6-1PIGSTY
 - Update to upstream 0.3.6 using the normalized PGXN source tarball
 - Keep EL9 builds on the packaged gRPC/abseil stack instead of the vendored FetchContent path

@@ -23,8 +23,9 @@ the version guards use pg_version_constants.h consistently, guard the
 rowcompress ReadStream include, route parallel scan relfile lookups
 through RelationPhysicalIdentifier_compat(), add the missing PG14/15
 rowcompress compatibility shims, fix the stale rowcompress estimate-size
-forward declaration, and keep `make clean` from failing when the
-regression subdir does not implement `clean-regression`.
+forward declaration, use the legacy PG13 raw_parser() signature, and
+keep `make clean` from failing when the regression subdir does not
+implement `clean-regression`.
 --- a/Makefile
 +++ b/Makefile
 @@ -49,6 +49,6 @@
@@ -119,9 +120,23 @@ regression subdir does not implement `clean-regression`.
 +#else
 +	pcscan->base.phs_relid = RelationGetRelid(rel);
 +#endif
- 	pcscan->base.phs_syncscan = false; /* columnar has no synchronised seq-scans */
- 	pcscan->base.phs_snapshot_any = false;
- 	pcscan->base.phs_snapshot_off = MAXALIGN(
+	pcscan->base.phs_syncscan = false; /* columnar has no synchronised seq-scans */
+	pcscan->base.phs_snapshot_any = false;
+	pcscan->base.phs_snapshot_off = MAXALIGN(
+@@ -3580,7 +3585,11 @@
+ 		{
+ 			StringInfoData chkbuf;
+ 			initStringInfo(&chkbuf);
+ 			appendStringInfo(&chkbuf, "SELECT 1 ORDER BY %s", options.orderby);
+-			raw_parser(chkbuf.data, RAW_PARSE_DEFAULT);
++#if PG_VERSION_NUM >= PG_VERSION_14
++			raw_parser(chkbuf.data, RAW_PARSE_DEFAULT);
++#else
++			raw_parser(chkbuf.data);
++#endif
+ 			pfree(chkbuf.data);
+ 		}
+ 
 --- a/src/backend/engine/engine_customscan.c
 +++ b/src/backend/engine/engine_customscan.c
 @@ -2945,7 +2945,7 @@
@@ -162,23 +177,37 @@ regression subdir does not implement `clean-regression`.
  #include "storage/smgr.h"
  #include "access/detoast.h"
  #include "catalog/storage.h"
-@@ -429,9 +430,9 @@
+@@ -429,7 +430,7 @@
  											IndexInfo *indexInfo, Snapshot snapshot,
  											ValidateIndexState *validateIndexState);
  static bool rowcompress_relation_needs_toast_table(Relation rel);
 -static void rowcompress_estimate_rel_size(Relation rel, int32 *attr_widths,
--										  BlockNumber *pages, double *tuples,
--										  double *allvisfrac);
 +static void rowcompress_relation_estimate_size(Relation rel, int32 *attr_widths,
-+											   BlockNumber *pages, double *tuples,
-+											   double *allvisfrac);
+ 										  BlockNumber *pages, double *tuples,
+ 										  double *allvisfrac);
  static bool rowcompress_scan_sample_next_block(TableScanDesc scan,
- 											   SampleScanState *scanstate);
- static bool rowcompress_scan_sample_next_tuple(TableScanDesc scan,
-@@ -2263,16 +2264,6 @@
- 	RCWriteStateList = NIL;
+@@ -1844,12 +1845,15 @@
+ 	return !deleted;
  }
  
++#if PG_VERSION_NUM >= PG_VERSION_14
+ static TransactionId
+ rowcompress_index_delete_tuples(Relation rel, TM_IndexDeleteOp *delstate)
+ {
+ return InvalidTransactionId;
+ }
+ 
++#endif
++
+ #if PG_VERSION_NUM < PG_VERSION_14
+ static TransactionId
+ rowcompress_compute_xid_horizon_for_tuples(Relation rel,
+@@ -2261,16 +2265,6 @@
+ 		RCWriteStateContext = NULL;
+ 	}
+ 	RCWriteStateList = NIL;
+-}
+-
 -static void
 -rowcompress_relation_set_new_filenode_compat(Relation rel,
 -  const RelFileLocator *newrnode,
@@ -187,12 +216,10 @@ regression subdir does not implement `clean-regression`.
 -  MultiXactId *minmulti)
 -{
 -rowcompress_relation_set_new_filenode(rel, newrnode, persistence, freezeXid, minmulti);
--}
--
+ }
+ 
  static bool
- rowcompress_relation_needs_toast_table(Relation rel)
- {
-@@ -2904,7 +2895,11 @@
+@@ -2904,7 +2898,11 @@
  .tuple_lock             = rowcompress_tuple_lock,
  .finish_bulk_insert     = rowcompress_finish_bulk_insert,
  

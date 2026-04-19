@@ -42,6 +42,8 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
+# Guard against AppleDouble metadata files accidentally mirrored from macOS.
+find . -name '._*' -delete
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make}
@@ -68,6 +70,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 - Switch to the vendored protobuf tree used by the current Debian recipe
 - Drop the obsolete utf8_range header patch because upstream now links the
   bundled utf8_range implementation directly
+- Delete stray AppleDouble files in %prep so polluted mirrors do not get
+  compiled as C sources
 
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.2.18-1PIGSTY
 - Update to upstream 0.2.18 with the normalized PGXN source tarball

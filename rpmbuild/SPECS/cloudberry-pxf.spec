@@ -4,13 +4,19 @@
 
 Name:           cloudberry-pxf
 Version:        2.1.0
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        Apache Cloudberry PXF for advanced external data access
 
 License:        Apache-2.0
 URL:            https://cloudberry.apache.org
 Source0:        apache-cloudberry-pxf-2.1.0-incubating-src.tar.gz
 Source1:        cloudberry-pxf-2.1.0-rpm-patches.tar.gz
+Source2:        gradle-wrapper-6.8.2.jar
+Source3:        gradle-wrapper-6.8.2.jar.sha256
+Source4:        gradle-wrapper-8.5.jar
+Source5:        gradle-wrapper-8.5.jar.sha256
+Source6:        gradle-6.8.2-bin.zip
+Source7:        gradle-8.5-bin.zip
 Prefix:         /usr/local/cloudberry-pxf-%{version}
 ExclusiveArch:  x86_64 aarch64
 
@@ -42,6 +48,17 @@ patch -p1 --forward -f < .rpm-patches/cloudberry-pxf-2.1.0-java-utf8.patch
 %if 0%{?rhel} >= 10
 patch -p1 --forward -f < .rpm-patches/cloudberry-pxf-2.1.0-el10-java21-build-fixes.patch
 %endif
+%if 0%{?rhel} >= 10
+cp -fp %{SOURCE4} server/gradle/wrapper/gradle-wrapper.jar
+cp -fp %{SOURCE5} server/gradle/wrapper/gradle-wrapper-8.5.jar.sha256
+cp -fp %{SOURCE7} server/gradle/wrapper/gradle-8.5-bin.zip
+sed -i "s#^distributionUrl=.*#distributionUrl=file://$(pwd)/server/gradle/wrapper/gradle-8.5-bin.zip#" server/gradle/wrapper/gradle-wrapper.properties
+%else
+cp -fp %{SOURCE2} server/gradle/wrapper/gradle-wrapper.jar
+cp -fp %{SOURCE3} server/gradle/wrapper/gradle-wrapper-6.8.2.jar.sha256
+cp -fp %{SOURCE6} server/gradle/wrapper/gradle-6.8.2-bin.zip
+sed -i "s#^distributionUrl=.*#distributionUrl=file://$(pwd)/server/gradle/wrapper/gradle-6.8.2-bin.zip#" server/gradle/wrapper/gradle-wrapper.properties
+%endif
 
 %build
 export GPHOME=/usr/local/cloudberry-%{version}
@@ -60,6 +77,7 @@ export PXF_HOME=%{prefix}
 export JAVA_HOME=%{pxf_java_home}
 export GOPATH=%{_builddir}/go
 export GOBIN=${GOPATH}/bin
+export GOPROXY=https://goproxy.cn,direct
 export PATH=${JAVA_HOME}/bin:${GOBIN}:/usr/local/go/bin:$PATH
 
 make -C external-table stage
@@ -127,6 +145,15 @@ fi
 %config(noreplace) %{prefix}/conf/pxf-profiles.xml
 
 %changelog
+* Sun Apr 19 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-2PIGSTY
+- Rebuild for EL10 together with the Cloudberry initdb fix release
+- Use a mirrored local Gradle 8.5 distribution on EL10 builders
+
+* Sat Apr 18 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PIGSTY
+- Route Go module downloads through goproxy.cn for builder connectivity
+- Pre-seed Gradle wrapper artifacts to avoid GitHub raw fetches during build
+- Pre-seed Gradle 6.8.2 distribution for EL8/EL9 wrapper timeouts
+
 * Thu Apr 16 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PIGSTY
 - Initial RPM package for Apache Cloudberry PXF 2.1.0 (incubating)
 - Bundle packaging patches into SRPM and ship NOTICE

@@ -1,6 +1,6 @@
 Name:           cloudberry
 Version:        2.1.0
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        High-performance open-source data warehouse based on PostgreSQL/Greenplum
 
 License:        Apache-2.0
@@ -10,6 +10,7 @@ Source1:        psutil-5.7.0.tar.gz
 Source2:        PyGreSQL-5.2.tar.gz
 Source3:        PyYAML-5.4.1.tar.gz
 Source4:        cloudberry-2.1.0-rpm-patches.tar.gz
+Source5:        Cython-0.29.37.tar.gz
 Prefix:         /usr/local
 
 # Cloudberry includes many ELF/GO binaries; do not fail hard on missing build-id edge cases.
@@ -37,6 +38,7 @@ data warehouse developed from PostgreSQL and Greenplum.
 mkdir -p .rpm-patches
 tar -xzf %{SOURCE4} -C .rpm-patches
 patch -p1 --forward -f < .rpm-patches/cloudberry-2.1.0-env-symlink.patch
+patch -p1 --forward -f < .rpm-patches/cloudberry-2.1.0-initdb-cdb-initd-errno.patch
 %if 0%{?rhel} >= 10
 patch -p1 --forward -f < .rpm-patches/cloudberry-2.1.0-el10-build-fixes.patch
 %endif
@@ -48,6 +50,8 @@ mkdir -p gpMgmt/bin/pythonSrc/ext
 cp -fp %{SOURCE1} gpMgmt/bin/pythonSrc/ext/
 cp -fp %{SOURCE2} gpMgmt/bin/pythonSrc/ext/
 cp -fp %{SOURCE3} gpMgmt/bin/pythonSrc/ext/
+cp -fp %{SOURCE5} gpMgmt/bin/pythonSrc/ext/
+sed -i 's|pip3 install --user wheel "cython<3.0.0"|pip3 install --user wheel $(PYLIB_SRC_EXT)/Cython-0.29.37.tar.gz|' gpMgmt/bin/Makefile
 
 %build
 ./configure \
@@ -124,10 +128,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Sun Apr 19 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-2PIGSTY
+- Reset errno before scanning cdb_init.d so initdb no longer misreports ENOSYS
+- Rebuild EL10 packages after fixing the runtime initdb failure
+
 * Thu Apr 16 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PIGSTY
 - Upgrade Apache Cloudberry to 2.1.0 (incubating)
 - Track source-level packaging fixes as reusable patch files
 - Pre-seed gpMgmt Python sources for offline RPM builds and package NOTICE
+- Pre-seed Cython 0.29.37 so EL10 gpMgmt install stays offline-compatible
 
 * Fri Feb 20 2026 Ruohang Feng <rh@vonng.com> - 2.0.0-1PIGSTY
 - Initial RPM package for Apache Cloudberry 2.0.0 (incubating)

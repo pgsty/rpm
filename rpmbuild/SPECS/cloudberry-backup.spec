@@ -2,7 +2,7 @@
 
 Name:           cloudberry-backup
 Version:        2.1.0
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        Backup and restore utilities for Apache Cloudberry
 
 License:        Apache-2.0
@@ -23,6 +23,7 @@ gpbackup_s3_plugin utilities for Apache Cloudberry.
 
 %build
 export GOPATH=%{_builddir}/go
+export GOPROXY=https://goproxy.cn,direct
 export PATH=${GOPATH}/bin:/usr/local/go/bin:$PATH
 make depend
 make build
@@ -45,5 +46,11 @@ install -Dpm 0644 NOTICE %{buildroot}%{_docdir}/%{name}/NOTICE
 %doc %{_docdir}/%{name}/NOTICE
 
 %changelog
+* Sun Apr 19 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-2PIGSTY
+- Rebuild for EL10 together with the Cloudberry initdb fix release
+
+* Sat Apr 18 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PIGSTY
+- Route Go module downloads through goproxy.cn for builder connectivity
+
 * Thu Apr 16 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PIGSTY
 - Initial RPM package for Apache Cloudberry Backup 2.1.0 (incubating)

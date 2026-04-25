@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.0
+Version:	1.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL GIN support for arrays with partial match
 License:	PostgreSQL
 URL:		https://github.com/theirix/parray_gin
 Source0:	%{sname}-%{version}.tar.gz
-#		https://github.com/theirix/parray_gin/archive/refs/tags/v1.4.0.tar.gz
+#           normalized from https://api.pgxn.org/dist/parray_gin/1.5.0/parray_gin-1.5.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -48,7 +48,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -66,6 +66,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
+%license COPYING
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -78,5 +79,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 25 2026 Vonng <rh@vonng.com> - 1.5.0-1PIGSTY
+- Update parray_gin to upstream PGXN 1.5.0
+- Fix the llvmjit subpackage dependency operator
+
 * Tue Apr 07 2026 Vonng <rh@vonng.com> - 1.4.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

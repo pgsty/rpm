@@ -2,6 +2,10 @@
 %global sname documentdb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:documentdb only supports PostgreSQL 15-18}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -13,14 +17,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.109
+Version:	0.110
 Release:	0PIGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/documentdb/documentdb
 Source0:	%{sname}-%{version}-0.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 mongo-c-driver-devel
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 pkgconf-pkg-config
 %if %{pgmajorversion} == 15
 BuildRequires: systemtap-sdt-devel
 %endif
@@ -29,8 +33,10 @@ Requires:	postgresql%{pgmajorversion}-server
 Requires:   postgresql%{pgmajorversion}-contrib
 Requires:   pg_cron_%{pgmajorversion}
 Requires:   pgvector_%{pgmajorversion}
+%if 0%{?pgmajorversion} < 18
 Requires:   rum_%{pgmajorversion}
-#Recommends: postgis36_%{pgmajorversion}
+%endif
+Requires:   postgis36_%{pgmajorversion}
 
 # Require extra dependencies for building: https://github.com/microsoft/documentdb/tree/main/scripts
 # Available for PostgreSQL 15,16,17,18
@@ -62,7 +68,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -94,9 +100,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
    %{pginstdir}/lib/bitcode/*
 %endif
 %exclude /usr/lib/.build-id/*
-%exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sat Apr 25 2026 Vonng <rh@vonng.com> - 0.110-0PIGSTY
+- switch to upstream documentdb v0.110-0
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 0.109-0PIGSTY
 - switch to microsoft documentdb v0.109.0
 * Tue Nov 11 2025 Vonng <rh@vonng.com> - 0.107-0PIGSTY

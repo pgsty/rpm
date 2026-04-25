@@ -4,7 +4,7 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.10
+Version:	1.2.11
 Release:	1PIGSTY%{?dist}
 License:	PostgreSQL
 Summary:	Prefix Range module for PostgreSQL
@@ -66,6 +66,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %make_install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Sat Apr 25 2026 Vonng <rh@vonng.com> - 1.2.11-1PIGSTY
+- Update to 1.2.11
+
 * Sat Nov 01 2025 Vonng <rh@vonng.com> - 1.2.10-1PIGSTY
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.2.5-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

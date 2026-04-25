@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.4.0
+Version:	2.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	RDF triplestore foreign data wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/rdf_fdw
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized source tarball from the upstream GitHub tag archive
+#           normalized from https://api.pgxn.org/dist/rdf_fdw/2.5.0/rdf_fdw-2.5.0.zip
 #           Supported: PostgreSQL 9.5+
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -91,5 +91,8 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sat Apr 25 2026 Vonng <rh@vonng.com> - 2.5.0-1PIGSTY
+- Update rdf_fdw to upstream PGXN 2.5.0
+
 * Sun Apr 05 2026 Vonng <rh@vonng.com> - 2.4.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

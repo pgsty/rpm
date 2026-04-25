@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 %global pname pg_trickle
 %global sname pg_trickle
-%global srcdir pg-trickle-%{version}
+%global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} != 18
@@ -9,13 +9,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.0
+Version:	0.31.0
 Release:	1PIGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/grove/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_trickle/0.20.0/pg_trickle-0.20.0.zip
+#           normalized from https://api.pgxn.org/dist/pg_trickle/0.31.0/pg_trickle-0.31.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -33,18 +33,15 @@ patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-# cargo-pgrx is provisioned manually on builders.
+PGRX_VERSION=0.18.0
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	cargo install --locked cargo-pgrx --version "$PGRX_VERSION"
+fi
 cargo pgrx init --pg18=%{pginstdir}/bin/pg_config --no-run
 cargo fetch
 
-# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
-# toolchain support in this container. Patch the cached crate before building.
-PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
-test -n "$PBOX"
-if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
-    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
-fi
-
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 cargo pgrx package --pg-config %{pginstdir}/bin/pg_config
 
 %install
@@ -66,6 +63,11 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 25 2026 Vonng <rh@vonng.com> - 0.31.0-1PIGSTY
+- Update to upstream PGXN 0.31.0 with the normalized source tarball
+- Refresh the packaging-only Cargo patch for pgrx 0.18.0 and the expanded workspace
+- Keep pgrx 0.18 schema metadata from being garbage-collected by the linker
+
 * Fri Apr 17 2026 Vonng <rh@vonng.com> - 0.20.0-1PIGSTY
 - Update to upstream 0.20.0 with the normalized PGXN source bundle
 - Refresh the packaging-only Cargo target trim patch for the expanded bench set

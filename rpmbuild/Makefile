@@ -112,7 +112,7 @@ pg_eviltransform:	# rust pgrx 0.17.0
 pg_command_fw:		# rust pgrx 0.17.0
 	./build pg_command_fw 15 16 17 18
 
-pg_trickle:		# rust pgrx 0.17.0, PG18 only
+pg_trickle:		# rust pgrx 0.18.0, PG18 only
 	./build pg_trickle 18
 
 
@@ -157,7 +157,7 @@ pgml:			# rust pgrx 0.12.9 (obsolete)
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
- pg_search:      # rust pgrx 0.17.0
+ pg_search:      # rust pgrx 0.18.0
 	./build pg_search 15 16 17 18
 
 pg_bigm:     	# covered by PGDG (deb break on 18)
@@ -229,7 +229,7 @@ hydra:
 	./build hydra 14 15 16 #17 not ready yet
 
 storage_engine:
-	./build storage_engine 13 14 15 16 17 18
+	./build storage_engine 14 15 16 17 18
 
 pghydro:
 	./build pghydro 14 15 16 17 18
@@ -297,6 +297,9 @@ pg_incremental:
 
 pgmb:
 	./build pgmb 14 15 16 17 18
+
+pg_accumulator:
+	./build pg_accumulator 14 15 16 17 18
 
 pgmq:
 	./build pgmq 14 15 16 17 18
@@ -1119,7 +1122,7 @@ rmdbg:
 	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
 	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
 	pgclone \
-	pglite_fusion pgmeminfo pgml pgmq pgnodemx pgpcre pgpdf \
+	pglite_fusion pgmeminfo pgml pg_accumulator pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	column_encrypt \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor pg_stat_ch \

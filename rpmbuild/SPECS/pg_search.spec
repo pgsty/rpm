@@ -3,16 +3,21 @@
 %global sname pg_search
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15
+%{error:pg_search only supports PostgreSQL 15+}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.23.0
+Version:	0.23.1
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_search/0.23.0/pg_search-0.23.0.zip
+#           normalized from https://api.pgxn.org/dist/pg_search/0.23.1/pg_search-0.23.1.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -26,7 +31,14 @@ It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, usin
 
 %build
 cd %{pname}
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+PGRX_VERSION=0.18.0
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	cargo install --locked cargo-pgrx --version "$PGRX_VERSION"
+fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --package %{pname} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -41,6 +53,10 @@ cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversi
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Sat Apr 25 2026 Vonng <rh@vonng.com> - 0.23.1-1PIGSTY
+- Update to upstream PGXN 0.23.1 with the normalized source bundle
+- Pin cargo-pgrx 0.18.0 and reject unsupported PostgreSQL 14 builds
+
 * Fri Apr 17 2026 Vonng <rh@vonng.com> - 0.23.0-1PIGSTY
 - Update to upstream 0.23.0 from the normalized PGXN source bundle
 

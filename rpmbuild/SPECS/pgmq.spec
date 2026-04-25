@@ -4,15 +4,16 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.11.0
+Version:	1.11.1
 Release:	1PIGSTY%{?dist}
 Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
 URL:		https://github.com/pgmq/pgmq
-SOURCE0:    %{sname}-%{version}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
+#           normalized from https://api.pgxn.org/dist/pgmq/1.11.1/pgmq-1.11.1.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion}
+Requires:	postgresql%{pgmajorversion}-server
 
 %description
 Postgres Message Queue (PGMQ) -- A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
@@ -24,12 +25,10 @@ Messages stay in the queue until explicitly removed, Messages can be archived, i
 %setup -q -n %{sname}-%{version}
 
 %build
-cd pgmq-extension
 PATH=%{pginstdir}/bin:$PATH make
 
 %install
 %{__rm} -rf %{buildroot}
-cd pgmq-extension
 PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 
 %files
@@ -39,6 +38,11 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Apr 25 2026 Vonng <rh@vonng.com> - 1.11.1-1PIGSTY
+- Update pgmq to upstream PGXN 1.11.1
+- Build from the PGXN root layout instead of the GitHub monorepo pgmq-extension subdirectory
+- Drop the stale pg_cron runtime dependency; upstream pgmq has no extension dependency on pg_cron
+
 * Fri Feb 20 2026 Vonng <rh@vonng.com> - 1.11.0-1PIGSTY
 * Wed Feb 18 2026 Vonng <rh@vonng.com> - 1.10.1-1PIGSTY
 - https://github.com/pgmq/pgmq/releases/tag/v1.10.1

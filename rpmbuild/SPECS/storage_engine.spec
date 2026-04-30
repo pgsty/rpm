@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.3
+Version:	1.3.4
 Release:	1PIGSTY%{?dist}
 Summary:	Column-oriented and row-compressed table access methods for PostgreSQL
 License:	AGPL-3.0
 URL:		https://github.com/saulojb/storage_engine
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/storage_engine/1.2.3/storage_engine-1.2.3.zip
+#           normalized from https://api.pgxn.org/dist/storage_engine/1.3.4/storage_engine-1.3.4.zip
 #           Supported: PostgreSQL 13+
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -35,7 +35,7 @@ storage_engine is a Hydra-derived PostgreSQL extension that provides two
 high-performance table access methods: colcompress for column-oriented
 analytics and rowcompress for row-based batch-compressed storage. It adds
 vectorized execution, parallel scans, stripe-level pruning, and PostgreSQL
-14-18 compatibility while remaining installable as a standard extension.
+13-19 compatibility while remaining installable as a standard extension.
 
 %if %llvm
 %package llvmjit
@@ -66,7 +66,6 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/storage_engine-1.2.3.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -88,6 +87,13 @@ rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 %endif
 
 %changelog
+* Thu Apr 30 2026 Vonng <rh@vonng.com> - 1.3.4-1PIGSTY
+- Update storage_engine to upstream PGXN 1.3.4
+- Drop the local 1.2.3 compatibility patch because upstream now carries the PG14-19 fixes
+
+* Sun Apr 26 2026 Vonng <rh@vonng.com> - 1.2.3-2PIGSTY
+- Add explicit access/genam.h include for SysScanDesc and systable_* builds
+
 * Sat Apr 25 2026 Vonng <rh@vonng.com> - 1.2.3-1PIGSTY
 - Update storage_engine to upstream PGXN 1.2.3
 - Switch packaging to the upstream PGXS Makefile.global layout and drop the old configure patch path

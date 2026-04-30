@@ -5,6 +5,30 @@ table scan descriptor did not gain phs_locator until PG18. Use the existing
 RelationPhysicalIdentifier_compat() helper for metadata lookups and guard the
 parallel scan header field with the correct PG18 boundary.
 
+Also include access/genam.h explicitly for SysScanDesc and systable_* symbols.
+Define PG_VERSION_19 before guarding the PG19-only varatt.h include.
+
+--- a/src/backend/engine/rowcompress_tableam.c
++++ b/src/backend/engine/rowcompress_tableam.c
+@@ -21,6 +21,7 @@
+ #include "pg_version_constants.h"
+ 
++#include "access/genam.h"
+ #include "access/heapam.h"
+ #include "access/htup_details.h"
+ #include "access/multixact.h"
+
+--- a/src/backend/engine/vectorization/types/numeric.c
++++ b/src/backend/engine/vectorization/types/numeric.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include "postgres.h"
++#include "pg_version_constants.h"
+ #if PG_VERSION_NUM >= PG_VERSION_19
+ #include "varatt.h"
+ #endif
+
 --- a/src/backend/engine/engine_tableam.c
 +++ b/src/backend/engine/engine_tableam.c
 @@ -564,7 +564,7 @@ engine_parallelscan_estimate(Relation rel)

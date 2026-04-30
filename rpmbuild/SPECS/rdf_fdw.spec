@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.5.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	RDF triplestore foreign data wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/rdf_fdw
@@ -63,6 +63,8 @@ This package provides JIT support for %{sname}.
 %{__rm} -rf %{_builddir}/%{sname}-%{version}
 mkdir -p %{_builddir}/%{sname}-%{version}
 tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
+cd %{_builddir}/%{sname}-%{version}
+patch -p1 --forward -f < %{_specdir}/patches/rdf_fdw-2.5.0-libcurl-nghttp2-compat.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -91,6 +93,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sun Apr 26 2026 Vonng <rh@vonng.com> - 2.5.0-2PIGSTY
+- Add libcurl nghttp2_version compatibility for EL8 builds
+
 * Sat Apr 25 2026 Vonng <rh@vonng.com> - 2.5.0-1PIGSTY
 - Update rdf_fdw to upstream PGXN 2.5.0
 

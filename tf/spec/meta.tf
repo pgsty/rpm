@@ -2,7 +2,7 @@
 # File      :   meta.yml
 # Desc      :   1-node env for x86_64/aarch64
 # Ctime     :   2020-05-12
-# Mtime     :   2026-01-16
+# Mtime     :   2026-04-30
 # Path      :   terraform/spec/aliyun-meta.yml
 # Docs      :   https://doc.pgsty.com/prepare/terraform
 # License   :   AGPLv3 @ https://doc.pgsty.com/about/license
@@ -21,9 +21,9 @@ variable "architecture" {
 }
 
 variable "distro" {
-  description = "The distro code (el8,el9,u22,u24,d12)"
+  description = "The distro code (el8,el9,u22,u24,d12,d13)"
   type        = string
-  default     = "el9"       # el7/el8/el9/el10/d11/d12/u20/u22/an8
+  default     = "el9"       # el7/el8/el9/el10/d11/d12/d13/u20/u22/u24/an8
 }
 
 locals {
@@ -42,28 +42,44 @@ locals {
       el9   = "^rockylinux_9_7_x64"
       el10  = "^rockylinux_10_1_x64"
       d11   = "^debian_11_11_x64"
-      d12   = "^debian_12_11_x64"
+      d12   = "^debian_12_13_x64"
+      d13   = "^debian_13_4_x64"
       u20   = "^ubuntu_20_04_x64"
-      u22   = "^ubuntu_22_04_x64"
-      u24   = "^ubuntu_24_04_x64"
+      u22   = "^ubuntu_22_04_x64_20G"
+      u24   = "^ubuntu_24_04_x64_20G"
       an8   = "^anolisos_8_9_x64"
     }
     arm64 = {
       el8   = "^rockylinux_8_10_arm64"
       el9   = "^rockylinux_9_7_arm64"
       el10   = "^rockylinux_10_1_arm64"
-      d12   = "^debian_12_11_arm64"
-      u22   = "^ubuntu_22_04_arm64"
-      u24   = "^ubuntu_24_04_arm64"
+      d12   = "^debian_12_13_arm64"
+      d13   = "^debian_13_4_arm64"
+      u22   = "^ubuntu_22_04_arm64_20G"
+      u24   = "^ubuntu_24_04_arm64_20G"
     }
   }
   selected_images = local.image_regex_map[var.architecture]
   selected_instype = local.instance_type_map[var.architecture]
 }
 
+#===========================================================#
+# Terraform Provider
+#===========================================================#
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    alicloud = {
+      source  = "aliyun/alicloud"
+      version = "~> 1.250.0"
+    }
+  }
+}
+
 data "alicloud_images" "pigsty_img" {
-  owners     = "system"
-  name_regex = local.selected_images[var.distro]
+  owners      = "system"
+  name_regex  = local.selected_images[var.distro]
+  most_recent = true
 }
 
 #===========================================================#

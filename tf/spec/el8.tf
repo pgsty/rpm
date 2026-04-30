@@ -2,7 +2,7 @@
 # File      :   terraform.tf
 # Desc      :   5-node oss building env for x86_64/aarch64
 # Ctime     :   2024-12-12
-# Mtime     :   2026-01-16
+# Mtime     :   2026-04-30
 # Path      :   tf/terraform
 # License   :   AGPLv3 @ https://pigsty.io/docs/about/license
 # Copyright :   2018-2025  Ruohang Feng / Vonng (rh@vonng.com)
@@ -25,29 +25,48 @@ locals {
   arm64_instype = local.instance_type_map["arm64"]
 }
 
+#===========================================================#
+# Terraform Provider
+#===========================================================#
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    alicloud = {
+      source  = "aliyun/alicloud"
+      version = "~> 1.250.0"
+    }
+  }
+}
+
 data "alicloud_images" "el8_amd64_img" {
-  owners     = "system"
-  name_regex = "^rockylinux_8_10_x64"
+  owners      = "system"
+  name_regex  = "^rockylinux_8_10_x64"
+  most_recent = true
 }
 data "alicloud_images" "el8_arm64_img" {
-  owners     = "system"
-  name_regex = "^rockylinux_8_10_arm64"
+  owners      = "system"
+  name_regex  = "^rockylinux_8_10_arm64"
+  most_recent = true
 }
 data "alicloud_images" "el9_amd64_img" {
-  owners     = "system"
-  name_regex = "^rockylinux_9_7_x64"
+  owners      = "system"
+  name_regex  = "^rockylinux_9_7_x64"
+  most_recent = true
 }
 data "alicloud_images" "el9_arm64_img" {
-  owners     = "system"
-  name_regex = "^rockylinux_9_7_arm64"
+  owners      = "system"
+  name_regex  = "^rockylinux_9_7_arm64"
+  most_recent = true
 }
 data "alicloud_images" "el10_amd64_img" {
-  owners     = "system"
-  name_regex = "^rockylinux_10_1_x64"
+  owners      = "system"
+  name_regex  = "^rockylinux_10_1_x64"
+  most_recent = true
 }
 data "alicloud_images" "el10_arm64_img" {
-  owners     = "system"
-  name_regex = "^rockylinux_10_1_arm64"
+  owners      = "system"
+  name_regex  = "^rockylinux_10_1_arm64"
+  most_recent = true
 }
 
 #===========================================================#

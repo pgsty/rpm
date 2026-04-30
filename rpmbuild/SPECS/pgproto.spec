@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.3
+Version:	0.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	Native Protobuf support for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/Apaezmx/pgproto
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgproto/0.3.3/pgproto-0.3.3.zip
+#           normalized from https://api.pgxn.org/dist/pgproto/0.5.0/pgproto-0.5.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -65,6 +65,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Apr 30 2026 Vonng <rh@vonng.com> - 0.5.0-1PIGSTY
+- Update to upstream PGXN 0.5.0 with the normalized source tarball
+- Keep the pure-C PGXS build introduced by the current upstream release
+
 * Sat Apr 18 2026 Vonng <rh@vonng.com> - 0.3.3-1PIGSTY
 - Update to upstream 0.3.3 with the normalized PGXN source tarball
 - Switch to the vendored protobuf tree used by the current Debian recipe

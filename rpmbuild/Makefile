@@ -45,7 +45,7 @@ rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
 rust10: pg_command_fw pg_trickle
-time: timescaledb pg_timeseries periods temporal_tables pg_when
+time: timescaledb pg_timeseries periods temporal_tables pg_when pg_bikram_sambat
 
 
 ###############################################################
@@ -76,6 +76,9 @@ pg_later:       # rust 0.16.1
 
 pg_when:        # rust pgrx 0.17.0
 	./build pg_when 14 15 16 17 18
+
+pg_bikram_sambat:
+	./build pg_bikram_sambat 14 15 16 17 18
 
 pg_background:
 	./build pg_background 14 15 16 17 18
@@ -1116,7 +1119,7 @@ rmdbg:
 		pg_pinyin pg_polyline pg_protobuf pgproto pg_random pg_rational pg_redis_pubsub pgmqtt \
 		pg_when \
 		pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
-		pg_pathcheck \
+		pg_pathcheck pg_bikram_sambat \
 		pg_isok \
 		pg_query_rewrite \
 		pg_semver pg_session_jwt pg_similarity pg_smtp_client \

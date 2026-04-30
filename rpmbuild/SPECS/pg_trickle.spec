@@ -9,13 +9,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.31.0
+Version:	0.40.0
 Release:	1PIGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/grove/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_trickle/0.31.0/pg_trickle-0.31.0.zip
+#           normalized from https://api.pgxn.org/dist/pg_trickle/0.40.0/pg_trickle-0.40.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -24,6 +24,8 @@ Requires:	postgresql%{pgmajorversion}-server
 %description
 pg_trickle turns PostgreSQL 18 into a real-time data platform with streaming
 tables and incremental view maintenance, implemented as a pgrx extension.
+Full background scheduler and shared-memory functionality require loading
+pg_trickle through shared_preload_libraries.
 
 %prep
 %setup -q -n %{srcdir}
@@ -63,6 +65,10 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Apr 30 2026 Vonng <rh@vonng.com> - 0.40.0-1PIGSTY
+- Update to upstream PGXN 0.40.0 with the normalized source tarball
+- Refresh the packaging-only Cargo patch for pgrx 0.18.0 and the current workspace layout
+
 * Sat Apr 25 2026 Vonng <rh@vonng.com> - 0.31.0-1PIGSTY
 - Update to upstream PGXN 0.31.0 with the normalized source tarball
 - Refresh the packaging-only Cargo patch for pgrx 0.18.0 and the expanded workspace

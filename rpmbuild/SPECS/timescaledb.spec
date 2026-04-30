@@ -4,7 +4,7 @@
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.26.3
+Version:	2.26.4
 Release:	1PIGSTY%{?dist}
 License:	Timescale
 Source0:	%{sname}-%{version}.tar.gz
@@ -50,6 +50,8 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Thu Apr 30 2026 Vonng <rh@vonng.com> - 2.26.4-1PIGSTY
+- https://github.com/timescale/timescaledb/releases/tag/2.26.4
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 2.26.3-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.26.3
 * Fri Apr 10 2026 Vonng <rh@vonng.com> - 2.26.2-1PIGSTY

@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	BM25-based full-text search for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/timescale/pg_textsearch
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/timescale/pg_textsearch/releases/download/v1.0.0/pg_textsearch-1.0.0.tar.gz
+#           https://github.com/timescale/pg_textsearch/releases/download/v1.1.0/pg_textsearch-1.1.0.tar.gz
 #           Supported: PostgreSQL 17, 18 only
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -90,6 +90,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Thu Apr 30 2026 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
+- https://github.com/timescale/pg_textsearch/releases/tag/v1.1.0
 * Mon Apr 06 2026 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - https://github.com/timescale/pg_textsearch/releases/tag/v1.0.0
 * Sat Feb 07 2026 Vonng <rh@vonng.com> - 0.5.0-1PIGSTY

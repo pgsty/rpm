@@ -692,6 +692,9 @@ pg_fio:
 pg_savior:		# breaks on pg18 (fixed)
 	./build pg_savior 14 15 16 17 18
 
+pg_pathcheck:	# preload-only diagnostics module for PG17/18
+	./build pg_pathcheck 17 18
+
 pg_drop_events:
 	./build pg_drop_events 14 15 16 17 18
 
@@ -1113,6 +1116,7 @@ rmdbg:
 		pg_pinyin pg_polyline pg_protobuf pgproto pg_random pg_rational pg_redis_pubsub pgmqtt \
 		pg_when \
 		pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
+		pg_pathcheck \
 		pg_isok \
 		pg_query_rewrite \
 		pg_semver pg_session_jwt pg_similarity pg_smtp_client \

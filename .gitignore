@@ -23,3 +23,5 @@ doc/*
 src/
 
 doc/
+.claude/
+.codex/

@@ -26,12 +26,12 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
 %install
 %{__rm} -rf %{buildroot}
 USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_mflags} install
+%{__rm} -f %{buildroot}%{pginstdir}/doc/extension/README.md
 
 %files
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%{pginstdir}/doc/extension/README.md
 %{pginstdir}/doc/extension/CONTRIBUTING.md
 
 %changelog

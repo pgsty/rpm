@@ -86,12 +86,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 %{?redis_make
 %install
 %{__rm} -rf %{buildroot}
 PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 %{?redis_make_flags} ENABLE_AMQP=1 install DESTDIR=%{buildroot}
+%{__rm} -f %{buildroot}%{pginstdir}/doc/extension/README.md
 
 %files
 %doc README.md
 %license LICENSE.md
 %{pginstdir}/lib/%{pname}.so
-%{pginstdir}/doc/extension/README.md
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %if %llvm

@@ -1,7 +1,7 @@
 %global sname lolor
 %global pname lolor
-%global pgmajorversion 17
-%global pgkernelversion 17.7
+%global pgmajorversion 18
+%global pgkernelversion 18.3
 %global pginstdir /usr/pgedge-%{pgmajorversion}
 
 Name:           %{sname}_%{pgmajorversion}
@@ -41,5 +41,8 @@ USE_PGXS=1 %{__make} install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri May 01 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.2-1PIGSTY
+- Build LOLOR extension against pgedge_18 using PGXS
+
 * Tue Feb 24 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.2-1PIGSTY
 - Build LOLOR extension against pgedge_17 using PGXS

@@ -1,11 +1,11 @@
 %global sname spock
 %global pname spock
-%global pgmajorversion 17
-%global pgkernelversion 17.7
+%global pgmajorversion 18
+%global pgkernelversion 18.3
 %global pginstdir /usr/pgedge-%{pgmajorversion}
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        5.0.5
+Version:        5.0.6
 Release:        1PIGSTY%{?dist}
 Summary:        Spock multi-master replication extension for pgEdge PostgreSQL
 License:        PostgreSQL
@@ -44,5 +44,8 @@ USE_PGXS=1 %{__make} install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri May 01 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.0.6-1PIGSTY
+- Build Spock extension against pgedge_18 using PGXS
+
 * Tue Feb 24 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.0.5-1PIGSTY
 - Build Spock extension against pgedge_17 using PGXS

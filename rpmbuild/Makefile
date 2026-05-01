@@ -990,8 +990,8 @@ pgedge:
 		rpmbuild -ba SPECS/pgedge.spec; \
 	fi
 pgedge-install:
-	sudo yum remove -y pgedge_17 || /bin/true
-	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/pgedge_17-[0-9]*.$(ARCH).rpm
+	sudo yum remove -y pgedge_18 || /bin/true
+	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/pgedge_18-[0-9]*.$(ARCH).rpm
 spock:
 	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
 		QA_RPATHS=3 rpmbuild -ba SPECS/spock.spec; \

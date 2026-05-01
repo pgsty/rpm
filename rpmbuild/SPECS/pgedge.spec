@@ -1,7 +1,7 @@
 %global sname pgedge
-%global pgmajorversion 17
-%global pgversion 17.9
-%global spockversion 5.0.5
+%global pgmajorversion 18
+%global pgversion 18.3
+%global spockversion 5.0.6
 %global pgbaseinstdir /usr/pgedge-%{pgmajorversion}
 
 Name:           %{sname}_%{pgmajorversion}
@@ -120,6 +120,9 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
+* Fri May 01 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.3-1PIGSTY
+- Build pgEdge PostgreSQL 18 kernel package with Spock 5.0.6 PG18 patchset
+
 * Fri Feb 27 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.9-1PIGSTY
 * Tue Feb 24 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.7-1PIGSTY
 - Build pgEdge PostgreSQL kernel package and apply Spock PG17 patchset in prep stage

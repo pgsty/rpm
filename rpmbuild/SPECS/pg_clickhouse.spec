@@ -14,15 +14,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.2.0/pg_clickhouse-0.2.0.zip
+#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.3.0/pg_clickhouse-0.3.0.zip
 #           vendor/clickhouse-cpp is already included in the PGXN source bundle
-#           Supported: PostgreSQL 13, 14, 15, 16, 17, 18
+#           Supported: PostgreSQL 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc-c++
@@ -43,7 +43,7 @@ Features:
 - Query Pushdown: Automatically optimizes queries by pushing them to ClickHouse
 - TPC-H Performance: Achieves substantial speedups on analytical workloads
 - No SQL Rewrites: Use standard PostgreSQL syntax for ClickHouse queries
-- Supports PostgreSQL 13+ and ClickHouse v23+
+- Supports PostgreSQL 14-18 in Pigsty builds and ClickHouse v23+
 
 %if %llvm
 %package llvmjit
@@ -87,6 +87,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 
 %files
+%license LICENSE.md
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -100,6 +101,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Thu May 14 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
+- Update to upstream PGXN 0.3.0 using the normalized source tarball with the vendored clickhouse-cpp tree
+
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 - Update to upstream 0.2.0 using the normalized PGXN source tarball with the vendored clickhouse-cpp tree
 - Drop the local libcurl compatibility patch because upstream now defines CURL_WRITEFUNC_ERROR in both HTTP drivers

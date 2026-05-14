@@ -3,6 +3,10 @@
 %global sname storage_engine
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15
+%{error:storage_engine 2.x only supports PostgreSQL 15+}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -14,14 +18,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.3.4
+Version:	2.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	Column-oriented and row-compressed table access methods for PostgreSQL
 License:	AGPL-3.0
 URL:		https://github.com/saulojb/storage_engine
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/storage_engine/1.3.4/storage_engine-1.3.4.zip
-#           Supported: PostgreSQL 13+
+#           normalized from https://api.pgxn.org/dist/storage_engine/2.3.0/storage_engine-2.3.0.zip
+#           Supported: PostgreSQL 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel
@@ -35,7 +39,7 @@ storage_engine is a Hydra-derived PostgreSQL extension that provides two
 high-performance table access methods: colcompress for column-oriented
 analytics and rowcompress for row-based batch-compressed storage. It adds
 vectorized execution, parallel scans, stripe-level pruning, and PostgreSQL
-13-19 compatibility while remaining installable as a standard extension.
+15-19 compatibility while remaining installable as a standard extension.
 
 %if %llvm
 %package llvmjit
@@ -87,6 +91,10 @@ rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 %endif
 
 %changelog
+* Thu May 14 2026 Vonng <rh@vonng.com> - 2.3.0-1PIGSTY
+- Update storage_engine to upstream PGXN 2.3.0
+- Restrict builds to PostgreSQL 15+ to match the upstream 2.x support matrix
+
 * Thu Apr 30 2026 Vonng <rh@vonng.com> - 1.3.4-1PIGSTY
 - Update storage_engine to upstream PGXN 1.3.4
 - Drop the local 1.2.3 compatibility patch because upstream now carries the PG14-19 fixes
@@ -116,5 +124,5 @@ rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 1.0.5-1PIGSTY
 - Initial RPM release for saulojb/storage_engine v1.0.5
-- Package the Hydra-derived storage engine fork with PostgreSQL 13-18 support
+- Package the Hydra-derived storage engine fork with PostgreSQL 14-18 support
 - Share the same 1.0.5 compatibility patch with the DEB recipe for configure metadata and PG16-18 build fixes

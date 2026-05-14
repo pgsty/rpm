@@ -232,7 +232,7 @@ hydra:
 	./build hydra 14 15 16 #17 not ready yet
 
 storage_engine:
-	./build storage_engine 14 15 16 17 18
+	./build storage_engine 15 16 17 18
 
 pghydro:
 	./build pghydro 14 15 16 17 18

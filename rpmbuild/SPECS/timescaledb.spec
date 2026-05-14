@@ -4,7 +4,7 @@
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.26.4
+Version:	2.27.0
 Release:	1PIGSTY%{?dist}
 License:	Timescale
 Source0:	%{sname}-%{version}.tar.gz
@@ -20,6 +20,8 @@ TimescaleDB is an open-source database designed to make SQL scalable for time-se
 
 %prep
 %setup -q -n %{sname}-%{version}
+
+sed -i 's/^version = %{version}-dev$/version = %{version}/' version.config
 
 # Disable telemetry
 export PATH=%{pginstdir}/bin:$PATH
@@ -50,6 +52,9 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Thu May 14 2026 Vonng <rh@vonng.com> - 2.27.0-1PIGSTY
+- https://github.com/timescale/timescaledb/releases/tag/2.27.0
+- Normalize the upstream tag tarball version metadata to package the 2.27.0 release
 * Thu Apr 30 2026 Vonng <rh@vonng.com> - 2.26.4-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.26.4
 * Thu Apr 16 2026 Vonng <rh@vonng.com> - 2.26.3-1PIGSTY

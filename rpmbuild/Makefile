@@ -172,6 +172,9 @@ pg_biscuit:
 pg_textsearch:
 	./build pg_textsearch 17 18
 
+psql_bm25s:
+	./build psql_bm25s 17 18
+
 pgroonga:
 	./build pgroonga 14 15 16 17 18
 
@@ -1106,7 +1109,7 @@ rmdbg:
 	lower_quantile md5hash mimeo numeral omnisketch \
 	openhalo agensgraph pgedge pgedge-install spock snowflake lolor pgedge-all babelfishpg orioledb oriolepg oriolepg-install pagevis \
 		periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
-		pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch pg_bulkload block_copy_command \
+		pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch psql_bm25s pg_bulkload block_copy_command \
 		pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
 		pg_country pg_crash pg_curl pg_currency pg_drop_events \
 		pg_duckdb pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \

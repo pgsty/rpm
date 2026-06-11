@@ -3,16 +3,21 @@
 %global sname pg_search
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:pg_search only supports PostgreSQL 15 through 18 in PGSTY builds}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.23.0
+Version:	0.24.0
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_search/0.23.0/pg_search-0.23.0.zip
+#           normalized from https://api.pgxn.org/dist/pg_search/0.24.0/pg_search-0.24.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -25,8 +30,23 @@ It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, usin
 
 
 %build
+cd %{_builddir}/%{sname}-%{version}
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
+fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+
+export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-2}"
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
+
 cd %{pname}
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -39,8 +59,14 @@ cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversi
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
+%exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.24.0-1PIGSTY
+- Update to upstream PGXN 0.24.0 using the normalized source tarball
+- Build with cargo-pgrx 0.18.1 and explicit pgNN features
+- Require preinstalled cargo-pgrx 0.18.1 and keep pgrx schema metadata during linking
+
 * Fri Apr 17 2026 Vonng <rh@vonng.com> - 0.23.0-1PIGSTY
 - Update to upstream 0.23.0 from the normalized PGXN source bundle
 

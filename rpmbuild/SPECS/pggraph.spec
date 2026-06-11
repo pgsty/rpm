@@ -8,13 +8,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.5
+Version:	0.1.7
 Release:	1PIGSTY%{?dist}
 Summary:	Graph database capabilities for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/evokoa/pggraph
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pggraph/0.1.5/pggraph-0.1.5.zip
+#           normalized from https://api.pgxn.org/dist/pggraph/0.1.7/pggraph-0.1.7.zip
 #           SQL extension payload is named graph.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -33,7 +33,7 @@ pggraph, while the installed PostgreSQL extension is named graph.
 cd %{_builddir}/%{sname}-%{version}/graph
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:/usr/bin:$PATH
 
-PGRX_VERSION=0.18.0
+PGRX_VERSION=0.18.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -66,6 +66,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Jun 11 2026 Vonng <rh@vonng.com> - 0.1.7-1PIGSTY
+- Update to upstream PGXN 0.1.7
+- Build with cargo-pgrx 0.18.1
+
 * Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.1.5-1PIGSTY
 - Initial RPM release for upstream PGXN 0.1.5
 - Keep pgrx 0.18 schema metadata from being garbage-collected by the linker

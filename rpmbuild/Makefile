@@ -286,7 +286,7 @@ pg_orca:
 pg_monetdb:		# obsolete: monetdb-devel is unavailable in active EL builder repos
 	@echo "pg_monetdb is obsolete; monetdb-devel is unavailable in active EL builder repos"
 
-pggraph:		# rust pgrx 0.18.0, installs graph extension
+pggraph:		# rust pgrx 0.18.1, installs graph extension
 	./build pggraph 14 15 16 17 18
 
 pg_graphql:		# rust pgrx 0.16.1 (build on unpublished-release)

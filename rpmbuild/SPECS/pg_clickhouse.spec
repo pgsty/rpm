@@ -2,6 +2,7 @@
 %global pname pg_clickhouse
 %global sname pg_clickhouse
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -14,13 +15,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.0
+Version:	0.3.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.3.0/pg_clickhouse-0.3.0.zip
+#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.3.1/pg_clickhouse-0.3.1.zip
 #           vendor/clickhouse-cpp is already included in the PGXN source bundle
 #           Supported: PostgreSQL 14, 15, 16, 17, 18
 
@@ -77,14 +78,15 @@ This packages provides JIT support for %{sname}
 
 # Skip git submodule command since vendor/clickhouse-cpp is already included in tarball
 sed -i 's/git submodule update --init/@echo "Skipping submodule (included in tarball)"/' Makefile
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-openssl-init.patch
 
 %build
 # Makefile will auto-build vendor/clickhouse-cpp via cmake
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %license LICENSE.md
@@ -101,6 +103,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY
+- Update to upstream PGXN 0.3.1 using the normalized source tarball
+
 * Thu May 14 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 - Update to upstream PGXN 0.3.0 using the normalized source tarball with the vendored clickhouse-cpp tree
 

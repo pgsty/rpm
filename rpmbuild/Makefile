@@ -30,6 +30,10 @@ pgrx0161:
 	pig build pgrx -v 0.16.1
 pgrx0170:
 	pig build pgrx -v 0.17.0
+pgrx0180:
+	pig build pgrx -v 0.18.0
+pgrx0181:
+	pig build pgrx -v 0.18.1
 
 
 ###############################################################
@@ -1093,7 +1097,7 @@ rmdbg:
 # All targets declared as .PHONY to ensure make always runs them
 # even if a file with the same name exists
 
-.PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0129
+.PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 pgrx0129
 
 .PHONY: deps scws scws-install libduckdb libduckdb-install \
 	libpgfeutils libpgfeutils-install pdu pgdog pgdog-install pg_filedump

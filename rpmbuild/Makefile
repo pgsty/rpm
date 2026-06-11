@@ -373,6 +373,9 @@ plv8:
 pljs:
 	./build pljs 14 15 16 17 18
 
+plpgsql_check:
+	./build plpgsql_check 14 15 16 17 18
+
 pg_typescript:		# rust pgrx 0.17.0
 	./build pg_typescript 16 17 18
 
@@ -1171,7 +1174,7 @@ rmdbg:
 	column_encrypt \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor pg_stat_ch \
 	logical_ddl \
-	pg_partman pljs plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \
+	pg_partman pljs plpgsql_check plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \
 	onesparse \
 	re2 redis_fdw sequential_uuids pg_typeid session_variable shacrypt \
 	smlar spat sqlite_fdw sslutils supautils system_stats table_log \

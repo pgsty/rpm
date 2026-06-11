@@ -9,7 +9,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.0
+Version:	1.8.0
 Release:	1PIGSTY%{?dist}
 Summary:	Semiring provenance and uncertainty management for PostgreSQL
 License:	MIT
@@ -31,13 +31,16 @@ CREATE EXTENSION provsql CASCADE.
 
 %prep
 %setup -q -n %{sname}-%{version}
+%if 0%{?rhel} == 8
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-el8-to_chars.patch
+%endif
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} with_llvm=no
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} with_llvm=no
 
 %files
 %license LICENSE
@@ -48,6 +51,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/doc/extension/%{pname}.md
 
 %changelog
+* Thu Jun 04 2026 Vonng <rh@vonng.com> - 1.8.0-1PIGSTY
+- https://pgxn.org/dist/provsql/1.8.0/
+
+* Sun May 24 2026 Vonng <rh@vonng.com> - 1.7.1-1PIGSTY
+- https://pgxn.org/dist/provsql/1.7.1/
 * Thu May 14 2026 Vonng <rh@vonng.com> - 1.4.0-1PIGSTY
 - https://pgxn.org/dist/provsql/1.4.0/
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.2.3-1PIGSTY

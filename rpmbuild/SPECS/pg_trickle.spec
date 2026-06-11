@@ -9,13 +9,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.40.0
+Version:	0.81.0
 Release:	1PIGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
-URL:		https://github.com/grove/pg-trickle
+URL:		https://github.com/trickle-labs/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_trickle/0.40.0/pg_trickle-0.40.0.zip
+#           normalized from https://api.pgxn.org/dist/pg_trickle/0.81.0/pg_trickle-0.81.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -38,11 +38,15 @@ export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 PGRX_VERSION=0.18.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
-	cargo install --locked cargo-pgrx --version "$PGRX_VERSION"
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
 fi
 cargo pgrx init --pg18=%{pginstdir}/bin/pg_config --no-run
 cargo fetch
 
+# pgrx 0.18 embeds extension schema metadata in a linker section; without this
+# flag the EL9A linker can garbage-collect it and cargo-pgrx reports a missing
+# .pgrxsc section during packaging.
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 cargo pgrx package --pg-config %{pginstdir}/bin/pg_config
 
@@ -65,6 +69,15 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.81.0-1PIGSTY
+- Update to upstream PGXN 0.81.0 with the normalized source tarball
+- Refresh the packaging-only Cargo/build.rs patch for the current PGXN bundle
+- Keep pgrx 0.18 schema metadata from being garbage-collected by the linker
+
+* Sun May 24 2026 Vonng <rh@vonng.com> - 0.71.0-1PIGSTY
+- Update to upstream PGXN 0.71.0 with the normalized source tarball
+- Refresh the packaging-only Cargo/build.rs patch for the current PGXN bundle
+
 * Thu Apr 30 2026 Vonng <rh@vonng.com> - 0.40.0-1PIGSTY
 - Update to upstream PGXN 0.40.0 with the normalized source tarball
 - Refresh the packaging-only Cargo patch for pgrx 0.18.0 and the current workspace layout

@@ -9,7 +9,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.8.0
+Version:	1.9.0
 Release:	1PIGSTY%{?dist}
 Summary:	Semiring provenance and uncertainty management for PostgreSQL
 License:	MIT
@@ -51,6 +51,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/doc/extension/%{pname}.md
 
 %changelog
+* Thu Jun 11 2026 Vonng <rh@vonng.com> - 1.9.0-1PIGSTY
+- https://pgxn.org/dist/provsql/1.9.0/
+- Refresh the EL8 std::to_chars compatibility patch
+
 * Thu Jun 04 2026 Vonng <rh@vonng.com> - 1.8.0-1PIGSTY
 - https://pgxn.org/dist/provsql/1.8.0/
 

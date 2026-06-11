@@ -299,6 +299,9 @@ pg_jsonschema:	# rust pgrx 0.16.1 (patch from 0.16.0)
 pgmnemo:
 	./build pgmnemo 14 15 16 17 18
 
+fsm_core:
+	./build fsm_core 15 16 17 18
+
 pg_projection:
 	./build pg_projection 14 15 16 17 18
 
@@ -1162,7 +1165,7 @@ rmdbg:
 		pg_explain_ui pg_failover_slots pg_financial pg_fio \
 		pg_geohash rum pg_ai_query pg_orca pg_monetdb pg_graphql pggraph pgrdf jsonschema pg_durable pg_gzip pg_hashids pg_hashlib \
 		pg_html5_email_address pg_http pg_idkit pg_incremental pg_ivm \
-		pg_jsonschema pgmnemo pg_projection pg_stl pg_sorted_heap pg_kazsearch pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
+		pg_jsonschema pgmnemo fsm_core pg_projection pg_stl pg_sorted_heap pg_kazsearch pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 		pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter pg_rrf \
 		pg_pinyin pg_polyline pg_protobuf pgproto pg_random pg_rational pg_redis_pubsub pgmqtt \
 		pg_when \

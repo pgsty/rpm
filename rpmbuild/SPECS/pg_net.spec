@@ -1,6 +1,7 @@
 %global pname pg_net
 %global sname pg_net
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -13,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.2
+Version:	0.20.3
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension that enables asynchronous (non-blocking) HTTP/HTTPS requests with SQL
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_net
 Source0:	pg_net-%{version}.tar.gz
-#           https://github.com/supabase/pg_net/archive/refs/tags/v0.20.2.tar.gz
+#           https://github.com/supabase/pg_net/archive/refs/tags/v0.20.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel >= 7.83
@@ -63,11 +64,11 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md
@@ -81,6 +82,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Jun 06 2026 Vonng <rh@vonng.com> - 0.20.3-1PIGSTY
+- https://github.com/supabase/pg_net/releases/tag/v0.20.3
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 0.20.2-1PIGSTY
 - https://github.com/supabase/pg_net/releases/tag/v0.20.2
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.20.0-1PIGSTY

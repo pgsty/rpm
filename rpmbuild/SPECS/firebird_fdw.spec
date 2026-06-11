@@ -1,6 +1,7 @@
 %global pname firebird_fdw
 %global sname firebird_fdw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -13,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.1
+Version:	1.4.2
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL foreign data wrapper (FDW) for Firebird
 License:	PostgreSQL
@@ -62,11 +63,11 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -80,6 +81,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sat Jun 06 2026 Vonng <rh@vonng.com> - 1.4.2-1PIGSTY
+- https://github.com/ibarwick/firebird_fdw/releases/tag/1.4.2
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 1.4.1-1PIGSTY
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.4.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

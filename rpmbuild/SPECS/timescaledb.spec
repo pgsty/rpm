@@ -2,9 +2,13 @@
 %global sname timescaledb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:timescaledb 2.27.2 only supports PostgreSQL 15 through 18}
+%endif
+
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.27.0
+Version:	2.27.2
 Release:	1PIGSTY%{?dist}
 License:	Timescale
 Source0:	%{sname}-%{version}.tar.gz
@@ -52,6 +56,10 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Sat Jun 06 2026 Vonng <rh@vonng.com> - 2.27.2-1PIGSTY
+- https://github.com/timescale/timescaledb/releases/tag/2.27.2
+* Sun May 24 2026 Vonng <rh@vonng.com> - 2.27.1-1PIGSTY
+- https://github.com/timescale/timescaledb/releases/tag/2.27.1
 * Thu May 14 2026 Vonng <rh@vonng.com> - 2.27.0-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.27.0
 - Normalize the upstream tag tarball version metadata to package the 2.27.0 release

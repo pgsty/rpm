@@ -2,6 +2,7 @@
 %global pname storage_engine
 %global sname storage_engine
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %if 0%{?pgmajorversion} < 15
 %{error:storage_engine 2.x only supports PostgreSQL 15+}
@@ -18,13 +19,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.3.0
+Version:	2.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	Column-oriented and row-compressed table access methods for PostgreSQL
 License:	AGPL-3.0
 URL:		https://github.com/saulojb/storage_engine
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/storage_engine/2.3.0/storage_engine-2.3.0.zip
+#           normalized from https://api.pgxn.org/dist/storage_engine/2.4.0/storage_engine-2.4.0.zip
 #           Supported: PostgreSQL 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -72,10 +73,10 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
-PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 
 %files
@@ -91,6 +92,9 @@ rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 %endif
 
 %changelog
+* Sun May 24 2026 Vonng <rh@vonng.com> - 2.4.0-1PIGSTY
+- Update storage_engine to upstream PGXN 2.4.0
+
 * Thu May 14 2026 Vonng <rh@vonng.com> - 2.3.0-1PIGSTY
 - Update storage_engine to upstream PGXN 2.3.0
 - Restrict builds to PostgreSQL 15+ to match the upstream 2.x support matrix

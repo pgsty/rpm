@@ -1,6 +1,7 @@
 %global pname re2
 %global sname re2
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %if 0%{?pgmajorversion} < 16
 %{error:re2 only supports PostgreSQL 16+}
@@ -17,13 +18,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.1
+Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	ClickHouse-compatible regular expression functions powered by RE2
 License:	PostgreSQL
 URL:		https://github.com/ClickHouse/pg_re2
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/re2/0.1.1/re2-0.1.1.zip
+#           normalized from https://api.pgxn.org/dist/re2/0.3.0/re2-0.3.0.zip
 #           Supported: PostgreSQL 16, 17, 18
 
 BuildRequires:	gcc-c++
@@ -66,11 +67,11 @@ This package provides JIT support for %{sname}.
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md doc/re2.md
@@ -85,6 +86,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
+- Update to upstream PGXN 0.3.0 using the normalized source tarball
+
 * Fri Apr 17 2026 Vonng <rh@vonng.com> - 0.1.1-1PIGSTY
 - Update to upstream 0.1.1 with the normalized PGXN source bundle
 

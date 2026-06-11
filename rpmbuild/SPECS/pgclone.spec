@@ -1,6 +1,7 @@
 %global pname pgclone
 %global sname pgclone
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -61,14 +62,14 @@ This package provides JIT support for %{sname}.
 
 %build
 cd %{_builddir}/%{sname}-%{version}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
 cd %{_builddir}/%{sname}-%{version}
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name}
 %{__mkdir_p} %{buildroot}%{_licensedir}/%{name}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 install -m 644 README.md CHANGELOG.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 

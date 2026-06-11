@@ -1,16 +1,17 @@
 %global sname pg_background
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.9.2
+Version:	2.0
 Release:	1PIGSTY%{?dist}
 Summary:	Execute SQL commands in PostgreSQL background worker processes
 License:	PostgreSQL
 URL:		https://github.com/vibhorkum/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#		https://github.com/vibhorkum/pg_background/archive/refs/tags/v1.9.2.tar.gz
+#		https://github.com/vibhorkum/pg_background/archive/refs/tags/v2.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -36,11 +37,11 @@ This package provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %license LICENSE
@@ -55,6 +56,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Sat Jun 06 2026 Vonng <rh@vonng.com> - 2.0-1PIGSTY
+- https://github.com/vibhorkum/pg_background/releases/tag/v2.0
+
 * Fri Apr 10 2026 Vonng <rh@vonng.com> - 1.9.2-1PIGSTY
 - Initial RPM release
 - https://github.com/vibhorkum/pg_background/releases/tag/v1.9.2

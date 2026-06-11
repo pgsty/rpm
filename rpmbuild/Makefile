@@ -48,7 +48,7 @@ rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
-rust10: pg_command_fw pg_trickle pggraph pgrdf
+rust10: pg_command_fw pg_trickle pggraph pgrdf jsonschema
 time: timescaledb pg_timeseries periods temporal_tables pg_when pg_bikram_sambat
 
 
@@ -309,6 +309,9 @@ pg_sorted_heap:
 
 pgrdf:			# rust pgrx 0.16.1, no PG18 feature upstream
 	./build pgrdf 14 15 16 17
+
+jsonschema:		# rust pgrx 0.18.0, distinct from pg_jsonschema
+	./build jsonschema 14 15 16 17 18
 
 pg_ttl_index:
 	./build pg_ttl_index 15 16 17 18
@@ -1143,7 +1146,7 @@ rmdbg:
 		pg_duckdb pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
 		pg_byteamagic \
 		pg_explain_ui pg_failover_slots pg_financial pg_fio \
-		pg_geohash rum pg_ai_query pg_orca pg_monetdb pg_graphql pggraph pgrdf pg_gzip pg_hashids pg_hashlib \
+		pg_geohash rum pg_ai_query pg_orca pg_monetdb pg_graphql pggraph pgrdf jsonschema pg_gzip pg_hashids pg_hashlib \
 		pg_html5_email_address pg_http pg_idkit pg_incremental pg_ivm \
 		pg_jsonschema pgmnemo pg_projection pg_stl pg_sorted_heap pg_kazsearch pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 		pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter pg_rrf \

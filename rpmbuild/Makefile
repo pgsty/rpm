@@ -49,7 +49,7 @@ rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
 rust10: pg_command_fw pg_trickle pggraph pgrdf jsonschema
-time: timescaledb pg_timeseries periods temporal_tables pg_when pg_bikram_sambat
+time: timescaledb pg_timeseries periods temporal_tables pg_when pg_bikram_sambat pg_task
 
 
 ###############################################################
@@ -73,7 +73,8 @@ temporal_tables:
 # emaj          (handled by PGDG)
 # table_version (handled by PGDG)
 # pg_cron       (handled by PGDG)
-# pg_task       (handled by PGDG)
+pg_task:
+	./build pg_task 14 15 16 17 18
 
 pg_later:       # rust 0.16.1
 	./build pg_later 14 15 16 17
@@ -1171,7 +1172,7 @@ rmdbg:
 		pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_variables pg_vectorize \
 	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
 	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
-	pgclone \
+	pgclone pg_task \
 	pglite_fusion pgmeminfo pgml pg_accumulator pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	column_encrypt \

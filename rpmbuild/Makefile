@@ -204,7 +204,7 @@ pg_tokenizer:		# rust pgrx 0.16.1
 pg_kazsearch:		# rust pgrx 0.17.0
 	./build pg_kazsearch 16 17 18
 
-pg_pinyin:			# rust pgrx 0.17.0
+pg_pinyin:			# rust pgrx 0.18.1
 	./build pg_pinyin 14 15 16 17 18
 
 hunspell: hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_ru_ru hunspell_ru_ru_aot #hunspell_pt_pt

@@ -522,6 +522,9 @@ url_encode:
 pg_extra_time:
 	./build pg_extra_time 14 15 16 17 18
 
+pgsql_tweaks:
+	./build pgsql_tweaks 14 15 16 17 18
+
 pgpcre:
 	./build pgpcre 14 15 16 17 18
 
@@ -1173,7 +1176,7 @@ rmdbg:
 		pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_variables pg_vectorize \
 	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
 	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
-	pgclone pg_task pg_extra_time \
+	pgclone pg_task pg_extra_time pgsql_tweaks \
 	pglite_fusion pgmeminfo pgml pg_accumulator pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
 	column_encrypt \

@@ -48,7 +48,7 @@ rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
-rust10: pg_command_fw pg_trickle
+rust10: pg_command_fw pg_trickle pggraph
 time: timescaledb pg_timeseries periods temporal_tables pg_when pg_bikram_sambat
 
 
@@ -285,6 +285,9 @@ pg_orca:
 
 pg_monetdb:		# obsolete: monetdb-devel is unavailable in active EL builder repos
 	@echo "pg_monetdb is obsolete; monetdb-devel is unavailable in active EL builder repos"
+
+pggraph:		# rust pgrx 0.18.0, installs graph extension
+	./build pggraph 14 15 16 17 18
 
 pg_graphql:		# rust pgrx 0.16.1 (build on unpublished-release)
 	./build pg_graphql 14 15 16 17 18
@@ -1125,7 +1128,7 @@ rmdbg:
 		pg_duckdb pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
 		pg_byteamagic \
 		pg_explain_ui pg_failover_slots pg_financial pg_fio \
-		pg_geohash rum pg_ai_query pg_orca pg_monetdb pg_graphql pg_gzip pg_hashids pg_hashlib \
+		pg_geohash rum pg_ai_query pg_orca pg_monetdb pg_graphql pggraph pg_gzip pg_hashids pg_hashlib \
 		pg_html5_email_address pg_http pg_idkit pg_incremental pg_ivm \
 		pg_jsonschema pg_kazsearch pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
 		pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter pg_rrf \

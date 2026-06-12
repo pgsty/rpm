@@ -18,6 +18,7 @@ Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
+BuildRequires:	pcre2-tools
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -27,6 +28,7 @@ install a CREATE EXTENSION control file.
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-pcre2grep.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} with_llvm=no
@@ -42,5 +44,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jun 12 2026 Vonng <rh@vonng.com> - 2.1.29-1PIGSTY
+- Build postgres.c with pcre2grep in EL builders
+
 * Thu Jun 11 2026 Vonng <rh@vonng.com> - 2.1.29-1PIGSTY
 - Initial RPM release for upstream PGXN 2.1.29

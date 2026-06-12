@@ -1,0 +1,11 @@
+--- a/postgres.sh	2026-06-06 00:18:54.000000000 +0800
++++ b/postgres.sh	2026-06-12 10:30:00.000000000 +0800
+@@ -67,7 +67,7 @@
+ EOF
+ (curl --no-progress-meter -fL "https://raw.githubusercontent.com/$REPO/$REL/src/backend/tcop/postgres.c" || \
+ curl --no-progress-meter -fL "https://raw.githubusercontent.com/$REPO/$STABLE/src/backend/tcop/postgres.c" || \
+-curl --no-progress-meter -fL "https://raw.githubusercontent.com/$REPO/$MAIN/src/backend/tcop/postgres.c") | pcregrep -M \
++curl --no-progress-meter -fL "https://raw.githubusercontent.com/$REPO/$MAIN/src/backend/tcop/postgres.c") | pcre2grep -M \
+ -e '(?s)^static bool CheckDebugDtmActionSqlCommandTag\(.*?\);' \
+ -e '(?s)^static void enable_statement_timeout\(.*?\);' \
+ -e '(?s)^static void start_xact_command\(.*?\);' \

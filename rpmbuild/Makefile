@@ -272,7 +272,7 @@ pg_partman:
 #                       Category: FEAT                        #
 ###############################################################
 age:
-	./build age 14 15 16 17 18
+	./build age 17 18
 
 #hll:
 rum:
@@ -1146,7 +1146,7 @@ rmdbg:
 .PHONY: deps scws scws-install libduckdb libduckdb-install \
 	libpgfeutils libpgfeutils-install pdu pgdog pgdog-install pg_filedump
 
-.PHONY: age age18 aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
+.PHONY: age aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
 	chkpass citus count_distinct cryptint \
 	data_historization datasketches db_migrator ddl_historization ddlx pglinter ddsketch \
 	decoder_raw documentdb external_file firebird_fdw first_last_agg floatvec \

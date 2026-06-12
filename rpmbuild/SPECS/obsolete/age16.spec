@@ -14,12 +14,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7.0
+Version:	1.6.0
 Release:	2PIGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases for PostgreSQL %{pgmajorversion}
 License:	Apache-2.0
 URL:		https://github.com/apache/age
-Source0:	age-%{version}.tar.gz
+Source0:	age-1.6.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 flex bison git
 %if 0%{?fedora} || 0%{?rhel} >= 9
@@ -53,7 +53,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
+Requires:	llvm => 19.0
 %endif
 
 %description llvmjit
@@ -85,9 +85,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
-* Fri Jun 12 2026 Vonng <rh@vonng.com> - 1.7.0-2PIGSTY
+* Fri Jun 12 2026 Vonng <rh@vonng.com> - 1.6.0-2PIGSTY
 - Rename RPM package to age_%{pgmajorversion} to match PGDG naming
-- Build from unified age-1.7.0 source package and use system llvm-lto path
+- Use system llvm-lto path for legacy AGE builds
+- Keep obsolete AGE 1.6.0 builds in a dedicated spec for PG14/15/16
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 1.6.0-1PIGSTY
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.5.0-2PIGSTY
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.5.0-1PIGSTY

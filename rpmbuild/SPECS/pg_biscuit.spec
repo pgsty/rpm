@@ -1,12 +1,13 @@
 %global pname biscuit
-%global sname pg_biscuit
+%global sname biscuit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.2.2
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
@@ -43,11 +44,11 @@ This packages provides JIT support for %{sname}
 %setup -q -n Biscuit-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md
@@ -61,6 +62,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Fri Jun 12 2026 Vonng <rh@vonng.com> - 2.2.2-2PIGSTY
+- Rename RPM packages from pg_biscuit_<pgmajorversion> to biscuit_<pgmajorversion>
+- Use system llvm-lto path for PGXS JIT builds
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 2.2.2-1PIGSTY
 * Tue Dec 16 2025 Vonng <rh@vonng.com> - 2.0.1-1PIGSTY
 - repo goes to https://github.com/CrystallineCore/Biscuit

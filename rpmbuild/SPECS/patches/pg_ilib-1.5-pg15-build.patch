@@ -1,0 +1,35 @@
+diff --git a/pg_ilib.c b/pg_ilib.c
+index 0ba6830..7b8d1f5 100644
+--- a/pg_ilib.c
++++ b/pg_ilib.c
+@@ -21,7 +21,9 @@
+  * ERRCODE_DATA_CORRUPTED instead of crashing the server.
+  */
+ #include "postgres.h"
++#if PG_VERSION_NUM < 150000
+ #include "utils/int8.h"
++#endif
+ #include "utils/builtins.h"
+ #include "utils/uuid.h"
+ #include "utils/json.h"
+@@ -1131,15 +1133,15 @@ bigint_to_bytea(PG_FUNCTION_ARGS)
+     SET_VARSIZE(outbytea, VARHDRSZ + byte_count + 1);
+
+     /* write integer digits into buffer right-to-left */
+-    ptr = buf+byte_count;
++    ptr = buf + byte_count + 1;
+     do
+     {
+         *--ptr = value % HEXBASE;
+         value /= HEXBASE;
+     } while (ptr > buf+1 && value);
+
+-    /    *--ptr = 0x00;
+-    *--ptr = 0x20;
+-    memcpy(VARDATA(outbytea), (void*)ptr, byte_count+1);
++    *--ptr = params & 0xFF;
++    *--ptr = (0x02 << 4) | ((params >> 8) & 0x0F);
++    memcpy(VARDATA(outbytea), (void*)buf, byte_count+1);
+
+     PG_RETURN_BYTEA_P(outbytea);
+ }

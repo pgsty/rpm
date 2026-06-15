@@ -917,7 +917,7 @@ redis_fdw:
 pg_redis_pubsub:
 	./build pg_redis_pubsub 14 15 16 17 18
 
-etcd_fdw:
+etcd_fdw:			# rust pgrx 0.18.1
 	./build etcd_fdw 14 15 16 17 18
 
 kafka_fdw:

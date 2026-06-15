@@ -866,7 +866,7 @@ block_copy_command:	# rust pgrx 0.17.0
 pg_session_jwt:		# rust pgrx 0.16.1
 	./build pg_session_jwt 14 15 16 17 18
 
-pg_anon:			# rust pgrx 0.17.0 (manual update from 0.16.1)
+pg_anon:			# rust pgrx 0.18.1
 	./build pg_anon 14 15 16 17 18
 
 pgsmcrypto:			# rust pgrx 0.16.1

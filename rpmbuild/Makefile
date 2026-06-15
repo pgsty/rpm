@@ -905,7 +905,7 @@ sslutils:
 #mongo_fdw
 #hdfs_fdw
 
-wrappers:			# rust pgrx 0.17.0 (manual update from 0.16.1)
+wrappers:			# rust pgrx 0.18.1
 	./build wrappers 14 15 16 17 18
 
 sqlite_fdw:

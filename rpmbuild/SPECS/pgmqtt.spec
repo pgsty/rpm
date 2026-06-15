@@ -1,20 +1,21 @@
 %define debug_package %{nil}
 %global pname pgmqtt
 %global sname pgmqtt
+%global srcdir RayElg-pgmqtt-abacb87
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 13 || 0%{?pgmajorversion} > 18
-%{error:pgmqtt supports PostgreSQL 13-18}
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pgmqtt supports PostgreSQL 14-18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	CDC-to-MQTT broker extension for PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/pgmqtt
 Source0:	%{sname}-%{version}.tar.gz
-#           repacked from upstream release https://github.com/RayElg/pgmqtt/releases/tag/0.1.0
+#           repacked from upstream release https://github.com/RayElg/pgmqtt/releases/tag/0.3.0
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang
@@ -27,23 +28,26 @@ uses logical decoding under the hood, so wal_level must be configured for
 logical replication when it is deployed.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{srcdir}
 find . -type f -name '._*' -delete
-patch -p1 < %{_specdir}/patches/pgmqtt-0.1.0-pgrx-0.17.0.patch
+patch -p1 --forward -f < %{_specdir}/patches/pgmqtt-0.3.0.patch
 
 %build
-cd %{_builddir}/%{sname}-%{version}/extension
+cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
-# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
-# preserves semantics and keeps the extension buildable on EL9A.
-PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
-test -n "$PBOX"
-if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
-    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
 fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo update -p pgrx --precise $PGRX_VERSION
+cargo update -p pgrx-tests --precise $PGRX_VERSION
+cargo fetch
+
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
@@ -52,11 +56,11 @@ cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-
 %{__mkdir_p} %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name}
 %{__mkdir_p} %{buildroot}%{_licensedir}/%{name}
-cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_builddir}/%{sname}-%{version}/README.md %{buildroot}%{_docdir}/%{name}/
-install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licensedir}/%{name}/
+cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
+install -m 644 %{_builddir}/%{srcdir}/README.md %{buildroot}%{_docdir}/%{name}/
+install -m 644 %{_builddir}/%{srcdir}/LICENSE.md %{buildroot}%{_licensedir}/%{name}/
 
 %files
 %doc %{_docdir}/%{name}/README.md
@@ -67,6 +71,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licens
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Jun 14 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
+- Package upstream release 0.3.0 for PostgreSQL 14-18
+- Patch Cargo metadata to build with cargo-pgrx 0.18.1
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Package upstream release 0.1.0 for PostgreSQL 13-18
 - Build the pgrx extension from the repository's extension/ subdirectory

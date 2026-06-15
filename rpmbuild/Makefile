@@ -351,7 +351,7 @@ pg_accumulator:
 pgmq:
 	./build pgmq 14 15 16 17 18
 
-pgmqtt:			# rust pgrx 0.17.0
+pgmqtt:			# rust pgrx 0.18.1
 	./build pgmqtt 14 15 16 17 18
 
 # pgq

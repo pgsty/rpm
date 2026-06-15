@@ -1,15 +1,16 @@
 %define debug_package %{nil}
 %global pname vectorize
 %global sname pg_vectorize
+%global srcdir ChuckHend-pg_vectorize-826078e
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.26.1
+Version:	0.26.2
 Release:	1PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize
-SOURCE0:    pg_vectorize-%{version}.tar.gz
+Source0:	pg_vectorize-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1.1.1 pgvector_%{pgmajorversion} >= 0.7.0 pg_cron_%{pgmajorversion}
@@ -20,29 +21,33 @@ A Postgres extension that automates the transformation and orchestration of text
 This allows you to do vector search and build LLM applications on existing data with as little as two function calls.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{_specdir}/patches/pg-vectorize-0.26.2.patch
 
 %build
-cd %{_builddir}/%{sname}-%{version}/extension
+cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
-# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
-# preserves semantics and keeps the extension buildable on EL9A.
-PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
-test -n "$PBOX"
-if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
-    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
 fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo update -p pgrx --precise $PGRX_VERSION
+cargo update -p pgrx-tests --precise $PGRX_VERSION
+cargo fetch
+
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -51,6 +56,9 @@ cp -a %{_builddir}/%{sname}-%{version}/extension/target/release/%{pname}-pg%{pgm
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.26.2-1PIGSTY
+- Bump to 0.26.2 and patch Cargo metadata to pgrx 0.18.1
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.26.1-1PIGSTY
 - https://github.com/ChuckHend/pg_vectorize/releases/tag/v0.26.1
 - Build with cargo-pgrx 0.17.0 and patch cached pgrx for EL9A Rust compatibility

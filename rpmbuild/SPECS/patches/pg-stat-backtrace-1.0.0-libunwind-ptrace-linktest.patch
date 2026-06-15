@@ -1,0 +1,50 @@
+diff --git a/Makefile b/Makefile
+index f290812..8f2b8c2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -104,10 +104,3 @@ PSBT_UNWIND_LIBDIRS := $(PSBT_UNWIND_LIBDIR) \
+-# Split the probe: we need BOTH
+-#   * a "linker symlink" (plain libunwind-ptrace.so without version suffix)
+-#     -- this is what "ld -lunwind-ptrace" actually resolves, and it is
+-#     only shipped by the -devel / -dev package; if it is missing, ld
+-#     silently falls back to the non-PIC .a in the same directory and
+-#     we get the R_X86_64_PC32 error later in the build.
+-#   * at least one versioned runtime .so.N* -- sanity check that the
+-#     shared library itself is actually installed.
+-#
+-# Both lists are computed so we can emit distinct diagnostics.
++# Some EL libunwind-devel packages ship libunwind-ptrace only as a static
++# archive. Use the actual PIC link test below as the source of truth instead
++# of failing early only because the shared-object filename is absent.
+@@ -119,24 +111,0 @@ PSBT_UNWIND_PTRACE_SO_VERS := $(strip $(foreach d,$(PSBT_UNWIND_LIBDIRS),\
+-ifeq ($(PSBT_UNWIND_PTRACE_SO_LINK)$(PSBT_UNWIND_PTRACE_SO_VERS),)
+-$(error pg_stat_backtrace: no SHARED libunwind-ptrace.so was found in \
+-	any of $(PSBT_UNWIND_LIBDIRS).  Only the non-PIC static archive \
+-	libunwind-ptrace.a (if any) is present, which cannot be linked into \
+-	a PIC shared module.  Fixes: (1) install a libunwind-devel package \
+-	that ships .so files (EPEL on RHEL/CentOS), or (2) build libunwind \
+-	from source with "./configure --enable-shared --with-pic \
+-	--enable-ptrace" and re-run "make".)
+-endif
+-
+-ifeq ($(PSBT_UNWIND_PTRACE_SO_LINK),)
+-$(error pg_stat_backtrace: versioned libunwind-ptrace.so.N was found \
+-	($(PSBT_UNWIND_PTRACE_SO_VERS)), but the unversioned linker symlink \
+-	'libunwind-ptrace.so' is missing.  This happens when only the \
+-	runtime libunwind package is installed, not the development \
+-	package.  In that situation "ld -lunwind-ptrace" silently falls \
+-	back to the non-PIC libunwind-ptrace.a and fails with \
+-	R_X86_64_PC32 relocation errors.  Fix: install the matching \
+-	-devel / -dev package, for example: \
+-	"dnf install libunwind-devel" (RHEL/Fedora), \
+-	"apt install libunwind-dev" (Debian/Ubuntu), or rebuild libunwind \
+-	from source with --enable-shared --with-pic --enable-ptrace.)
+-endif
+-
+@@ -144,3 +113,3 @@ endif
+-# synthesised "you hit the non-PIC .a" error BEFORE the real build starts,
+-# instead of letting ld surface the cryptic R_X86_64_PC32 message much
+-# later in the build.
++# synthesised "you hit the non-PIC .a" error BEFORE the real build starts.
++# This also permits distro libunwind builds where libunwind-ptrace is static
++# but can still be linked into a PostgreSQL shared module.

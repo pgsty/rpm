@@ -830,6 +830,9 @@ pagevis:
 pg_stat_ch:
 	./build pg_stat_ch 16 17 18
 
+pg_stat_backtrace:
+	./build pg_stat_backtrace 14 15 16 17 18
+
 pg_isok:
 	./build pg_isok 14 15 16 17 18
 
@@ -1194,7 +1197,7 @@ rmdbg:
 	pgclone pg_task pg_extra_time pgsql_tweaks \
 	pglite_fusion pgmeminfo pgml pg_accumulator pgmq pgnodemx pgpcre pgpdf \
 	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
-	column_encrypt \
+	column_encrypt pg_stat_backtrace \
 	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor pg_stat_ch \
 	logical_ddl \
 	pg_partman pljs plpgsql_check plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \

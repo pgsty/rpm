@@ -1,10 +1,11 @@
 %define debug_package %{nil}
 %global pname pg_graphql
 %global sname pg_graphql
+%global srcdir supabase-pg_graphql-66d4c55
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.12
+Version:	1.6.1
 Release:	1PIGSTY%{?dist}
 Summary:	GraphQL support to your PostgreSQL database.
 License:	Apache-2.0
@@ -20,17 +21,33 @@ The extension keeps schema translation and query resolution neatly contained on 
 This enables any programming language that can connect to PostgreSQL to query the database via GraphQL with no additional servers, processes, or libraries.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{_specdir}/patches/pg-graphql-1.6.1.patch
 
 %build
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+cd %{_builddir}/%{srcdir}
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
+fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo update -p pgrx --precise $PGRX_VERSION
+cargo update -p pgrx-tests --precise $PGRX_VERSION
+cargo fetch
+
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
+cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -39,6 +56,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 1.6.1-1PIGSTY
+- https://github.com/supabase/pg_graphql/releases/tag/v1.6.1
+- Patch Cargo metadata to build with cargo-pgrx 0.18.1
+
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.5.12-1PIGSTY
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.5.11-1PIGSTY
 * Thu Oct 17 2024 Vonng <rh@vonng.com> - 1.5.9-1PIGSTY

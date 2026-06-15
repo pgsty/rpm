@@ -293,7 +293,7 @@ pggraph:		# rust pgrx 0.18.1, installs graph extension
 pg_ilib:		# deferred: draft spec kept in SPECS/obsolete
 	@echo "pg_ilib is deferred; draft spec kept in SPECS/obsolete"
 
-pg_graphql:		# rust pgrx 0.16.1 (build on unpublished-release)
+pg_graphql:		# rust pgrx 0.18.1
 	./build pg_graphql 14 15 16 17 18
 
 pg_jsonschema:	# rust pgrx 0.16.1 (patch from 0.16.0)

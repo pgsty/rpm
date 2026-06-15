@@ -314,7 +314,7 @@ pg_stl:
 pg_sorted_heap:
 	./build pg_sorted_heap 16 17 18
 
-pgrdf:			# rust pgrx 0.16.1, no PG18 feature upstream
+pgrdf:			# rust pgrx 0.18.1, no PG18 feature upstream
 	./build pgrdf 14 15 16 17
 
 jsonschema:		# rust pgrx 0.18.0, distinct from pg_jsonschema

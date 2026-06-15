@@ -58,7 +58,7 @@ time: timescaledb pg_timeseries periods temporal_tables pg_when pg_bikram_sambat
 timescaledb:
 	./build timescaledb 15 16 17 18
 
-timescaledb_toolkit:	# rust pgrx 0.16.1
+timescaledb_toolkit:	# rust pgrx 0.18.1
 	./build timescaledb_toolkit 15 16 17 18
 
 pg_timeseries:

@@ -1,10 +1,11 @@
 %define debug_package %{nil}
 %global pname pglinter
 %global sname pglinter
+%global srcdir pmpetit-pglinter-972c06d
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.1.2
+Version:	2.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Database Linting and Analysis Extension
 License:	PostgreSQL
@@ -21,29 +22,33 @@ This is a Rust conversion of the original Python dblinter tool, providing native
 PostgreSQL extension capabilities for database analysis and linting.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{_specdir}/patches/pglinter-2.0.0.patch
 
 %build
-cd %{_builddir}/%{sname}-%{version}
+cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
-# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
-# preserves semantics and keeps the extension buildable on EL9A.
-PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
-test -n "$PBOX"
-if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
-    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
 fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo update -p pgrx --precise $PGRX_VERSION
+cargo update -p pgrx-tests --precise $PGRX_VERSION
+cargo fetch
+
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -52,6 +57,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Jun 14 2026 Vonng <rh@vonng.com> - 2.0.0-1PIGSTY
+- https://github.com/pmpetit/pglinter/releases/tag/2.0.0
+- Patch Cargo metadata to build with cargo-pgrx 0.18.1
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.1.2-1PIGSTY
 - https://github.com/pmpetit/pglinter/releases/tag/1.1.2
 - Build with cargo-pgrx 0.17.0 and patch cached pgrx for EL9A Rust compatibility

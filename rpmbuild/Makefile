@@ -851,6 +851,9 @@ pg_noset:
 pg_vault:
 	./build pg_vault 14 15 16 17 18
 
+hyperion_vault:	# rust pgrx 0.18.1, PG18 only, shared_preload_libraries
+	./build hyperion_vault 18
+
 supautils:
 	./build supautils 14 15 16 17 18
 
@@ -1179,7 +1182,7 @@ rmdbg:
 		pg_semver pg_session_jwt pg_similarity pg_smtp_client \
 		pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
 		pg_text_semver pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing pg_datasentinel pg_typescript \
-		pg_tzf pg_uint128 pg_upless pg_uri pg_vault pg_variables pg_vectorize \
+		pg_tzf pg_uint128 pg_upless pg_uri pg_vault hyperion_vault pg_variables pg_vectorize \
 	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
 	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
 	pgclone pg_task pg_extra_time pgsql_tweaks \

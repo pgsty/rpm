@@ -1,10 +1,11 @@
 %define debug_package %{nil}
 %global pname tzf
 %global sname pg_tzf
+%global srcdir ringsaturn-pg-tzf-5d6627e
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.4
+Version:	0.3.0
 Release:	1PIGSTY%{?dist}
 Summary:	Fast PG extension to lookup timezone name by GPS coordinates
 License:	MIT
@@ -18,29 +19,33 @@ Requires:	postgresql%{pgmajorversion}-server
 Resolve IANA timezone names from longitude/latitude coordinates in PostgreSQL.
 
 %prep
-%setup -q -n pg-tzf-%{version}
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{_specdir}/patches/tzf-0.3.0.patch
 
 %build
-cd %{_builddir}/pg-tzf-%{version}
+cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
-# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
-# preserves semantics and keeps the extension buildable on EL9A.
-PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
-test -n "$PBOX"
-if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
-    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
 fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+cargo update -p pgrx --precise $PGRX_VERSION
+cargo update -p pgrx-tests --precise $PGRX_VERSION
+cargo fetch
+
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %doc README.md
@@ -51,6 +56,9 @@ cp -a %{_builddir}/pg-tzf-%{version}/target/release/%{pname}-pg%{pgmajorversion}
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
+- Bump to 0.3.0 and patch Cargo metadata to pgrx 0.18.1
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.2.4-1PIGSTY
 - https://github.com/ringsaturn/pg-tzf/releases/tag/v0.2.4
 - Drop the stale pgvector runtime dependency; upstream now uses PostgreSQL point types

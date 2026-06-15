@@ -202,7 +202,7 @@ vchord_bm25:		# rust  pgrx 0.16.1
 pg_tokenizer:		# rust pgrx 0.16.1
 	./build pg_tokenizer 14 15 16 17 18
 
-pg_kazsearch:		# rust pgrx 0.17.0
+pg_kazsearch:		# rust pgrx 0.18.1
 	./build pg_kazsearch 16 17 18
 
 pg_pinyin:			# rust pgrx 0.18.1

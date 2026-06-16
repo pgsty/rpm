@@ -3,15 +3,20 @@
 %global sname pg_convert
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_convert only supports PostgreSQL 14 through 18}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Postgres extension for common conversions when working with spatial data.
 License:	MIT
 URL:		https://github.com/Vonng/%{pname}
-SOURCE0:    %{pname}-%{version}.tar.gz
+Source0:    %{pname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -19,9 +24,23 @@ Convert is a Postgres extension providing common conversion functions, such as m
 
 %prep
 %setup -q -n %{pname}-%{version}
+patch -p1 --forward -f < %{_specdir}/patches/convert-0.1.0.patch
 
 %build
-PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
+cd %{_builddir}/%{pname}-%{version}
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
+fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -37,6 +56,10 @@ cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.1.0-2PIGSTY
+- Build with cargo-pgrx 0.18.1 and explicit pgNN features
+- Use the shared pgrx 0.18.1 source patch from DEB packaging
+
 * Fri Jan 17 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 * Mon Dec 15 2025 Vonng <rh@vonng.com> - 0.0.5-1PIGSTY
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.0.4-2PIGSTY

@@ -679,7 +679,7 @@ pg_base58:		# rust pgrx 0.18.1
 pg_financial:
 	./build pg_financial 14 15 16 17 18
 
-pg_convert:		# rust (pgrx 0.16.1)
+pg_convert:		# rust pgrx 0.18.1
 	./build pg_convert 14 15 16 17 18
 
 

@@ -114,7 +114,7 @@ pg_polyline:    # rust pgrx 0.16.1
 pg_tzf:         # rust pgrx 0.18.1
 	./build pg_tzf 14 15 16 17 18
 
-pg_eviltransform:	# rust pgrx 0.17.0
+pg_eviltransform:	# rust pgrx 0.18.1
 	./build pg_eviltransform 14 15 16 17 18
 
 pg_command_fw:		# rust pgrx 0.18.1

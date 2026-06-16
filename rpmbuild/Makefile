@@ -193,7 +193,7 @@ scws-install:
 zhparser:
 	QA_RPATHS=2 ./build zhparser 14 15 16 17 18
 
-pg_bestmatch:		# rust pgrx 0.16.1
+pg_bestmatch:		# rust pgrx 0.18.1
 	./build pg_bestmatch 14 15 16 17
 
 vchord_bm25:		# rust  pgrx 0.16.1

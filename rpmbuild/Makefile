@@ -809,7 +809,7 @@ pgmeminfo:
 toastinfo:
 	./build toastinfo 14 15 16 17 18
 
-pg_explain_ui:		# rust pgrx 0.16.1
+pg_explain_ui:		# rust pgrx 0.18.1
 	./build pg_explain_ui 14 15 16 17 18
 
 pg_stat_monitor:

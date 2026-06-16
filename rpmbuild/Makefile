@@ -196,7 +196,7 @@ zhparser:
 pg_bestmatch:		# rust pgrx 0.18.1
 	./build pg_bestmatch 14 15 16 17
 
-vchord_bm25:		# rust  pgrx 0.16.1
+vchord_bm25:		# rust pgrx 0.18.1
 	./build vchord_bm25 14 15 16 17 18
 
 pg_tokenizer:		# rust pgrx 0.18.1

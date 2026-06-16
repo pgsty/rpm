@@ -872,7 +872,7 @@ pgsodium:
 column_encrypt:
 	./build column_encrypt 14 15 16 17 18
 
-block_copy_command:	# rust pgrx 0.17.0
+block_copy_command:	# rust pgrx 0.18.1
 	./build block_copy_command 14 15 16 17 18
 
 pg_session_jwt:		# rust pgrx 0.16.1

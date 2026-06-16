@@ -108,7 +108,7 @@ geoip:
 pg_geohash:
 	./build pg_geohash 14 15 16 17 18
 
-pg_polyline:    # rust pgrx 0.16.1
+pg_polyline:    # rust pgrx 0.18.1
 	./build pg_polyline 14 15 16 17 18
 
 pg_tzf:         # rust pgrx 0.18.1

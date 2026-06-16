@@ -3,15 +3,20 @@
 %global sname pgvectorscale
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pgvectorscale only supports PostgreSQL 14 through 18}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.9.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
 URL:		https://github.com/timescale/pgvectorscale
-SOURCE0:    pgvectorscale-%{version}.tar.gz
+Source0:    pgvectorscale-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion} >= 0.7.0
 
 %description
@@ -19,12 +24,25 @@ pgvectorscale builds on pgvector with higher performance embedding search and co
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --forward -f < %{_specdir}/patches/pgvectorscale-0.9.0.patch
 
 %build
-export PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH
-export RUSTFLAGS="-C target-feature=+avx2,+fma"
-cd pgvectorscale
-cargo pgrx package -v
+cd %{_builddir}/%{sname}-%{version}/pgvectorscale
+export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
+fi
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-tests --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-pg-config --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+export RUSTFLAGS="${RUSTFLAGS:-} -C target-feature=+avx2,+fma -C link-arg=-Wl,--no-gc-sections"
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion},build_parallel --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -40,6 +58,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.9.0-2PIGSTY
+- Build with cargo-pgrx 0.18.1 and explicit pgNN features
+- Use the shared pgrx 0.18.1 source patch from DEB packaging
+
 * Mon Nov 17 2025 Vonng <rh@vonng.com> - 0.9.0-1PIGSTY
 - add pg18 support, drop pg13 support
 * Fri Oct 31 2025 Vonng <rh@vonng.com> - 0.8.0-2PIGSTY

@@ -133,7 +133,7 @@ pgvector:  # skip, handled by pgdg
 vchord:    # rust pgrx 0.16.1
 	./build vchord 14 15 16 17 18
 
-pgvectorscale:  # rust 0.16.1
+pgvectorscale:  # rust pgrx 0.18.1
 	./build pgvectorscale 14 15 16 17 18
 
 pg_vectorize:	# rust pgrx 0.18.1

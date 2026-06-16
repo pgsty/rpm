@@ -148,7 +148,7 @@ pg_similarity:	# covered by pgdg
 smlar:          # break for pg18, fixed
 	./build smlar 14 15 16 17 18
 
-pg_summarize:	# rust pgrx 0.16.1 (forked)
+pg_summarize:	# rust pgrx 0.18.1 (forked)
 	./build pg_summarize 14 15 16 17
 
 pg_tiktoken:	# rust pgrx 0.16.1

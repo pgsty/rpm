@@ -881,7 +881,7 @@ pg_session_jwt:		# rust pgrx 0.18.1
 pg_anon:			# rust pgrx 0.18.1
 	./build pg_anon 14 15 16 17 18
 
-pgsmcrypto:			# rust pgrx 0.16.1
+pgsmcrypto:			# rust pgrx 0.18.1
 	./build pgsmcrypto 14 15 16 17 18
 
 pg_enigma:			# rust pgrx 0.18.1

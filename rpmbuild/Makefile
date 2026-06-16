@@ -120,7 +120,7 @@ pg_eviltransform:	# rust pgrx 0.18.1
 pg_command_fw:		# rust pgrx 0.18.1
 	./build pg_command_fw 15 16 17 18
 
-pg_trickle:		# rust pgrx 0.18.0, PG18 only
+pg_trickle:		# rust pgrx 0.18.1, PG18 only
 	./build pg_trickle 18
 
 

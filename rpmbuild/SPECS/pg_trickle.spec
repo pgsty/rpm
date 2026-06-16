@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.81.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/trickle-labs/pg-trickle
@@ -29,26 +29,25 @@ pg_trickle through shared_preload_libraries.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg-trickle-0.81.0.patch
 
 %build
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.0
+PGRX_VERSION=0.18.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-cargo pgrx init --pg18=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-
-# pgrx 0.18 embeds extension schema metadata in a linker section; without this
-# flag the EL9A linker can garbage-collect it and cargo-pgrx reports a missing
-# .pgrxsc section during packaging.
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-macros --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-pg-config --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-cargo pgrx package --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 rm -rf %{buildroot}
@@ -69,6 +68,10 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.81.0-2PIGSTY
+- Build with cargo-pgrx 0.18.1 and explicit pgNN features
+- Use the shared pgrx 0.18.1 source patch from DEB packaging
+
 * Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.81.0-1PIGSTY
 - Update to upstream PGXN 0.81.0 with the normalized source tarball
 - Refresh the packaging-only Cargo/build.rs patch for the current PGXN bundle

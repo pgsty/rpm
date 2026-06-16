@@ -597,7 +597,7 @@ pgsparql:
 pg_weighted_statistics:
 	./build pg_weighted_statistics 14 15 16 17 18
 
-pg_idkit:			# rust pgrx 0.16.1 (bump from 0.16.0)
+pg_idkit:			# rust pgrx 0.18.1
 	./build pg_idkit 14 15 16 17 18
 
 pgx_ulid:			# rust pgrx 0.17.0

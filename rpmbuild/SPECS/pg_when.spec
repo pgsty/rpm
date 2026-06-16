@@ -3,13 +3,13 @@
 %global sname pg_when
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 13 || 0%{?pgmajorversion} > 18
-%{error:pg_when supports PostgreSQL 13-18}
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_when only supports PostgreSQL 14 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.9
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Natural-language timestamp parser for PostgreSQL
 License:	MIT
 URL:		https://github.com/frectonz/pg-when
@@ -17,7 +17,7 @@ Source0:	%{sname}-%{version}.tar.gz
 #           normalized from upstream git tag https://github.com/frectonz/pg-when/tree/0.1.9
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	clang
+BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -27,22 +27,23 @@ phrases such as "next friday at 8:00 pm in America/New_York".
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 < %{_specdir}/patches/pg_when-0.1.9-pgrx-0.17.0.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg-when-0.1.9.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-# pgrx 0.17.0 uses NonNull::from_mut(), which is newer than the EL9 Rust
-# shipped in our validation container. Rewriting to NonNull::from(&mut ...)
-# preserves semantics and keeps the extension buildable on EL9A.
-PBOX="$(find "$HOME/.cargo/registry/src" -path '*/pgrx-0.17.0/src/palloc/pbox.rs' | head -n 1)"
-test -n "$PBOX"
-if ! grep -q 'NonNull::from(\&mut datum)' "$PBOX"; then \
-    (cd "$(dirname "$PBOX")" && patch -p0 < %{_specdir}/patches/pgrx-0.17.0-pbox-nonnull.patch); \
+
+PGRX_VERSION=0.18.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
+	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	exit 1
 fi
-cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 %{__rm} -rf %{buildroot}
@@ -65,6 +66,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.1.9-2PIGSTY
+- Build with cargo-pgrx 0.18.1 and explicit pgNN features
+- Use the shared pgrx 0.18.1 source patch from DEB packaging
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.1.9-1PIGSTY
 - Package upstream tag 0.1.9 for PostgreSQL 13-18
 - Build with cargo-pgrx 0.17.0 after patching the upstream Cargo manifest

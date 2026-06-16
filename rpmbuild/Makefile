@@ -79,7 +79,7 @@ pg_task:
 pg_later:       # rust pgrx 0.18.1
 	./build pg_later 14 15 16 17
 
-pg_when:        # rust pgrx 0.17.0
+pg_when:        # rust pgrx 0.18.1
 	./build pg_when 14 15 16 17 18
 
 pg_bikram_sambat:

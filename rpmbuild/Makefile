@@ -875,7 +875,7 @@ column_encrypt:
 block_copy_command:	# rust pgrx 0.18.1
 	./build block_copy_command 14 15 16 17 18
 
-pg_session_jwt:		# rust pgrx 0.16.1
+pg_session_jwt:		# rust pgrx 0.18.1
 	./build pg_session_jwt 14 15 16 17 18
 
 pg_anon:			# rust pgrx 0.18.1

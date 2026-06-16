@@ -600,7 +600,7 @@ pg_weighted_statistics:
 pg_idkit:			# rust pgrx 0.18.1
 	./build pg_idkit 14 15 16 17 18
 
-pgx_ulid:			# rust pgrx 0.17.0
+pgx_ulid:			# rust pgrx 0.18.1
 	./build pgx_ulid  14 15 16 17 18
 
 #pg_uuidv7

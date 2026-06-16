@@ -4,12 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:jsonschema only supports PostgreSQL 14 through 18 in PGSTY builds}
+%{error:jsonschema only supports PostgreSQL 14 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.9
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	JSON Schema validation functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/theory/pg-jsonschema-boon
@@ -28,24 +28,25 @@ extension.
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --forward -f < %{_specdir}/patches/jsonschema-0.1.9.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.0
+PGRX_VERSION=0.18.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-# pgrx 0.18 embeds extension schema metadata in a linker section; without this
-# flag the EL9A linker can garbage-collect it and cargo-pgrx reports a missing
-# .pgrxsc section during packaging.
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-macros --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-pg-config --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
 %install
 %{__rm} -rf %{buildroot}
@@ -66,6 +67,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licens
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.1.9-2PIGSTY
+- Build with cargo-pgrx 0.18.1 and explicit pgNN features
+- Use the shared pgrx 0.18.1 source patch from DEB packaging
+
 * Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.1.9-1PIGSTY
 - Initial RPM release for upstream PGXN 0.1.9
 - Keep pgrx 0.18 schema metadata from being garbage-collected by the linker

@@ -139,7 +139,7 @@ pgvectorscale:  # rust 0.16.1
 pg_vectorize:	# rust pgrx 0.18.1
 	./build pg_vectorize 14 15 16 17 18
 
-pg_rrf:			# rust pgrx 0.17.0
+pg_rrf:			# rust pgrx 0.18.1
 	./build pg_rrf 14 15 16 17
 
 pg_similarity:	# covered by pgdg

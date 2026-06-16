@@ -4,12 +4,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_durable only supports PostgreSQL 14 through 18 in PGSTY builds}
+%{error:pg_durable only supports PostgreSQL 14 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.2
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Durable SQL functions for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/microsoft/pg_durable
@@ -27,7 +27,7 @@ and requires loading pg_durable through shared_preload_libraries.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-pgrx-0.18.1.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg-durable-0.2.2.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -40,11 +40,10 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-macros --precise $PGRX_VERSION
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-pg-config --precise $PGRX_VERSION
 CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
-
-# pgrx 0.18 embeds extension schema metadata in a linker section; without this
-# flag the EL9A linker can garbage-collect it and cargo-pgrx reports a missing
-# .pgrxsc section during packaging.
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 
@@ -67,6 +66,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.txt %{buildroot}%{_licen
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.2.2-2PIGSTY
+- Build with cargo-pgrx 0.18.1 and explicit pgNN features
+- Use the shared pgrx 0.18.1 source patch from DEB packaging
+
 * Sat Jun 06 2026 Vonng <rh@vonng.com> - 0.2.2-1PIGSTY
 - Initial RPM release for microsoft/pg_durable v0.2.2
 - Patch Cargo.toml to build with cargo-pgrx 0.18.1 for PG14-18

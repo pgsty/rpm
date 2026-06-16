@@ -713,7 +713,7 @@ pglinter:
 pgfincore:
 	./build pgfincore 14 15 16 17 18
 
-pgdd:			# rust pgrx 0.16.1
+pgdd:			# rust pgrx 0.18.1
 	./build pgdd 14 15 16 17 18
 
 pgclone:

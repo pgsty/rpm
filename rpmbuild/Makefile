@@ -76,7 +76,7 @@ temporal_tables:
 pg_task:
 	./build pg_task 14 15 16 17 18
 
-pg_later:       # rust 0.16.1
+pg_later:       # rust pgrx 0.18.1
 	./build pg_later 14 15 16 17
 
 pg_when:        # rust pgrx 0.17.0

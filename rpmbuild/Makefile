@@ -386,7 +386,7 @@ pljs:
 plpgsql_check:
 	./build plpgsql_check 14 15 16 17 18
 
-pg_typescript:		# rust pgrx 0.17.0
+pg_typescript:		# rust pgrx 0.18.1
 	./build pg_typescript 16 17 18
 
 # pllua

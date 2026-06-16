@@ -151,7 +151,7 @@ smlar:          # break for pg18, fixed
 pg_summarize:	# rust pgrx 0.18.1 (forked)
 	./build pg_summarize 14 15 16 17
 
-pg_tiktoken:	# rust pgrx 0.16.1
+pg_tiktoken:	# rust pgrx 0.18.1
 	./build pg_tiktoken 14 15 16 17 18
 
 pg4ml:

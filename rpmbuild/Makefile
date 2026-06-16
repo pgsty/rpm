@@ -391,7 +391,7 @@ pg_typescript:		# rust pgrx 0.18.1
 
 # pllua
 
-plprql: 		# rust pgrx 0.16.1
+plprql: 		# rust pgrx 0.18.1
 	./build plprql 14 15 16 17 18
 
 # plprofiler

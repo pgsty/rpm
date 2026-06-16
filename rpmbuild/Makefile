@@ -130,7 +130,7 @@ pg_trickle:		# rust pgrx 0.18.1, PG18 only
 pgvector:  # skip, handled by pgdg
 	./build pgvector 14 15 16 17 18
 
-vchord:    # rust pgrx 0.16.1
+vchord:    # rust pgrx 0.18.1
 	./build vchord 14 15 16 17 18
 
 pgvectorscale:  # rust pgrx 0.18.1

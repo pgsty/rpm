@@ -48,3 +48,9 @@ index f290812..8f2b8c2 100644
 +# synthesised "you hit the non-PIC .a" error BEFORE the real build starts.
 +# This also permits distro libunwind builds where libunwind-ptrace is static
 +# but can still be linked into a PostgreSQL shared module.
+@@ -161,4 +137,4 @@ endif
+ 
+ PG_CPPFLAGS += $(PSBT_UNWIND_CFLAGS)
+-SHLIB_LINK  += $(PSBT_UNWIND_LIBS) $(PSBT_UNWIND_RPATH)
++SHLIB_LINK  += -Wl,-Bsymbolic $(PSBT_UNWIND_LIBS) $(PSBT_UNWIND_RPATH)
+ 

@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.6
+Version:	1.7
 Release:	1PIGSTY%{?dist}
 Summary:	Show storage structure of varlena datatypes in PostgreSQL
 License:	PostgreSQL
-URL:		https://github.com/credativ/toastinfo
+URL:		https://github.com/df7cb/toastinfo
 Source0:	toastinfo-%{version}.tar.gz
-#           https://deb.debian.org/debian/pool/main/t/toastinfo/toastinfo_1.6.orig.tar.gz
+#           https://deb.debian.org/debian/pool/main/t/toastinfo/toastinfo_1.7.orig.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -87,6 +87,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Jun 17 2026 Vonng <rh@vonng.com> - 1.7-1PIGSTY
+- https://deb.debian.org/debian/pool/main/t/toastinfo/toastinfo_1.7.orig.tar.gz
 * Sat Jun 06 2026 Vonng <rh@vonng.com> - 1.6-1PIGSTY
 - https://deb.debian.org/debian/pool/main/t/toastinfo/toastinfo_1.6.orig.tar.gz
 * Thu Sep 04 2025 Vonng <rh@vonng.com> - 1.5

@@ -1,3 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -7,4 +7,4 @@ members = [
+ [profile.release]
+ lto = "fat"
+-debug = true
++debug = false
+ codegen-units = 1
 --- a/extension/Cargo.toml
 +++ b/extension/Cargo.toml
 @@ -18,9 +18,9 @@ pg_test = ["approx"]

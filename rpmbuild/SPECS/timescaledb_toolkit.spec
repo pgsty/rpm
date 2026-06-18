@@ -64,6 +64,7 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 1.23.0-1PIGSTY
 - https://github.com/timescale/timescaledb-toolkit/releases/tag/1.23.0
 - Patch Cargo metadata to build with cargo-pgrx 0.18.1
+- Disable release debuginfo to keep EL builder memory bounded
 
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 1.22.0-1PIGSTY
 * Wed May 07 2025 Vonng <rh@vonng.com> - 1.21.0-1PIGSTY

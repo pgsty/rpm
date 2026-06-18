@@ -25,9 +25,11 @@ patch -p1 --forward -f < %{_specdir}/patches/tzf-0.3.0.patch
 %build
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export RUSTUP_DIST_SERVER=${RUSTUP_DIST_SERVER:-https://mirrors.ustc.edu.cn/rust-static}
+export RUSTUP_UPDATE_ROOT=${RUSTUP_UPDATE_ROOT:-https://mirrors.ustc.edu.cn/rust-static/rustup}
 
 PGRX_VERSION=0.18.1
-CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+CURRENT_PGRX=$(cargo-pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
@@ -58,6 +60,8 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %changelog
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 - Bump to 0.3.0 and patch Cargo metadata to pgrx 0.18.1
+- Use cargo-pgrx directly for version checks
+- Use USTC rustup mirror for nightly toolchain setup
 
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 0.2.4-1PIGSTY
 - https://github.com/ringsaturn/pg-tzf/releases/tag/v0.2.4

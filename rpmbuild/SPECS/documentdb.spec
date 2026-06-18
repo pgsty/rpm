@@ -17,7 +17,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.110
+Version:	0.112
 Release:	0PIGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
@@ -102,6 +102,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Jun 18 2026 Vonng <rh@vonng.com> - 0.112-0PIGSTY
+- switch to upstream documentdb v0.112-0
 * Sat Apr 25 2026 Vonng <rh@vonng.com> - 0.110-0PIGSTY
 - switch to upstream documentdb v0.110-0
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 0.109-0PIGSTY

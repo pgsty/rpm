@@ -1,6 +1,7 @@
 %global pname pgfincore
 %global sname pgfincore
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -13,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.3.1
+Version:	1.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	Examine and manage the OS buffer cache from PostgreSQL
 License:	BSD-3-Clause
@@ -51,6 +52,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
+BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
 Requires:	llvm => 19.0
 %endif
 
@@ -62,11 +64,11 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_mflags} install
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_mflags} install LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -80,5 +82,7 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %exclude %{pginstdir}/doc/%{pname}/README.md
 
 %changelog
+* Fri Jun 19 2026 Vonng <rh@vonng.com> - 1.4.0-1PIGSTY
+- Update to 1.4.0
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 1.3.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

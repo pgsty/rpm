@@ -1,18 +1,36 @@
 %global sname oriolepg
-%global pgmajorversion 17
+%define debug_package %{nil}
+%define _build_id_links none
+%{!?pgmajorversion:%global pgmajorversion 18}
+%if 0%{?pgmajorversion} == 18
+%global orioledb_patchset 1
+%global upstream_pgver 18.4
+%else
+%if 0%{?pgmajorversion} == 17
+%global orioledb_patchset 20
+%global upstream_pgver 17.9
+%else
+%if 0%{?pgmajorversion} == 16
+%global orioledb_patchset 47
+%global upstream_pgver 16.13
+%else
+%{error:oriolepg beta16 packaging supports PostgreSQL 16, 17, and 18 only}
+%endif
+%endif
+%endif
 %global pgbaseinstdir	/usr/oriole-%{pgmajorversion}
-%global orioledb_patchset 18
-%global upstream_pgver 17.7
-%global srcdir postgres-patches17_%{orioledb_patchset}
+%global orioledb_beta beta16
+%global orioledb_version 1.8
+%global srcdir postgres-patches%{pgmajorversion}_%{orioledb_patchset}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	17.%{orioledb_patchset}
+Version:	%{pgmajorversion}.%{orioledb_patchset}
 Release:	1PIGSTY%{?dist}
 Summary:	Modern cloud-native storage engine for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/orioledb/orioledb
 Source0:	%{srcdir}.tar.gz
-# upstream codeload tarball from https://github.com/orioledb/postgres/tree/patches17_18
+# upstream source tarball from the tag listed in orioledb beta16 .pgtags
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -55,7 +73,7 @@ export CFLAGS
 --docdir=%{pgbaseinstdir}/doc \
 --htmldir=%{pgbaseinstdir}/doc/html \
 --with-system-tzdata=/usr/share/zoneinfo \
---with-extra-version=" (OrioleDB 1.7-beta15)" \
+--with-extra-version=" (OrioleDB %{orioledb_version}-%{orioledb_beta})" \
 --with-lz4 \
 --with-zstd \
 --with-uuid=e2fs \
@@ -89,7 +107,7 @@ MAKELEVEL=0 %{__make} %{?_smp_mflags} world-bin
 make DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} install-world-bin
 
 %files
-%doc README.md
+%doc README* HISTORY
 %license COPYRIGHT
 %{pgbaseinstdir}/lib/*
 %{pgbaseinstdir}/bin/*
@@ -109,6 +127,10 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
+* Fri Jun 19 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.1-1PIGSTY
+- Update to OrioleDB beta16 patchsets for PG16/PG17/PG18
+- Default to PG18 while keeping pgmajorversion-based builds for PG16 and PG17
+
 * Thu Apr 16 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.18-1PIGSTY
 - Rebase the PG17 kernel package to upstream patches17_18 (PostgreSQL 17.7)
 - Apply the OrioleDB branding change as a packaging patch instead of repacking the source tarball

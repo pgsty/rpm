@@ -8,6 +8,7 @@
 # License   :   Apache-2.0
 #==============================================================#
 ARCH=$(shell uname -m)
+PG_MAJOR ?= 18
 
 
 ###############################################################
@@ -1103,12 +1104,49 @@ babelfish:
 babelfish_all: antlr4 babelfishpg babelfishpg_install babelfish
 
 oriolepg:
-	QA_RPATHS=3 rpmbuild -ba SPECS/oriolepg.spec
+	./build oriolepg 18
+oriolepg_16:
+	./build oriolepg 16
+oriolepg_17:
+	./build oriolepg 17
+oriolepg_18:
+	./build oriolepg 18
+oriolepg_all:
+	./build oriolepg 16 17 18
 oriolepg-install:
-	sudo yum remove -y oriolepg_17 || /bin/true
-	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/oriolepg_17-[0-9]*.$(ARCH).rpm
+	sudo yum remove -y oriolepg_$(PG_MAJOR) || /bin/true
+	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/oriolepg_$(PG_MAJOR)-[0-9]*.$(ARCH).rpm
+oriolepg-install-all:
+	$(MAKE) PG_MAJOR=16 oriolepg-install
+	$(MAKE) PG_MAJOR=17 oriolepg-install
+	$(MAKE) PG_MAJOR=18 oriolepg-install
 orioledb:
-	QA_RPATHS=3 rpmbuild -ba SPECS/orioledb.spec
+	./build orioledb 18
+orioledb_16:
+	./build orioledb 16
+orioledb_17:
+	./build orioledb 17
+orioledb_18:
+	./build orioledb 18
+orioledb_all:
+	./build orioledb 16 17 18
+oriole: oriole_18
+oriole_16:
+	$(MAKE) oriolepg_16
+	$(MAKE) PG_MAJOR=16 oriolepg-install
+	$(MAKE) orioledb_16
+oriole_17:
+	$(MAKE) oriolepg_17
+	$(MAKE) PG_MAJOR=17 oriolepg-install
+	$(MAKE) orioledb_17
+oriole_18:
+	$(MAKE) oriolepg_18
+	$(MAKE) PG_MAJOR=18 oriolepg-install
+	$(MAKE) orioledb_18
+oriole_all:
+	$(MAKE) oriole_16
+	$(MAKE) oriole_17
+	$(MAKE) oriole_18
 
 parray_gin:
 	./build parray_gin 14 15 16 17 18
@@ -1170,7 +1208,7 @@ rmdbg:
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
 	hydra pghydro icu_ext imgsmlr pg_ttl_index index_advisor etcd_fdw kafka_fdw \
 	lower_quantile md5hash mimeo numeral omnisketch \
-	openhalo agensgraph pgedge pgedge-install spock snowflake lolor pgedge-all babelfishpg orioledb oriolepg oriolepg-install pagevis \
+	openhalo agensgraph pgedge pgedge-install spock snowflake lolor pgedge-all babelfishpg orioledb orioledb_16 orioledb_17 orioledb_18 orioledb_all oriolepg oriolepg_16 oriolepg_17 oriolepg_18 oriolepg_all oriolepg-install oriolepg-install-all oriole oriole_16 oriole_17 oriole_18 oriole_all pagevis \
 		periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
 		pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch psql_bm25s pg_bulkload block_copy_command \
 		pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \

@@ -1,28 +1,46 @@
 %global sname orioledb
+%define debug_package %{nil}
+%define _build_id_links none
 %global pname orioledb
-%global pgmajorversion 17
+%{!?pgmajorversion:%global pgmajorversion 18}
+%if 0%{?pgmajorversion} == 18
+%global orioledb_patchset 1
+%global upstream_pgver 18.4
+%else
+%if 0%{?pgmajorversion} == 17
+%global orioledb_patchset 20
+%global upstream_pgver 17.9
+%else
+%if 0%{?pgmajorversion} == 16
+%global orioledb_patchset 47
+%global upstream_pgver 16.13
+%else
+%{error:orioledb beta16 packaging supports PostgreSQL 16, 17, and 18 only}
+%endif
+%endif
+%endif
 %global pginstdir	/usr/oriole-%{pgmajorversion}
-%global orioledb_patchset 18
-%global upstream_pgver 17.7
+%global orioledb_beta beta16
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7
-Release:	beta15PIGSTY%{?dist}
+Version:	1.8
+Release:	beta16PIGSTY%{?dist}
 Summary:	Modern cloud-native storage engine for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/orioledb/orioledb
-Source0:	%{sname}-beta15.tar.gz
+Source0:	%{sname}-%{orioledb_beta}.tar.gz
 
-BuildRequires:	oriolepg_%{pgmajorversion} = 17.%{orioledb_patchset} libcurl-devel
-Requires:	    oriolepg_%{pgmajorversion} = 17.%{orioledb_patchset}
+BuildRequires:	oriolepg_%{pgmajorversion} = %{pgmajorversion}.%{orioledb_patchset}
+BuildRequires:	libcurl-devel, libzstd-devel, openssl-devel
+Requires:	oriolepg_%{pgmajorversion} = %{pgmajorversion}.%{orioledb_patchset}
 
 %description
 OrioleDB – building a modern cloud-native storage engine, and solving some PostgreSQL wicked problems
-This is the extension package for OrioleDB beta 15 on OriolePG 17.%{orioledb_patchset}
+This is the extension package for OrioleDB beta 16 on OriolePG %{pgmajorversion}.%{orioledb_patchset}
 (PostgreSQL %{upstream_pgver}, patchset %{orioledb_patchset})
 
 %prep
-%setup -q -n %{sname}-beta15
+%setup -q -n %{sname}-%{orioledb_beta}
 
 %build
 PATH=%{pginstdir}/bin:$PATH USE_PGXS=1 ORIOLEDB_PATCHSET_VERSION=%{orioledb_patchset} %{__make} %{?_smp_mflags}
@@ -36,10 +54,12 @@ PATH=%{pginstdir}/bin:$PATH USE_PGXS=1 ORIOLEDB_PATCHSET_VERSION=%{orioledb_patc
 %{pginstdir}/lib/postgresql/%{pname}.so
 %{pginstdir}/share/postgresql/extension/%{pname}.control
 %{pginstdir}/share/postgresql/extension/%{pname}*sql
-%exclude %{pginstdir}/lib/postgresql/bitcode/*
-%exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jun 19 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.8-beta16PIGSTY
+- Update to upstream beta16
+- Require matching OriolePG beta16 patchsets for PG16/PG17/PG18
+
 * Thu Apr 16 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.7-0.beta15PIGSTY
 - Update to upstream beta15
 - Require OriolePG 17.18 built from the PostgreSQL 17.7-based OrioleDB patchset

@@ -960,6 +960,9 @@ aws_s3:
 ##babelfishpg
 #pgmemcache
 
+db2fce:
+	./build db2fce 14 15 16 17 18
+
 documentdb:
 	./build documentdb 15 16 17 18
 

@@ -14,7 +14,7 @@ SOURCE0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion}
-Recommends: pg_http_%{pgmajorversion}
+Recommends: pgsql_http_%{pgmajorversion}
 
 %description
 A lightweight message broker system built inside PostgreSQL. pgmb enables

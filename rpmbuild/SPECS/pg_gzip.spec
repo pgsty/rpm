@@ -1,5 +1,5 @@
 %global pname gzip
-%global sname pg_gzip
+%global sname pgsql_gzip
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -13,16 +13,18 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
-Release:	2PIGSTY%{?dist}
+Version:	1.1.0
+Release:	1PIGSTY%{?dist}
 Summary:	Gzip compress and decompress for PostgreSQL
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-gzip
 Source0:	pgsql-gzip-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:  zlib-devel
+BuildRequires:	zlib-devel
 Requires:	postgresql%{pgmajorversion}-server
+Provides:	pg_gzip_%{pgmajorversion} = %{version}-%{release}
+Obsoletes:	pg_gzip_%{pgmajorversion} < %{version}-%{release}
 
 %description
 Sometimes you just need to compress your bytea object before you return it to the client.
@@ -80,6 +82,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jun 19 2026 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
+- Update to 1.1.0
+* Fri Jun 19 2026 Vonng <rh@vonng.com> - 1.0.0-4PIGSTY
+- Rename RPM package name to pgsql_gzip
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.0.0-2PIGSTY
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 * Mon Jan 29 2024 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY

@@ -5,13 +5,13 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0
+Version:	2.0.2
 Release:	1PIGSTY%{?dist}
 Summary:	Execute SQL commands in PostgreSQL background worker processes
 License:	PostgreSQL
 URL:		https://github.com/vibhorkum/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#		https://github.com/vibhorkum/pg_background/archive/refs/tags/v2.0.tar.gz
+#		https://github.com/vibhorkum/pg_background/archive/refs/tags/v2.0.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -56,6 +56,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Fri Jun 19 2026 Vonng <rh@vonng.com> - 2.0.2-1PIGSTY
+- https://github.com/vibhorkum/pg_background/releases/tag/v2.0.2
+
 * Sat Jun 06 2026 Vonng <rh@vonng.com> - 2.0-1PIGSTY
 - https://github.com/vibhorkum/pg_background/releases/tag/v2.0
 

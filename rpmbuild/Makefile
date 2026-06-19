@@ -250,6 +250,9 @@ pghydro:
 pg_duckdb:
 	./build pg_duckdb 14 15 16 17 18
 
+pg_ducklake:
+	./build pg_ducklake 14 15 16 17 18
+
 pg_mooncake:
 	./build pg_mooncake 14 15 16 17 18
 
@@ -1213,7 +1216,7 @@ rmdbg:
 		pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch psql_bm25s pg_bulkload block_copy_command \
 		pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
 		pg_country pg_crash pg_curl pg_currency pg_drop_events \
-		pg_duckdb pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
+		pg_duckdb pg_ducklake pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
 		pg_byteamagic \
 		pg_explain_ui pg_failover_slots pg_financial pg_fio \
 		pg_geohash rum pg_ai_query pg_orca pg_monetdb pg_graphql pggraph pgrdf jsonschema pg_durable pg_gzip pg_hashids pg_hashlib \

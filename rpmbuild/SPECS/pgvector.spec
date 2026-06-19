@@ -1,11 +1,12 @@
 %global pname vector
 %global sname pgvector
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.8.2
+Version:	0.8.3
 Release:	1PIGSTY%{?dist}
 Summary:	Open-source vector similarity search for Postgres
 License:	PostgreSQL
@@ -50,11 +51,11 @@ This package provides JIT support for pgvector
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md
@@ -72,6 +73,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Fri Jun 19 2026 Vonng <rh@vonng.com> - 0.8.3-1PIGSTY
+- https://pgxn.org/dist/vector/0.8.3/
+- Use system llvm-lto path for builder LLVM version compatibility
+
 * Thu Feb 26 2026 Ruohang Feng <rh@vonng.com> - 0.8.2-1PIGSTY
 * Sun Sep 07 2025 Ruohang Feng <rh@vonng.com> - 0.8.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

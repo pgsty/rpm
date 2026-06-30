@@ -1,6 +1,7 @@
 %global pname icu_ext
 %global sname icu_ext
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -13,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.10.0
+Version:	1.11.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension (in C) to expose functionality from the ICU library
 License:	PostgreSQL
@@ -59,11 +60,11 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md
@@ -77,7 +78,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
-* Thu Sep 04 2024 Vonng <rh@vonng.com> - 1.10.0-1PIGSTY
+* Tue Jun 30 2026 Vonng <rh@vonng.com> - 1.11.0-1PIGSTY
+- Bump to upstream PGXN 1.11.0
+
+* Wed Sep 04 2024 Vonng <rh@vonng.com> - 1.10.0-1PIGSTY
 * Mon Oct 14 2024 Vonng <rh@vonng.com> - 1.9.0-1PIGSTY
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.8.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

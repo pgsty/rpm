@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.3.0
+Version:	2.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
 Source0:	Biscuit-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/biscuit/2.3.0/biscuit-2.3.0.zip
+#           normalized from https://api.pgxn.org/dist/biscuit/2.4.0/biscuit-2.4.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -51,7 +51,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n Biscuit-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-pg16-pg17-api.patch
+sed -i '1i .DEFAULT_GOAL := all' Makefile
 # PostgreSQL packages on EL9 x86_64 inject -flto=auto through pg_config,
 # which trips gcc's LTO jobserver path for this PGXS build.
 %ifarch x86_64
@@ -62,17 +62,17 @@ sed -i '/^[[:space:]]*-fPIC$/a override CFLAGS += -fno-lto' Makefile
 
 %build
 %if %llvm
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config LLVM_BINPATH=%{llvm_binpath}
 %else
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} with_llvm=no
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config with_llvm=no
 %endif
 
 %install
 %{__rm} -rf %{buildroot}
 %if %llvm
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 %else
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} with_llvm=no
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot} with_llvm=no
 %endif
 
 %files
@@ -87,6 +87,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Tue Jun 30 2026 Vonng <rh@vonng.com> - 2.4.0-1PIGSTY
+- Bump to upstream PGXN 2.4.0
+
 * Thu Jun 18 2026 Vonng <rh@vonng.com> - 2.3.0-1PIGSTY
 - Use upstream PGXN 2.3.0 to match extension metadata and SQL version
 - Backport PG16 and PG17 API compatibility fixes for current active builds

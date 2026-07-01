@@ -2,17 +2,22 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global _build_id_links none
 %global sname citus
+%global llvm_binpath /usr/bin
 
 %{!?llvm:%global llvm 1}
 
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
+%{error:citus 14.1.0 only supports PostgreSQL 16-18}
+%endif
+
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
-Version:	14.0.0
-Release:	4PIGSTY%{dist}
+Version:	14.1.0
+Release:	1PIGSTY%{?dist}
 License:	AGPL-3.0
 URL:		https://github.com/citusdata/%{sname}
 Source0:    %{sname}-%{version}.tar.gz
-#Source0:	https://github.com/citusdata/%{sname}/archive/v%{version}.tar.gz
+#Source0:	https://github.com/citusdata/%%{sname}/archive/v%%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel libxml2-devel
 BuildRequires:	libxslt-devel openssl-devel pam-devel readline-devel
@@ -62,10 +67,17 @@ This packages provides JIT support for citus
 
 %build
 %configure PG_CONFIG=%{pginstdir}/bin/pg_config
-make %{?_smp_mflags}
+%ifarch x86_64
+%if 0%{?rhel} == 9
+# EL9 x86_64 PGXS injects -flto=auto, which can trip nested make jobserver
+# handling in the columnar build.
+echo 'override CFLAGS += -fno-lto' >> Makefile.global
+%endif
+%endif
+make %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
-%make_install
+make install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 # Install documentation with a better name:
 %{__mkdir} -p %{buildroot}%{pginstdir}/doc/extension
 %{__cp} README.md %{buildroot}%{pginstdir}/doc/extension/README-%{sname}.md
@@ -104,6 +116,11 @@ make %{?_smp_mflags}
 %endif
 
 %changelog
+* Wed Jul 01 2026 Vonng <rh@vonng.com> - 14.1.0-1PIGSTY
+- Update to upstream 14.1.0 with PostgreSQL 18 support
+- Use system llvm-lto path for builder LLVM version compatibility
+- Disable GCC LTO on EL9 x86_64 to avoid columnar nested make jobserver failures
+
 * Wed Feb 18 2026 Vonng <rh@vonng.com> - 14.0.0-4PIGSTY
 - Rebuild release for latest packaging updates
 * Thu Feb 12 2026 Vonng <rh@vonng.com> - 14.0.0-3PIGSTY

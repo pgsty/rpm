@@ -234,8 +234,8 @@ hunspell_pt_pt:
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
-citus:			# not ready for pg18
-	./build citus 15 16 17
+citus:
+	./build citus 16 17 18
 
 hydra:
 	./build hydra 14 15 16 #17 not ready yet

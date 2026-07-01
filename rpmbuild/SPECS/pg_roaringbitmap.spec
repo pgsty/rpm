@@ -1,6 +1,7 @@
 %global pname roaringbitmap
 %global sname pg_roaringbitmap
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -14,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	RoaringBitmap extension for PostgreSQL.
 License:	Apache-2.0
 URL:		https://github.com/ChenHuajun/pg_roaringbitmap
@@ -62,11 +63,11 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md
@@ -81,6 +82,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 
 %changelog
+* Wed Jul 01 2026 Vonng <rh@vonng.com> - 1.2.0-2PIGSTY
+- Use system llvm-lto path for builder LLVM version compatibility
+
 * Tue Jun 30 2026 Vonng <rh@vonng.com> - 1.2.0-1PIGSTY
 - https://github.com/ChenHuajun/pg_roaringbitmap/releases/tag/v1.2.0
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY

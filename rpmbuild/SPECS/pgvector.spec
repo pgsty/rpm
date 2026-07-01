@@ -6,7 +6,7 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.8.3
+Version:	0.8.4
 Release:	1PIGSTY%{?dist}
 Summary:	Open-source vector similarity search for Postgres
 License:	PostgreSQL
@@ -73,6 +73,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Wed Jul 01 2026 Vonng <rh@vonng.com> - 0.8.4-1PIGSTY
+- Update to upstream 0.8.4
+
 * Fri Jun 19 2026 Vonng <rh@vonng.com> - 0.8.3-1PIGSTY
 - https://pgxn.org/dist/vector/0.8.3/
 - Use system llvm-lto path for builder LLVM version compatibility

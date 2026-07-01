@@ -7,13 +7,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.8.3
+Version:	0.12.1
 Release:	1PIGSTY%{?dist}
 Summary:	Provenance-gated vector memory for LLM agents in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/pgmnemo/pgmnemo
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgmnemo/0.8.3/pgmnemo-0.8.3.zip
+#           normalized from https://api.pgxn.org/dist/pgmnemo/0.12.1/pgmnemo-0.12.1.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -43,6 +43,9 @@ cp -f extension/%{pname}.control %{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Wed Jul 01 2026 Vonng <rh@vonng.com> - 0.12.1-1PIGSTY
+- Update to upstream PGXN 0.12.1
+
 * Thu Jun 11 2026 Vonng <rh@vonng.com> - 0.8.3-1PIGSTY
 - Update to upstream PGXN 0.8.3
 

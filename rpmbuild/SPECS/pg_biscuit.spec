@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.4.0
+Version:	2.4.1
 Release:	1PIGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
 Source0:	Biscuit-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/biscuit/2.4.0/biscuit-2.4.0.zip
+#           normalized from https://api.pgxn.org/dist/biscuit/2.4.1/biscuit-2.4.1.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -87,6 +87,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginst
 %endif
 
 %changelog
+* Wed Jul 01 2026 Vonng <rh@vonng.com> - 2.4.1-1PIGSTY
+- Update package to upstream PGXN 2.4.1; extension SQL remains 2.4.0
+
 * Tue Jun 30 2026 Vonng <rh@vonng.com> - 2.4.0-1PIGSTY
 - Bump to upstream PGXN 2.4.0
 

@@ -3,8 +3,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global llvm_binpath /usr/bin
 
-%if 0%{?pgmajorversion} < 16
-%{error:re2 only supports PostgreSQL 16+}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
+%{error:re2 only supports PostgreSQL 16 through 18 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -18,13 +18,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.0
+Version:	0.4.0
 Release:	1PIGSTY%{?dist}
 Summary:	ClickHouse-compatible regular expression functions powered by RE2
 License:	PostgreSQL
 URL:		https://github.com/ClickHouse/pg_re2
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/re2/0.3.0/re2-0.3.0.zip
+#           normalized from https://api.pgxn.org/dist/re2/0.4.0/re2-0.4.0.zip
 #           Supported: PostgreSQL 16, 17, 18
 
 BuildRequires:	gcc-c++
@@ -86,6 +86,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Jul 05 2026 Vonng <rh@vonng.com> - 0.4.0-1PIGSTY
+- Update to upstream PGXN 0.4.0 using the normalized source tarball
+
 * Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 - Update to upstream PGXN 0.3.0 using the normalized source tarball
 

@@ -8,13 +8,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.3
+Version:	1.0.5
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL functions and views for daily work
 License:	PostgreSQL
 URL:		https://codeberg.org/pgsql_tweaks/pgsql_tweaks
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgsql_tweaks/1.0.3/pgsql_tweaks-1.0.3.zip
+#           normalized from https://api.pgxn.org/dist/pgsql_tweaks/1.0.5/pgsql_tweaks-1.0.5.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -40,5 +40,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Sun Jul 05 2026 Vonng <rh@vonng.com> - 1.0.5-1PIGSTY
+- Update to upstream PGXN 1.0.5 using the normalized source tarball
+
 * Thu Jun 11 2026 Vonng <rh@vonng.com> - 1.0.3-1PIGSTY
 - Initial RPM release for upstream PGXN 1.0.3

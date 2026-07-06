@@ -24,9 +24,10 @@ BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc, gcc-c++, make, readline-devel, zlib-devel >= 1.0.4
 BuildRequires:  libuuid-devel, libxml2-devel, libxslt-devel, libicu-devel
 BuildRequires:  openssl-devel, pam-devel, krb5-devel, openldap-devel
-BuildRequires:  perl-interpreter, perl-ExtUtils-Embed
+BuildRequires:  perl-interpreter, perl-ExtUtils-Embed, perl-FindBin, perl-Opcode
 BuildRequires:  python3-devel, tcl-devel, lz4-devel, libzstd-devel, libunwind-devel
 BuildRequires:  clang, llvm-devel, file, binutils
+BuildRequires:  polarstore
 Requires:       tzdata
 Requires(pre):  shadow-utils
 

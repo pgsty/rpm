@@ -1051,11 +1051,7 @@ pg_filedump:
 openhalodb:
 	QA_RPATHS=3 rpmbuild -ba SPECS/openhalodb.spec
 agensgraph:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/agensgraph.spec; \
-	else \
-		rpmbuild -ba SPECS/agensgraph.spec; \
-	fi
+	QA_RPATHS=3 rpmbuild -ba SPECS/agensgraph.spec
 polardb:
 	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
 		QA_RPATHS=3 rpmbuild -ba SPECS/polardb.spec; \

@@ -1,10 +1,11 @@
 %global sname agensgraph
-%global pgmajorversion 16
+%global pgmajorversion 17
 %global pgbaseinstdir /usr/agens-%{pgmajorversion}
+%global _lto_cflags %{nil}
 %define debug_package %{nil}
 
-Name:           %{sname}_%{pgmajorversion}
-Version:        2.16.0
+Name:           %{sname}-%{pgmajorversion}
+Version:        2.17.0
 Release:        1PIGSTY%{?dist}
 Summary:        AgensGraph kernel (PG%{pgmajorversion} fork)
 License:        PostgreSQL
@@ -13,7 +14,7 @@ Source0:        %{sname}-%{version}.tar.gz
 
 BuildRequires:  glibc-devel, gettext >= 0.10.35
 BuildRequires:  gcc-c++, zlib-devel >= 1.0.4
-BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
+BuildRequires:  krb5-devel, libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
 BuildRequires:  bison >= 2.3, flex >= 2.5.35, readline-devel, pam-devel
@@ -28,6 +29,7 @@ BuildRequires:  /usr/bin/perl
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
 %endif
 Requires(pre):  shadow-utils
+Provides:       agensgraph = %{version}-%{release}
 
 %description
 AgensGraph patched PostgreSQL %{pgmajorversion} kernel package.
@@ -35,8 +37,6 @@ This package installs PostgreSQL binaries and libraries under %{pgbaseinstdir}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-# meta is SQL-only extension, remove mistaken MODULE_big to avoid install failure
-sed -i '/^MODULE_big[[:space:]]*=[[:space:]]*meta$/d' contrib/meta/Makefile
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"
@@ -59,6 +59,10 @@ export CFLAGS
 --with-libxml \
 --with-libxslt \
 --with-icu \
+--with-gssapi \
+%if 0%{?rhel} >= 9
+--with-perl \
+%endif
 --with-python \
 --with-tcl \
 --with-openssl \
@@ -68,6 +72,7 @@ export CFLAGS
 --with-systemd \
 --with-includes=/usr/include \
 --with-libraries=%{_libdir} \
+--sysconfdir=/etc/sysconfig/agensgraph \
 --enable-nls \
 --enable-dtrace
 
@@ -101,6 +106,10 @@ useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
 /sbin/ldconfig
 
 %changelog
+* Sun Jul 05 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 2.17.0-1PIGSTY
+- Bump AgensGraph kernel package to 2.17.0 based on PostgreSQL 17.10
+- Use upstream tag source archive and install under /usr/agens-17
+
 * Tue Feb 24 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 2.16.0-1PIGSTY
 - Initial RPM release, AgensGraph PG16 kernel single-package build
 - Disable LLVM JIT on all EL targets for build stability

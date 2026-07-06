@@ -10,15 +10,16 @@ set -euo pipefail
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC_DIR="$(cd "${BIN_DIR}/../src" && pwd)"
 
-PG_VERSION="${1:-17.8}"
-BBF_VERSION="${2:-5.5.0}"
-PG_REF="${3:-BABEL_5_5_STABLE__PG_17_8}"
-EXT_REF="${4:-BABEL_5_5_STABLE}"
+PG_VERSION="${1:-17.7}"
+BBF_VERSION="${2:-5.4.0}"
+PG_REF="${3:-BABEL_5_4_STABLE__PG_17_7}"
+EXT_REF="${4:-BABEL_5_4_STABLE}"
 ANTLR_VERSION="${5:-4.13.2}"
+PG_MAJOR="${PG_VERSION%%.*}"
 
 PG_DIR_PREFIX="postgresql_modified_for_babelfish"
 EXT_DIR_PREFIX="babelfish_extensions"
-PACKAGE_NAME="babelfishpg-${PG_VERSION}-${BBF_VERSION}"
+PACKAGE_NAME="babelfish-${PG_MAJOR}-${PG_VERSION}-${BBF_VERSION}"
 PG_TARBALL_URL="https://codeload.github.com/babelfish-for-postgresql/postgresql_modified_for_babelfish/tar.gz/refs/heads/${PG_REF}"
 EXT_TARBALL_URL="https://codeload.github.com/babelfish-for-postgresql/babelfish_extensions/tar.gz/refs/heads/${EXT_REF}"
 ANTLR_ZIP="antlr4-cpp-runtime-${ANTLR_VERSION}-source.zip"
@@ -53,6 +54,7 @@ fi
 echo "[INFO] source dir: ${SRC_DIR}"
 echo "[INFO] pg ref: ${PG_REF}"
 echo "[INFO] ext ref: ${EXT_REF}"
+echo "[INFO] pg major: ${PG_MAJOR}"
 echo "[INFO] pg version: ${PG_VERSION}"
 echo "[INFO] babelfish version: ${BBF_VERSION}"
 echo "[INFO] antlr version: ${ANTLR_VERSION}"
@@ -117,6 +119,10 @@ cp -a "${EXT_DIR}/." "${PACKAGE_ROOT}/babelfish_extensions/"
 cp -f "${TMP_DIR}/${ANTLR_ZIP}" "${PACKAGE_ROOT}/third_party/${ANTLR_ZIP}"
 cp -f "${TMP_DIR}/${ANTLR_ZIP}" "${SRC_DIR}/${ANTLR_ZIP}"
 
+for ext in babelfishpg_money babelfishpg_common babelfishpg_tsql babelfishpg_tds; do
+  rm -rf "${PACKAGE_ROOT}/postgresql_modified_for_babelfish/contrib/${ext}"
+done
+
 echo "[INFO] applying branding edits (PostgreSQL -> Babelfish in version string)..."
 perl -0pi -e 's/PostgreSQL \$PG_VERSION on/Babelfish \$PG_VERSION on/g' "${PACKAGE_ROOT}/postgresql_modified_for_babelfish/configure.ac"
 perl -0pi -e "s/'PostgreSQL \@0\@ on \@1\@-\@2\@, compiled by \@3\@-\@4\@, \@5\@-bit'/'Babelfish \@0\@ on \@1\@-\@2\@, compiled by \@3\@-\@4\@, \@5\@-bit'/g" "${PACKAGE_ROOT}/postgresql_modified_for_babelfish/meson.build"
@@ -136,14 +142,16 @@ fi
 
 BUILD_DATE_UTC="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 cat > "${PACKAGE_ROOT}/SOURCE_MANIFEST" <<EOS
-name=babelfishpg
+name=babelfish-${PG_MAJOR}
 pg_version=${PG_VERSION}
 babelfish_version=${BBF_VERSION}
 build_date_utc=${BUILD_DATE_UTC}
-core_url=${PG_TARBALL_URL}
+core_repo=https://github.com/babelfish-for-postgresql/postgresql_modified_for_babelfish.git
 core_ref=${PG_REF}
-ext_url=${EXT_TARBALL_URL}
+core_url=${PG_TARBALL_URL}
+ext_repo=https://github.com/babelfish-for-postgresql/babelfish_extensions.git
 ext_ref=${EXT_REF}
+ext_url=${EXT_TARBALL_URL}
 antlr_runtime_source=${ANTLR_ZIP}
 EOS
 

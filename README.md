@@ -24,44 +24,43 @@ pig build pkg pg_search
 ```
 
 
-## Babelfish (EL9, PG17)
+## Babelfish (EL10A, PG17)
 
-Validated package chain:
+Current package chain:
 
-1. `babelfishpg_17` (kernel)
-2. `antlr4-runtime413` + `antlr4-runtime413-devel` (standalone ANTLR runtime)
-3. `babelfish_extensions_17` (four core extensions)
+1. `antlr4-runtime413` + `antlr4-runtime413-devel` (standalone ANTLR runtime)
+2. `babelfish-17` (Babelfish PG 17.7 kernel + four core extensions)
 
 Key files:
 
 - `bin/babelfish.sh` (generate source tarball + ANTLR zip)
-- `rpmbuild/SPECS/babelfishpg_17.spec`
 - `rpmbuild/SPECS/antlr4-runtime413.spec`
-- `rpmbuild/SPECS/babelfish_extensions_17.spec`
-- `rpmbuild/Makefile` target: `babelfishpg`
+- `rpmbuild/SPECS/babelfish.spec`
+- `rpmbuild/Makefile` target: `babelfish_all`
 
-Build on EL9 (example):
+Generate sources:
 
 ```bash
-cp ~/pgsty/rpm/src/babelfishpg-17.8-5.5.0.tar.gz ~/rpmbuild/SOURCES/
-cp ~/pgsty/rpm/src/antlr4-cpp-runtime-4.13.2-source.zip ~/rpmbuild/SOURCES/
-cp ~/pgsty/rpm/rpmbuild/SPECS/babelfishpg_17.spec ~/rpmbuild/SPECS/
-cp ~/pgsty/rpm/rpmbuild/SPECS/antlr4-runtime413.spec ~/rpmbuild/SPECS/
-cp ~/pgsty/rpm/rpmbuild/SPECS/babelfish_extensions_17.spec ~/rpmbuild/SPECS/
-
-rpmbuild -ba ~/rpmbuild/SPECS/babelfishpg_17.spec
-rpmbuild -ba ~/rpmbuild/SPECS/antlr4-runtime413.spec
-
-ARCH="$(uname -m)"
-sudo dnf remove -y antlr4-runtime antlr4-runtime-devel || true
-sudo dnf install -y \
-  ~/rpmbuild/RPMS/${ARCH}/antlr4-runtime413-4.13.2-1PIGSTY.el9.${ARCH}.rpm \
-  ~/rpmbuild/RPMS/${ARCH}/antlr4-runtime413-devel-4.13.2-1PIGSTY.el9.${ARCH}.rpm \
-  ~/rpmbuild/RPMS/${ARCH}/babelfishpg_17-17.8-1PIGSTY.el9.${ARCH}.rpm
-
-rpmbuild -ba ~/rpmbuild/SPECS/babelfish_extensions_17.spec
+bin/babelfish.sh
 ```
 
+Build on EL10A (example):
+
+```bash
+cp ~/pgsty/rpm/src/babelfish-17-17.7-5.4.0.tar.gz ~/rpmbuild/SOURCES/
+cp ~/pgsty/rpm/src/antlr4-cpp-runtime-4.13.2-source.zip ~/rpmbuild/SOURCES/
+cp ~/pgsty/rpm/rpmbuild/SPECS/antlr4-runtime413.spec ~/rpmbuild/SPECS/
+cp ~/pgsty/rpm/rpmbuild/SPECS/babelfish.spec ~/rpmbuild/SPECS/
+
+cd ~/rpmbuild
+make babelfish_all
+```
+
+PG18 dev source can be generated with:
+
+```bash
+bin/babelfish.sh 18.0 6.0.0 BABEL_6_X_DEV__PG_18_X BABEL_6_X_DEV
+```
 
 ## Signature
 

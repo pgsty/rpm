@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/rpm make shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2026-03-21
+# Mtime     :   2026-07-06
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -35,7 +35,8 @@ pgrx0180:
 	pig build pgrx -v 0.18.0
 pgrx0181:
 	pig build pgrx -v 0.18.1
-
+pgrx0191:
+	pig build pgrx -v 0.19.1
 
 ###############################################################
 #                            Summary                          #
@@ -50,7 +51,7 @@ rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
 rust10: pg_command_fw pg_trickle pggraph pgrdf jsonschema
-time: timescaledb pg_timeseries periods temporal_tables pg_when pg_bikram_sambat pg_extra_time pg_task
+time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background pg_when pg_stl pg_extra_time pg_bikram_sambat
 
 
 ###############################################################
@@ -80,14 +81,14 @@ pg_task:
 pg_later:       # rust pgrx 0.18.1
 	./build pg_later 14 15 16 17
 
+pg_background:
+	./build pg_background 14 15 16 17 18
+
 pg_when:        # rust pgrx 0.18.1
 	./build pg_when 14 15 16 17 18
 
-pg_bikram_sambat:
-	./build pg_bikram_sambat 14 15 16 17 18
-
-pg_background:
-	./build pg_background 14 15 16 17 18
+pg_stl:
+	./build pg_stl 16 17 18
 
 
 ###############################################################
@@ -106,23 +107,20 @@ q3c:
 geoip:
 	./build geoip 14 15 16 17 18
 
-pg_geohash:
-	./build pg_geohash 14 15 16 17 18
-
 pg_polyline:    # rust pgrx 0.18.1
 	./build pg_polyline 14 15 16 17 18
-
-pg_tzf:         # rust pgrx 0.18.1
-	./build pg_tzf 14 15 16 17 18
 
 pg_eviltransform:	# rust pgrx 0.18.1
 	./build pg_eviltransform 14 15 16 17 18
 
-pg_command_fw:		# rust pgrx 0.18.1
-	./build pg_command_fw 15 16 17 18
+pg_geohash:
+	./build pg_geohash 14 15 16 17 18
 
-pg_trickle:		# rust pgrx 0.18.1, PG18 only
-	./build pg_trickle 18
+pghydro:
+	./build pghydro 14 15 16 17 18
+
+pg_tzf:         # rust pgrx 0.18.1
+	./build pg_tzf 14 15 16 17 18
 
 
 ###############################################################
@@ -140,11 +138,11 @@ pgvectorscale:  # rust pgrx 0.18.1
 pg_vectorize:	# rust pgrx 0.18.1
 	./build pg_vectorize 14 15 16 17 18
 
-pg_rrf:			# rust pgrx 0.18.1
-	./build pg_rrf 14 15 16 17
-
 pg_similarity:	# covered by pgdg
 	./build pg_similarity 14 15 16 17 18
+
+pg_rrf:			# rust pgrx 0.18.1
+	./build pg_rrf 14 15 16 17
 
 smlar:          # break for pg18, fixed
 	./build smlar 14 15 16 17 18
@@ -161,28 +159,22 @@ pg4ml:
 pgml:			# rust pgrx 0.12.9 (obsolete)
 	./build pgml 14 15 16 17
 
+pgmnemo:
+	./build pgmnemo 14 15 16 17 18
+
 
 
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
- pg_search:      # rust pgrx 0.18.1
+pg_search:      # rust pgrx 0.18.1
 	./build pg_search 15 16 17 18
-
-pg_bigm:     	# covered by PGDG (deb break on 18)
-	./build pg_bigm 14 15 16 17 18
-
-pg_biscuit:
-	./build pg_biscuit 16 17 18
-
-pg_textsearch:
-	./build pg_textsearch 17 18
-
-psql_bm25s:
-	./build psql_bm25s 17 18
 
 pgroonga:
 	./build pgroonga 14 15 16 17 18
+
+pg_bigm:     	# covered by PGDG (deb break on 18)
+	./build pg_bigm 14 15 16 17 18
 
 # zhparser and scws deps
 scws:
@@ -203,11 +195,20 @@ vchord_bm25:		# rust pgrx 0.18.1
 pg_tokenizer:		# rust pgrx 0.18.1
 	./build pg_tokenizer 14 15 16 17 18
 
-pg_kazsearch:		# rust pgrx 0.18.1
-	./build pg_kazsearch 16 17 18
+pg_biscuit:
+	./build pg_biscuit 16 17 18
+
+pg_textsearch:
+	./build pg_textsearch 17 18
 
 pg_pinyin:			# rust pgrx 0.18.1
 	./build pg_pinyin 14 15 16 17 18
+
+pg_kazsearch:		# rust pgrx 0.18.1
+	./build pg_kazsearch 16 17 18
+
+psql_bm25s:
+	./build psql_bm25s 17 18
 
 hunspell: hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_ru_ru hunspell_ru_ru_aot #hunspell_pt_pt
 hunspell_cs_cz:
@@ -224,15 +225,15 @@ hunspell_nl_nl:
 	./build hunspell_nl_nl     14 15 16 17 18
 hunspell_nn_no:
 	./build hunspell_nn_no     14 15 16 17 18
+hunspell_pt_pt:
+	./build hunspell_pt_pt     14 15 16 17 18
 hunspell_ru_ru:
 	./build hunspell_ru_ru     14 15 16 17 18
 hunspell_ru_ru_aot:
 	./build hunspell_ru_ru_aot 14 15 16 17 18
-hunspell_pt_pt:
-	./build hunspell_pt_pt     14 15 16 17 18
 
 ###############################################################
-#                       Category: FTS                         #
+#                       Category: OLAP                        #
 ###############################################################
 citus:
 	./build citus 16 17 18
@@ -240,21 +241,15 @@ citus:
 hydra:
 	./build hydra 14 15 16 #17 not ready yet
 
-storage_engine:
-	./build storage_engine 15 16 17 18
-
-pghydro:
-	./build pghydro 14 15 16 17 18
-
 #pg_analytics:   # download, obsolete
 pg_duckdb:
 	./build pg_duckdb 14 15 16 17 18
 
-pg_ducklake:
-	./build pg_ducklake 14 15 16 17 18
-
 pg_mooncake:
 	./build pg_mooncake 14 15 16 17 18
+
+storage_engine:
+	./build storage_engine 15 16 17 18
 
 pg_clickhouse:
 	./build pg_clickhouse 14 15 16 17 18
@@ -265,9 +260,18 @@ pg_clickhouse:
 pg_parquet:			# rust pgrx 0.18.1
 	./build pg_parquet 14 15 16 17 18
 
+pg_ducklake:
+	./build pg_ducklake 14 15 16 17 18
+
 # pg_fkpart
 pg_partman:
 	./build pg_partman 14 15 16 17 18
+
+pg_orca:
+	./build pg_orca 18
+
+pg_sorted_heap:
+	./build pg_sorted_heap 16 17 18
 
 # plproxy
 # pg_strom
@@ -278,21 +282,36 @@ pg_partman:
 age:
 	./build age 17 18
 
+onesparse:
+	./build onesparse 18
+
+pggraph:		# rust pgrx 0.18.1, installs graph extension
+	./build pggraph 14 15 16 17 18
+
+pgrdf:			# rust pgrx 0.18.1, no PG18 feature upstream
+	./build pgrdf 14 15 16 17
+
+pgmq:
+	./build pgmq 14 15 16 17 18
+
+pgmb:
+	./build pgmb 14 15 16 17 18
+
+ulak:
+	./build ulak 14 15 16 17 18
+
+fsm_core:
+	./build fsm_core 15 16 17 18
+
 #hll:
 rum:
-	./build run 16 17 18
+	./build rum 16 17 18
 
 pg_ai_query:
 	./build pg_ai_query 14 15 16 17 18
 
-pg_orca:
-	./build pg_orca 18
-
 pg_monetdb:		# obsolete: monetdb-devel is unavailable in active EL builder repos
 	@echo "pg_monetdb is obsolete; monetdb-devel is unavailable in active EL builder repos"
-
-pggraph:		# rust pgrx 0.18.1, installs graph extension
-	./build pggraph 14 15 16 17 18
 
 pg_ilib:		# deferred: draft spec kept in SPECS/obsolete
 	@echo "pg_ilib is deferred; draft spec kept in SPECS/obsolete"
@@ -300,38 +319,17 @@ pg_ilib:		# deferred: draft spec kept in SPECS/obsolete
 pg_igraph:		# deferred: draft spec kept in SPECS/obsolete
 	@echo "pg_igraph is deferred; draft spec kept in SPECS/obsolete"
 
+pg_ttl_index:
+	./build pg_ttl_index 15 16 17 18
+
 pg_graphql:		# rust pgrx 0.18.1
 	./build pg_graphql 14 15 16 17 18
 
 pg_jsonschema:	# rust pgrx 0.18.1
 	./build pg_jsonschema 14 15 16 17 18
 
-pgmnemo:
-	./build pgmnemo 14 15 16 17 18
-
-fsm_core:
-	./build fsm_core 15 16 17 18
-
-pg_projection:
-	./build pg_projection 14 15 16 17 18
-
-pg_stl:
-	./build pg_stl 16 17 18
-
-pg_sorted_heap:
-	./build pg_sorted_heap 16 17 18
-
-pgrdf:			# rust pgrx 0.18.1, no PG18 feature upstream
-	./build pgrdf 14 15 16 17
-
 jsonschema:		# rust pgrx 0.18.1, distinct from pg_jsonschema
 	./build jsonschema 14 15 16 17 18
-
-pg_durable:		# rust pgrx 0.18.1, shared_preload_libraries
-	./build pg_durable 14 15 16 17 18
-
-pg_ttl_index:
-	./build pg_ttl_index 15 16 17 18
 
 #jsquery:
 #pg_hint_plan
@@ -341,25 +339,26 @@ index_advisor:
 pg_plan_filter:
 	./build pg_plan_filter 14 15 16 17 18
 
+pg_variables:
+	./build pg_variables 14 15 16 17 18
+
 imgsmlr:
 	./build imgsmlr 14 15 16 17 18
 
 pg_ivm:
 	./build pg_ivm 14 15 16 17 18
+
 pg_incremental:
 	./build pg_incremental 16 17 18
 
-pgmb:
-	./build pgmb 14 15 16 17 18
+pg_trickle:		# rust pgrx 0.18.1, PG18 only
+	./build pg_trickle 18
 
-pg_accumulator:
-	./build pg_accumulator 14 15 16 17 18
+pg_durable:		# rust pgrx 0.18.1, shared_preload_libraries
+	./build pg_durable 14 15 16 17 18
 
-pgmq:
-	./build pgmq 14 15 16 17 18
-
-pgmqtt:			# rust pgrx 0.18.1
-	./build pgmqtt 14 15 16 17 18
+provsql:
+	./build provsql 14 15 16 17 18
 
 # pgq
 
@@ -387,16 +386,19 @@ plv8:
 pljs:
 	./build pljs 14 15 16 17 18
 
+plprql: 		# rust pgrx 0.18.1
+	./build plprql 14 15 16 17 18
+
 plpgsql_check:
 	./build plpgsql_check 14 15 16 17 18
+
+pg_mockable:
+	./build pg_mockable 14 15 16 17 18
 
 pg_typescript:		# rust pgrx 0.18.1
 	./build pg_typescript 16 17 18
 
 # pllua
-
-plprql: 		# rust pgrx 0.18.1
-	./build plprql 14 15 16 17 18
 
 # plprofiler
 # plsh
@@ -469,9 +471,6 @@ pg_uint128:
 hashtypes:
 	./build hashtypes 14 15 16 17 18
 
-pg_duration:
-	./build pg_duration 17 18
-
 pg_uri:
 	./build pg_uri 14 15 16 17 18
 
@@ -480,6 +479,12 @@ pg_emailaddr:
 
 pg_acl:
 	./build pg_acl 14 15 16 17 18
+
+pg_duration:
+	./build pg_duration 17 18
+
+pg_bikram_sambat:
+	./build pg_bikram_sambat 14 15 16 17 18
 
 pg_rrule:
 	./build pg_rrule 14 15 16 17 18
@@ -494,9 +499,6 @@ chkpass:
 ###############################################################
 #                       Category: UTIL                        #
 ###############################################################
-pg_retry:
-	./build pg_retry 17 18
-
 pg_gzip:
 	./build pg_gzip 14 15 16 17 18
 
@@ -509,16 +511,23 @@ pg_zstd:
 pg_http:
 	./build pg_http 14 15 16 17 18
 
-pg_mockable:
-	./build pg_mockable 14 15 16 17 18
-
 pg_net:
 	./build pg_net 14 15 16 17 18
+
 pg_net2:
 	./build pg_net2 14 15 16 17 18
 
 pg_curl:
 	./build pg_curl 14 15 16 17 18
+
+pg_retry:
+	./build pg_retry 17 18
+
+pg_protobuf:
+	./build pg_protobuf 14 15 16 17 18
+
+pgproto:
+	./build pgproto 14 15 16 17 18
 
 pgjq:
 	./build pgjq 14 15 16 17
@@ -535,23 +544,23 @@ pg_html5_email_address:
 url_encode:
 	./build url_encode 14 15 16 17 18
 
-pg_extra_time:
-	./build pg_extra_time 14 15 16 17 18
-
 pgsql_tweaks:
 	./build pgsql_tweaks 14 15 16 17 18
 
+pg_extra_time:
+	./build pg_extra_time 14 15 16 17 18
+
 pgpcre:
 	./build pgpcre 14 15 16 17 18
+
+re2:
+	./build re2 16 17 18
 
 icu_ext:
 	./build icu_ext 14 15 16 17 18
 
 pgqr:
 	./build pgqr 14 15 16 17 18
-
-pg_protobuf:
-	./build pg_protobuf 14 15 16 17 18
 
 pg_envvar:
 	./build pg_envvar 14 15 16 17 18
@@ -576,6 +585,9 @@ data_historization:
 pg_schedoc:
 	./build pg_schedoc 14 15 16 17 18
 
+pg_isok:
+	./build pg_isok 14 15 16 17 18
+
 pg_hashlib:
 	./build pg_hashlib 14 15 16 17 18
 
@@ -598,14 +610,14 @@ pgsparql:
 ###############################################################
 #                       Category: FUNC                        #
 ###############################################################
-pg_weighted_statistics:
-	./build pg_weighted_statistics 14 15 16 17 18
-
 pg_idkit:			# rust pgrx 0.18.1
 	./build pg_idkit 14 15 16 17 18
 
 pgx_ulid:			# rust pgrx 0.18.1
 	./build pgx_ulid  14 15 16 17 18
+
+pg_uuid_v8:
+	./build pg_uuid_v8 14 15 16 17 18
 
 #pg_uuidv7
 
@@ -633,18 +645,20 @@ count_distinct:
 omnisketch:
 	./build omnisketch 14 15 16 17 18
 
-datasketches:
-	./build datasketches 14 15 16 17 18
-
 ddsketch:
 	./build ddsketch 14 15 16 17 18
 
 vasco:
 	./build vasco 14 15 16 17 18
-	./build vasco 14 15 16 17 18
 
 pgxicor:
 	./build pgxicor 14 15 16 17 18
+
+pg_weighted_statistics:
+	./build pg_weighted_statistics 14 15 16 17 18
+
+datasketches:
+	./build datasketches 14 15 16 17 18
 
 #tdigest
 
@@ -683,8 +697,14 @@ pg_base58:		# rust pgrx 0.18.1
 pg_financial:
 	./build pg_financial 14 15 16 17 18
 
+pg_accumulator:
+	./build pg_accumulator 14 15 16 17 18
+
 pg_convert:		# rust pgrx 0.18.1
 	./build pg_convert 14 15 16 17 18
+
+parray_gin:
+	./build parray_gin 14 15 16 17 18
 
 
 ###############################################################
@@ -705,6 +725,12 @@ pg_convert:		# rust pgrx 0.18.1
 # pg_prewarm:
 # pgpool:
 
+pg_query_rewrite:
+	./build pg_query_rewrite 14 15 16 17 18
+
+pgfincore:
+	./build pgfincore 14 15 16 17 18
+
 pg_cooldown:
 	./build pg_cooldown 14 15 16 17 18
 
@@ -714,29 +740,11 @@ ddlx:			# fix pgdg 18 missing
 pglinter:
 	./build pglinter 14 15 16 17 18
 
-pgfincore:
-	./build pgfincore 14 15 16 17 18
-
 pgdd:			# rust pgrx 0.18.1
 	./build pgdd 14 15 16 17 18
 
-pgclone:
-	./build pgclone 14 15 16 17 18
-
-pgproto:
-	./build pgproto 14 15 16 17 18
-
-re2:
-	./build re2 16 17 18
-
-pg_uuid_v8:
-	./build pg_uuid_v8 14 15 16 17 18
-
 preprepare:
 	./build preprepare 14 15 16 17 18
-
-ulak:
-	./build ulak 14 15 16 17 18
 
 pg_upless:
 	./build pg_upless 14 15 16 17 18
@@ -756,20 +764,20 @@ pg_cheat_funcs:
 pg_fio:
 	./build pg_fio 14 15 16 17 18
 
-pg_savior:		# breaks on pg18 (fixed)
-	./build pg_savior 14 15 16 17 18
+pg_qos:
+	./build pg_qos 15 16 17 18
 
 pg_pathcheck:	# preload-only diagnostics module for PG17/18
 	./build pg_pathcheck 17 18
+
+pg_savior:		# breaks on pg18 (fixed)
+	./build pg_savior 14 15 16 17 18
 
 pg_drop_events:
 	./build pg_drop_events 14 15 16 17 18
 
 table_log:
 	./build table_log 14 15 16 17 18
-
-pg_qos:
-	./build pg_qos 15 16 17 18
 
 ###############################################################
 #                       Category: STAT                         #
@@ -781,22 +789,37 @@ pg_qos:
 #pg_qualstats
 #pg_track_settings
 #pg_wait_sampling
-system_stats:
-	./build system_stats 14 15 16 17 18
+pg_tracing:
+	./build pg_tracing 14 15 16 17 18
+
+pg_stat_ch:
+	./build pg_stat_ch 16 17 18
+
+pg_stat_backtrace:
+	./build pg_stat_backtrace 14 15 16 17 18
+
+pg_stat_monitor:
+	./build pg_stat_monitor 18 # fix the missing pgdg
+
+pg_store_plans:
+	./build pg_store_plans 14 15 16 17 18
+
+pg_track_optimizer:
+	./build pg_track_optimizer 17 18
 
 pg_datasentinel:
 	./build pg_datasentinel 15 16 17 18
 #bgw_replstatus
 #powa
 
-pg_tracing:
-	./build pg_tracing 14 15 16 17 18
-
 pgsentinel:
 	./build pgsentinel 14 15 16 17 18
 
 pg_ash:
 	./build pg_ash 14 15 16 17 18
+
+system_stats:
+	./build system_stats 14 15 16 17 18
 
 pg_meta:
 	./build pg_meta 14 15 16 17 18
@@ -816,29 +839,11 @@ toastinfo:
 pg_explain_ui:		# rust pgrx 0.18.1
 	./build pg_explain_ui 14 15 16 17 18
 
-pg_stat_monitor:
-	./build pg_stat_monitor 18 # fix the missing pgdg
-
-pg_store_plans:
-	./build pg_store_plans 14 15 16 17 18
-
 pg_relusage:
 	./build pg_relusage 14 15 16 17 18
 
-pg_track_optimizer:
-	./build pg_track_optimizer 17 18
-
 pagevis:
 	./build pagevis 14 15 16 17 18
-
-pg_stat_ch:
-	./build pg_stat_ch 16 17 18
-
-pg_stat_backtrace:
-	./build pg_stat_backtrace 14 15 16 17 18
-
-pg_isok:
-	./build pg_isok 14 15 16 17 18
 
 
 ###############################################################
@@ -855,18 +860,6 @@ pg_isok:
 #logerrors
 #set_user
 
-login_hook:
-	./build login_hook 14 15 16 17 18
-
-pg_noset:
-	./build pg_noset 14 15 16 17 18
-
-pg_vault:
-	./build pg_vault 14 15 16 17 18
-
-hyperion_vault:	# rust pgrx 0.18.1, PG18 only, shared_preload_libraries
-	./build hyperion_vault 18
-
 supautils:
 	./build supautils 14 15 16 17 18
 
@@ -876,8 +869,11 @@ pgsodium:
 column_encrypt:
 	./build column_encrypt 14 15 16 17 18
 
-block_copy_command:	# rust pgrx 0.18.1
-	./build block_copy_command 14 15 16 17 18
+pg_vault:
+	./build pg_vault 14 15 16 17 18
+
+hyperion_vault:	# rust pgrx 0.18.1, PG18 only, shared_preload_libraries
+	./build hyperion_vault 18
 
 pg_session_jwt:		# rust pgrx 0.18.1
 	./build pg_session_jwt 14 15 16 17 18
@@ -891,8 +887,14 @@ pgsmcrypto:			# rust pgrx 0.18.1
 pg_enigma:			# rust pgrx 0.18.1
 	./build pg_enigma 14 15 16 17 18
 
+pg_auditor:
+	./build pg_auditor 14 15 16 17 18
+
 pgcryptokey:
 	./build pgcryptokey 14 15 16 17 18
+
+login_hook:
+	./build login_hook 14 15 16 17 18
 
 pg_snakeoil:
 	./build pg_snakeoil 14 15 16 17 18
@@ -900,11 +902,17 @@ pg_snakeoil:
 pgextwlist:
 	./build pgextwlist 14 15 16 17 18
 
-pg_auditor:
-	./build pg_auditor 14 15 16 17 18
+pg_command_fw:		# rust pgrx 0.18.1
+	./build pg_command_fw 15 16 17 18
+
+block_copy_command:	# rust pgrx 0.18.1
+	./build block_copy_command 14 15 16 17 18
 
 sslutils:
 	./build sslutils 14 15 16 17 18
+
+pg_noset:
+	./build pg_noset 14 15 16 17 18
 
 ###############################################################
 #                       Category: FDW                         #
@@ -927,23 +935,23 @@ wrappers:			# rust pgrx 0.18.1
 sqlite_fdw:
 	./build sqlite_fdw 14 15 16 17 18
 
+etcd_fdw:			# rust pgrx 0.18.1
+	./build etcd_fdw 14 15 16 17 18
+
+nominatim_fdw:
+	./build nominatim_fdw 14 15 16 17 18
+
 redis_fdw:
 	./build redis_fdw 14 15 16 17 18
 
 pg_redis_pubsub:
 	./build pg_redis_pubsub 14 15 16 17 18
 
-etcd_fdw:			# rust pgrx 0.18.1
-	./build etcd_fdw 14 15 16 17 18
-
 kafka_fdw:
 	./build kafka_fdw 14 15 16 17
 
 firebird_fdw:
 	./build firebird_fdw 14 15 16 17 18
-
-nominatim_fdw:
-	./build nominatim_fdw 14 15 16 17 18
 
 aws_s3:
 	./build aws_s3 14 15 16 17 18
@@ -960,20 +968,17 @@ aws_s3:
 ##babelfishpg
 #pgmemcache
 
-db2fce:
-	./build db2fce 14 15 16 17 18
-
 documentdb:
 	./build documentdb 15 16 17 18
+
+pg_projection:
+	./build pg_projection 14 15 16 17 18
 
 session_variable:
 	./build session_variable 14 15 16 17 18
 
-pg_variables:
-	./build pg_variables 14 15 16 17 18
-
-provsql:
-	./build provsql 14 15 16 17 18
+db2fce:
+	./build db2fce 14 15 16 17 18
 
 spat:
 	./build spat 17
@@ -991,6 +996,9 @@ spat:
 
 pglogical_ticker:
 	./build pglogical_ticker 14 15 16 17 #18
+
+logical_ddl:
+	./build logical_ddl 14 15 16 17 18
 
 pg_failover_slots:
 	./build pg_failover_slots 14 15 16 17 18
@@ -1011,6 +1019,12 @@ libpgfeutils-install:
 pgactive:
 	./build pgactive 14 15 16 17 18
 
+pgclone:
+	./build pgclone 14 15 16 17 18
+
+pgmqtt:			# rust pgrx 0.18.1
+	./build pgmqtt 14 15 16 17 18
+
 decoder_raw:
 	./build decoder_raw 14 15 16 17 18
 
@@ -1020,15 +1034,8 @@ mimeo:
 pg_bulkload:
 	./build pg_bulkload 14 15 16 17 18
 
-logical_ddl:
-	./build logical_ddl 14 15 16 17 18
-
-pg_query_rewrite:
-	./build pg_query_rewrite 14 15 16 17 18
-
-onesparse:
-	./build onesparse 18
-
+postgresbson:
+	./build postgresbson 14 15 16 17 18
 
 ###############################################################
 #                          Misc                               #
@@ -1050,117 +1057,45 @@ pg_filedump:
 ###############################################################
 openhalodb:
 	QA_RPATHS=3 rpmbuild -ba SPECS/openhalodb.spec
+openhalo: openhalodb
+
+ivorysql:
+	QA_RPATHS=3 rpmbuild -ba SPECS/ivorysql.spec
+
 agensgraph:
 	QA_RPATHS=3 rpmbuild -ba SPECS/agensgraph.spec
+
 polardb:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/polardb.spec; \
-	else \
-		rpmbuild -ba SPECS/polardb.spec; \
-	fi
-pgedge:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/pgedge.spec; \
-	else \
-		rpmbuild -ba SPECS/pgedge.spec; \
-	fi
-pgedge-install:
-	sudo yum remove -y pgedge_18 || /bin/true
-	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/pgedge_18-[0-9]*.$(ARCH).rpm
-spock:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/spock.spec; \
-	else \
-		rpmbuild -ba SPECS/spock.spec; \
-	fi
-snowflake:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/snowflake.spec; \
-	else \
-		rpmbuild -ba SPECS/snowflake.spec; \
-	fi
-lolor:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/lolor.spec; \
-	else \
-		rpmbuild -ba SPECS/lolor.spec; \
-	fi
-pgedge-all: pgedge pgedge-install spock snowflake lolor
+	QA_RPATHS=3 rpmbuild -ba SPECS/polardb.spec
+
+pgedge: pgedge-18
+pgedge-18:
+	QA_RPATHS=3 ./build pgedge 18
+pgedge-17:
+	QA_RPATHS=3 ./build pgedge 17
+pgedge-16:
+	QA_RPATHS=3 ./build pgedge 16
+pgedge-15:
+	QA_RPATHS=3 ./build pgedge 15
+
 antlr4:
 	rpmbuild -ba SPECS/antlr4-runtime413.spec
-babelfishpg:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/babelfishpg.spec; \
-	else \
-		rpmbuild -ba SPECS/babelfishpg.spec; \
-	fi
-babelfishpg_install:
-	@set -e; \
-	ANTLR_RPM=$$(ls -1t ~/rpmbuild/RPMS/$(ARCH)/antlr4-runtime413-[0-9]*.rpm | head -n 1); \
-	ANTLR_DEV_RPM=$$(ls -1t ~/rpmbuild/RPMS/$(ARCH)/antlr4-runtime413-devel-*.rpm | head -n 1); \
-	KERNEL_RPM=$$(ls -1t ~/rpmbuild/RPMS/$(ARCH)/babelfishpg_17-[0-9]*.rpm | head -n 1); \
-	RHEL_MAJOR=$$(rpm -E '%{?rhel}'); \
-	if [ "$$RHEL_MAJOR" -ge 10 ]; then JAVA_RPM=java-21-openjdk-headless; else JAVA_RPM=java-17-openjdk-headless; fi; \
-	sudo dnf remove -y antlr4-runtime antlr4-runtime-devel || true; \
-	sudo dnf install -y $$ANTLR_RPM $$ANTLR_DEV_RPM $$KERNEL_RPM $$JAVA_RPM
-babelfish:
-	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
-		QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec; \
-	else \
-		rpmbuild -ba SPECS/babelfish.spec; \
-	fi
-babelfish_all: antlr4 babelfishpg babelfishpg_install babelfish
 
-oriolepg:
-	./build oriolepg 18
-oriolepg_16:
-	./build oriolepg 16
-oriolepg_17:
-	./build oriolepg 17
-oriolepg_18:
-	./build oriolepg 18
-oriolepg_all:
-	./build oriolepg 16 17 18
-oriolepg-install:
-	sudo yum remove -y oriolepg_$(PG_MAJOR) || /bin/true
-	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/oriolepg_$(PG_MAJOR)-[0-9]*.$(ARCH).rpm
-oriolepg-install-all:
-	$(MAKE) PG_MAJOR=16 oriolepg-install
-	$(MAKE) PG_MAJOR=17 oriolepg-install
-	$(MAKE) PG_MAJOR=18 oriolepg-install
-orioledb:
-	./build orioledb 18
-orioledb_16:
-	./build orioledb 16
-orioledb_17:
-	./build orioledb 17
-orioledb_18:
-	./build orioledb 18
-orioledb_all:
-	./build orioledb 16 17 18
-oriole: oriole_18
-oriole_16:
-	$(MAKE) oriolepg_16
-	$(MAKE) PG_MAJOR=16 oriolepg-install
-	$(MAKE) orioledb_16
-oriole_17:
-	$(MAKE) oriolepg_17
-	$(MAKE) PG_MAJOR=17 oriolepg-install
-	$(MAKE) orioledb_17
-oriole_18:
-	$(MAKE) oriolepg_18
-	$(MAKE) PG_MAJOR=18 oriolepg-install
-	$(MAKE) orioledb_18
-oriole_all:
-	$(MAKE) oriole_16
-	$(MAKE) oriole_17
-	$(MAKE) oriole_18
+babelfish: babelfish-17
+babelfish-18:
+	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 18" --define "pgversion 18.3" --define "bbfversion 6.0.0"
+babelfish-17:
+	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 17" --define "pgversion 17.7" --define "bbfversion 5.4.0"
 
-parray_gin:
-	./build parray_gin 14 15 16 17 18
-
-postgresbson:
-	./build postgresbson 14 15 16 17 18
+orioledb: orioledb-18
+orioledb-18:
+	QA_RPATHS=3 ./build orioledb 18
+orioledb-17:
+	QA_RPATHS=3 ./build orioledb 17
+orioledb-16:
+	QA_RPATHS=3 ./build orioledb 16
+orioledb-all:
+	QA_RPATHS=3 ./build orioledb 16 17 18
 
 ###############################################################
 #                      Cloudberry Build                        #
@@ -1202,58 +1137,43 @@ rmdbg:
 # All targets declared as .PHONY to ensure make always runs them
 # even if a file with the same name exists
 
-.PHONY: default env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 pgrx0129
-
-.PHONY: deps scws scws-install libduckdb libduckdb-install \
-	libpgfeutils libpgfeutils-install pdu pgdog pgdog-install pg_filedump
-
-.PHONY: age aggs_for_arrays aggs_for_vecs asn1oid aws_s3 \
-	chkpass citus count_distinct cryptint \
-	data_historization datasketches db_migrator ddl_historization ddlx pglinter ddsketch \
-	decoder_raw documentdb external_file firebird_fdw first_last_agg floatvec \
-	geoip hashtypes hunspell hunspell_cs_cz hunspell_de_de \
-	hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
-	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
-	hydra pghydro icu_ext imgsmlr pg_ttl_index index_advisor etcd_fdw kafka_fdw \
-	lower_quantile md5hash mimeo numeral omnisketch \
-	openhalo agensgraph polardb pgedge pgedge-install spock snowflake lolor pgedge-all babelfishpg orioledb orioledb_16 orioledb_17 orioledb_18 orioledb_all oriolepg oriolepg_16 oriolepg_17 oriolepg_18 oriolepg_all oriolepg-install oriolepg-install-all oriole oriole_16 oriole_17 oriole_18 oriole_all pagevis \
-		periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
-		pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch psql_bm25s pg_bulkload block_copy_command \
-		pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \
-		pg_country pg_crash pg_curl pg_currency pg_drop_events \
-		pg_duckdb pg_ducklake pg_duration pg_ecdsa pg_eviltransform pg_emailaddr pg_envvar \
-		pg_byteamagic \
-		pg_explain_ui pg_failover_slots pg_financial pg_fio \
-		pg_geohash rum pg_ai_query pg_orca pg_monetdb pg_graphql pggraph pgrdf jsonschema pg_durable pg_gzip pg_hashids pg_hashlib \
-		pg_html5_email_address pg_http pg_mockable pg_idkit pg_incremental pg_ivm \
-		pg_jsonschema pgmnemo fsm_core pg_projection pg_stl pg_sorted_heap pg_kazsearch pg_later pg_math pg_meta pg_mooncake pg_clickhouse \
-		pg_net pg_net2 pg_noset pg_orphaned pg_parquet pg_plan_filter pg_rrf \
-		pg_pinyin pg_polyline pg_protobuf pgproto pg_random pg_rational pg_redis_pubsub pgmqtt \
-		pg_when \
-		pg_relusage pg_render pg_retry pg_roaringbitmap pg_savior pg_schedoc pg_ash \
-		pg_pathcheck pg_bikram_sambat \
-		pg_isok \
-		pg_query_rewrite \
-		pg_semver pg_session_jwt pg_similarity pg_smtp_client \
-		pg_snakeoil pg_sqlog pg_store_plans pg_summarize pg_tde \
-		pg_text_semver pg_tiktoken pg_timeseries pg_tle pg_tokenizer pg_tracing pg_datasentinel pg_typescript \
-		pg_tzf pg_uint128 pg_upless pg_uri pg_vault hyperion_vault pg_variables pg_vectorize \
-	pg_weighted_statistics pg_xenophile pg_xxhash pg_zstd pg4ml pgactive pgcollection \
-	pgcozy pgcryptokey pgdd pgextwlist pgfaceting pgjq pgjwt pgmb \
-	pgclone pg_task pg_extra_time pgsql_tweaks \
-	pglite_fusion pgmeminfo pgml pg_accumulator pgmq pgnodemx pgpcre pgpdf \
-	pgqr pgroonga pgsentinel pgsmcrypto pg_enigma pgsodium pgsparql \
-	column_encrypt pg_stat_backtrace \
-	pgsphere pguint pgvector pgvectorscale pgx_ulid pgxicor pg_stat_ch \
-	logical_ddl \
-	pg_partman pljs plpgsql_check plproxy plprql plv8 prefix preprepare pg_track_optimizer q3c quantile \
-	onesparse \
-	re2 redis_fdw sequential_uuids pg_uuid_v8 pg_typeid session_variable shacrypt \
-	smlar spat sqlite_fdw sslutils supautils system_stats table_log \
-	temporal_tables timescaledb timescaledb_toolkit toastinfo \
-	ulak url_encode vasco vchord vchord_bm25 wrappers zhparser \
-	parray_gin postgresbson \
-	pglogical_ticker omnigres \
-	antlr4 babelfishpg babelfishpg_install babelfish \
-	cloudberry cloudberry-backup cloudberry-pxf \
+.PHONY: env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
+	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time timescaledb \
+	timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background \
+	pg_when pg_stl q3c geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
+	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg4ml \
+	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_bestmatch vchord_bm25 \
+	pg_tokenizer pg_biscuit pg_textsearch pg_pinyin pg_kazsearch psql_bm25s hunspell \
+	hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
+	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot citus hydra pg_duckdb \
+	pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_partman pg_orca \
+	pg_sorted_heap age onesparse pggraph pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
+	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
+	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql \
+	pg_cardano inchi rdkit pg_tle plv8 pljs plprql plpgsql_check pg_mockable pg_typescript \
+	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
+	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \
+	numeral pg_rational pguint pg_uint128 hashtypes pg_uri pg_emailaddr pg_acl pg_duration \
+	pg_bikram_sambat pg_rrule chkpass pg_gzip pg_bzip pg_zstd pg_http pg_net pg_net2 pg_curl \
+	pg_retry pg_protobuf pgproto pgjq pgjwt pg_smtp_client pg_html5_email_address url_encode \
+	pgsql_tweaks pg_extra_time pgpcre re2 icu_ext pgqr pg_envvar pg_byteamagic external_file \
+	pg_render ddl_historization data_historization pg_schedoc pg_isok pg_hashlib pg_xxhash \
+	shacrypt cryptint pg_ecdsa pgsparql pg_idkit pgx_ulid pg_uuid_v8 permuteseq pg_hashids \
+	sequential_uuids pg_typeid quantile lower_quantile count_distinct omnisketch ddsketch vasco \
+	pgxicor pg_weighted_statistics datasketches first_last_agg floatvec aggs_for_vecs \
+	aggs_for_arrays pg_arraymath pg_math pg_random pg_base36 pg_base62 pg_base58 pg_financial \
+	pg_accumulator pg_convert parray_gin pg_query_rewrite pgfincore pg_cooldown ddlx pglinter \
+	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \
+	pg_pathcheck pg_savior pg_drop_events table_log pg_tracing pg_stat_ch pg_stat_backtrace \
+	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \
+	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_relusage \
+	pagevis supautils pgsodium column_encrypt pg_vault hyperion_vault pg_session_jwt pg_anon \
+	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
+	block_copy_command sslutils pg_noset wrappers sqlite_fdw etcd_fdw nominatim_fdw redis_fdw \
+	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \
+	db2fce spat pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
+	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson pdu \
+	pgdog pgdog-install pg_filedump openhalo openhalodb ivorysql agensgraph polardb \
+	pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \
+	orioledb-16 orioledb-17 orioledb-18 orioledb-all cloudberry cloudberry-backup cloudberry-pxf \
 	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg

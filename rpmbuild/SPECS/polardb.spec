@@ -17,6 +17,7 @@ Summary:        PolarDB PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/polardb/PolarDB-for-PostgreSQL
 Source0:        polardb-for-postgresql-%{version}.tar.gz
+# Bundle-style private prefix package; do not register copied libraries as system providers.
 AutoReqProv:    no
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
@@ -26,6 +27,7 @@ BuildRequires:  openssl-devel, pam-devel, krb5-devel, openldap-devel
 BuildRequires:  perl-interpreter, perl-ExtUtils-Embed
 BuildRequires:  python3-devel, tcl-devel, lz4-devel, libzstd-devel, libunwind-devel
 BuildRequires:  clang, llvm-devel, file, binutils
+Requires:       tzdata
 Requires(pre):  shadow-utils
 
 %description
@@ -151,9 +153,8 @@ polar_install_dependency %{pgbaseinstdir}
 %{pgbaseinstdir}/*
 
 %pre
-groupadd -g 26 -o -r postgres >/dev/null 2>&1 || :
-useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
--c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || :
+getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2>&1 || groupadd -r postgres >/dev/null 2>&1 || :
+getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %post
 /sbin/ldconfig

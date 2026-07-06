@@ -30,6 +30,7 @@ Headers and development files for ANTLR4 C++ runtime 4.13.
 unzip -q %{SOURCE0}
 
 %build
+cd antlr4-cpp-runtime-%{version}-source
 cmake -S . -B build \
   -DANTLR_BUILD_CPP_TESTS=OFF \
   -DANTLR_BUILD_STATIC=OFF \
@@ -41,6 +42,7 @@ cmake --build build %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
+cd antlr4-cpp-runtime-%{version}-source
 DESTDIR=%{buildroot} cmake --install build
 %{__rm} -f %{buildroot}%{_libdir}/libantlr4-runtime.a
 %{__rm} -rf %{buildroot}%{_datadir}/doc/libantlr4
@@ -52,7 +54,7 @@ DESTDIR=%{buildroot} cmake --install build
 /sbin/ldconfig
 
 %files
-%doc README.md
+%doc antlr4-cpp-runtime-%{version}-source/README.md
 %{_libdir}/libantlr4-runtime.so.4*
 
 %files devel

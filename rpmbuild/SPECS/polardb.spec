@@ -37,6 +37,17 @@ PGXS files, and bundled contrib extensions under %{pgbaseinstdir}.
 %setup -q -n PolarDB-for-PostgreSQL-%{version}
 sed -i -e 's|^POLAR_COMMIT=.*|POLAR_COMMIT="%{polar_commit}"|' configure configure.ac
 sed -i -e 's|^port=$(random_unused_port)|port=%{pgport}|' build.sh
+patch -p1 <<'PATCH'
+--- a/build.sh
++++ b/build.sh
+@@ -82 +82,2 @@
+-  configure_flag+=" --prefix=$base_dir --with-pgport=$port ${extra_configure_flag-}"
++  package_prefix="${POLAR_PACKAGE_PREFIX:-$base_dir}"
++  configure_flag+=" --prefix=$package_prefix --with-pgport=$port ${extra_configure_flag-}"
+@@ -251 +252 @@
+-export LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib:$base_dir/lib',--build-id=sha1 ${LDFLAGS-}"
++export LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib',--build-id=sha1 ${LDFLAGS-}"
+PATCH
 %if 0%{?rhel} == 8 && "%{_arch}" == "aarch64"
 sed -i -e 's|-lpfsd -lpthread|-lpfsd -latomic -lpthread|' src/Makefile.global.in
 %endif
@@ -50,9 +61,10 @@ export CC=gcc CXX=g++
 export NM=gcc-nm AR=gcc-ar RANLIB=gcc-ranlib
 export CLANG="${CLANG:-$(command -v clang)}"
 export LLVM_CONFIG="${LLVM_CONFIG:-$(command -v llvm-config)}"
+unset CFLAGS CXXFLAGS LDFLAGS
 
-DESTDIR=%{buildroot} ./build.sh \
-  --ec="--prefix=%{pgbaseinstdir} --with-deploy-mode=opensource --with-pfsd" \
+POLAR_PACKAGE_PREFIX=%{pgbaseinstdir} DESTDIR=%{buildroot} ./build.sh \
+  --ec="--with-deploy-mode=opensource --with-pfsd" \
   --port=%{pgport} \
   --debug=off \
   --jobs=%{_smp_build_ncpus} \

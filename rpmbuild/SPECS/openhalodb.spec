@@ -1,6 +1,9 @@
 %global sname openhalodb
 %global pgmajorversion 14
 %global pgbaseinstdir	/usr/halo-%{pgmajorversion}
+# Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
+%global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
+%global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 
 Name:		%{sname}-%{pgmajorversion}
 Version:	1.0
@@ -13,17 +16,17 @@ Source0:	%{sname}-%{version}.tar.gz
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, krb5-devel
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
-BuildRequires:  lz4-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
+BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel, patchelf
 %if 0%{?rhel} >= 10
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin, perl-interpreter
-Requires:       systemd, lz4-libs, libzstd >= 1.5.1, /sbin/ldconfig, libicu, openssl-libs >= 3.0.0, libxml2
+Requires:       systemd, lz4-libs, libzstd >= 1.5.1, /sbin/ldconfig, libicu, openssl-libs >= 3.0.0, libxml2, tzdata
 %elif 0%{?rhel} == 9
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
-Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
+Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2, tzdata
 %else
 BuildRequires:  perl-interpreter < 4:5.30
-Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
+Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2, tzdata
 %endif
 Requires(pre):  shadow-utils
 
@@ -66,7 +69,7 @@ export CFLAGS
 --with-selinux \
 --with-systemd \
 --with-includes=/usr/include \
---with-libraries=/usr/lib \
+--with-libraries=%{_libdir} \
 --enable-nls \
 --enable-dtrace
 
@@ -119,7 +122,6 @@ rm -f "$bad_runpath"
 
 %files
 %doc README.md
-%doc %{pgbaseinstdir}/doc/postgresql/extension/*.example
 %license %{pgbaseinstdir}/LICENSE
 %license %{pgbaseinstdir}/COPYRIGHT
 %license %{pgbaseinstdir}/3party-legal-notices
@@ -130,8 +132,8 @@ rm -f "$bad_runpath"
 %doc %{pgbaseinstdir}/doc/*
 
 %pre
-groupadd -g 26 -o -r postgres >/dev/null 2>&1 || :
-useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || :
+getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2>&1 || groupadd -r postgres >/dev/null 2>&1 || :
+getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %post
 /sbin/ldconfig

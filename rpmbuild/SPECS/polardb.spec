@@ -23,7 +23,7 @@ BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc, gcc-c++, make, readline-devel, zlib-devel >= 1.0.4
 BuildRequires:  libuuid-devel, libxml2-devel, libxslt-devel, libicu-devel
 BuildRequires:  openssl-devel, pam-devel, krb5-devel, openldap-devel
-BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin, perl-interpreter
+BuildRequires:  perl-interpreter, perl-ExtUtils-Embed
 BuildRequires:  python3-devel, tcl-devel, lz4-devel, libzstd-devel, libunwind-devel
 BuildRequires:  clang, llvm-devel, file, binutils
 Requires(pre):  shadow-utils
@@ -37,6 +37,9 @@ PGXS files, and bundled contrib extensions under %{pgbaseinstdir}.
 %setup -q -n PolarDB-for-PostgreSQL-%{version}
 sed -i -e 's|^POLAR_COMMIT=.*|POLAR_COMMIT="%{polar_commit}"|' configure configure.ac
 sed -i -e 's|^port=$(random_unused_port)|port=%{pgport}|' build.sh
+%if 0%{?rhel} == 8 && "%{_arch}" == "aarch64"
+sed -i -e 's|-lpfsd -lpthread|-lpfsd -latomic -lpthread|' src/Makefile.global.in
+%endif
 awk '1; /  \.\/configure \$configure_flag/ { print "  (cd src/backend && MAKELEVEL=0 make submake-generated-headers)" }' build.sh > build.sh.new
 mv build.sh.new build.sh
 chmod +x build.sh

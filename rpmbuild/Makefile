@@ -1056,6 +1056,12 @@ agensgraph:
 	else \
 		rpmbuild -ba SPECS/agensgraph.spec; \
 	fi
+polardb:
+	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
+		QA_RPATHS=3 rpmbuild -ba SPECS/polardb.spec; \
+	else \
+		rpmbuild -ba SPECS/polardb.spec; \
+	fi
 pgedge:
 	@if [ "$$(rpm -E '%{?rhel}')" -ge 10 ]; then \
 		QA_RPATHS=3 rpmbuild -ba SPECS/pgedge.spec; \
@@ -1214,7 +1220,7 @@ rmdbg:
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot \
 	hydra pghydro icu_ext imgsmlr pg_ttl_index index_advisor etcd_fdw kafka_fdw \
 	lower_quantile md5hash mimeo numeral omnisketch \
-	openhalo agensgraph pgedge pgedge-install spock snowflake lolor pgedge-all babelfishpg orioledb orioledb_16 orioledb_17 orioledb_18 orioledb_all oriolepg oriolepg_16 oriolepg_17 oriolepg_18 oriolepg_all oriolepg-install oriolepg-install-all oriole oriole_16 oriole_17 oriole_18 oriole_all pagevis \
+	openhalo agensgraph polardb pgedge pgedge-install spock snowflake lolor pgedge-all babelfishpg orioledb orioledb_16 orioledb_17 orioledb_18 orioledb_all oriolepg oriolepg_16 oriolepg_17 oriolepg_18 oriolepg_all oriolepg-install oriolepg-install-all oriole oriole_16 oriole_17 oriole_18 oriole_all pagevis \
 		periods permuteseq pg_acl pg_anon pg_arraymath pg_auditor \
 		pg_background pg_base36 pg_base58 pg_base62 pg_bestmatch pg_bigm pg_biscuit pg_textsearch psql_bm25s pg_bulkload block_copy_command \
 		pg_bzip pg_cardano pg_cheat_funcs pg_convert pg_cooldown \

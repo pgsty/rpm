@@ -13,6 +13,7 @@ PROG_NAME="$(basename $0)"
 PROG_DIR="$(cd $(dirname $0) && pwd)"
 SPEC_DIR="${PROG_DIR}/SPECS"
 RPMS_DIR="${PROG_DIR}/RPMS"
+SOURCES_DIR="${PROG_DIR}/SOURCES"
 
 #--------------------------------------------------------------#
 # Usage
@@ -39,6 +40,26 @@ function log_debug() { printf "[${__CB}HINT${__CN}] ${__CB}%s${__CN}\n" "$*"; }
 function log_title() { printf "[${__CG}%s${__CN}] ${__CG}%s${__CN}\n" "$1" "$2"; }
 function log_hint()  { printf "${__CB}%s${__CN}\n" "$*"; }
 function log_line()  { printf "${__CM}[%s] ===========================================${__CN}\n" "$*"; }
+
+function stage_declared_patches() {
+    [[ -e "${SOURCES_DIR}" ]] || return 0
+
+    awk -F: '/^Patch[0-9]*:/ {
+        sub(/^[ \t]+/, "", $2);
+        sub(/[ \t]+$/, "", $2);
+        print $2;
+    }' "${SPEC_FILE}" | while IFS= read -r patch_file; do
+        [[ -z "${patch_file}" ]] && continue
+        [[ "${patch_file}" == *'%'* ]] && continue
+        [[ "${patch_file}" = /* ]] && continue
+        local_patch="${SPEC_DIR}/patches/$(basename "${patch_file}")"
+        source_patch="${SOURCES_DIR}/${patch_file}"
+        if [[ -f "${local_patch}" ]]; then
+            mkdir -p "$(dirname "${source_patch}")"
+            cp -f "${local_patch}" "${source_patch}"
+        fi
+    done
+}
 
 
 #--------------------------------------------------------------#
@@ -99,6 +120,7 @@ else
 fi
 
 cat ${SPEC_FILE} | grep -E '^Version:|^Release:|^Summary:|^License:|^URL:|^Source0:'
+stage_declared_patches
 
 
 #--------------------------------------------------------------#

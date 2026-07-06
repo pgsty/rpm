@@ -1,6 +1,9 @@
 %global sname agensgraph
 %global pgmajorversion 17
 %global pgbaseinstdir /usr/agens-%{pgmajorversion}
+# Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
+%global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
+%global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 %global _lto_cflags %{nil}
 %define debug_package %{nil}
 
@@ -20,13 +23,13 @@ BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
 BuildRequires:  bison >= 2.3, flex >= 2.5.35, readline-devel, pam-devel
 %if 0%{?rhel} >= 10
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin, perl-interpreter
-Requires:       systemd, lz4-libs, libzstd >= 1.5.1, /sbin/ldconfig, libicu, openssl-libs >= 3.0.0, libxml2
+Requires:       systemd, lz4-libs, libzstd >= 1.5.1, /sbin/ldconfig, libicu, openssl-libs >= 3.0.0, libxml2, tzdata
 %elif 0%{?rhel} == 9
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
-Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
+Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2, tzdata
 %else
 BuildRequires:  /usr/bin/perl
-Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2
+Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2, tzdata
 %endif
 Requires(pre):  shadow-utils
 Provides:       agensgraph = %{version}-%{release}
@@ -95,9 +98,8 @@ MAKELEVEL=0 %{__make} %{?_smp_mflags} world-bin
 %doc %{pgbaseinstdir}/doc/*
 
 %pre
-groupadd -g 26 -o -r postgres >/dev/null 2>&1 || :
-useradd -M -g postgres -o -r -d /var/lib/pgsql -s /bin/bash \
--c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || :
+getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2>&1 || groupadd -r postgres >/dev/null 2>&1 || :
+getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %post
 /sbin/ldconfig

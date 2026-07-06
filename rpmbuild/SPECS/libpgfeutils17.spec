@@ -7,12 +7,14 @@
 %global pginstdir /usr/pgsql-17
 
 Name:		libpgfeutils17
-Version:	17.9
+Version:	17.10
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org
 Source0:	%{sname}-%{version}.tar.gz
+
+BuildRequires:	bison, flex, perl-FindBin
 
 %description
 Add /usr/pgsql-17/lib/libpgfeutils.a for extension building
@@ -33,6 +35,9 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %{pginstdir}/lib/libpgfeutils.a
 
 %changelog
+* Mon Jul 06 2026 Vonng <rh@vonng.com> - 17.10-1PIGSTY
+- Rebuild libpgfeutils from PostgreSQL 17.10 source
+
 * Fri Feb 27 2026 Vonng <rh@vonng.com> - 17.9-1PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 17.6-1PIGSTY
 * Tue Jun 24 2025 Vonng <rh@vonng.com> - 17.5-1PIGSTY

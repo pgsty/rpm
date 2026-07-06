@@ -7,7 +7,7 @@
 %global pginstdir /usr/pgsql-14
 
 Name:		libpgfeutils14
-Version:	14.22
+Version:	14.23
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
@@ -33,6 +33,9 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %{pginstdir}/lib/libpgfeutils.a
 
 %changelog
+* Mon Jul 06 2026 Vonng <rh@vonng.com> - 14.23-1PIGSTY
+- Rebuild libpgfeutils from PostgreSQL 14.23 source
+
 * Fri Feb 27 2026 Vonng <rh@vonng.com> - 14.22-1PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 14.19-1PIGSTY
 * Tue Jun 24 2025 Vonng <rh@vonng.com> - 14.18-1PIGSTY

@@ -112,8 +112,8 @@ MAKELEVEL=0 %{__make} %{?_smp_mflags} -C contrib
 
 %install
 rm -rf %{buildroot}
-# Cloudberry carries a private RPATH to %{cb_prefix}/lib.
-export QA_RPATHS=3
+# Cloudberry carries private RPATHs and PAX keeps $ORIGIN after the prefix.
+export QA_RPATHS=11
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PIP_NO_INDEX=1
 

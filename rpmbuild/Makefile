@@ -1107,13 +1107,13 @@ orioledb-all:
 #                      Cloudberry Build                        #
 ###############################################################
 cloudberry:
-	rpmbuild -ba SPECS/cloudberry.spec
+	QA_RPATHS=3 rpmbuild -ba SPECS/cloudberry.spec
 
 cloudberry-backup:
-	rpmbuild -ba SPECS/cloudberry-backup.spec
+	QA_RPATHS=3 rpmbuild -ba SPECS/cloudberry-backup.spec
 
 cloudberry-pxf:
-	rpmbuild -ba SPECS/cloudberry-pxf.spec
+	QA_RPATHS=3 rpmbuild -ba SPECS/cloudberry-pxf.spec
 
 
 ###############################################################

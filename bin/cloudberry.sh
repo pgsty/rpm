@@ -385,7 +385,7 @@ EOF
 
 build_rpm() {
   local src_dir="$1"
-  local build_destination="/usr/local/cloudberry"
+  local build_destination="/usr/cloudberry"
 
   ensure_ag
   log "building from extracted local tarball in ${src_dir}"

@@ -5,6 +5,7 @@ infra-pkg.iml
 .DS_Store
 rpmbuild/SOURCES
 rpmbuild/RPMS
+rpmbuild/SRPMS
 yum/
 tmp/
 

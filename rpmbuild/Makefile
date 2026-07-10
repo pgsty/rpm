@@ -245,6 +245,9 @@ hydra:
 pg_duckdb:
 	./build pg_duckdb 14 15 16 17 18
 
+pg_lake:
+	./build pg_lake 16 17 18
+
 pg_mooncake:
 	./build pg_mooncake 14 15 16 17 18
 

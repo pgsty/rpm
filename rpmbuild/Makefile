@@ -241,11 +241,15 @@ citus:
 hydra:
 	./build hydra 14 15 16 #17 not ready yet
 
+# DuckDB family platform policy:
+# - pg_duckdb, duckdb_fdw, and pg_mooncake remain EL8/EL9/EL10 capable.
+# - pg_lake requires EL9+ for system OpenSSL 3.
+# - pg_ducklake is EL9+ until its EL8/GCC8 filesystem path is fixed and tested.
 #pg_analytics:   # download, obsolete
 pg_duckdb:
 	./build pg_duckdb 14 15 16 17 18
 
-pg_lake:
+pg_lake:                 # EL9+ only: bundled DuckDB requires system OpenSSL 3
 	./build pg_lake 16 17 18
 
 pg_mooncake:
@@ -263,7 +267,7 @@ pg_clickhouse:
 pg_parquet:			# rust pgrx 0.18.1
 	./build pg_parquet 14 15 16 17 18
 
-pg_ducklake:
+pg_ducklake:             # EL9+ only: EL8/GCC8 filesystem support is unverified
 	./build pg_ducklake 14 15 16 17 18
 
 # pg_fkpart
@@ -1155,7 +1159,7 @@ rmdbg:
 	pg_tokenizer pg_biscuit pg_textsearch pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot citus hydra pg_duckdb \
-	pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_partman pg_orca \
+	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql \

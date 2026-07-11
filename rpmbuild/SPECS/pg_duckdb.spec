@@ -1,10 +1,15 @@
 %define debug_package %{nil}
-%global _unique_build_ids 1
-# libduckdb has same build-id which require unique build id to avoid conflict
+%global _build_id_links none
+# libduckdb is identical across PostgreSQL majors.  Keep the ELF build-id note,
+# but suppress global symlinks that would collide across versioned packages.
 
 %global pname pg_duckdb
 %global sname pg_duckdb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_duckdb 1.1.1 only supports PostgreSQL 14 through 18}
+%endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -18,7 +23,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT
 URL:		https://github.com/duckdb/pg_duckdb
@@ -51,11 +56,11 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
-This packages provides JIT support for %{sname}
+This package provides JIT support for %{sname}.
 %endif
 
 %prep
@@ -84,9 +89,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/lib/bitcode/*
 
 %changelog
+* Sat Jul 11 2026 Vonng <rh@vonng.com> - 1.1.1-2PIGSTY
+- Disable global build-id links so PostgreSQL-major packages can coexist
+- Enforce the supported PostgreSQL 14 through 18 range
+
 * Wed Dec 24 2025 Vonng <rh@vonng.com> - 1.1.1-1PIGSTY
 * Tue Dec 16 2025 Vonng <rh@vonng.com> - 1.1.0-2PIGSTY
-* Sun Nov 01 2025 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
+* Sat Nov 01 2025 Vonng <rh@vonng.com> - 1.1.0-1PIGSTY
 - this is not published yet, but for pg_mooncake building 7daa8e53a
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 0.3.1-1PIGSTY

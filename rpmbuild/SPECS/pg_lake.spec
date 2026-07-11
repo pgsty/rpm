@@ -1,10 +1,20 @@
 %define debug_package %{nil}
+%global _build_id_links none
 %global pname pg_lake
 %global sname pg_lake
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global vcpkg_version 2025.10.17
 %global vcpkg_commit 74e6536215718009aae747d86d84b78376bf9e09
 %global source_sha256 fd9fd38b723448a93f3a8265f60655560f8044198cf9c96df26b992cd0b2f2c0
+%global patch_sha256 6220c36c4c363a1a15144ebeb895261228f8593c8080fc34ba1a464e3d50f60c
+
+# DuckDB and Avro are intentionally identical across PostgreSQL majors.  RPM
+# build-id symlinks would therefore collide while pointing at different
+# /usr/pgsql-NN paths; retain ELF build-id notes but do not package the links.
+
+%if 0%{?rhel} && 0%{?rhel} < 9
+%{error:pg_lake 3.4.0 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
+%endif
 
 # The bundled runtimes are private implementation details.  Do not let their
 # generic SONAMEs satisfy unrelated packages, and do not emit external
@@ -16,19 +26,11 @@
 %{error:pg_lake 3.4.0 only supports PostgreSQL 16 through 18}
 %endif
 
-%ifarch ppc64 ppc64le s390 s390x armv7hl
- %if 0%{?rhel} && 0%{?rhel} == 7
-  %{!?llvm:%global llvm 0}
- %else
-  %{!?llvm:%global llvm 1}
- %endif
-%else
- %{!?llvm:%global llvm 1}
-%endif
+%{!?llvm:%global llvm 1}
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        3.4.0
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        PostgreSQL lakehouse extensions powered by DuckDB
 License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND ICU AND ISC AND PostgreSQL AND Unicode-3.0 AND Zlib AND curl AND OpenSSL AND LicenseRef-TPC-EULA-2.2
 URL:            https://github.com/Snowflake-Labs/pg_lake
@@ -82,6 +84,7 @@ This package provides LLVM bitcode for pg_lake's PostgreSQL modules.
 
 %prep
 test "$(sha256sum %{SOURCE0} | awk '{print $1}')" = "%{source_sha256}"
+test "$(sha256sum %{PATCH0} | awk '{print $1}')" = "%{patch_sha256}"
 %autosetup -N -n %{sname}-%{version}
 git apply --whitespace=nowarn %{PATCH0}
 
@@ -296,6 +299,10 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %endif
 
 %changelog
+* Sat Jul 11 2026 Vonng <rh@vonng.com> - 3.4.0-2PIGSTY
+- Disable global build-id links so PostgreSQL-major packages can coexist
+- Require EL9+ and verify the bundled patch checksum
+
 * Fri Jul 10 2026 Vonng <rh@vonng.com> - 3.4.0-1PIGSTY
 - Package the complete pg_lake 3.4.0 extension family and pgduck_server
 - Bundle pinned DuckDB and Avro runtimes in a PostgreSQL-major private path

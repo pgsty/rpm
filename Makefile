@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2026-02-09
+# Mtime     :   2026-07-11
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -16,6 +16,12 @@ setup:
 	@echo "pig build rust"
 	@echo "pig build pgrx"
 	@echo "#pig build pkg <name...>"
+
+# Specs and build helpers are synchronized separately from sources and build
+# products.  Keep remote build roots free of local staging and output files.
+SPEC_RSYNC_ARGS := -az \
+	--exclude=/BUILD/ --exclude=/BUILDROOT/ --exclude=/RPMS/ \
+	--exclude=/SRPMS/ --exclude=/SOURCES/ --exclude=.DS_Store
 
 ###############################################################
 #                      Prepare Environment                    #
@@ -33,20 +39,20 @@ p10a: spec10a src10a
 ###############################################################
 spec: spec8 spec9 spec10 spec8a spec9a spec10a
 specm:
-	rsync -az rpmbuild/ meta:~/rpmbuild/
+	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ meta:~/rpmbuild/
 spec8:
-	rsync -az rpmbuild/ el8:~/rpmbuild/
+	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el8:~/rpmbuild/
 spec9:
-	rsync -az rpmbuild/ el9:~/rpmbuild/
+	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el9:~/rpmbuild/
 spec10:
-	rsync -az rpmbuild/ el10:~/rpmbuild/
+	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el10:~/rpmbuild/
 
 spec8a:
-	rsync -az rpmbuild/ el8a:~/rpmbuild/
+	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el8a:~/rpmbuild/
 spec9a:
-	rsync -az rpmbuild/ el9a:~/rpmbuild/
+	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el9a:~/rpmbuild/
 spec10a:
-	rsync -az rpmbuild/ el10a:~/rpmbuild/
+	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el10a:~/rpmbuild/
 
 ###############################################################
 #                      Push SRC to Remote                     #

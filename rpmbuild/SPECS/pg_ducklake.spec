@@ -2,22 +2,21 @@
 %global sname pg_ducklake
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%ifarch ppc64 ppc64le s390 s390x armv7hl
- %if 0%{?rhel} && 0%{?rhel} == 7
-  %{!?llvm:%global llvm 0}
- %else
-  %{!?llvm:%global llvm 1}
- %endif
-%else
- %{!?llvm:%global llvm 1}
+%if 0%{?rhel} && 0%{?rhel} < 9
+%{error:pg_ducklake 1.0.0 is currently supported on EL9 and later; EL8 GCC8 filesystem compatibility is not validated}
 %endif
-# PGXS in the current EL9 builder points LLVM_BINPATH at llvm20 while the image
-# ships llvm21, so ship the primary extension package without bitcode for now.
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_ducklake 1.0.0 only supports PostgreSQL 14 through 18}
+%endif
+
+# PGXS and LLVM toolchain paths are not yet aligned across the supported
+# builders, so ship the primary extension package without bitcode for now.
 %global llvm 0
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	DuckLake lakehouse extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/relytcloud/pg_ducklake
@@ -112,5 +111,9 @@ CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pgi
 %endif
 
 %changelog
+* Sat Jul 11 2026 Vonng <rh@vonng.com> - 1.0.0-2PIGSTY
+- Mark the current package as EL9+ pending EL8 GCC8 filesystem support
+- Enforce the supported PostgreSQL 14 through 18 range
+
 * Fri Jun 19 2026 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Initial RPM release for pg_ducklake 1.0.0

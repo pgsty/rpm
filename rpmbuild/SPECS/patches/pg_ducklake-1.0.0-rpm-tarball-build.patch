@@ -25,8 +25,8 @@
 @@ -75,2 +75,2 @@
 -# Apply patches onto the pristine submodule; reset first so editing a patch
 -# re-applies from a clean base. The working tree is intentionally left dirty.
-+# RPM source tarballs already contain third_party/ducklake and no .git metadata.
-+# Apply patches once on the fresh rpmbuild tree and guard with a stamp.
++# Package source tarballs already contain third_party/ducklake and no .git metadata.
++# Apply patches once on the fresh package build tree and guard with a stamp.
 @@ -78,2 +78,0 @@
 -	git -C $(DUCKLAKE_DIR) checkout -q .
 -	git -C $(DUCKLAKE_DIR) clean -fdq src

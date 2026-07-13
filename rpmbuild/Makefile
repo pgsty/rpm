@@ -116,6 +116,9 @@ pg_eviltransform:	# rust pgrx 0.18.1
 pg_geohash:
 	./build pg_geohash 14 15 16 17 18
 
+mobilitydb:
+	./build mobilitydb 14 15 16 17 18
+
 pghydro:
 	./build pghydro 14 15 16 17 18
 

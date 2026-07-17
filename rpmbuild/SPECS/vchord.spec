@@ -9,11 +9,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.1
-Release:	2PIGSTY%{?dist}
+Release:	3PIGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0
-URL:		https://github.com/tensorchord/VectorChord
+URL:		https://github.com/supervc-stack/VectorChord
 Source0:	VectorChord-%{version}.tar.gz
+Patch0:		vchord-1.1.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -24,8 +25,7 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 
 %prep
 %setup -q -n VectorChord-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/vchord-1.1.1.patch
-sed -i -E '/^\[workspace.package\]/,/^\[/{s/^version = ".*"/version = "%{version}"/}' Cargo.toml
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 # EL8/EL9 system GCC is too old for AVX-512 FP16 intrinsics (requires GCC >= 12 or Clang >= 16)
@@ -41,17 +41,27 @@ export LDFLAGS=$(echo "${LDFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*
 cd %{_builddir}/VectorChord-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
+LOCK_EXPECTED=1807adb59a573e4135413be326dcc4e781811907fe5f29ca9517e4c27478ea93
+LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
+if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
+	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
+	exit 1
+fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion},simd/init --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_GIT_FETCH_WITH_CLI=true CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion},simd/init --pg-config %{pginstdir}/bin/pg_config
+LOCK_AFTER=$(sha256sum Cargo.lock | cut -d ' ' -f1)
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
+	exit 1
+fi
 EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension
 cp -f sql/upgrade/%{pname}--*.sql ${EXT_DIR}/
 cp -f sql/install/%{pname}--%{version}.sql ${EXT_DIR}/%{pname}--%{version}.sql
@@ -74,6 +84,10 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 1.1.1-3PIGSTY
+- Build with cargo-pgrx 0.19.1 from a locked, offline dependency graph
+- Refresh the source patch for pgrx 0.19.1 and the current upstream repository
+
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 1.1.1-2PIGSTY
 - Build with cargo-pgrx 0.18.1 and explicit pgNN features
 - Use the shared pgrx 0.18.1 source patch from DEB packaging

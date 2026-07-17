@@ -3,13 +3,13 @@
 %global sname pg_rrf
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 17
-%{error:pg_rrf only supports PostgreSQL 14 through 17}
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_rrf only supports PostgreSQL 14 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	2PIGSTY%{?dist}
+Release:	3PIGSTY%{?dist}
 Summary:	Reciprocal Rank Fusion functions for hybrid search in PostgreSQL
 License:	MIT
 URL:		https://github.com/yuiseki/pg_rrf
@@ -34,17 +34,22 @@ find . -type f -name '._*' -delete
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
+	exit 1
+fi
 
 %install
 %{__rm} -rf %{buildroot}
@@ -68,6 +73,11 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.3-3PIGSTY
+- Migrate the direct-on-pristine source patch and fixed dependency graph to pgrx 0.19.1
+- Build offline after locked fetch and reject Cargo.lock rewrites
+- Build version-specific packages for PostgreSQL 14 through 18
+
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.0.3-2PIGSTY
 - Build with cargo-pgrx 0.18.1 and explicit pgNN features
 - Use the shared pgrx 0.18.1 source patch from DEB packaging

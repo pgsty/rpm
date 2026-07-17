@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.6.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	GraphQL support to your PostgreSQL database.
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_graphql
@@ -28,19 +28,23 @@ patch -p1 --forward -f < %{_specdir}/patches/pg-graphql-1.6.1.patch
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo update -p pgrx --precise $PGRX_VERSION
-cargo update -p pgrx-tests --precise $PGRX_VERSION
-cargo fetch
+LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
+cargo fetch --locked
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
+	exit 1
+fi
 
 %install
 rm -rf %{buildroot}
@@ -56,6 +60,10 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 1.6.1-2PIGSTY
+- Migrate the direct-on-pristine source patch and locked pgrx test graph to 0.19.1
+- Build offline after locked fetch and reject Cargo.lock rewrites
+
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 1.6.1-1PIGSTY
 - https://github.com/supabase/pg_graphql/releases/tag/v1.6.1
 - Patch Cargo metadata to build with cargo-pgrx 0.18.1

@@ -145,7 +145,7 @@ pg_similarity:	# covered by pgdg
 	./build pg_similarity 14 15 16 17 18
 
 pg_rrf:			# rust pgrx 0.19.1
-	./build pg_rrf 14 15 16 17
+	./build pg_rrf 14 15 16 17 18
 
 smlar:          # break for pg18, fixed
 	./build smlar 14 15 16 17 18

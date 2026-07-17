@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 %global pname pgmqtt
 %global sname pgmqtt
-%global srcdir RayElg-pgmqtt-abacb87
+%global srcdir pgmqtt-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
@@ -9,13 +9,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.0
+Version:	0.4.1
 Release:	1PIGSTY%{?dist}
 Summary:	CDC-to-MQTT broker extension for PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/pgmqtt
 Source0:	%{sname}-%{version}.tar.gz
-#           repacked from upstream release https://github.com/RayElg/pgmqtt/releases/tag/0.3.0
+#           https://github.com/RayElg/pgmqtt/archive/refs/tags/0.4.1.tar.gz
+Patch0:		pgmqtt-0.4.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang
@@ -30,25 +31,28 @@ logical replication when it is deployed.
 %prep
 %setup -q -n %{srcdir}
 find . -type f -name '._*' -delete
-patch -p1 --forward -f < %{_specdir}/patches/pgmqtt-0.3.0.patch
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo update -p pgrx --precise $PGRX_VERSION
-cargo update -p pgrx-tests --precise $PGRX_VERSION
-cargo fetch
+cargo fetch --locked
+LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
+	echo "Cargo.lock changed during package" >&2
+	exit 1
+}
 
 %install
 %{__rm} -rf %{buildroot}
@@ -71,6 +75,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE.md %{buildroot}%{_licensedir}/%{na
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.4.1-1PIGSTY
+- Update to upstream 0.4.1 and add a committed pgrx 0.19.1 Cargo.lock
+
 * Sun Jun 14 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 - Package upstream release 0.3.0 for PostgreSQL 14-18
 - Patch Cargo metadata to build with cargo-pgrx 0.18.1

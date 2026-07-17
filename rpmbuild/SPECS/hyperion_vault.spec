@@ -9,11 +9,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Encrypted secrets vault for PostgreSQL
 License:	GPL-3.0-or-later
 URL:		https://github.com/hyperiondb/hyperion-vault
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		hyperion-vault-0.3.0.patch
 #           normalized from https://api.pgxn.org/dist/hyperion_vault/0.3.0/hyperion_vault-0.3.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -28,24 +29,33 @@ shared_preload_libraries.
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
+LOCKFILE=../Cargo.lock
+LOCK_BEFORE=$(sha256sum "$LOCKFILE" | cut -d ' ' -f1)
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 
-# pgrx 0.18 embeds extension schema metadata in a linker section; without this
+# pgrx embeds extension schema metadata in a linker section; without this
 # flag the EL9A linker can garbage-collect it and cargo-pgrx reports a missing
 # .pgrxsc section during packaging.
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+LOCK_AFTER=$(sha256sum "$LOCKFILE" | cut -d ' ' -f1)
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
+	exit 1
+fi
 
 %install
 %{__rm} -rf %{buildroot}
@@ -71,6 +81,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENCE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*/*
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.3.0-2PIGSTY
+- Build with cargo-pgrx 0.19.1 and a locked workspace dependency graph
+- Verify cargo pgrx package does not rewrite Cargo.lock
+
 * Sun Jun 14 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 - Initial RPM release for upstream PGXN 0.3.0
 - Build PostgreSQL 18 pgrx extension with cargo-pgrx 0.18.1

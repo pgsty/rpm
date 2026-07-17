@@ -6,13 +6,15 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.26.2
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize
 Source0:	pg_vectorize-%{version}.tar.gz
+Patch0:		pg-vectorize-0.26.2.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server pgmq_%{pgmajorversion} >= 1.1.1 pgvector_%{pgmajorversion} >= 0.7.0 pg_cron_%{pgmajorversion}
 Recommends: pg_cron_%{pgmajorversion}
 
@@ -22,25 +24,34 @@ This allows you to do vector search and build LLM applications on existing data 
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{_specdir}/patches/pg-vectorize-0.26.2.patch
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
+LOCK_EXPECTED=31eeb960ac756d9233fda98c6faaec8d0298f176880c14a18a6dbcbf934b1818
+LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
+if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
+	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
+	exit 1
+fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo update -p pgrx --precise $PGRX_VERSION
-cargo update -p pgrx-tests --precise $PGRX_VERSION
-cargo fetch
+cargo fetch --locked
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+LOCK_AFTER=$(sha256sum Cargo.lock | cut -d ' ' -f1)
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
+	exit 1
+fi
 
 %install
 rm -rf %{buildroot}
@@ -56,6 +67,10 @@ cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.26.2-2PIGSTY
+- Build the extension crate with cargo-pgrx 0.19.1 and a locked dependency graph
+- Preserve the PG18 background-worker build and linker metadata retention flag
+
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.26.2-1PIGSTY
 - Bump to 0.26.2 and patch Cargo metadata to pgrx 0.18.1
 

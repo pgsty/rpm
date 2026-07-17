@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/rpm make shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2026-07-06
+# Mtime     :   2026-07-17
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -26,7 +26,7 @@ spec:
 	pig build spec
 rust:
 	pig build rust
-pgrx: pgrx0161
+pgrx: pgrx0191
 pgrx0161:
 	pig build pgrx -v 0.16.1
 pgrx0170:
@@ -60,7 +60,7 @@ time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables pg_t
 timescaledb:
 	./build timescaledb 15 16 17 18
 
-timescaledb_toolkit:	# rust pgrx 0.18.1
+timescaledb_toolkit:	# rust pgrx 0.19.1
 	./build timescaledb_toolkit 15 16 17 18
 
 pg_timeseries:
@@ -78,13 +78,13 @@ temporal_tables:
 pg_task:
 	./build pg_task 14 15 16 17 18
 
-pg_later:       # rust pgrx 0.18.1
-	./build pg_later 14 15 16 17
+pg_later:       # rust pgrx 0.19.1
+	./build pg_later 14 15 16 17 18
 
 pg_background:
 	./build pg_background 14 15 16 17 18
 
-pg_when:        # rust pgrx 0.18.1
+pg_when:        # rust pgrx 0.19.1
 	./build pg_when 14 15 16 17 18
 
 pg_stl:
@@ -107,10 +107,10 @@ q3c:
 geoip:
 	./build geoip 14 15 16 17 18
 
-pg_polyline:    # rust pgrx 0.18.1
+pg_polyline:    # rust pgrx 0.19.1
 	./build pg_polyline 14 15 16 17 18
 
-pg_eviltransform:	# rust pgrx 0.18.1
+pg_eviltransform:	# rust pgrx 0.19.1
 	./build pg_eviltransform 14 15 16 17 18
 
 pg_geohash:
@@ -122,7 +122,7 @@ mobilitydb:
 pghydro:
 	./build pghydro 14 15 16 17 18
 
-pg_tzf:         # rust pgrx 0.18.1
+pg_tzf:         # rust pgrx 0.19.1
 	./build pg_tzf 14 15 16 17 18
 
 
@@ -132,28 +132,28 @@ pg_tzf:         # rust pgrx 0.18.1
 pgvector:  # skip, handled by pgdg
 	./build pgvector 14 15 16 17 18
 
-vchord:    # rust pgrx 0.18.1
+vchord:    # rust pgrx 0.19.1
 	./build vchord 14 15 16 17 18
 
-pgvectorscale:  # rust pgrx 0.18.1
+pgvectorscale:  # rust pgrx 0.19.1
 	./build pgvectorscale 14 15 16 17 18
 
-pg_vectorize:	# rust pgrx 0.18.1
+pg_vectorize:	# rust pgrx 0.19.1
 	./build pg_vectorize 14 15 16 17 18
 
 pg_similarity:	# covered by pgdg
 	./build pg_similarity 14 15 16 17 18
 
-pg_rrf:			# rust pgrx 0.18.1
+pg_rrf:			# rust pgrx 0.19.1
 	./build pg_rrf 14 15 16 17
 
 smlar:          # break for pg18, fixed
 	./build smlar 14 15 16 17 18
 
-pg_summarize:	# rust pgrx 0.18.1 (forked)
-	./build pg_summarize 14 15 16 17
+pg_summarize:	# rust pgrx 0.19.1 (forked)
+	./build pg_summarize 14 15 16 17 18
 
-pg_tiktoken:	# rust pgrx 0.18.1
+pg_tiktoken:	# rust pgrx 0.19.1
 	./build pg_tiktoken 14 15 16 17 18
 
 pg4ml:
@@ -170,7 +170,7 @@ pgmnemo:
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
-pg_search:      # rust pgrx 0.18.1
+pg_search:      # rust pgrx 0.19.1
 	./build pg_search 15 16 17 18
 
 pgroonga:
@@ -189,13 +189,13 @@ scws-install:
 zhparser:
 	QA_RPATHS=2 ./build zhparser 14 15 16 17 18
 
-pg_bestmatch:		# rust pgrx 0.18.1
-	./build pg_bestmatch 14 15 16 17
+pg_bestmatch:		# rust pgrx 0.19.1
+	./build pg_bestmatch 14 15 16 17 18
 
-vchord_bm25:		# rust pgrx 0.18.1
+vchord_bm25:		# rust pgrx 0.19.1
 	./build vchord_bm25 14 15 16 17 18
 
-pg_tokenizer:		# rust pgrx 0.18.1
+pg_tokenizer:		# rust pgrx 0.19.1
 	./build pg_tokenizer 14 15 16 17 18
 
 pg_biscuit:
@@ -204,10 +204,10 @@ pg_biscuit:
 pg_textsearch:
 	./build pg_textsearch 17 18
 
-pg_pinyin:			# rust pgrx 0.18.1
+pg_pinyin:			# rust pgrx 0.19.1
 	./build pg_pinyin 14 15 16 17 18
 
-pg_kazsearch:		# rust pgrx 0.18.1
+pg_kazsearch:		# rust pgrx 0.19.1
 	./build pg_kazsearch 16 17 18
 
 psql_bm25s:
@@ -267,7 +267,7 @@ pg_clickhouse:
 #duckdb_fdw:
 #	./build duckdb_fdw
 
-pg_parquet:			# rust pgrx 0.18.1
+pg_parquet:			# rust pgrx 0.19.1
 	./build pg_parquet 14 15 16 17 18
 
 pg_ducklake:             # EL9+ only: EL8/GCC8 filesystem support is unverified
@@ -295,11 +295,11 @@ age:
 onesparse:
 	./build onesparse 18
 
-pggraph:		# rust pgrx 0.18.1, installs graph extension
+pggraph:		# rust pgrx 0.19.1, installs graph extension
 	./build pggraph 14 15 16 17 18
 
-pgrdf:			# rust pgrx 0.18.1, no PG18 feature upstream
-	./build pgrdf 14 15 16 17
+pgrdf:			# rust pgrx 0.19.1
+	./build pgrdf 14 15 16 17 18
 
 pgmq:
 	./build pgmq 14 15 16 17 18
@@ -332,13 +332,13 @@ pg_igraph:		# deferred: draft spec kept in SPECS/obsolete
 pg_ttl_index:
 	./build pg_ttl_index 15 16 17 18
 
-pg_graphql:		# rust pgrx 0.18.1
+pg_graphql:		# rust pgrx 0.19.1
 	./build pg_graphql 14 15 16 17 18
 
-pg_jsonschema:	# rust pgrx 0.18.1
+pg_jsonschema:	# rust pgrx 0.19.1
 	./build pg_jsonschema 14 15 16 17 18
 
-jsonschema:		# rust pgrx 0.18.1, distinct from pg_jsonschema
+jsonschema:		# rust pgrx 0.19.1, distinct from pg_jsonschema
 	./build jsonschema 14 15 16 17 18
 
 #jsquery:
@@ -361,10 +361,10 @@ pg_ivm:
 pg_incremental:
 	./build pg_incremental 16 17 18
 
-pg_trickle:		# rust pgrx 0.18.1, PG18 only
+pg_trickle:		# rust pgrx 0.19.1, PG18 only
 	./build pg_trickle 18
 
-pg_durable:		# rust pgrx 0.18.1, shared_preload_libraries
+pg_durable:		# rust pgrx 0.19.1, shared_preload_libraries
 	./build pg_durable 14 15 16 17 18
 
 provsql:
@@ -396,7 +396,7 @@ plv8:
 pljs:
 	./build pljs 14 15 16 17 18
 
-plprql: 		# rust pgrx 0.18.1
+plprql: 		# rust pgrx 0.19.1
 	./build plprql 14 15 16 17 18
 
 plpgsql_check:
@@ -405,7 +405,7 @@ plpgsql_check:
 pg_mockable:
 	./build pg_mockable 14 15 16 17 18
 
-pg_typescript:		# rust pgrx 0.18.1
+pg_typescript:		# rust pgrx 0.19.1
 	./build pg_typescript 16 17 18
 
 # pllua
@@ -546,7 +546,7 @@ pgjwt:
 	./build pgjwt 14 15 16 17 18
 
 pg_smtp_client:		# rust pgrx
-	./build pg_smtp_client 14 15 16 17
+	./build pg_smtp_client 14 15 16 17 18
 
 pg_html5_email_address:
 	./build pg_html5_email_address 14 15 16 17 18
@@ -581,8 +581,8 @@ pg_byteamagic:
 external_file:
 	./build external_file 14 15 16 17 18
 
-pg_render:		# rust pgrx 0.18.1
-	./build pg_render 14 15 16 17
+pg_render:		# rust pgrx 0.19.1
+	./build pg_render 14 15 16 17 18
 
 #pg_readme
 
@@ -620,10 +620,10 @@ pgsparql:
 ###############################################################
 #                       Category: FUNC                        #
 ###############################################################
-pg_idkit:			# rust pgrx 0.18.1
+pg_idkit:			# rust pgrx 0.19.1
 	./build pg_idkit 14 15 16 17 18
 
-pgx_ulid:			# rust pgrx 0.18.1
+pgx_ulid:			# rust pgrx 0.19.1
 	./build pgx_ulid  14 15 16 17 18
 
 pg_uuid_v8:
@@ -701,7 +701,7 @@ pg_base36:
 pg_base62:
 	./build pg_base62 14 15 16 17 18
 
-pg_base58:		# rust pgrx 0.18.1
+pg_base58:		# rust pgrx 0.19.1
 	./build pg_base58 14 15 16 17 18
 
 pg_financial:
@@ -710,7 +710,7 @@ pg_financial:
 pg_accumulator:
 	./build pg_accumulator 14 15 16 17 18
 
-pg_convert:		# rust pgrx 0.18.1
+pg_convert:		# rust pgrx 0.19.1
 	./build pg_convert 14 15 16 17 18
 
 parray_gin:
@@ -750,7 +750,7 @@ ddlx:			# fix pgdg 18 missing
 pglinter:
 	./build pglinter 14 15 16 17 18
 
-pgdd:			# rust pgrx 0.18.1
+pgdd:			# rust pgrx 0.19.1
 	./build pgdd 14 15 16 17 18
 
 preprepare:
@@ -846,7 +846,7 @@ pgmeminfo:
 toastinfo:
 	./build toastinfo 14 15 16 17 18
 
-pg_explain_ui:		# rust pgrx 0.18.1
+pg_explain_ui:		# rust pgrx 0.19.1
 	./build pg_explain_ui 14 15 16 17 18
 
 pg_relusage:
@@ -882,19 +882,19 @@ column_encrypt:
 pg_vault:
 	./build pg_vault 14 15 16 17 18
 
-hyperion_vault:	# rust pgrx 0.18.1, PG18 only, shared_preload_libraries
+hyperion_vault:	# rust pgrx 0.19.1, PG18 only, shared_preload_libraries
 	./build hyperion_vault 18
 
-pg_session_jwt:		# rust pgrx 0.18.1
+pg_session_jwt:		# rust pgrx 0.19.1
 	./build pg_session_jwt 14 15 16 17 18
 
-pg_anon:			# rust pgrx 0.18.1
+pg_anon:			# rust pgrx 0.19.1
 	./build pg_anon 14 15 16 17 18
 
-pgsmcrypto:			# rust pgrx 0.18.1
+pgsmcrypto:			# rust pgrx 0.19.1
 	./build pgsmcrypto 14 15 16 17 18
 
-pg_enigma:			# rust pgrx 0.18.1
+pg_enigma:			# rust pgrx 0.19.1
 	./build pg_enigma 14 15 16 17 18
 
 pg_auditor:
@@ -912,10 +912,10 @@ pg_snakeoil:
 pgextwlist:
 	./build pgextwlist 14 15 16 17 18
 
-pg_command_fw:		# rust pgrx 0.18.1
+pg_command_fw:		# rust pgrx 0.19.1
 	./build pg_command_fw 15 16 17 18
 
-block_copy_command:	# rust pgrx 0.18.1
+block_copy_command:	# rust pgrx 0.19.1
 	./build block_copy_command 14 15 16 17 18
 
 sslutils:
@@ -939,13 +939,13 @@ pg_noset:
 #mongo_fdw
 #hdfs_fdw
 
-wrappers:			# rust pgrx 0.18.1
+wrappers:			# rust pgrx 0.19.1
 	./build wrappers 14 15 16 17 18
 
 sqlite_fdw:
 	./build sqlite_fdw 14 15 16 17 18
 
-etcd_fdw:			# rust pgrx 0.18.1
+etcd_fdw:			# rust pgrx 0.19.1
 	./build etcd_fdw 14 15 16 17 18
 
 nominatim_fdw:
@@ -1032,7 +1032,7 @@ pgactive:
 pgclone:
 	./build pgclone 14 15 16 17 18
 
-pgmqtt:			# rust pgrx 0.18.1
+pgmqtt:			# rust pgrx 0.19.1
 	./build pgmqtt 14 15 16 17 18
 
 decoder_raw:

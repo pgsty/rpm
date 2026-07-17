@@ -1,6 +1,7 @@
 %define debug_package %{nil}
 %global pname pg_search
 %global sname pg_search
+%global srcdir paradedb-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
@@ -8,13 +9,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.24.0
+Version:	0.24.3
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_search/0.24.0/pg_search-0.24.0.zip
+#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.24.3.tar.gz
+Patch0:		pg-search-0.24.3.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
@@ -26,34 +28,40 @@ the state-of-the-art ranking function for full text search.
 It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, using pgrx.
 
 %prep
-%setup -q -n pg_search-%{version}
-
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{PATCH0}
 
 %build
-cd %{_builddir}/%{sname}-%{version}
+cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export RUSTUP_TOOLCHAIN=stable
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
+LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 
 export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-2}"
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 
 cd %{pname}
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+test "$LOCK_SHA256" = "$(sha256sum ../Cargo.lock | awk '{print $1}')" || {
+	echo "Cargo.lock changed during package" >&2
+	exit 1
+}
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -62,6 +70,10 @@ cp -a %{_builddir}/pg_search-%{version}/target/release/%{pname}-pg%{pgmajorversi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.24.3-1PIGSTY
+- Update to upstream 0.24.3 and migrate all active pgrx workspace crates to 0.19.1
+- Use the validated builder stable Rust toolchain without downloading another toolchain
+
 * Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.24.0-1PIGSTY
 - Update to upstream PGXN 0.24.0 using the normalized source tarball
 - Build with cargo-pgrx 0.18.1 and explicit pgNN features

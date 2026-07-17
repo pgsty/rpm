@@ -1,6 +1,7 @@
 %define debug_package %{nil}
 %global pname graph
 %global sname pggraph
+%global srcdir pgGraph-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
@@ -8,14 +9,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.7
+Version:	0.1.8
 Release:	1PIGSTY%{?dist}
 Summary:	Graph database capabilities for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/evokoa/pggraph
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pggraph/0.1.7/pggraph-0.1.7.zip
+#           https://github.com/Evokoa/pgGraph/archive/refs/tags/v0.1.8.tar.gz
 #           SQL extension payload is named graph.
+Patch0:		pggraph-0.1.8.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -27,35 +29,42 @@ registration capabilities to PostgreSQL. The PGXN distribution is named
 pggraph, while the installed PostgreSQL extension is named graph.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{srcdir}
+patch -p1 --forward -f < %{PATCH0}
 
 %build
-cd %{_builddir}/%{sname}-%{version}/graph
+cd %{_builddir}/%{srcdir}/graph
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:/usr/bin:$PATH
+export RUSTUP_TOOLCHAIN=stable
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo fetch
-# pgrx 0.18 embeds extension schema metadata in a linker section; without this
+cargo fetch --locked
+LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
+# pgrx 0.19 embeds extension schema metadata in a linker section; without this
 # flag the EL9A linker can garbage-collect it and cargo-pgrx reports a missing
 # .pgrxsc section during packaging.
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
+	echo "Cargo.lock changed during package" >&2
+	exit 1
+}
 
 %install
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
-cp -a %{_builddir}/%{sname}-%{version}/graph/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/graph/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/graph/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_builddir}/%{sname}-%{version}/README.md %{buildroot}%{_docdir}/%{name}/
-install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedir}/%{name}/
+cp -a %{_builddir}/%{srcdir}/graph/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/graph/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/graph/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
+install -m 644 %{_builddir}/%{srcdir}/README.md %{buildroot}%{_docdir}/%{name}/
+install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}/
 
 %files
 %doc %{_docdir}/%{name}/README.md
@@ -66,6 +75,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.1.8-1PIGSTY
+- Update to upstream v0.1.8 with native pgrx 0.19.1 support
+- Use the validated builder stable Rust toolchain without downloading another toolchain
+
 * Thu Jun 11 2026 Vonng <rh@vonng.com> - 0.1.7-1PIGSTY
 - Update to upstream PGXN 0.1.7
 - Build with cargo-pgrx 0.18.1

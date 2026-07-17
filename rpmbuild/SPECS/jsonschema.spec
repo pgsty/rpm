@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.9
-Release:	2PIGSTY%{?dist}
+Release:	3PIGSTY%{?dist}
 Summary:	JSON Schema validation functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/theory/pg-jsonschema-boon
@@ -34,19 +34,22 @@ patch -p1 --forward -f < %{_specdir}/patches/jsonschema-0.1.9.patch
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.18.1
+PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx --precise $PGRX_VERSION
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-macros --precise $PGRX_VERSION
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update -p pgrx-pg-config --precise $PGRX_VERSION
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch
+LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
+	exit 1
+fi
 
 %install
 %{__rm} -rf %{buildroot}
@@ -67,6 +70,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licens
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.1.9-3PIGSTY
+- Migrate the direct-on-pristine source patch and locked dependency graph to pgrx 0.19.1
+- Fetch the fixed Cargo.lock and verify cargo pgrx package does not rewrite it
+
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.1.9-2PIGSTY
 - Build with cargo-pgrx 0.18.1 and explicit pgNN features
 - Use the shared pgrx 0.18.1 source patch from DEB packaging

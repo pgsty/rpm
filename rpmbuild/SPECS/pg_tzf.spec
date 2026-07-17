@@ -4,9 +4,13 @@
 %global srcdir ringsaturn-pg-tzf-5d6627e
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_tzf only supports PostgreSQL 14 through 18}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Fast PG extension to lookup timezone name by GPS coordinates
 License:	MIT
 URL:		https://github.com/ringsaturn/pg-tzf
@@ -25,22 +29,23 @@ patch -p1 --forward -f < %{_specdir}/patches/tzf-0.3.0.patch
 %build
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_DIST_SERVER=${RUSTUP_DIST_SERVER:-https://mirrors.ustc.edu.cn/rust-static}
-export RUSTUP_UPDATE_ROOT=${RUSTUP_UPDATE_ROOT:-https://mirrors.ustc.edu.cn/rust-static/rustup}
 
-PGRX_VERSION=0.18.1
-CURRENT_PGRX=$(cargo-pgrx --version 2>/dev/null | awk '{print $2}')
+PGRX_VERSION=0.19.1
+CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-cargo update -p pgrx --precise $PGRX_VERSION
-cargo update -p pgrx-tests --precise $PGRX_VERSION
-cargo fetch
+cargo fetch --locked
+LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
+	echo "Cargo.lock changed during package" >&2
+	exit 1
+}
 
 %install
 rm -rf %{buildroot}
@@ -58,6 +63,10 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.3.0-2PIGSTY
+- Build with cargo-pgrx 0.19.1 using the patched, locked dependency graph
+- Use the validated image toolchain instead of downloading a floating nightly
+
 * Mon Jun 15 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 - Bump to 0.3.0 and patch Cargo metadata to pgrx 0.18.1
 - Use cargo-pgrx directly for version checks

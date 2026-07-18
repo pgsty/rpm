@@ -46,6 +46,11 @@ cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 cargo fetch --locked
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
+%if 0%{?rhel} >= 10
+# aws-lc-sys 0.42 deliberately ignores CFLAGS for its executable compiler
+# probe, but still inherits the EL10 hardened LDFLAGS that enable PIE.
+export LDFLAGS="${LDFLAGS:-} -fPIE"
+%endif
 CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 LOCK_AFTER=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then

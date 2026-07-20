@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2
+Version:	2.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Nominatim Foreign Data Wrapper for PostgreSQL
 License:	MIT
@@ -81,5 +81,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.0.0-1PIGSTY
+- Update to upstream PGXN 2.0.0
+
 * Fri Apr 10 2026 Vonng <rh@vonng.com> - 1.2-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

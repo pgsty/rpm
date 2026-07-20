@@ -415,6 +415,9 @@ plpgsql_check:
 pg_mockable:
 	./build pg_mockable 14 15 16 17 18
 
+pgsqlmock:
+	./build pgsqlmock 14 15 16 17 18
+
 pg_typescript:		# rust pgrx 0.19.1
 	./build pg_typescript 16 17 18
 
@@ -1182,7 +1185,7 @@ rmdbg:
 	pg_sorted_heap age onesparse pggraph pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
-	pg_cardano inchi rdkit pg_tle plv8 pljs plprql plpgsql_check pg_mockable pg_typescript \
+	pg_cardano inchi rdkit pg_tle plv8 pljs plprql plpgsql_check pg_mockable pgsqlmock pg_typescript \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \
 	numeral pg_rational pguint pg_uint128 hashtypes pg_uri pg_emailaddr pg_acl pg_duration \

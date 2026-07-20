@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	18.0.1
-Release:	3PIGSTY%{?dist}
+Release:	4PIGSTY%{?dist}
 Summary:	Use PRQL in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/kaspermarstal/plprql
@@ -67,6 +67,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jul 20 2026 Vonng <rh@vonng.com> - 18.0.1-4PIGSTY
+- Coerce numeric table-return values to declared float4/float8 types before forming tuples
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 18.0.1-3PIGSTY
 - Build with cargo-pgrx 0.19.1 from a locked workspace dependency graph
 - Correct the upstream release archive's crate versions from 18.0.0 to 18.0.1

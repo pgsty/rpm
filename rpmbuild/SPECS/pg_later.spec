@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.0
-Release:	3PIGSTY%{?dist}
+Release:	4PIGSTY%{?dist}
 Summary:	Execute SQL now and get the results later.
 License:	PostgreSQL
 Source0:    pg_later-%{version}.tar.gz
@@ -62,6 +62,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jul 20 2026 Vonng <rh@vonng.com> - 0.4.0-4PIGSTY
+- Update the Rust pgmq client to 0.30.1 for pgmq 1.10+ message-record compatibility
+- Validate SQL before quote-escaping it for the pgmq payload
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.4.0-3PIGSTY
 - Migrate the direct-on-pristine source patch and fixed dependency graph to pgrx 0.19.1
 - Build offline after locked fetch and reject Cargo.lock rewrites

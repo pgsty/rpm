@@ -159,6 +159,9 @@ pg_summarize:	# rust pgrx 0.19.1 (forked)
 pg_tiktoken:	# rust pgrx 0.19.1
 	./build pg_tiktoken 14 15 16 17 18
 
+pg_tiktoken_c:
+	./build pg_tiktoken_c 14 15 16 17 18
+
 pg4ml:
 	./build pg4ml 14 15 16 17 18
 
@@ -1170,7 +1173,7 @@ rmdbg:
 	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
-	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg4ml \
+	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
 	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_bestmatch vchord_bm25 \
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \

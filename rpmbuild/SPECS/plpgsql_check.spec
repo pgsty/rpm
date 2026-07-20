@@ -18,13 +18,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.9.2
+Version:	2.10.1
 Release:	1PIGSTY%{?dist}
 Summary:	Additional tools for PL/pgSQL function validation
 License:	MIT
 URL:		https://github.com/okbob/plpgsql_check
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/plpgsql_check/2.9.2/plpgsql_check-2.9.2.zip
+#           normalized from https://api.pgxn.org/dist/plpgsql_check/2.10.1/plpgsql_check-2.10.1.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -69,6 +69,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.10.1-1PIGSTY
+- Update to latest upstream PGXN 2.10.1
+
 * Wed Jul 01 2026 Vonng <rh@vonng.com> - 2.9.2-1PIGSTY
 - Update to upstream PGXN 2.9.2
 

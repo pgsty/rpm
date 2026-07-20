@@ -2,18 +2,18 @@
 %global sname pgmnemo
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14
-%{error:pgmnemo only supports PostgreSQL 14+}
+%if 0%{?pgmajorversion} < 17
+%{error:pgmnemo 0.13.0 only supports PostgreSQL 17+}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.12.1
+Version:	0.13.0
 Release:	1PIGSTY%{?dist}
 Summary:	Provenance-gated vector memory for LLM agents in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/pgmnemo/pgmnemo
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgmnemo/0.12.1/pgmnemo-0.12.1.zip
+#           normalized from https://api.pgxn.org/dist/pgmnemo/0.13.0/pgmnemo-0.13.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -43,6 +43,10 @@ cp -f extension/%{pname}.control %{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Sun Jul 19 2026 Vonng <rh@vonng.com> - 0.13.0-1PIGSTY
+- Update to upstream PGXN 0.13.0
+- Follow upstream's new PostgreSQL 17+ runtime requirement
+
 * Wed Jul 01 2026 Vonng <rh@vonng.com> - 0.12.1-1PIGSTY
 - Update to upstream PGXN 0.12.1
 

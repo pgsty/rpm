@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.6.2
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
@@ -43,7 +43,7 @@ LOCK_FILE=../Cargo.lock
 LOCK_SHA256=$(sha256sum "$LOCK_FILE" | awk '{print $1}')
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion},duckdb_fdw --pg-config %{pginstdir}/bin/pg_config
 test "$LOCK_SHA256" = "$(sha256sum "$LOCK_FILE" | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
 	exit 1
@@ -63,6 +63,9 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Jul 20 2026 Vonng <rh@vonng.com> - 0.6.2-2PIGSTY
+- Enable the bundled DuckDB FDW used by the package Parquet QA contract
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.6.2-1PIGSTY
 - Update to upstream 0.6.2 and migrate both pgrx workspace crates to 0.19.1
 - Preserve the packaging error-report compatibility fix in the versioned patch

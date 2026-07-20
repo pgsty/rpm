@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.11.0
+Version:	2.12.0
 Release:	1PIGSTY%{?dist}
 Summary:	PL/Proxy development
 License:	BSD-0-Clause
@@ -21,6 +21,7 @@ URL:		https://github.com/plproxy/plproxy
 Source0:	plproxy-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	gcc flex bison
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -77,5 +78,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.12.0-1PIGSTY
+- Update to upstream PGXN 2.12.0
+
 * Sun May 05 2024 Vonng <rh@vonng.com> - 2.11.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

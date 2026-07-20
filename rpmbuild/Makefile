@@ -283,7 +283,8 @@ pg_orca:
 pg_sorted_heap:
 	./build pg_sorted_heap 16 17 18
 
-# plproxy
+plproxy:
+	./build plproxy 14 15 16 17 18
 # pg_strom
 
 ###############################################################

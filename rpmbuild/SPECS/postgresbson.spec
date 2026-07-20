@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.2
+Version:	2.0.4
 Release:	1PIGSTY%{?dist}
 Summary:	BSON data type and accessor functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/buzzm/postgresbson
 Source0:	%{sname}-%{version}.tar.gz
-#		repacked from upstream HEAD e8375bfabcf54de400b07988b6f017d6e48c5a91
+#		normalized from https://api.pgxn.org/dist/bson/2.0.4/bson-2.0.4.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libbson-devel pkgconf-pkg-config
@@ -59,7 +59,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/postgresbson-2.0.2-avoid-private-libbson-symbol.patch
+patch -p1 --forward -f < %{_specdir}/patches/postgresbson-avoid-private-libbson-symbol.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} \
@@ -86,6 +86,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.0.4-1PIGSTY
+- Update to upstream PGXN bson 2.0.4
+- Keep the system libbson compatibility fix for ISO-8601 date formatting
+
 * Tue Apr 07 2026 Vonng <rh@vonng.com> - 2.0.2-1PIGSTY
 - Initial RPM release for pgbson, sourced from upstream HEAD e8375bf
 - Avoid private libbson symbol dependency for EL9 system libbson

@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.4.1
+Version:	2.4.3
 Release:	1PIGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
@@ -87,6 +87,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginst
 %endif
 
 %changelog
+* Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.4.3-1PIGSTY
+- Update to latest stable PGXN distribution 2.4.3
+- Package the upstream extension SQL/default version 2.4.1
+
 * Wed Jul 01 2026 Vonng <rh@vonng.com> - 2.4.1-1PIGSTY
 - Update package to upstream PGXN 2.4.1; extension SQL remains 2.4.0
 

@@ -23,6 +23,7 @@ Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/documentdb/documentdb
 Source0:	%{sname}-%{version}-0.tar.gz
+Patch0:		documentdb-0.114-export-validation.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 pkgconf-pkg-config
 %if %{pgmajorversion} == 15
@@ -77,6 +78,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{pname}-%{version}-0
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -104,6 +106,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %changelog
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 0.114-0PIGSTY
 - switch to upstream documentdb v0.114-0
+- ignore toolchain-provided ELF boundary symbols in the RUM export validator
 
 * Tue Jun 30 2026 Vonng <rh@vonng.com> - 0.113-0PIGSTY
 - switch to upstream documentdb v0.113-0

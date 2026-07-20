@@ -73,6 +73,7 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.24.3-1PIGSTY
 - Update to upstream 0.24.3 and migrate all active pgrx workspace crates to 0.19.1
 - Use the validated builder stable Rust toolchain without downloading another toolchain
+- Drop the upstream rust-toolchain manifest so rustup does not refresh a moving channel during container builds
 
 * Thu Jun 04 2026 Vonng <rh@vonng.com> - 0.24.0-1PIGSTY
 - Update to upstream PGXN 0.24.0 using the normalized source tarball

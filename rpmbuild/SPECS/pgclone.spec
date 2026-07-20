@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	4.3.2
+Version:	4.4.2
 Release:	1PIGSTY%{?dist}
 Summary:	Clone PostgreSQL databases, schemas, and tables across environments
 License:	PostgreSQL
 URL:		https://github.com/valehdba/pgclone
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgclone/4.3.2/pgclone-4.3.2.zip
+#           normalized from https://api.pgxn.org/dist/pgclone/4.4.2/pgclone-4.4.2.zip
 #           Supported: PostgreSQL 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -87,6 +87,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Jul 19 2026 Vonng <rh@vonng.com> - 4.4.2-1PIGSTY
+- Update to upstream PGXN 4.4.2
+
 * Thu May 14 2026 Vonng <rh@vonng.com> - 4.3.2-1PIGSTY
 - Update to upstream PGXN 4.3.2 with the normalized pgclone-4.3.2.tar.gz source tarball
 

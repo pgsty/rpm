@@ -5,7 +5,7 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.1
+Version:	1.4.2
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension providing Active session history
 License:	PostgreSQL
@@ -14,6 +14,7 @@ Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 PostgreSQL provides session activity. However, in order to gather activity behavior,
@@ -42,7 +43,7 @@ Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -74,6 +75,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %endif
 %exclude /usr/lib/.build-id/*
 %changelog
+* Mon Jul 20 2026 Vonng <rh@vonng.com> - 1.4.2-1PIGSTY
+- https://github.com/pgsentinel/pgsentinel/releases/tag/v1.4.2
+- Require PostgreSQL contrib for pg_stat_statements
 * Sat Mar 21 2026 Vonng <rh@vonng.com> - 1.4.1-1PIGSTY
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.4.0-1PIGSTY
 - https://github.com/pgsentinel/pgsentinel/releases/tag/v1.4.0

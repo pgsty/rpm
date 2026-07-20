@@ -838,6 +838,9 @@ pg_ash:
 system_stats:
 	./build system_stats 14 15 16 17 18
 
+fbsql:
+	./build fbsql 16 17 18
+
 pg_meta:
 	./build pg_meta 14 15 16 17 18
 
@@ -1172,7 +1175,7 @@ rmdbg:
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
-	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql \
+	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
 	pg_cardano inchi rdkit pg_tle plv8 pljs plprql plpgsql_check pg_mockable pg_typescript \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \

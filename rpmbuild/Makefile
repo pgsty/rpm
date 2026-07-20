@@ -283,6 +283,9 @@ pg_ducklake:             # EL9+ only: EL8/GCC8 filesystem support is unverified
 	./build pg_ducklake 14 15 16 17 18
 
 # pg_fkpart
+pg_kpart:
+	./build pg_kpart 14 15 16 17 18
+
 pg_partman:
 	./build pg_partman 14 15 16 17 18
 
@@ -1184,7 +1187,7 @@ rmdbg:
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot citus hydra pg_duckdb \
-	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_partman pg_orca \
+	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \

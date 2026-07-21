@@ -26,6 +26,7 @@ Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/huangjimmy/pg_cjk_parser/archive/refs/tags/v0.1.0.tar.gz
 Patch0:		pg_cjk_parser-0.1.0.patch
 
+BuildRequires:	libicu-devel
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
@@ -71,3 +72,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 install DESTDIR=%{buildroot}
 %changelog
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
+- Declare the ICU development dependency

@@ -23,7 +23,6 @@ Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/documentdb/documentdb
 Source0:	%{sname}-%{version}-0.tar.gz
-Patch0:		documentdb-0.114-export-validation.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 pkgconf-pkg-config
 %if %{pgmajorversion} == 15
@@ -78,17 +77,39 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{pname}-%{version}-0
-patch -p1 --forward -f < %{PATCH0}
+
+# Match upstream RPM packaging: the OSS package excludes the internal,
+# distributed-only extension.
+sed -i '/internal\/pg_documentdb_distributed/d' Makefile
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
-cd pg_documentdb_core
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+# Match the upstream 0.114 RPM packaging: keep linker-generated ELF boundary
+# symbols out of the two bundled RUM libraries without changing upstream code.
+cat > %{_builddir}/documentdb-hide-linker-syms.map <<'EOF'
+{
+  local:
+    _end; __end__;
+    _edata; edata;
+    _etext; etext;
+    __bss_start; __bss_start__; __bss_end__; _bss_end__;
+};
+EOF
+
+UNDEF_VERSION_FLAG=""
+if echo 'int _documentdb_uvprobe;' | gcc -shared -fPIC -x c - \
+    -o %{_builddir}/.documentdb-uvprobe.so -Wl,--undefined-version 2>/dev/null; then
+    UNDEF_VERSION_FLAG="-Wl,--undefined-version"
+fi
+rm -f %{_builddir}/.documentdb-uvprobe.so
+
+# PostgreSQL 15 expands COPT into both CFLAGS and LDFLAGS, which sends the
+# anonymous map to ld twice.  Keep the upstream map but pass it exactly once
+# through the documented link flags instead.
+DOCUMENTDB_LDFLAGS="$(%{pginstdir}/bin/pg_config --ldflags) $UNDEF_VERSION_FLAG -Wl,--version-script=%{_builddir}/documentdb-hide-linker-syms.map"
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LDFLAGS="$DOCUMENTDB_LDFLAGS"
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
-cd pg_documentdb_core
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
@@ -106,7 +127,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %changelog
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 0.114-0PIGSTY
 - switch to upstream documentdb v0.114-0
-- ignore toolchain-provided ELF boundary symbols in the RUM export validator
+- use the upstream RPM linker map for toolchain-provided ELF boundary symbols
 
 * Tue Jun 30 2026 Vonng <rh@vonng.com> - 0.113-0PIGSTY
 - switch to upstream documentdb v0.113-0

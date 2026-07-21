@@ -1,75 +1,63 @@
 %define debug_package %{nil}
-%global pname oidc_validator
+%global pname pg_oidc_validator
 %global sname pg_oidc_validator
-%global commit b65bbbe288f84fab91d58b8304e8a526d1326af5
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} != 18
 %{error:pg_oidc_validator only supports PostgreSQL 18}
 %endif
 
-Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
-Release:	1PIGSTY%{?dist}
-Summary:	OIDC bearer-token validator for PostgreSQL 18
-License:	LicenseRef-Upstream-No-License
-URL:		https://github.com/UnAfraid/pg_oidc_validator_rust
-Source0:	%{sname}-%{version}.tar.gz
-# Source0 is the upstream master snapshot at commit b65bbbe288f84fab91d58b8304e8a526d1326af5:
-# https://github.com/UnAfraid/pg_oidc_validator_rust/archive/b65bbbe288f84fab91d58b8304e8a526d1326af5.tar.gz
-Patch0:		pg-oidc-validator-0.1.0.patch
+Name:           %{sname}_%{pgmajorversion}
+Version:        0.2
+Release:        1PIGSTY%{?dist}
+Summary:        OAuth and OIDC token validator for PostgreSQL 18
+License:        Apache-2.0
+URL:            https://github.com/percona/pg_oidc_validator
+Source0:        %{sname}-%{version}.tar.gz
+#               https://github.com/percona/pg_oidc_validator/archive/refs/tags/0.2.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang-devel openssl-devel rust rustfmt
-BuildRequires:	binutils
-Requires:	postgresql%{pgmajorversion}-server
+BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if 0%{?rhel} == 8 || 0%{?rhel} == 9
+BuildRequires:  gcc-toolset-13 gcc-toolset-13-gcc-c++
+%else
+BuildRequires:  gcc-c++ >= 13
+%endif
+BuildRequires:  libcurl-devel openssl-devel
+Requires:       postgresql%{pgmajorversion}-server
 
 %description
-pg_oidc_validator provides an OIDC bearer-token validator module for the
-PostgreSQL 18 OAuth authentication mechanism. It performs OIDC discovery,
-fetches the issuer JWKS, validates JWT access tokens, and returns the token
-subject as the authenticated identity. Configure PostgreSQL with
-oauth_validator_libraries = 'oidc_validator' to load the module.
+pg_oidc_validator implements PostgreSQL 18's OAuth validator module API. It
+discovers OIDC providers, fetches and caches their JWKS data, validates JWT
+access tokens, and maps a configured token claim to the PostgreSQL identity.
+Load it with oauth_validator_libraries = 'pg_oidc_validator'.
 
 %prep
-%setup -q -n pg_oidc_validator_rust-%{commit}
-patch -p1 --forward -f < %{PATCH0}
+%setup -q -n %{sname}-%{version}
 
 %build
-cd %{_builddir}/pg_oidc_validator_rust-%{commit}
-export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-
-PGRX_VERSION=0.19.1
-CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
-if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
-	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
-	exit 1
-fi
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
-export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-PG_CONFIG=%{pginstdir}/bin/pg_config CARGO_NET_OFFLINE=true \
-	cargo build --release --locked --no-default-features --features pg18
-LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
-if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
-	echo "Cargo.lock changed during cargo build" >&2
-	exit 1
-fi
+%if 0%{?rhel} == 8 || 0%{?rhel} == 9
+. /opt/rh/gcc-toolset-13/enable
+%endif
+PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 \
+    PG_CONFIG=%{pginstdir}/bin/pg_config with_llvm=no %{?_smp_mflags}
 
 %check
-readelf -Ws target/release/lib%{pname}.so | grep -q _PG_oauth_validator_module_init
+readelf -Ws %{pname}.so | grep -q _PG_oauth_validator_module_init
 
 %install
 %{__rm} -rf %{buildroot}
-%{__install} -D -m 0755 target/release/lib%{pname}.so \
-	%{buildroot}%{pginstdir}/lib/%{pname}.so
+%if 0%{?rhel} == 8 || 0%{?rhel} == 9
+. /opt/rh/gcc-toolset-13/enable
+%endif
+PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 \
+    PG_CONFIG=%{pginstdir}/bin/pg_config with_llvm=no install DESTDIR=%{buildroot}
 
 %files
+%license LICENSE.txt
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
+%exclude /usr/lib/.build-id/*
 
 %changelog
-* Mon Jul 20 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
-- Package upstream snapshot b65bbbe for the PostgreSQL 18 OAuth validator API
-- Build with cargo-pgrx/pgrx 0.19.1 and a fixed Cargo.lock
+* Tue Jul 21 2026 Vonng <rh@vonng.com> - 0.2-1PIGSTY
+- Initial RPM release for Percona pg_oidc_validator 0.2 and PostgreSQL 18

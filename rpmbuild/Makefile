@@ -700,6 +700,9 @@ datasketches:
 first_last_agg:
 	./build first_last_agg 14 15 16 17 18
 
+argm:
+	./build argm 14 15 16 17 18
+
 #extra_window_functions
 
 floatvec:
@@ -1221,7 +1224,7 @@ rmdbg:
 	pg_render ddl_historization data_historization pg_schedoc pg_isok pg_hashlib pg_xxhash \
 	shacrypt cryptint pg_ecdsa pgsparql pg_idkit pgx_ulid pg_uuid_v8 permuteseq pg_hashids \
 	sequential_uuids pg_typeid quantile lower_quantile count_distinct omnisketch ddsketch vasco \
-	pgxicor pg_weighted_statistics datasketches first_last_agg floatvec aggs_for_vecs \
+	pgxicor pg_weighted_statistics datasketches first_last_agg argm floatvec aggs_for_vecs \
 	aggs_for_arrays pg_arraymath pg_math pg_random pg_base36 pg_base62 pg_base58 pg_financial \
 	pg_accumulator pg_convert parray_gin pg_query_rewrite pgfincore pg_cooldown ddlx pglinter \
 	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \

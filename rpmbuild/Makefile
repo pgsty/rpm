@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/rpm make shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2026-07-20
+# Mtime     :   2026-07-21
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -1081,6 +1081,9 @@ postgresbson:
 ###############################################################
 #                          Misc                               #
 ###############################################################
+haproxy:
+	rpmbuild -ba SPECS/haproxy.spec
+
 pdu:
 	./build pdu 14 15 16 17 18
 
@@ -1190,7 +1193,7 @@ rmdbg:
 # even if a file with the same name exists
 
 .PHONY: env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
-	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time timescaledb \
+	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time haproxy timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \

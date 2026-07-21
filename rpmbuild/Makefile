@@ -195,6 +195,9 @@ scws-install:
 zhparser:
 	QA_RPATHS=2 ./build zhparser 14 15 16 17 18
 
+pg_cjk_parser:
+	./build pg_cjk_parser 14 15 16 17 18
+
 pg_bestmatch:		# rust pgrx 0.19.1
 	./build pg_bestmatch 14 15 16 17 18
 
@@ -1197,7 +1200,7 @@ rmdbg:
 	timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
-	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_bestmatch vchord_bm25 \
+	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_bestmatch vchord_bm25 \
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
 	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot citus hydra pg_duckdb \

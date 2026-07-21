@@ -20,7 +20,7 @@ Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
 Source0:	Biscuit-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/biscuit/2.4.1/biscuit-2.4.1.zip
+#           normalized from https://api.pgxn.org/dist/biscuit/2.4.3/biscuit-2.4.3.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

@@ -1097,6 +1097,11 @@ openhalo: openhalodb
 ivorysql:
 	QA_RPATHS=3 rpmbuild -ba SPECS/ivorysql.spec
 
+ivorysql-contrib:
+	QA_RPATHS=3 rpmbuild -ba SPECS/ivorysql-contrib.spec
+
+ivorysql-all: ivorysql ivorysql-contrib
+
 agensgraph:
 	QA_RPATHS=3 rpmbuild -ba SPECS/agensgraph.spec
 
@@ -1214,7 +1219,7 @@ rmdbg:
 	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \
 	db2fce spat pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
 	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson pdu \
-	pgdog pgdog-install pg_filedump openhalo openhalodb ivorysql agensgraph zlog polarstore polardb \
+	pgdog pgdog-install pg_filedump openhalo openhalodb ivorysql ivorysql-contrib ivorysql-all agensgraph zlog polarstore polardb \
 	pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \
 	orioledb-16 orioledb-17 orioledb-18 orioledb-all cloudberry cloudberry-backup cloudberry-pxf \
 	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg

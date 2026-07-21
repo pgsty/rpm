@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+# Compatibility wrapper for software that still expects sfcgal-config.
+# SFCGAL 2.2 on EL9 exposes its build flags through pkg-config only.
+set -eu
+
+case "${1:-}" in
+  --version)
+    exec pkg-config --modversion sfcgal
+    ;;
+  --cflags)
+    exec pkg-config --cflags sfcgal
+    ;;
+  --libs)
+    exec pkg-config --libs sfcgal
+    ;;
+  --static)
+    printf '%s\n' OFF
+    ;;
+  *)
+    echo "usage: $0 {--version|--cflags|--libs|--static}" >&2
+    exit 2
+    ;;
+esac

@@ -6,9 +6,11 @@ infra-pkg.iml
 rpmbuild/SOURCES
 rpmbuild/RPMS
 rpmbuild/SRPMS
+rpmbuild/targets/
 yum/
 tmp/
 
+docs/
 doc/pig.md
 
 tf/.terraform/

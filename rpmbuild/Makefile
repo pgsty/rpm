@@ -769,6 +769,9 @@ pg_query_rewrite:
 online_advisor:
 	./build online_advisor 14 15 16 17 18
 
+pgmemento:
+	./build pgmemento 14 15 16 17 18
+
 pgfincore:
 	./build pgfincore 14 15 16 17 18
 
@@ -1229,7 +1232,7 @@ rmdbg:
 	sequential_uuids pg_typeid quantile lower_quantile count_distinct omnisketch ddsketch vasco \
 	pgxicor pg_weighted_statistics datasketches first_last_agg argm floatvec aggs_for_vecs \
 	aggs_for_arrays pg_arraymath pg_math pg_random pg_base36 pg_base62 pg_base58 pg_financial \
-	pg_accumulator pg_convert parray_gin pg_query_rewrite online_advisor pgfincore pg_cooldown ddlx pglinter \
+	pg_accumulator pg_convert parray_gin pg_query_rewrite online_advisor pgmemento pgfincore pg_cooldown ddlx pglinter \
 	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \
 	pg_pathcheck pg_savior pg_drop_events table_log pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \

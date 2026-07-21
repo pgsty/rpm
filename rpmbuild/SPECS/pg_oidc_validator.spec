@@ -15,6 +15,7 @@ License:        Apache-2.0
 URL:            https://github.com/percona/pg_oidc_validator
 Source0:        %{sname}-%{version}.tar.gz
 #               https://github.com/percona/pg_oidc_validator/archive/refs/tags/0.2.tar.gz
+Patch0:         pg-oidc-validator-0.2-gcc11.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if 0%{?rhel} == 8 || 0%{?rhel} == 9
@@ -33,6 +34,7 @@ Load it with oauth_validator_libraries = 'pg_oidc_validator'.
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 %if 0%{?rhel} == 8 || 0%{?rhel} == 9
@@ -61,3 +63,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 \
 %changelog
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 0.2-1PIGSTY
 - Initial RPM release for Percona pg_oidc_validator 0.2 and PostgreSQL 18
+- Keep the source compatible with GCC 11 and 12 standard libraries

@@ -19,6 +19,7 @@ Summary:	Nominatim Foreign Data Wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/nominatim_fdw
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		nominatim_fdw-2.0.0-libcurl-compat.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel libxml2-devel
@@ -56,7 +57,7 @@ This package provides JIT support for %{sname}.
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%autosetup -p1 -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
@@ -83,6 +84,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %changelog
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.0.0-1PIGSTY
 - Update to upstream PGXN 2.0.0
+- Guard nghttp2 version reporting for the older EL8 libcurl API
 
 * Fri Apr 10 2026 Vonng <rh@vonng.com> - 1.2-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

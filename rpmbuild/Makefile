@@ -48,7 +48,7 @@ rust4: pglite_fusion pg_graphql pg_jsonschema wrappers
 rust5: pg_parquet pg_render
 rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
-rust8: pg_session_jwt pg_oidc_validator pg_anon pgsmcrypto pg_enigma
+rust8: pg_session_jwt pg_oidc_validator_rust pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
 rust10: pg_command_fw pg_trickle pggraph pgrdf jsonschema
 time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
@@ -910,7 +910,10 @@ hyperion_vault:	# rust pgrx 0.19.1, PG18 only, shared_preload_libraries
 pg_session_jwt:		# rust pgrx 0.19.1
 	./build pg_session_jwt 14 15 16 17 18
 
-pg_oidc_validator:	# rust pgrx 0.19.1, PostgreSQL 18 OAuth validator
+pg_oidc_validator_rust:	# rust pgrx 0.19.1, PostgreSQL 18 OAuth validator
+	./build pg_oidc_validator_rust 18
+
+pg_oidc_validator:	# C++23, PostgreSQL 18 OAuth validator
 	./build pg_oidc_validator 18
 
 pg_anon:			# rust pgrx 0.19.1
@@ -1213,7 +1216,7 @@ rmdbg:
 	pg_pathcheck pg_savior pg_drop_events table_log pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \
 	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_relusage \
-	pagevis supautils pgsodium column_encrypt pg_vault hyperion_vault pg_session_jwt pg_oidc_validator pg_anon \
+	pagevis supautils pgsodium column_encrypt pg_vault hyperion_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
 	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
 	block_copy_command sslutils pg_noset wrappers sqlite_fdw etcd_fdw nominatim_fdw redis_fdw \
 	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \

@@ -1,4 +1,4 @@
-(B[mdiff --git a/Cargo.toml b/Cargo.toml
+diff --git a/Cargo.toml b/Cargo.toml
 index cc661de..5e045d0 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml

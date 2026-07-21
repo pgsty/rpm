@@ -64,3 +64,4 @@ cd build
 %changelog
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 2.0.1-1PIGSTY
 - Initial RPM release with the pinned cppjieba submodule
+- Support CMake 4 by requiring CMake policy level 3.5 or newer

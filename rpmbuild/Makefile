@@ -839,6 +839,9 @@ table_log:
 #pg_qualstats
 #pg_track_settings
 #pg_wait_sampling
+pg_flight_recorder:
+	./build pg_flight_recorder 15 16 17 18
+
 pg_tracing:
 	./build pg_tracing 14 15 16 17 18
 
@@ -1237,7 +1240,7 @@ rmdbg:
 	aggs_for_arrays pg_arraymath pg_math pg_random pg_base36 pg_base62 pg_base58 pg_financial \
 	pg_accumulator pg_convert parray_gin pg_query_rewrite online_advisor pgmemento pg_roast pgfincore pg_cooldown ddlx pglinter \
 	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \
-	pg_pathcheck pg_savior pg_drop_events table_log pg_tracing pg_stat_ch pg_stat_backtrace \
+	pg_pathcheck pg_savior pg_drop_events table_log pg_flight_recorder pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \
 	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_relusage \
 	pagevis supautils pgsodium column_encrypt pg_vault hyperion_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \

@@ -19,7 +19,7 @@ Summary:	Nominatim Foreign Data Wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/nominatim_fdw
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		nominatim_fdw-2.0.0-libcurl-compat.patch
+Patch0:		nominatim_fdw-2.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel libxml2-devel

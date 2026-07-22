@@ -101,7 +101,8 @@ cron_utils:
 # postgis
 # pgroutine
 # pointcloud
-# h3 (missing el8 17/18)
+h3-pg:         # EL8 x86_64 gap only
+	./build h3-pg 17 18
 # ogr_fdw
 
 q3c:

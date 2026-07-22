@@ -1,0 +1,21 @@
+diff --git a/lib/pg_repack.sql.in b/lib/pg_repack.sql.in
+index 39a6bc9..914f897 100644
+--- a/lib/pg_repack.sql.in
++++ b/lib/pg_repack.sql.in
+@@ -62,8 +62,16 @@
+ CREATE FUNCTION repack.create_table(oid, name) RETURNS void AS
+ $$
++DECLARE
++    table_am name;
+ BEGIN
++    SELECT am.amname INTO STRICT table_am
++      FROM pg_catalog.pg_class AS c
++      JOIN pg_catalog.pg_am AS am ON am.oid = c.relam
++     WHERE c.oid = $1;
++
+     EXECUTE 'CREATE TABLE repack.table_' || $1 ||
++            ' USING ' || quote_ident(table_am) ||
+             ' WITH (' || repack.get_storage_param($1) || ') ' ||
+             ' TABLESPACE ' || quote_ident($2) ||
+             ' AS SELECT ' || repack.get_columns_for_create_as($1) ||
+             ' FROM ONLY ' || repack.oid2text($1) || ' WITH NO DATA';

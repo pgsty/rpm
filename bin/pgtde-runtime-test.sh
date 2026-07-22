@@ -27,9 +27,12 @@ fail() {
 
 for program in \
   initdb pg_ctl postgres psql pg_config pg_basebackup pg_verifybackup \
-  pg_rewind pg_controldata; do
+  pg_rewind pg_controldata pg_repack shp2pgsql raster2pgsql; do
   [[ -x "${PGROOT}/bin/${program}" ]] || fail "missing executable: ${PGROOT}/bin/${program}"
 done
+
+[[ -f "${PGROOT}/lib/postgresql/wal2json.so" ]] || fail 'missing wal2json output plugin'
+[[ -f "${PGROOT}/share/postgresql/contrib/gather.sql" ]] || fail 'missing pg_gather script'
 
 for mapping in \
   pg_tde_basebackup:pg_basebackup \
@@ -73,8 +76,9 @@ runuser -u postgres -- "${PGROOT}/bin/initdb" -D "${PRIMARY_DATA}" \
 {
   printf "listen_addresses = '127.0.0.1'\n"
   printf 'port = %s\n' "${PRIMARY_PORT}"
-  printf "shared_preload_libraries = 'pg_tde'\n"
-  printf "wal_level = replica\n"
+  printf "shared_preload_libraries = 'pg_tde,pgaudit,set_user,pg_stat_monitor,pg_stat_statements'\n"
+  printf "compute_query_id = on\n"
+  printf "wal_level = logical\n"
   printf "max_wal_senders = 10\n"
   printf "max_replication_slots = 10\n"
   printf "hot_standby = on\n"
@@ -104,9 +108,17 @@ printf '[PHASE] create every packaged extension\n'
 "${PRIMARY_PSQL[@]}" -c 'CREATE SCHEMA _pg_tde' >/dev/null
 "${PRIMARY_PSQL[@]}" -c 'CREATE EXTENSION pg_tde SCHEMA _pg_tde' \
   >"${LOG_DIR}/create-pg_tde.log" 2>&1
+for extension in \
+  postgis postgis_raster postgis_sfcgal postgis_tiger_geocoder postgis_topology \
+  address_standardizer address_standardizer_data_us vector pg_repack pgaudit \
+  set_user pg_stat_monitor; do
+  available=$("${PRIMARY_PSQL[@]}" -Atc \
+    "SELECT count(*) FROM pg_available_extensions WHERE name = '${extension}'")
+  [[ "${available}" == '1' ]] || fail "required extension is unavailable: ${extension}"
+done
 mapfile -t extensions < <("${PRIMARY_PSQL[@]}" -Atc \
   "SELECT name FROM pg_available_extensions WHERE name <> 'pg_tde' ORDER BY name")
-[[ "${#extensions[@]}" -ge 60 ]] || fail "only ${#extensions[@]} non-pg_tde extensions are available"
+[[ "${#extensions[@]}" -ge 69 ]] || fail "only ${#extensions[@]} non-pg_tde extensions are available"
 
 declare -a first_failures=()
 for extension in "${extensions[@]}"; do
@@ -137,6 +149,32 @@ expected_extensions=$("${PRIMARY_PSQL[@]}" -Atc 'SELECT count(*) FROM pg_availab
 [[ "${installed_extensions}" -eq "${expected_extensions}" ]] || \
   fail "installed extensions=${installed_extensions}, available=${expected_extensions}"
 
+printf '[PHASE] smoke-test Percona extension payloads\n'
+vector_distance=$("${PRIMARY_PSQL[@]}" -Atc \
+  "SELECT ('[1,2,3]'::vector <-> '[1,2,4]'::vector)::int")
+[[ "${vector_distance}" == '1' ]] || fail "unexpected vector distance: ${vector_distance}"
+postgis_point=$("${PRIMARY_PSQL[@]}" -Atc \
+  "SELECT ST_AsText(ST_SetSRID(ST_MakePoint(1,2),4326))")
+[[ "${postgis_point}" == 'POINT(1 2)' ]] || fail "unexpected PostGIS result: ${postgis_point}"
+"${PRIMARY_PSQL[@]}" -f "${PGROOT}/share/postgresql/contrib/gather.sql" \
+  >"${LOG_DIR}/pg-gather.tsv" 2>"${LOG_DIR}/pg-gather.err"
+
+"${PRIMARY_PSQL[@]}" -c 'CREATE TABLE wal2json_qa(id bigint PRIMARY KEY, payload text)' \
+  >"${LOG_DIR}/wal2json-table.log"
+"${PRIMARY_PSQL[@]}" -c \
+  "SELECT * FROM pg_create_logical_replication_slot('pgtde_qa_wal2json', 'wal2json')" \
+  >"${LOG_DIR}/wal2json-slot.log"
+"${PRIMARY_PSQL[@]}" -c \
+  "INSERT INTO wal2json_qa VALUES (1, '${MARKER}_WAL2JSON')" \
+  >"${LOG_DIR}/wal2json-insert.log"
+wal2json_changes=$("${PRIMARY_PSQL[@]}" -Atc \
+  "SELECT count(*) FROM pg_logical_slot_get_changes('pgtde_qa_wal2json', NULL, NULL)
+   WHERE data LIKE '%${MARKER}_WAL2JSON%'")
+[[ "${wal2json_changes}" -ge 1 ]] || fail 'wal2json did not decode the inserted marker'
+"${PRIMARY_PSQL[@]}" -c \
+  "SELECT pg_drop_replication_slot('pgtde_qa_wal2json')" \
+  >"${LOG_DIR}/wal2json-drop.log"
+
 printf '[PHASE] configure TDE and verify encrypted storage\n'
 "${PRIMARY_PSQL[@]}" <<SQL >"${LOG_DIR}/tde-smoke.log"
 SELECT _pg_tde.pg_tde_add_database_key_provider_file('qa_file', '${KEYRING}');
@@ -151,6 +189,17 @@ SQL
 encrypted=$("${PRIMARY_PSQL[@]}" -Atc \
   "SELECT _pg_tde.pg_tde_is_encrypted('tde_qa')")
 [[ "${encrypted}" == 't' ]] || fail 'tde_qa is not encrypted'
+
+printf '[PHASE] standard pg_repack preserves the TDE table access method\n'
+"${PGROOT}/bin/pg_repack" -h 127.0.0.1 -p "${PRIMARY_PORT}" \
+  -U postgres -d postgres --table=public.tde_qa --no-order --wait-timeout=60 \
+  >"${LOG_DIR}/pg-repack.log" 2>&1
+repack_state=$("${PRIMARY_PSQL[@]}" -Atc \
+  "SELECT am.amname || '|' || _pg_tde.pg_tde_is_encrypted('tde_qa')::int || '|' || count(*)
+     FROM pg_class AS c JOIN pg_am AS am ON am.oid = c.relam, tde_qa
+    WHERE c.oid = 'tde_qa'::regclass GROUP BY am.amname")
+[[ "${repack_state}" == 'tde_heap|1|1000' ]] || \
+  fail "pg_repack changed the TDE table state: ${repack_state}"
 
 printf '[PHASE] standard pg_basebackup creates and verifies a standby\n'
 runuser -u postgres -- "${PGROOT}/bin/pg_basebackup" \
@@ -231,5 +280,5 @@ if LC_ALL=C grep -aF "${MARKER}" "${relation_path}"* >/dev/null 2>&1; then
   fail 'plaintext marker found in the encrypted relation files'
 fi
 
-printf '[RESULT] server=%s extensions=%s/%s encrypted=1 basebackup=pass rewind=pass plaintext=absent\n' \
+printf '[RESULT] server=%s extensions=%s/%s encrypted=1 repack=pass wal2json=pass pg_gather=pass basebackup=pass rewind=pass plaintext=absent\n' \
   "${server_version}" "${installed_extensions}" "${expected_extensions}"

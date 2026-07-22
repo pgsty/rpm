@@ -14,11 +14,14 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4
-Release:	2PIGSTY%{?dist}
+Release:	3PIGSTY%{?dist}
 Summary:	A Postgres extension for managing SSL certificates through SQL.
 License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/sslutils
 Source0:	sslutils-%{version}.tar.gz
+%if 0%{?pgmajorversion} >= 18
+Patch0:		sslutils-pg18-openssl-api-compat.patch
+%endif
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 openssl-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -47,7 +50,8 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -56,6 +60,9 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
+%if 0%{?pgmajorversion} >= 18
+%patch -P 0 -p1
+%endif
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -93,6 +100,9 @@ strip %{buildroot}%{pginstdir}/lib/*.so
 %endif
 
 %changelog
+* Wed Jul 22 2026 Vonng <rh@vonng.com> - 1.4-3PIGSTY
+- Add PostgreSQL 18 OpenSSL API compatibility
+
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.4-2PIGSTY
 * Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.4-1PIGSTY
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.3-1PIGSTY

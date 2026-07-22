@@ -1,0 +1,15 @@
+diff --git a/sslutils.c b/sslutils.c
+index f6f77a0..90cff26 100644
+--- a/sslutils.c
++++ b/sslutils.c
+@@ -20,3 +20,9 @@
+ #include "postgres.h"
+-
++
++/* PostgreSQL 18 hides OpenSSL APIs that sslutils still uses. */
++#if PG_VERSION_NUM >= 180000
++#undef OPENSSL_API_COMPAT
++#define OPENSSL_API_COMPAT 0x10002000L
++#endif
++
+ #include <openssl/err.h>

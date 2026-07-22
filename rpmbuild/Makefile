@@ -1128,6 +1128,9 @@ ivorysql-contrib:
 
 ivorysql-all: ivorysql ivorysql-contrib
 
+pgtde:
+	QA_RPATHS=3 ./build pgtde 18
+
 agensgraph:
 	QA_RPATHS=3 rpmbuild -ba SPECS/agensgraph.spec
 

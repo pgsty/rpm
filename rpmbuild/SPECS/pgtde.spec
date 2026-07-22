@@ -232,6 +232,9 @@ find "$PGTDE_CONTRIB_STAGE%{pgbaseinstdir}/lib/postgresql" \
   "$PGTDE_CONTRIB_STAGE%{pgbaseinstdir}/share/postgresql/contrib/gather.sql"
 
 %install
+# EL10 classifies an absolute non-system RUNPATH as QA_RPATHS 0x0002. The
+# private kernel intentionally needs this path to resolve its own libpq ABI.
+export QA_RPATHS=0x0002
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}
 %{__cp} -a .pgtde-stage/usr %{buildroot}/

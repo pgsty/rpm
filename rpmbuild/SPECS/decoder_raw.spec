@@ -14,11 +14,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Output plugin for logical replication in Raw SQL format
 License:	PostgreSQL
 URL:		https://github.com/michaelpq/pg_plugins/blob/main/decoder_raw/
 Source0:	decoder_raw-%{version}.tar.gz
+Patch0:		decoder_raw-reorderbuffer-tuple.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -78,6 +79,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -95,5 +97,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Jul 21 2026 Vonng <rh@vonng.com> - 1.0-2PIGSTY
+- Fix PostgreSQL 14-16 tuple buffer handling with newer toolchains
+
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

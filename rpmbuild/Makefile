@@ -1032,7 +1032,8 @@ aws_s3:
 #orafce
 #pgtt
 #pg_statement_rollback
-#pg_dbms_metadata
+pg_dbms_metadata: # EL8 aarch64 PG15/18 gaps
+	./build pg_dbms_metadata 15 18
 #pg_dbms_lock
 #pg_dbms_job
 ##babelfishpg

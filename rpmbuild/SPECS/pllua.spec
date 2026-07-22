@@ -9,7 +9,7 @@
 Summary:	Procedural language interface between PostgreSQL and Lua
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{plluangmajver}.%{plluangmidver}.%{plluangminver}
-Release:	4PIGSTY%{?dist}
+Release:	7PIGSTY%{?dist}
 License:	MIT
 Source0:	%{sname}-%{version}.tar.gz
 %if 0%{?pgmajorversion} >= 18
@@ -20,6 +20,7 @@ URL:		https://github.com/%{sname}/%{sname}
 BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	lua-devel
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-contrib
 Requires:	lua-libs
 
 %description
@@ -51,13 +52,20 @@ This package provides JIT support for pllua.
 %endif
 
 %build
+export LUA_INCDIR="%{_includedir}"
 LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
 	PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
+LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
+	PATH=%{pginstdir}/bin:$PATH %{__make} -C hstore USE_PGXS=1 %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
+export LUA_INCDIR="%{_includedir}"
 LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
 	PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} \
+	install DESTDIR=%{buildroot}
+LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
+	PATH=%{pginstdir}/bin:$PATH %{__make} -C hstore USE_PGXS=1 %{?_smp_mflags} \
 	install DESTDIR=%{buildroot}
 %{__mkdir} -p %{buildroot}%{pginstdir}/doc/extension/
 %{__cp} README.md %{buildroot}%{pginstdir}/doc/extension/README-%{sname}.md
@@ -71,6 +79,11 @@ LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
 %{pginstdir}/share/extension/%{sname}.control
 %{pginstdir}/share/extension/%{sname}u*.sql
 %{pginstdir}/share/extension/%{sname}u.control
+%{pginstdir}/lib/hstore_%{sname}.so
+%{pginstdir}/share/extension/hstore_%{sname}-*.sql
+%{pginstdir}/share/extension/hstore_%{sname}.control
+%{pginstdir}/share/extension/hstore_%{sname}u-*.sql
+%{pginstdir}/share/extension/hstore_%{sname}u.control
 
 %files devel
 %dir %{pginstdir}/include/server/extension/%{sname}
@@ -81,9 +94,15 @@ LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
 %{pginstdir}/lib/bitcode/%{sname}*.bc
 %dir %{pginstdir}/lib/bitcode/%{sname}
 %{pginstdir}/lib/bitcode/%{sname}/*
+%{pginstdir}/lib/bitcode/hstore_%{sname}.index.bc
+%dir %{pginstdir}/lib/bitcode/hstore_%{sname}
+%{pginstdir}/lib/bitcode/hstore_%{sname}/*
 %endif
 
 %changelog
+* Wed Jul 22 2026 Vonng <rh@vonng.com> - 2.0.12-7PIGSTY
+- Build and package hstore transforms
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 2.0.12-4PIGSTY
 - Add PostgreSQL 18 compatibility
 

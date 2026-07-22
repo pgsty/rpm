@@ -418,8 +418,8 @@ pgsqlmock:
 pg_typescript:		# rust pgrx 0.19.1
 	./build pg_typescript 16 17 18
 
-pllua:         # PG18 all EL; PG14/15 only on EL8 aarch64
-	./build pllua 14 15 18
+pllua:
+	./build pllua 14 15 16 17 18
 
 # plprofiler
 # plsh

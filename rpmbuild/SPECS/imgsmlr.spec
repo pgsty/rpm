@@ -19,6 +19,7 @@ Summary:	PostgreSQL extension which implements similar images searching function
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/imgsmlr
 Source0:	imgsmlr-%{version}.tar.gz
+Patch0:		imgsmlr-detoast-datum.patch
 #           https://github.com/postgrespro/imgsmlr/archive/refs/heads/master.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 gd-devel
@@ -60,6 +61,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
@@ -80,5 +82,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Jul 21 2026 Vonng <rh@vonng.com> - 1.0-2PIGSTY
+- Fix varlena detoasting with newer toolchains
+
 * Mon Jul 22 2024 Vonng <rh@vonng.com> - 1.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -1,0 +1,15 @@
+diff --git a/src/pllua.h b/src/pllua.h
+index 15166c5..4ca8db5 100644
+--- a/src/pllua.h
++++ b/src/pllua.h
+@@ -46,6 +46,10 @@
+ #define __has_attribute(x_) 0
+ #endif
+ 
++#if PG_VERSION_NUM >= 180000
++#define pg_attribute_noreturn() __attribute__((noreturn))
++#endif
++
+ #if __has_attribute(__fallthrough__)
+ #define FALLTHROUGH __attribute__((__fallthrough__))
+ #else

@@ -304,7 +304,8 @@ pg_sorted_heap:
 
 plproxy:
 	./build plproxy 14 15 16 17 18
-# pg_strom
+pg_strom:                    # EL10 x86_64 / PostgreSQL 14 gap
+	./build pg_strom 14
 
 ###############################################################
 #                       Category: FEAT                        #

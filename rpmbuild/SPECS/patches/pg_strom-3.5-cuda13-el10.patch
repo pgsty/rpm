@@ -1,0 +1,136 @@
+--- a/Makefile
++++ b/Makefile
+@@ -18,8 +18,8 @@
+ #
+ # PG-Strom version
+ #
+-PGSTROM_VERSION := 3.4
+-PGSTROM_RELEASE := devel
++PGSTROM_VERSION := 3.5
++PGSTROM_RELEASE := 1
+ 
+ #
+ # Installation related
+@@ -66,10 +66,10 @@
+ GPUINFO := $(STROM_BUILD_ROOT)/utils/gpuinfo
+ GPUINFO_SOURCE := $(STROM_BUILD_ROOT)/utils/gpuinfo.c
+ GPUINFO_DEPEND := $(GPUINFO_SOURCE)
+-GPUINFO_CFLAGS = $(PGSTROM_FLAGS) -I $(CUDA_IPATH) -L $(CUDA_LPATH) \
++GPUINFO_CFLAGS = $(PGSTROM_FLAGS) -I $(CUDA_IPATH) \
++                 -L $(CUDA_LPATH) -L $(CUDA_LPATH)/stubs \
+                  -I $(STROM_BUILD_ROOT)/src \
+-                 -I $(STROM_BUILD_ROOT)/utils \
+-                 $(shell $(PG_CONFIG) --ldflags)
++                 -I $(STROM_BUILD_ROOT)/utils
+ 
+ SSBM_DBGEN = $(STROM_BUILD_ROOT)/utils/dbgen-ssbm
+ __SSBM_DBGEN_SOURCE = bcd2.c  build.c load_stub.c print.c text.c \
+@@ -79,8 +79,7 @@
+ SSBM_DBGEN_DISTS_DSS = $(STROM_BUILD_ROOT)/utils/ssbm/dists.dss.h
+ SSBM_DBGEN_CFLAGS = -DDBNAME=\"dss\" -DLINUX -DDB2 -DSSBM -DTANDEM \
+                     -DSTATIC_DISTS=1 \
+-                    -O2 -g -I. -I$(STROM_BUILD_ROOT)/utils/ssbm \
+-                    $(shell $(PG_CONFIG) --ldflags)
++                    -O2 -g -I. -I$(STROM_BUILD_ROOT)/utils/ssbm
+ __SSBM_SQL_FILES = ssbm-11.sql ssbm-12.sql ssbm-13.sql \
+                    ssbm-21.sql ssbm-22.sql ssbm-23.sql \
+                    ssbm-31.sql ssbm-32.sql ssbm-33.sql ssbm-34.sql \
+@@ -166,7 +165,7 @@
+ PGSTROM_FLAGS += -DCMD_GPUINFO_PATH=\"$(shell $(PG_CONFIG) --bindir)/gpuinfo\"
+ PGSTROM_FLAGS += -DPGSTROM_GITHASH=\"$(PGSTROM_GITHASH)$(PGSTROM_GITHASH_SUFFIX)\"
+ PG_CPPFLAGS := $(PGSTROM_FLAGS) -I $(CUDA_IPATH)
+-SHLIB_LINK := -L $(CUDA_LPATH) -lcuda
++SHLIB_LINK := -L $(CUDA_LPATH) -L $(CUDA_LPATH)/stubs -lcuda
+ 
+ #
+ # Definition of PG-Strom Extension
+@@ -213,6 +212,7 @@
+ #
+ # Build chain of PostgreSQL
+ #
++override enable_rpath := no
+ PGXS := $(shell $(PG_CONFIG) --pgxs)
+ include $(PGXS)
+ 
+--- a/Makefile.cuda
++++ b/Makefile.cuda
+@@ -17,7 +17,7 @@
+ CUDA_BPATH := $(CUDA_PATH)/bin
+ CUDA_LPATH := $(CUDA_PATH)/lib64
+ NVCC  := $(CUDA_PATH)/bin/nvcc
+-CUDA_VERSION := $(shell grep -E '^\#define[ ]+CUDA_VERSION[ ]+[0-9]+$$' $(CUDA_IPATH)/cuda.h | awk '{print $$3}')
++CUDA_VERSION := $(shell grep -E '^#define[ ]+CUDA_VERSION[ ]+[0-9]+$$' $(CUDA_IPATH)/cuda.h | awk '{print $$3}')
+ 
+ # Max number of registers per GPU thread for PG-Strom modules
+ # (64k / 128 = up to 512 threads per SM)
+@@ -27,10 +27,15 @@
+ __NVCC_FLAGS ?= $(NVCC_FLAGS_CUSTOM)
+ __NVCC_FLAGS += -I $(shell $(PG_CONFIG) --includedir-server) \
+                 --fatbin \
+-                --maxrregcount=$(MAXREGCOUNT) \
+-                --gpu-architecture=compute_60
++                --maxrregcount=$(MAXREGCOUNT)
+ # supported device depends on CUDA version
+ # don't forget to update the logic of target_cc in cuda_program.c 
++ifeq ($(shell test $(CUDA_VERSION) -ge 13000; echo $$?), 0)
++  # CUDA 13 dropped offline compilation for pre-Turing targets.
++  __NVCC_FLAGS += --gpu-architecture=compute_75
++  __NVCC_FLAGS += --gpu-code=compute_75,sm_75,sm_80,sm_86
++else
++  __NVCC_FLAGS += --gpu-architecture=compute_60
+ ifeq ($(shell test $(CUDA_VERSION) -ge 11020; echo $$?), 0)
+   __NVCC_FLAGS += --gpu-code=sm_60,sm_61,sm_70,sm_75,sm_80,sm_86
+   __NVCC_FLAGS += --threads 6		# CUDA 11.2 supports nvcc --threads option
+@@ -41,6 +46,7 @@
+ else
+   __NVCC_FLAGS += --gpu-code=sm_60,sm_61,sm_70
+ endif
++endif
+ __NVCC_FLAGS += --source-in-ptx
+ 
+ __NVCC_DEBUG_FLAGS = $(__NVCC_FLAGS) --device-debug \
+--- a/src/pg_strom.h
++++ b/src/pg_strom.h
+@@ -211,6 +211,20 @@
+ #define CUDA_API_PER_THREAD_DEFAULT_STREAM		1
+ #include <cuda.h>
+ #include <nvrtc.h>
++
++/* CUDA 13 maps cuCtxCreate to the new v4 ABI and hides the legacy v2
++ * declaration, even though the driver still exports it for compatibility. */
++#if CUDA_VERSION >= 13000
++extern CUresult CUDAAPI cuCtxCreate_v2(CUcontext *pctx,
++									   unsigned int flags,
++									   CUdevice dev);
++extern CUresult CUDAAPI cuMemPrefetchAsync_ptsz(CUdeviceptr devPtr,
++												 size_t count,
++												 CUdevice dstDevice,
++												 CUstream hStream);
++#undef cuMemPrefetchAsync
++#define cuMemPrefetchAsync cuMemPrefetchAsync_ptsz
++#endif
+ #include <assert.h>
+ #include <pthread.h>
+ #include <unistd.h>
+--- a/src/gpu_context.c
++++ b/src/gpu_context.c
+@@ -888,7 +888,7 @@
+ 	if (rc != CUDA_SUCCESS)
+ 		werror("failed on cuDeviceGet: %s", errorText(rc));
+ 
+-	rc = cuCtxCreate(&cuda_context,
++	rc = cuCtxCreate_v2(&cuda_context,
+ 					 CU_CTX_SCHED_AUTO,
+ 					 cuda_device);
+ 	if (rc != CUDA_SUCCESS)
+--- a/src/gpu_mmgr.c
++++ b/src/gpu_mmgr.c
+@@ -1290,7 +1290,7 @@
+ 	rc = cuDeviceGet(&cuda_device, devAttrs[cuda_dindex].DEV_ID);
+ 	if (rc != CUDA_SUCCESS)
+ 		elog(ERROR, "failed on cuDeviceGet: %s", errorText(rc));
+-	rc = cuCtxCreate(&cuda_context,
++	rc = cuCtxCreate_v2(&cuda_context,
+ 					 CU_CTX_SCHED_AUTO,
+ 					 cuda_device);
+ 	if (rc != CUDA_SUCCESS)

@@ -1,0 +1,98 @@
+diff --git a/src/monitor/version_compat.h b/src/monitor/version_compat.h
+index 47eb9ad..298c0a1 100644
+--- a/src/monitor/version_compat.h
++++ b/src/monitor/version_compat.h
+@@ -14,8 +14,8 @@
+ 
+ #include "postgres.h"
+ 
+-/* we support Postgres versions 10, 11, 12, 13, 14, 15, 16, and 17. */
+-#if (PG_VERSION_NUM < 100000 || PG_VERSION_NUM >= 180000)
++/* we support Postgres versions 10, 11, 12, 13, 14, 15, 16, 17, 18. */
++#if (PG_VERSION_NUM < 100000 || PG_VERSION_NUM >= 190000)
+ #error "Unknown or unsupported postgresql version"
+ #endif
+ 
+diff --git a/Makefile b/Makefile
+index d6bb245..24b30b9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -4,7 +4,7 @@
+ .DEFAULT_GOAL := all
+ 
+ # Supported PostgreSQL versions:
+-PGVERSIONS = 13 14 15 16 17
++PGVERSIONS = 14 15 16 17 18
+ 
+ # Default version:
+ PGVERSION ?= $(lastword $(PGVERSIONS))
+
+diff --git a/src/monitor/node_metadata.c b/src/monitor/node_metadata.c
+index ce752bc..72ec13a 100644
+--- a/src/monitor/node_metadata.c
++++ b/src/monitor/node_metadata.c
+@@ -19,6 +19,7 @@
+ /* list_qsort is only in Postgres 11 and 12 */
+ #include "version_compat.h"
+ 
++#include "group_state_machine.h"
+ #include "health_check.h"
+ #include "metadata.h"
+ #include "node_metadata.h"
+diff --git a/src/monitor/pg_auto_failover.c b/src/monitor/pg_auto_failover.c
+index 963aebf..60f799f 100644
+--- a/src/monitor/pg_auto_failover.c
++++ b/src/monitor/pg_auto_failover.c
+@@ -35,7 +35,7 @@
+ #include "tcop/utility.h"
+ 
+ 
+-ProcessUtility_hook_type PreviousProcessUtility_hook = NULL;
++static ProcessUtility_hook_type PreviousProcessUtility_hook = NULL;
+ 
+ 
+ #if PG_VERSION_NUM >= 150000
+diff --git a/src/bin/lib/pg/snprintf.c b/src/bin/lib/pg/snprintf.c
+index f289304..3178fda 100644
+--- a/src/bin/lib/pg/snprintf.c
++++ b/src/bin/lib/pg/snprintf.c
+@@ -550,16 +550,12 @@ dopr(PrintfTarget *target, const char *format, va_list args)
+ 					longflag = 1;
+ 				goto nextch2;
+ 			case 'z':
+-#if SIZEOF_SIZE_T == 8
+-#ifdef HAVE_LONG_INT_64
++#if SIZEOF_SIZE_T == SIZEOF_LONG
+ 				longflag = 1;
+-#elif defined(HAVE_LONG_LONG_INT_64)
++#elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
+ 				longlongflag = 1;
+ #else
+-#error "Don't know how to print 64bit integers"
+-#endif
+-#else
+-				/* assume size_t is same size as int */
++#error "cannot find integer type of the same size as size_t"
+ #endif
+ 				goto nextch2;
+ 			case 'h':
+@@ -817,16 +813,12 @@ find_arguments(const char *format, va_list args,
+ 					longflag = 1;
+ 				goto nextch1;
+ 			case 'z':
+-#if SIZEOF_SIZE_T == 8
+-#ifdef HAVE_LONG_INT_64
++#if SIZEOF_SIZE_T == SIZEOF_LONG
+ 				longflag = 1;
+-#elif defined(HAVE_LONG_LONG_INT_64)
++#elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
+ 				longlongflag = 1;
+ #else
+-#error "Don't know how to print 64bit integers"
+-#endif
+-#else
+-				/* assume size_t is same size as int */
++#error "cannot find integer type of the same size as size_t"
+ #endif
+ 				goto nextch1;
+ 			case 'h':

@@ -760,7 +760,8 @@ parray_gin:
 # pg_checksums:
 # pg_readonly:
 # pg_permissions:
-# pgautofailover:
+pgautofailover:
+	./build pgautofailover 18
 # pg_catcheck:
 # safeupdate:
 # pgagent:

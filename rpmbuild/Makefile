@@ -1040,6 +1040,9 @@ pg_dbms_metadata: # EL8 aarch64 PG15/18 gaps
 pgmemcache:    # EL8 aarch64 gap only
 	./build pgmemcache 14 15
 
+dbt2:          # EL8 x86_64/aarch64 gap only
+	./build dbt2 17 18
+
 documentdb:
 	./build documentdb 15 16 17 18
 

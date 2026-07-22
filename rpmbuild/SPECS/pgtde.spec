@@ -29,7 +29,7 @@ BuildRequires:  libuuid-devel lz4-devel libzstd-devel libicu-devel openldap-deve
 BuildRequires:  pam-devel krb5-devel python3-devel tcl-devel systemtap-sdt-devel
 BuildRequires:  openssl-devel systemd-devel libcurl-devel liburing-devel json-c-devel
 BuildRequires:  meson ninja-build pkgconf-pkg-config
-BuildRequires:  perl perl-ExtUtils-Embed perl-FindBin
+BuildRequires:  perl perl-ExtUtils-Embed
 Requires:       tzdata
 Requires(pre):  shadow-utils
 

@@ -51,7 +51,12 @@ BuildRequires:  perl perl-ExtUtils-Embed
 # PostGIS dependencies. Pigsty builders resolve these from the OS, EPEL, and
 # PGDG repositories; the private PostgreSQL ABI itself remains self-contained.
 BuildRequires:  autoconf automake libtool gmp-devel pcre2-devel
-BuildRequires:  geos-devel proj-devel libgeotiff-devel gdal-devel
+%if 0%{?rhel} == 8
+# Match Percona's PostGIS 3.5 SRPM dependency set on EL8.
+BuildRequires:  geos311-devel proj95-devel gdal38-devel libgeotiff-devel
+%else
+BuildRequires:  geos-devel proj-devel gdal-devel libgeotiff-devel
+%endif
 BuildRequires:  SFCGAL-devel protobuf-c-devel xerces-c-devel
 Requires:       tzdata
 Requires(pre):  shadow-utils
@@ -173,6 +178,11 @@ find "$PGTDE_STAGE%{pgbaseinstdir}" -type f \
 export PGTDE_BUILD_PG_CONFIG="$(pwd)/.pgtde-pg-config"
 export CPPFLAGS="-I$PGTDE_STAGE%{pgbaseinstdir}/include/server -I$PGTDE_STAGE%{pgbaseinstdir}/include ${CPPFLAGS:-}"
 export LDFLAGS="-L$PGTDE_STAGE%{pgbaseinstdir}/lib -Wl,-rpath,%{pgbaseinstdir}/lib -Wl,--as-needed"
+%if 0%{?rhel} == 8
+export CPPFLAGS="$CPPFLAGS -I/usr/geos311/include -I/usr/proj95/include -I/usr/gdal38/include"
+export LDFLAGS="$LDFLAGS -L/usr/geos311/lib64 -L/usr/proj95/lib64 -L/usr/gdal38/lib64"
+export PKG_CONFIG_PATH="/usr/proj95/lib64/pkgconfig:/usr/gdal38/lib64/pkgconfig:${PKG_CONFIG_PATH:-}"
+%endif
 
 build_pgxs() {
   srcdir="$1"
@@ -199,6 +209,11 @@ CPPFLAGS="$CPPFLAGS" LDFLAGS="$LDFLAGS" ./configure \
   --libdir=%{pgbaseinstdir}/lib/postgresql \
   --mandir=%{pgbaseinstdir}/share/man \
   --with-pgconfig="$PGTDE_BUILD_PG_CONFIG" \
+%if 0%{?rhel} == 8
+  --with-geosconfig=/usr/geos311/bin/geos-config \
+  --with-projdir=/usr/proj95 \
+  --with-gdalconfig=/usr/gdal38/bin/gdal-config \
+%endif
   --with-sfcgal="$(pwd)/../.pgtde-sfcgal-config" \
   --with-protobuf \
   --without-gui \

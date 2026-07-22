@@ -229,27 +229,8 @@ pg_kazsearch:		# rust pgrx 0.19.1
 psql_bm25s:
 	./build psql_bm25s 17 18
 
-hunspell: hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl hunspell_nn_no hunspell_ru_ru hunspell_ru_ru_aot #hunspell_pt_pt
-hunspell_cs_cz:
-	./build hunspell_cs_cz     14 15 16 17 18
-hunspell_de_de:
-	./build hunspell_de_de     14 15 16 17 18
-hunspell_en_us:
-	./build hunspell_en_us     14 15 16 17 18
-hunspell_fr:
-	./build hunspell_fr        14 15 16 17 18
-hunspell_ne_np:
-	./build hunspell_ne_np     14 15 16 17 18
-hunspell_nl_nl:
-	./build hunspell_nl_nl     14 15 16 17 18
-hunspell_nn_no:
-	./build hunspell_nn_no     14 15 16 17 18
-hunspell_pt_pt:
-	./build hunspell_pt_pt     14 15 16 17 18
-hunspell_ru_ru:
-	./build hunspell_ru_ru     14 15 16 17 18
-hunspell_ru_ru_aot:
-	./build hunspell_ru_ru_aot 14 15 16 17 18
+hunspell:
+	./build hunspell 14 15 16 17 18
 
 ###############################################################
 #                       Category: OLAP                        #
@@ -1235,8 +1216,7 @@ rmdbg:
 	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
 	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_jieba pg_bestmatch vchord_bm25 \
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts pg_pinyin pg_kazsearch psql_bm25s hunspell \
-	hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr hunspell_ne_np hunspell_nl_nl \
-	hunspell_nn_no hunspell_pt_pt hunspell_ru_ru hunspell_ru_ru_aot citus hydra pg_duckdb \
+	citus hydra pg_duckdb \
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \

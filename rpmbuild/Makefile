@@ -1037,7 +1037,8 @@ pg_dbms_metadata: # EL8 aarch64 PG15/18 gaps
 #pg_dbms_lock
 #pg_dbms_job
 ##babelfishpg
-#pgmemcache
+pgmemcache:    # EL8 aarch64 gap only
+	./build pgmemcache 14 15
 
 documentdb:
 	./build documentdb 15 16 17 18

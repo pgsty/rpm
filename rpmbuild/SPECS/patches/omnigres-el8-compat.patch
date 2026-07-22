@@ -1,0 +1,64 @@
+diff --git a/extensions/omni_httpc/omni_httpc.c b/extensions/omni_httpc/omni_httpc.c
+index d593e30..f9cd6b3 100644
+--- a/extensions/omni_httpc/omni_httpc.c
++++ b/extensions/omni_httpc/omni_httpc.c
+@@ -139,9 +139,11 @@ static void init() {
+       .http3 = &h3ctx,
+   };
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+   SSL_load_error_strings();
+   SSL_library_init();
+   OpenSSL_add_all_algorithms();
++#endif
+ 
+   /* When using OpenSSL >= 3.0, load legacy provider so that blowfish can be used for 64-bit QUIC
+    * CIDs. */
+diff --git a/extensions/omni_csv/deps/cppgres.hpp b/extensions/omni_csv/deps/cppgres.hpp
+index edd43e8..d5c33f6 100644
+--- a/extensions/omni_csv/deps/cppgres.hpp
++++ b/extensions/omni_csv/deps/cppgres.hpp
+@@ -12226,6 +12226,6 @@ namespace cppgres {
+ 
+ #if defined(__linux__)
+-static inline bool is_main_thread() { return gettid() == getpid(); }
++static inline bool is_main_thread() { return syscall(SYS_gettid) == getpid(); }
+ #elif defined(__APPLE__)
+ static inline bool is_main_thread() { return pthread_main_np() != 0; }
+ #else
+diff --git a/extensions/omni_shmem/deps/cppgres.hpp b/extensions/omni_shmem/deps/cppgres.hpp
+index f884209..70930ce 100644
+--- a/extensions/omni_shmem/deps/cppgres.hpp
++++ b/extensions/omni_shmem/deps/cppgres.hpp
+@@ -12495,6 +12495,6 @@ namespace cppgres {
+ 
+ #if defined(__linux__)
+-static inline bool is_main_thread() { return gettid() == getpid(); }
++static inline bool is_main_thread() { return syscall(SYS_gettid) == getpid(); }
+ #elif defined(__APPLE__)
+ static inline bool is_main_thread() { return pthread_main_np() != 0; }
+ #else
+diff --git a/extensions/omni_sqlite/deps/cppgres.hpp b/extensions/omni_sqlite/deps/cppgres.hpp
+index 1eb8d1a..3583f86 100644
+--- a/extensions/omni_sqlite/deps/cppgres.hpp
++++ b/extensions/omni_sqlite/deps/cppgres.hpp
+@@ -12502,6 +12502,6 @@ namespace cppgres {
+ 
+ #if defined(__linux__)
+-static inline bool is_main_thread() { return gettid() == getpid(); }
++static inline bool is_main_thread() { return syscall(SYS_gettid) == getpid(); }
+ #elif defined(__APPLE__)
+ static inline bool is_main_thread() { return pthread_main_np() != 0; }
+ #else
+diff --git a/extensions/omni_worker/deps/cppgres.hpp b/extensions/omni_worker/deps/cppgres.hpp
+index a5eec62..420a70d 100644
+--- a/extensions/omni_worker/deps/cppgres.hpp
++++ b/extensions/omni_worker/deps/cppgres.hpp
+@@ -12608,6 +12608,6 @@ namespace cppgres {
+ 
+ #if defined(__linux__)
+-static inline bool is_main_thread() { return gettid() == getpid(); }
++static inline bool is_main_thread() { return syscall(SYS_gettid) == getpid(); }
+ #elif defined(__APPLE__)
+ static inline bool is_main_thread() { return pthread_main_np() != 0; }
+ #else

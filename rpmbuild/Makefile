@@ -403,6 +403,8 @@ rdkit:
 	./build rdkit 18
 
 # omnigres
+omnigres:
+	./build omnigres 14 15 16 17 18
 
 ###############################################################
 #                       Category: LANG                        #

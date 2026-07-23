@@ -1,0 +1,101 @@
+--- a/Code/PgSQL/rdkit/Makefile
++++ b/Code/PgSQL/rdkit/Makefile
+@@ -10,9 +10,8 @@
+ #STATIC_LINK=1
+ # -------------------------
+ 
+-
+ RDKIT=$(RDBASE)
+-
++RDKIT_PGSQL_SRCDIR=$(RDBASE)/Code/PgSQL/rdkit
+ 
+ ifeq ($(USE_INCHI),1)
+   INCHILIBS=-lRDKitRDInchiLib -lRDKitInchi
+@@ -26,18 +25,17 @@
+   AVALONREGRESS=avalon
+ endif
+ 
+-POPCOUNTFLAGS=-DRDK_OPTIMIZE_POPCNT -mpopcnt
+-
+ ifeq ($(USE_THREADS),1)
+   THREADLIBS=-L${BOOSTHOME}/lib -lboost_thread -lboost_system
+ endif
+ 
+ RDKLIBS       = ${AVALONLIBS} ${INCHILIBS} -lRDKitMolDraw2D -lRDKitMolTransforms -lRDKitMolHash -lRDKitFMCS -lRDKitChemReactions -lRDKitChemTransforms -lRDKitFileParsers -lRDKitSmilesParse -lRDKitFingerprints -lRDKitSubgraphs -lRDKitDescriptors -lRDKitPartialCharges -lRDKitSubstructMatch  -lRDKitGraphMol -lRDKitEigenSolvers -lRDKitDataStructs -lRDKitDepictor -lRDKitRDGeometryLib -lRDKitRDGeneral
++RDKIT_LIBDIR ?= ${RDKIT}/lib
+ 
+ ifeq ($(STATIC_LINK),0)
+-  SHLIB_LINK += -L${RDKIT}/lib -Wl,-rpath,'${RDKIT}/lib' ${RDKLIBS}
++  SHLIB_LINK += -L${RDKIT_LIBDIR} ${RDKLIBS}
+ else
+-  SHLIB_LINK += -L${RDKIT}/lib $(addsuffix _static,${RDKLIBS})
++  SHLIB_LINK += -L${RDKIT_LIBDIR} $(addsuffix _static,${RDKLIBS})
+ endif
+ 
+ ifndef BOOSTHOME
+@@ -47,48 +45,60 @@
+ 
+ SHLIB_LINK += ${THREADLIBS}
+ 
+-PG_CPPFLAGS = -I${BOOSTHOME}/include -I${RDKIT}/Code -DRDKITVER='"007300"' ${AVALONFLAGS} ${INCHIFLAGS} ${POPCOUNTFLAGS}
++PG_CPPFLAGS = -I${BOOSTHOME}/include -I${RDKIT}/Code -DRDKITVER='"007300"' -DRDK_TOOLKIT_VERSION='"2023.03.3"' ${AVALONFLAGS} ${INCHIFLAGS}
+ 
+ CPLUSPLUSFLAGS = $(filter-out -fexcess-precision=standard -Wmissing-prototypes -Wdeclaration-after-statement, $(CFLAGS))
+-CPLUSPLUSFLAGS += -Wno-unused-function
++CPLUSPLUSFLAGS += -std=c++17 -Wno-unused-function
+ #CPLUSPLUSFLAGS += -march=native
+ CPLUSPLUSFLAGS += $(PG_CPPFLAGS)
+ CPLUSPLUSFLAGS := $(filter-out -fexcess-precision=standard,$(CPLUSPLUSFLAGS))
+ 
+ EXTENSION  = rdkit
+-EXTVERSION = $(shell grep default_version $(EXTENSION).control | sed -e "s/default_version[[:space:]]*=[[:space:]]*'\([^']*\)'/\1/")
++EXTVERSION = $(shell grep default_version ${RDKIT_PGSQL_SRCDIR}/$(EXTENSION).control | sed -e "s/default_version[[:space:]]*=[[:space:]]*'\([^']*\)'/\1/")
+ PG_CONFIG  = pg_config
+ MODULE_big = rdkit
+ OBJS       = rdkit_io.o mol_op.o bfp_op.o sfp_op.o rxn_op.o rdkit_gist.o bfp_gist.o bfp_gin.o low_gist.o guc.o cache.o adapter.o bitstring.o
+ PGXS       := $(shell $(PG_CONFIG) --pgxs)
++PG96 = $(shell $(PG_CONFIG) --version | grep -qE " 9\.[1-5]" && echo no || echo yes)
+ PG95 = $(shell $(PG_CONFIG) --version | grep -qE " 9\.[1-4]" && echo no || echo yes)
+ PG92 = $(shell $(PG_CONFIG) --version | grep -qE " 9\.[1-2]" && echo yes || echo no)
+ 
+ all: $(EXTENSION)--$(EXTVERSION).sql
+ 
++ifeq ($(PG96),yes)
++$(EXTENSION)--$(EXTVERSION).sql: $(EXTENSION).sql.in
++	sed -e's/@RDKIT_PG_BFP_GIST_FETCH@/FUNCTION    9   gbfp_fetch (internal),/;' \
++-e's/@RDKIT_GIN_BFP_TRICONSISTENT@/FUNCTION    6   gin_bfp_triconsistent(internal, int2, bfp, int4, internal, internal, internal),/' \
++-e's/@RDKIT_PARALLEL_SAFE@/PARALLEL SAFE/' \
++ $< > $@
++else
+ ifeq ($(PG95),yes)
+ $(EXTENSION)--$(EXTVERSION).sql: $(EXTENSION).sql.in
+ 	sed -e's/@RDKIT_PG_BFP_GIST_FETCH@/FUNCTION    9   gbfp_fetch (internal),/;' \
+ -e's/@RDKIT_GIN_BFP_TRICONSISTENT@/FUNCTION    6   gin_bfp_triconsistent(internal, int2, bfp, int4, internal, internal, internal),/' \
++-e's/@RDKIT_PARALLEL_SAFE@//' \
+  $< > $@
+-	cp $< $@
+ else
+ ifeq ($(PG92),no)
+ $(EXTENSION)--$(EXTVERSION).sql: $(EXTENSION).sql.in
+ 	sed -e's/@RDKIT_PG_BFP_GIST_FETCH@//;' \
+ -e's/@RDKIT_GIN_BFP_TRICONSISTENT@/FUNCTION    6   gin_bfp_triconsistent(internal, int2, bfp, int4, internal, internal, internal),/' \
++-e's/@RDKIT_PARALLEL_SAFE@//' \
+ $< > $@
+ else
+ $(EXTENSION)--$(EXTVERSION).sql: $(EXTENSION).sql.in
+ 	sed -e's/@RDKIT_PG_BFP_GIST_FETCH@//;' \
+ -e's/@RDKIT_GIN_BFP_TRICONSISTENT@//;' \
++-e's/@RDKIT_PARALLEL_SAFE@//' \
+ $< > $@
+ endif
+ endif
++endif
+ 
+ REGRESS    = rdkit-91 props btree molgist bfpgist-91 bfpgin sfpgist slfpgist fps reaction ${INCHIREGRESS} ${AVALONREGRESS}
+-DATA = $(EXTENSION)--$(EXTVERSION).sql
++DATA_built = $(EXTENSION)--$(EXTVERSION).sql
+ EXTRA_CLEAN = $(EXTENSION)--$(EXTVERSION).sql
++override with_llvm = no
+ include $(PGXS)
+ 
+ # save our current CC value:

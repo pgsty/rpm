@@ -1,0 +1,43 @@
+--- a/Code/PgSQL/rdkit/rdkit_gist.c
++++ b/Code/PgSQL/rdkit/rdkit_gist.c
+@@ -118,7 +118,7 @@ PGDLLEXPORT Datum gmol_decompress(PG_FUN
+ PG_FUNCTION_INFO_V1(gmol_decompress);
+ Datum gmol_decompress(PG_FUNCTION_ARGS) {
+   GISTENTRY *entry = (GISTENTRY *)PG_GETARG_POINTER(0);
+-  bytea *key = (bytea *)DatumGetPointer(PG_DETOAST_DATUM(entry->key));
++  bytea *key = (bytea *)PG_DETOAST_DATUM(entry->key);
+ 
+   if (key != (bytea *)DatumGetPointer(entry->key)) {
+     GISTENTRY *retval = (GISTENTRY *)palloc(sizeof(GISTENTRY));
+--- a/Code/PgSQL/rdkit/bfp_gist.c
++++ b/Code/PgSQL/rdkit/bfp_gist.c
+@@ -154,7 +154,7 @@ Datum gbfp_decompress(PG_FUNCTION_ARGS)
+   GISTENTRY *retval;
+   GBfp *key;
+ 
+-  key = (GBfp *)DatumGetPointer(PG_DETOAST_DATUM(entry->key));
++  key = (GBfp *)PG_DETOAST_DATUM(entry->key);
+ 
+   if (key != (GBfp *)DatumGetPointer(entry->key)) {
+     retval = (GISTENTRY *)palloc(sizeof(GISTENTRY));
+@@ -616,7 +616,7 @@ PGDLLEXPORT Datum gbfp_fetch(PG_FUNCTION
+ PG_FUNCTION_INFO_V1(gbfp_fetch);
+ Datum gbfp_fetch(PG_FUNCTION_ARGS) {
+   GISTENTRY *entry = (GISTENTRY *)PG_GETARG_POINTER(0);
+-  GBfp *gbfp = (GBfp *)DatumGetPointer(PG_DETOAST_DATUM(entry->key));
++  GBfp *gbfp = (GBfp *)PG_DETOAST_DATUM(entry->key);
+ 
+   GBfpLeafData *data;
+ 
+--- a/Code/PgSQL/rdkit/low_gist.c
++++ b/Code/PgSQL/rdkit/low_gist.c
+@@ -65,7 +65,7 @@ PGDLLEXPORT Datum gslfp_decompress(PG_FU
+ PG_FUNCTION_INFO_V1(gslfp_decompress);
+ Datum gslfp_decompress(PG_FUNCTION_ARGS) {
+   GISTENTRY *entry = (GISTENTRY *)PG_GETARG_POINTER(0);
+-  bytea *key = (bytea *)DatumGetPointer(PG_DETOAST_DATUM(entry->key));
++  bytea *key = (bytea *)PG_DETOAST_DATUM(entry->key);
+ 
+   if (key != (bytea *)DatumGetPointer(entry->key)) {
+     GISTENTRY *retval = (GISTENTRY *)palloc(sizeof(GISTENTRY));
+

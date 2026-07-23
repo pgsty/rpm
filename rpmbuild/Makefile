@@ -382,7 +382,11 @@ inchi:
 	./build inchi 18
 
 rdkit:
-	./build rdkit 18
+	@if [ "$$(rpm -E '%{rhel}')" -lt 10 ]; then \
+		./build rdkit_legacy 14 15 16 17 18; \
+	else \
+		./build rdkit 14 15 16 17 18; \
+	fi
 
 # omnigres
 omnigres:

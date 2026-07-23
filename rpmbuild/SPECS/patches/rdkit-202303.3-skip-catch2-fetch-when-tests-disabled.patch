@@ -1,0 +1,9 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -146,2 +146,4 @@
+-add_subdirectory(${RDKit_ExternalDir}/catch)
+-message("CATCH: ${CATCH_INCLUDE_DIR}")
++if(RDK_BUILD_CPP_TESTS)
++  add_subdirectory(${RDKit_ExternalDir}/catch)
++  message("CATCH: ${CATCH_INCLUDE_DIR}")
++endif()

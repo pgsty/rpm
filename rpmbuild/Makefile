@@ -1055,7 +1055,8 @@ spat:
 #                       Category: ETL                         #
 ###############################################################
 #pglogical
-#pgl_ddl_deploy
+pgl_ddl_deploy:
+	./build pgl_ddl_deploy 14 15 16 17 18
 #wal2json
 #wal2mongo
 #decoderbufs
@@ -1255,7 +1256,7 @@ rmdbg:
 	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
 	block_copy_command sslutils pg_noset pgspider_ext wrappers sqlite_fdw etcd_fdw nominatim_fdw redis_fdw \
 	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \
-	db2fce spat pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
+	db2fce spat pgl_ddl_deploy pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
 	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson pdu \
 	pgdog pgdog-install pg_filedump openhalo openhalodb ivorysql ivorysql-contrib ivorysql-all agensgraph zlog polarstore polardb \
 	pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \

@@ -14,13 +14,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.3
+Version:	0.20.5
 Release:	1PIGSTY%{?dist}
 Summary:	A PostgreSQL extension that enables asynchronous (non-blocking) HTTP/HTTPS requests with SQL
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_net
 Source0:	pg_net-%{version}.tar.gz
-#           https://github.com/supabase/pg_net/archive/refs/tags/v0.20.3.tar.gz
+#           https://github.com/supabase/pg_net/archive/refs/tags/v0.20.5.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel >= 7.83
@@ -52,7 +52,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -73,6 +73,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %files
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
+%{pginstdir}/include/server/extension/%{pname}/
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %if %llvm
@@ -82,6 +83,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Jul 23 2026 Vonng <rh@vonng.com> - 0.20.5-1PIGSTY
+- https://github.com/supabase/pg_net/releases/tag/v0.20.5
 * Sat Jun 06 2026 Vonng <rh@vonng.com> - 0.20.3-1PIGSTY
 - https://github.com/supabase/pg_net/releases/tag/v0.20.3
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 0.20.2-1PIGSTY

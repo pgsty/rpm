@@ -292,7 +292,7 @@ pg_strom:                    # EL10 x86_64 / PostgreSQL 14 gap
 #                       Category: FEAT                        #
 ###############################################################
 age:
-	./build age 17 18
+	./build age 18
 
 onesparse:
 	./build onesparse 18

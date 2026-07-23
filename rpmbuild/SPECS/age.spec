@@ -13,15 +13,19 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if 0%{?pgmajorversion} != 18
+%{error:age 1.8.0 supports PostgreSQL 18 only}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7.0
-Release:	2PIGSTY%{?dist}
+Version:	1.8.0
+Release:	1PIGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases for PostgreSQL %{pgmajorversion}
 License:	Apache-2.0
 URL:		https://github.com/apache/age
-Source0:	age-%{version}.tar.gz
+Source0:	age-PG18-v%{version}-rc0.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 flex bison git
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 flex bison
 %if 0%{?fedora} || 0%{?rhel} >= 9
 BuildRequires:	perl-FindBin
 %endif
@@ -62,9 +66,7 @@ This packages provides JIT support for %{sname}
 
 
 %prep
-%setup -q -n age-%{version}
-
-git checkout PG%{pgmajorversion}
+%setup -q -n age-PG18-v%{version}-rc0
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
@@ -85,6 +87,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Thu Jul 23 2026 Vonng <rh@vonng.com> - 1.8.0-1PIGSTY
+- Build Apache AGE 1.8.0 for PostgreSQL 18
+- https://github.com/apache/age/releases/tag/PG18%2Fv1.8.0-rc0
 * Fri Jun 12 2026 Vonng <rh@vonng.com> - 1.7.0-2PIGSTY
 - Rename RPM package to age_%{pgmajorversion} to match PGDG naming
 - Build from unified age-1.7.0 source package and use system llvm-lto path

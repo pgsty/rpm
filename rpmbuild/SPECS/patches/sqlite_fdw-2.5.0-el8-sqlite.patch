@@ -1,0 +1,13 @@
+--- a/sqlite_data_norm.c
++++ b/sqlite_data_norm.c
+@@ -23,6 +23,10 @@
+ #include "sqlite_fdw.h"
+ #include "utils/uuid.h"
+ 
++#ifndef SQLITE_INNOCUOUS
++#define SQLITE_INNOCUOUS 0
++#endif
++
+ static void error_helper(sqlite3* db, int rc);
+ static bool infinity_processing (double* d, const char* t);
+ 

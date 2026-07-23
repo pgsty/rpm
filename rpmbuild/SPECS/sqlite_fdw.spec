@@ -6,10 +6,12 @@
 Summary:	SQLite Foreign Data Wrapper for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.5.0
-Release:	2PIGSTY%{?dist}
+Release:	3PIGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/pgspider/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		sqlite_fdw-2.5.0-pg18.patch
+Patch1:		sqlite_fdw-2.5.0-el8-sqlite.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	postgresql%{pgmajorversion}-server sqlite-devel
 #BuildRequires:	libspatialite-devel
@@ -37,7 +39,7 @@ Requires:	llvm17
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -46,6 +48,12 @@ This package provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
+%if 0%{?pgmajorversion} >= 18
+%patch -P 0 -p1
+%endif
+%if 0%{?rhel} == 8
+%patch -P 1 -p1
+%endif
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
@@ -71,5 +79,8 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} install DESTDI
 %endif
 
 %changelog
+* Wed Jul 22 2026 Vonng <rh@vonng.com> - 2.5.0-3PIGSTY
+- Add PostgreSQL 18 compatibility, safe LIMIT pushdown, and EL8 SQLite support
+
 * Thu May 22 2025 Vonng <rh@vonng.com> - 2.5.0-2PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

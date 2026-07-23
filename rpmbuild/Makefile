@@ -982,7 +982,8 @@ pg_noset:
 #odbc_fdw
 jdbc_fdw:
 	./build jdbc_fdw 14 15 16 17 18
-#pgspider_ext
+pgspider_ext:
+	./build pgspider_ext 14 15 16 17 18
 #mysql_fdw
 #oracle_fdw
 #tds_fdw
@@ -1252,7 +1253,7 @@ rmdbg:
 	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_relusage \
 	pagevis supautils pgsodium column_encrypt pg_vault hyperion_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
 	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
-	block_copy_command sslutils pg_noset wrappers sqlite_fdw etcd_fdw nominatim_fdw redis_fdw \
+	block_copy_command sslutils pg_noset pgspider_ext wrappers sqlite_fdw etcd_fdw nominatim_fdw redis_fdw \
 	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \
 	db2fce spat pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
 	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson pdu \

@@ -742,7 +742,8 @@ parray_gin:
 #                       Category: ADMIN                       #
 ###############################################################
 # pg_repack:
-# pg_rewrite:
+pg_rewrite:
+	./build pg_rewrite 14 15 16 17 18
 # pg_squeeze:
 # pg_dirtyread:
 # pg_prioritize:
@@ -1243,7 +1244,7 @@ rmdbg:
 	sequential_uuids pg_typeid quantile lower_quantile count_distinct omnisketch ddsketch vasco \
 	pgxicor pg_weighted_statistics datasketches first_last_agg argm floatvec aggs_for_vecs \
 	aggs_for_arrays pg_arraymath pg_math pg_random pg_base36 pg_base62 pg_base58 pg_financial \
-	pg_accumulator pg_convert parray_gin pg_query_rewrite online_advisor pgmemento pg_roast pgfincore pg_cooldown ddlx pglinter \
+	pg_accumulator pg_convert parray_gin pg_rewrite pg_query_rewrite online_advisor pgmemento pg_roast pgfincore pg_cooldown ddlx pglinter \
 	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \
 	pg_pathcheck pg_savior pg_drop_events table_log pg_flight_recorder pgmonitor pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \

@@ -1,19 +1,18 @@
 %global sname pg_rewrite
 
 %global pgrwmajver 2
-%global pgrwmidver 0
-%global pgrwminver 0
+%global pgrwmidver 2
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %{!?llvm:%global llvm 1}
 
 Summary:	PostgreSQL tool to rewrite a table
 Name:		%{sname}_%{pgmajorversion}
-Version:	%{pgrwmajver}.%{pgrwmidver}.%{pgrwminver}
+Version:	%{pgrwmajver}.%{pgrwmidver}
 Release:	1PIGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/cybertec-postgresql/%{sname}
-Source0:	pg_rewrite-REL2_0_0.tar.gz
+Source0:	pg_rewrite-REL%{pgrwmajver}_%{pgrwmidver}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
 
@@ -31,7 +30,7 @@ Requires:	llvm17
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -39,7 +38,7 @@ This package provides JIT support for pg_rewrite
 %endif
 
 %prep
-%setup -q -n %{sname}-REL%{pgrwmajver}_%{pgrwmidver}_%{pgrwminver}
+%setup -q -n %{sname}-REL%{pgrwmajver}_%{pgrwmidver}
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
@@ -61,5 +60,7 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %endif
 
 %changelog
+* Thu Jul 23 2026 Vonng <rh@vonng.com> - 2.2-1PIGSTY
+- https://github.com/cybertec-postgresql/pg_rewrite/releases/tag/REL2_2
 * Sun Sep 07 2025 Ruohang Feng <rh@vonng.com> - 2.0.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

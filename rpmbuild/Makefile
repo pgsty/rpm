@@ -539,6 +539,9 @@ pg_http:
 pg_net:
 	./build pg_net 14 15 16 17 18
 
+pg_csv:
+	./build pg_csv 14 15 16 17 18
+
 pg_net2:
 	./build pg_net2 14 15 16 17 18
 
@@ -1232,7 +1235,7 @@ rmdbg:
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \
 	numeral pg_rational pguint pg_uint128 hashtypes pg_uri pg_emailaddr pg_acl pg_duration \
-	pg_bikram_sambat pg_rrule chkpass pg_gzip pg_bzip pg_zstd pg_http pg_net pg_net2 pg_curl \
+	pg_bikram_sambat pg_rrule chkpass pg_gzip pg_bzip pg_zstd pg_http pg_net pg_csv pg_net2 pg_curl \
 	pg_retry pg_protobuf pgproto pgjq pgjwt pg_smtp_client pg_html5_email_address url_encode \
 	pgsql_tweaks pg_extra_time pgpcre re2 icu_ext pgqr pg_envvar pg_byteamagic external_file \
 	pg_render ddl_historization data_historization pg_schedoc pg_isok pg_hashlib pg_xxhash \

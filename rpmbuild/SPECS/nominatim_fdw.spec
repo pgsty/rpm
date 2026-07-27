@@ -2,6 +2,10 @@
 %global sname nominatim_fdw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:nominatim_fdw only supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -13,13 +17,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.0
+Version:	2.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	Nominatim Foreign Data Wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/nominatim_fdw
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		nominatim_fdw-2.0.0.patch
+Patch0:		nominatim_fdw-2.1.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel libxml2-devel
@@ -82,6 +86,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Mon Jul 27 2026 Vonng <rh@vonng.com> - 2.1.0-1PIGSTY
+- Update to upstream PGXN 2.1.0 and refresh the EL8 libcurl patch
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.0.0-1PIGSTY
 - Update to upstream PGXN 2.0.0
 - Guard nghttp2 version reporting for the older EL8 libcurl API

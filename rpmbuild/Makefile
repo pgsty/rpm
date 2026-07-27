@@ -51,7 +51,7 @@ rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_oidc_validator_rust pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
 rust10: pg_command_fw pg_trickle pggraph pgrdf jsonschema
-time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
+time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
 
 
 ###############################################################
@@ -72,7 +72,9 @@ periods:
 temporal_tables:
 	./build temporal_tables 14 15 16 17 18
 
-# emaj          (handled by PGDG)
+emaj:
+	./build emaj 14 15 16 17 18
+
 # table_version (handled by PGDG)
 # pg_cron       (handled by PGDG)
 pg_task:
@@ -1226,7 +1228,7 @@ rmdbg:
 
 .PHONY: env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
 	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time haproxy timescaledb \
-	timescaledb_toolkit pg_timeseries periods temporal_tables pg_task pg_later pg_background \
+	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
 	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_jieba pg_bestmatch vchord_bm25 \

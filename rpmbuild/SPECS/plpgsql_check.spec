@@ -3,8 +3,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global llvm_binpath /usr/bin
 
-%if 0%{?pgmajorversion} < 14
-%{error:plpgsql_check only supports PostgreSQL 14+}
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:plpgsql_check only supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -18,13 +18,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.10.1
+Version:	2.10.3
 Release:	1PIGSTY%{?dist}
 Summary:	Additional tools for PL/pgSQL function validation
 License:	MIT
 URL:		https://github.com/okbob/plpgsql_check
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/plpgsql_check/2.10.1/plpgsql_check-2.10.1.zip
+#           normalized from https://api.pgxn.org/dist/plpgsql_check/2.10.3/plpgsql_check-2.10.3.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -69,6 +69,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Jul 27 2026 Vonng <rh@vonng.com> - 2.10.3-1PIGSTY
+- Update to latest upstream PGXN 2.10.3
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.10.1-1PIGSTY
 - Update to latest upstream PGXN 2.10.1
 

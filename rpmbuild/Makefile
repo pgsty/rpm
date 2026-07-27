@@ -489,6 +489,9 @@ numeral:
 pg_rational:
 	./build pg_rational 14 15 16 17 18
 
+pgmp:
+	./build pgmp 14 15 16 17 18
+
 pguint:
 	./build pguint 14 15 16 17 18
 
@@ -1241,7 +1244,7 @@ rmdbg:
 	pg_cardano inchi rdkit pg_tle plv8 pljs plx plprql plpgsql_check pg_mockable pgsqlmock pg_typescript \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \
-	numeral pg_rational pguint pg_uint128 hashtypes pg_uri pg_emailaddr pg_acl pg_duration \
+	numeral pg_rational pgmp pguint pg_uint128 hashtypes pg_uri pg_emailaddr pg_acl pg_duration \
 	pg_bikram_sambat pg_rrule chkpass pg_gzip pg_bzip pg_zstd pg_http pg_net pg_csv pg_net2 pg_curl \
 	pg_retry pg_protobuf pgproto pgjq pgjwt pg_smtp_client pg_html5_email_address url_encode \
 	pgsql_tweaks pg_extra_time pgpcre re2 icu_ext pgqr pg_envvar pg_byteamagic external_file \

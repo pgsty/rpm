@@ -2,6 +2,10 @@
 %global sname pg_partman
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_partman only supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -13,16 +17,18 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	5.4.0
+Version:	5.5.0
 Release:	1PIGSTY%{?dist}
 Summary:	Partition management extension for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/pgpartman/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/pgpartman/pg_partman/archive/refs/tags/v5.4.0.tar.gz
+#           https://github.com/pgpartman/pg_partman/archive/refs/tags/v5.5.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	python3
+Requires:	python3-psycopg2
 
 %description
 pg_partman is an extension to create and manage both time-based and number-based
@@ -91,5 +97,9 @@ sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|g' %{buildroot}%{pginstdi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Jul 27 2026 Vonng <rh@vonng.com> - 5.5.0-1PIGSTY
+- Update to upstream PGXN 5.5.0
+- Require Python 3 and psycopg2 for the installed maintenance scripts
+
 * Fri Jan 16 2026 Vonng <rh@vonng.com> - 5.4.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

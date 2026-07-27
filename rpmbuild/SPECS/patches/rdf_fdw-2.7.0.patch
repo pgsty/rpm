@@ -1,6 +1,8 @@
+diff --git a/rdf_fdw.c b/rdf_fdw.c
+index 45383bf..c8f43cd 100644
 --- a/rdf_fdw.c
 +++ b/rdf_fdw.c
-@@ -823,8 +823,13 @@ Datum rdf_fdw_settings(PG_FUNCTION_ARGS)
+@@ -846,8 +846,13 @@ Datum rdf_fdw_settings(PG_FUNCTION_ARGS)
  		appendStringInfo(&buffer, "zlib %s,", ver->libz_version);
  	if (ver->libssh_version)
  		appendStringInfo(&buffer, "libSSH %s,", ver->libssh_version);

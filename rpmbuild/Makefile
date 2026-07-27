@@ -1012,6 +1012,9 @@ sqlite_fdw:
 etcd_fdw:			# rust pgrx 0.19.1
 	./build etcd_fdw 14 15 16 17 18
 
+rdf_fdw:
+	./build rdf_fdw 14 15 16 17 18
+
 nominatim_fdw:
 	./build nominatim_fdw 14 15 16 17 18
 
@@ -1266,7 +1269,7 @@ rmdbg:
 	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_relusage \
 	pagevis supautils pgsodium column_encrypt pg_vault hyperion_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
 	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
-	block_copy_command sslutils pg_noset pgspider_ext wrappers sqlite_fdw etcd_fdw nominatim_fdw redis_fdw \
+	block_copy_command sslutils pg_noset pgspider_ext wrappers sqlite_fdw etcd_fdw rdf_fdw nominatim_fdw redis_fdw \
 	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \
 	db2fce spat pgl_ddl_deploy wal2mongo pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
 	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson pdu \

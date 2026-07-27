@@ -3,6 +3,10 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global llvm_binpath /usr/bin
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:rdf_fdw only supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -14,13 +18,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.6.0
+Version:	2.7.0
 Release:	1PIGSTY%{?dist}
 Summary:	RDF triplestore foreign data wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/rdf_fdw
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/rdf_fdw/2.6.0/rdf_fdw-2.6.0.zip
+#           normalized from https://api.pgxn.org/dist/rdf_fdw/2.7.0/rdf_fdw-2.7.0.zip
 #           Supported: PostgreSQL 9.5+
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -65,7 +69,7 @@ This package provides JIT support for %{sname}.
 mkdir -p %{_builddir}/%{sname}-%{version}
 tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 cd %{_builddir}/%{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/rdf_fdw-2.6.0.patch
+patch -p1 --forward -f < %{_specdir}/patches/rdf_fdw-2.7.0.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -94,6 +98,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Jul 27 2026 Vonng <rh@vonng.com> - 2.7.0-1PIGSTY
+- Update to upstream PGXN 2.7.0 and refresh the EL8 libcurl patch
+
 * Wed Jul 01 2026 Vonng <rh@vonng.com> - 2.6.0-1PIGSTY
 - Update to upstream PGXN 2.6.0 and keep EL8 libcurl compatibility patch
 - Use system llvm-lto path for builder LLVM version compatibility

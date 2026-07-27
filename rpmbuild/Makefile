@@ -50,7 +50,7 @@ rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_oidc_validator_rust pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform
-rust10: pg_command_fw pg_trickle pggraph pgrdf jsonschema
+rust10: pg_command_fw pg_trickle pggraph pgcontext pgrdf jsonschema
 time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
 
 
@@ -304,6 +304,9 @@ onesparse:
 
 pggraph:		# rust pgrx 0.19.1, installs graph extension
 	./build pggraph 14 15 16 17 18
+
+pgcontext:		# rust pgrx 0.19.1, installs pgcontext and pgcontext_pgvector
+	./build pgcontext 17 18
 
 pgrdf:			# rust pgrx 0.19.1
 	./build pgrdf 14 15 16 17 18
@@ -1241,7 +1244,7 @@ rmdbg:
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	citus hydra pg_duckdb \
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
-	pg_sorted_heap age onesparse pggraph pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
+	pg_sorted_heap age onesparse pggraph pgcontext pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
 	pg_cardano inchi rdkit pg_tle plv8 pljs plx plprql plpgsql_check pg_mockable pgsqlmock pg_typescript \

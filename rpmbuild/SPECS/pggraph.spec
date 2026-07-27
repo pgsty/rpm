@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 %global pname graph
 %global sname pggraph
-%global srcdir pgGraph-%{version}
+%global srcdir pggraph-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
@@ -9,15 +9,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.8
+Version:	1.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	Graph database capabilities for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/evokoa/pggraph
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/Evokoa/pgGraph/archive/refs/tags/v0.1.8.tar.gz
+#           normalized from https://api.pgxn.org/dist/pgGraph/1.0.0/pgGraph-1.0.0.zip
 #           SQL extension payload is named graph.
-Patch0:		pggraph-0.1.8.patch
+Patch0:		pggraph-1.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -65,16 +65,23 @@ cp -a %{_builddir}/%{srcdir}/graph/target/release/%{pname}-pg%{pgmajorversion}/u
 cp -a %{_builddir}/%{srcdir}/graph/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
 install -m 644 %{_builddir}/%{srcdir}/README.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}/
+install -m 644 %{_builddir}/%{srcdir}/NOTICE %{buildroot}%{_licensedir}/%{name}/
 
 %files
 %doc %{_docdir}/%{name}/README.md
 %license %{_licensedir}/%{name}/LICENSE
+%license %{_licensedir}/%{name}/NOTICE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Jul 27 2026 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
+- Update to upstream PGXN 1.0.0 with pgrx 0.19.1
+- Keep Cargo.lock immutable and use the validated builder stable toolchain
+- Preserve the upstream Apache NOTICE in the package payload
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.1.8-1PIGSTY
 - Update to upstream v0.1.8 with native pgrx 0.19.1 support
 - Use the validated builder stable Rust toolchain without downloading another toolchain

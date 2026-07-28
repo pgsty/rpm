@@ -49,7 +49,7 @@ rust5: pg_parquet pg_render
 rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_oidc_validator_rust pg_anon pgsmcrypto pg_enigma
-rust9: pg_pinyin pg_eviltransform
+rust9: pg_pinyin pg_eviltransform pgwasm
 rust10: pg_command_fw pg_trickle pggraph pgcontext pgrdf jsonschema
 time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
 
@@ -310,6 +310,9 @@ pgcontext:		# rust pgrx 0.19.1, installs pgcontext and pgcontext_pgvector
 
 pgrdf:			# rust pgrx 0.19.1
 	./build pgrdf 14 15 16 17 18
+
+pgwasm:		# rust pgrx 0.19.1, Wasmtime 44
+	./build pgwasm 14 15 16 17 18
 
 pgmq:
 	./build pgmq 14 15 16 17 18

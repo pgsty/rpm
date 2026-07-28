@@ -3,7 +3,7 @@
 
 Name:           %{sname}
 Version:        10.2.0
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        SuiteSparse implementation of the GraphBLAS standard
 License:        Apache-2.0
 URL:            https://github.com/DrTimothyAldenDavis/GraphBLAS
@@ -26,7 +26,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Headers, pkg-config metadata, and CMake package files for SuiteSparse:GraphBLAS.
 
 %prep
-%setup -q -n GraphBLAS-%{version}
+%setup -q -n graphblas-%{version}
 
 %build
 cmake -S . -B build \
@@ -60,5 +60,8 @@ DESTDIR=%{buildroot} cmake --install build
 %{_libdir}/cmake/GraphBLAS/*
 
 %changelog
+* Tue Jul 28 2026 Vonng <rh@vonng.com> - 10.2.0-2PIGSTY
+- Match the normalized lowercase source archive root
+
 * Mon Apr 13 2026 Vonng <rh@vonng.com> - 10.2.0-1PIGSTY
 - Package SuiteSparse:GraphBLAS 10.2.0 as runtime and devel RPMs

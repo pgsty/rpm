@@ -3,7 +3,7 @@
 
 Name:           %{sname}
 Version:        1.2.1
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        Graph algorithms and test harness built on GraphBLAS
 License:        BSD-2-Clause
 URL:            https://github.com/GraphBLAS/LAGraph
@@ -30,7 +30,7 @@ Requires:       graphblas-devel >= 10.2.0
 Headers, pkg-config metadata, and CMake package files for LAGraph.
 
 %prep
-%setup -q -n LAGraph-%{version}
+%setup -q -n lagraph-%{version}
 
 %build
 cmake -S . -B build \
@@ -66,5 +66,8 @@ DESTDIR=%{buildroot} cmake --install build
 %{_libdir}/cmake/LAGraph/*
 
 %changelog
+* Tue Jul 28 2026 Vonng <rh@vonng.com> - 1.2.1-2PIGSTY
+- Match the normalized lowercase source archive root
+
 * Mon Apr 13 2026 Vonng <rh@vonng.com> - 1.2.1-1PIGSTY
 - Package LAGraph 1.2.1 as runtime and devel RPMs, including LAGraphX

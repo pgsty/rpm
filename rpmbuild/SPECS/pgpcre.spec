@@ -12,9 +12,13 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if 0%{?rhel} >= 10
+%{error:pgpcre requires the legacy PCRE 1 development package and only supports EL8 and EL9}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.20190509
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	PCRE functions for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/petere/pgpcre
@@ -48,7 +52,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -78,6 +82,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Jul 28 2026 Vonng <rh@vonng.com> - 0.20190509-2PIGSTY
+- Restrict builds to EL8 and EL9 where the legacy PCRE development package exists
+
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 0.20190509-1PIGSTY
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 0.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

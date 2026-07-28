@@ -328,7 +328,11 @@ rum:
 	./build rum 16 17 18
 
 pg_ai_query:
-	./build pg_ai_query 14 15 16 17 18
+	@if [ "$$(rpm -E '%{rhel}')" -ge 9 ]; then \
+		./build pg_ai_query 14 15 16 17 18; \
+	else \
+		echo "pg_ai_query requires EL9 or newer, skipping EL8"; \
+	fi
 
 pg_monetdb:		# obsolete: monetdb-devel is unavailable in active EL builder repos
 	@echo "pg_monetdb is obsolete; monetdb-devel is unavailable in active EL builder repos"
@@ -593,7 +597,11 @@ pg_extra_time:
 	./build pg_extra_time 14 15 16 17 18
 
 pgpcre:
-	./build pgpcre 14 15 16 17 18
+	@if [ "$$(rpm -E '%{rhel}')" -lt 10 ]; then \
+		./build pgpcre 14 15 16 17 18; \
+	else \
+		echo "pgpcre requires legacy PCRE and is not built on EL10"; \
+	fi
 
 re2:
 	./build re2 16 17 18
@@ -791,7 +799,7 @@ pg_cooldown:
 	./build pg_cooldown 14 15 16 17 18
 
 ddlx:			# fix pgdg 18 missing
-	./build ddlx 14 15 16 17 18
+	./build pg_ddlx 14 15 16 17 18
 
 pglinter:
 	./build pglinter 14 15 16 17 18

@@ -2,14 +2,20 @@
 %{!?pgmajorversion:%global pgmajorversion 18}
 %if 0%{?pgmajorversion} == 18
 %global pgversion 18.4
-%elif 0%{?pgmajorversion} == 17
+%else
+%if 0%{?pgmajorversion} == 17
 %global pgversion 17.10
-%elif 0%{?pgmajorversion} == 16
+%else
+%if 0%{?pgmajorversion} == 16
 %global pgversion 16.14
-%elif 0%{?pgmajorversion} == 15
+%else
+%if 0%{?pgmajorversion} == 15
 %global pgversion 15.18
 %else
 %{error:pgedge supports pgmajorversion 15, 16, 17, or 18}
+%endif
+%endif
+%endif
 %endif
 %global spockversion 5.0.10
 %global lolorversion 1.2.2
@@ -21,7 +27,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        pgEdge PostgreSQL kernel with bundled replication extensions
 License:        PostgreSQL
 URL:            https://github.com/pgEdge
@@ -232,6 +238,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Jul 28 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.4-2PIGSTY
+- Replace rpm 4.15 percent-elif syntax for EL8 compatibility
+
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.4-1PIGSTY
 - Bundle pgEdge PostgreSQL 18.4 with Spock 5.0.10, LOLOR 1.2.2, and Snowflake 2.5.0
 - Rename package to pgedge-18 and obsolete the previous split pgEdge extension packages

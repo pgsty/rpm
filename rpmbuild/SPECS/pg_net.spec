@@ -3,6 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global llvm_binpath /usr/bin
 
+%if 0%{?rhel} >= 10
+%global pg_net_version 0.20.5
+%else
+%global pg_net_version 0.9.2
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -14,16 +20,20 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.5
-Release:	1PIGSTY%{?dist}
+Version:	%{pg_net_version}
+Release:	3PIGSTY%{?dist}
 Summary:	A PostgreSQL extension that enables asynchronous (non-blocking) HTTP/HTTPS requests with SQL
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_net
 Source0:	pg_net-%{version}.tar.gz
-#           https://github.com/supabase/pg_net/archive/refs/tags/v0.20.5.tar.gz
+#           Upstream release archive uses the matching v-prefixed tag.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if 0%{?rhel} >= 10
 BuildRequires:	libcurl-devel >= 7.83
+%else
+BuildRequires:	libcurl-devel
+%endif
 Requires:	    postgresql%{pgmajorversion}-server
 
 %description
@@ -73,7 +83,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %files
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
+%if 0%{?rhel} >= 10
 %{pginstdir}/include/server/extension/%{pname}/
+%endif
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %if %llvm
@@ -83,6 +95,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Jul 28 2026 Vonng <rh@vonng.com> - 0.20.5-3PIGSTY
+- Use pg_net 0.9.2 with the system libcurl on EL8 and EL9
+- Keep pg_net 0.20.5 on EL10 where libcurl 7.83 or newer is available
+
 * Thu Jul 23 2026 Vonng <rh@vonng.com> - 0.20.5-1PIGSTY
 - https://github.com/supabase/pg_net/releases/tag/v0.20.5
 * Sat Jun 06 2026 Vonng <rh@vonng.com> - 0.20.3-1PIGSTY

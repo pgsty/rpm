@@ -11,9 +11,13 @@
 #   - OpenSSL 3.0.0+ (httplib requirement)
 # Therefore: Only EL9+ is supported. EL8 cannot build this extension.
 
+%if 0%{?rhel} && 0%{?rhel} < 9
+%{error:pg_ai_query requires EL9 or newer for GCC 13 and OpenSSL 3}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.1
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	AI-powered SQL query generation for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/benodiwal/pg_ai_query
@@ -94,5 +98,8 @@ cd build
 %exclude /usr/local/*
 
 %changelog
+* Tue Jul 28 2026 Vonng <rh@vonng.com> - 0.1.1-2PIGSTY
+- Enforce the documented EL9 or newer toolchain requirement
+
 * Mon Dec 16 2024 Vonng <rh@vonng.com> - 0.1.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

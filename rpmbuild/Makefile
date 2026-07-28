@@ -489,6 +489,9 @@ pg_currency:
 pgcollection:
 	./build pgcollection 14 15 16 17 18
 
+postbis:
+	./build postbis 14 15 16 17 18
+
 numeral:
 	./build numeral 14 15 16 17 18
 

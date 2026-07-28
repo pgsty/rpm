@@ -2,7 +2,7 @@
 # File      :   Makefile
 # Desc      :   pgsty/rpm make shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2026-07-21
+# Mtime     :   2026-07-28
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
@@ -308,6 +308,9 @@ pggraph:		# rust pgrx 0.19.1, installs graph extension
 pgcontext:		# rust pgrx 0.19.1, installs pgcontext and pgcontext_pgvector
 	./build pgcontext 17 18
 
+pgzint:			# deferred: active EL repos do not provide Zint 2.14+
+	@echo "pgzint is deferred; zint-devel 2.14 or newer is unavailable in active EL repos"
+
 pgrdf:			# rust pgrx 0.19.1
 	./build pgrdf 14 15 16 17 18
 
@@ -434,9 +437,6 @@ pg_mockable:
 pgsqlmock:
 	./build pgsqlmock 14 15 16 17 18
 
-pg_typescript:		# rust pgrx 0.19.1
-	./build pg_typescript 16 17 18
-
 pllua:
 	./build pllua 14 15 16 17 18
 
@@ -562,9 +562,6 @@ pg_net:
 
 pg_csv:
 	./build pg_csv 14 15 16 17 18
-
-pg_net2:
-	./build pg_net2 14 15 16 17 18
 
 pg_curl:
 	./build pg_curl 14 15 16 17 18
@@ -955,9 +952,6 @@ column_encrypt:
 pg_vault:
 	./build pg_vault 14 15 16 17 18
 
-hyperion_vault:	# rust pgrx 0.19.1, PG18 only, shared_preload_libraries
-	./build hyperion_vault 18
-
 pg_session_jwt:		# rust pgrx 0.19.1
 	./build pg_session_jwt 14 15 16 17 18
 
@@ -1264,14 +1258,14 @@ rmdbg:
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	citus hydra pg_duckdb \
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
-	pg_sorted_heap age onesparse pggraph pgcontext pgrdf pgmq pgmb ulak fsm_core rum pg_ai_query \
+	pg_sorted_heap age onesparse pggraph pgcontext pgzint pgrdf pgwasm pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
-	pg_cardano inchi rdkit pg_tle plv8 pljs plx plprql plpgsql_check pg_mockable pgsqlmock pg_typescript \
+	pg_cardano inchi rdkit pg_tle plv8 pljs plx plprql plpgsql_check pg_mockable pgsqlmock \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \
 	numeral pg_rational pgmp pguint pg_uint128 hashtypes pg_uri pg_emailaddr pg_acl pg_duration \
-	pg_bikram_sambat pg_rrule chkpass pg_gzip pg_bzip pg_zstd pg_http pg_net pg_csv pg_net2 pg_curl \
+	pg_bikram_sambat pg_rrule chkpass pg_gzip pg_bzip pg_zstd pg_http pg_net pg_csv pg_curl \
 	pg_retry pg_protobuf pgproto pgjq pgjwt pg_smtp_client pg_html5_email_address url_encode \
 	pgsql_tweaks pg_extra_time pgpcre re2 icu_ext pgqr pg_envvar pg_byteamagic external_file \
 	pg_render ddl_historization data_historization pg_schedoc pg_isok pg_hashlib pg_xxhash \
@@ -1279,12 +1273,12 @@ rmdbg:
 	sequential_uuids pg_typeid quantile lower_quantile count_distinct omnisketch ddsketch vasco \
 	pgxicor pg_weighted_statistics datasketches first_last_agg argm floatvec aggs_for_vecs \
 	aggs_for_arrays pg_arraymath pg_math pg_random pg_base36 pg_base62 pg_base58 pg_financial \
-	pg_accumulator pg_convert parray_gin pg_rewrite pg_query_rewrite online_advisor pgmemento pg_roast pgfincore pg_cooldown ddlx pglinter \
+	pg_accumulator pg_convert parray_gin pg_rewrite pg_query_rewrite pg_column_tetris online_advisor pgmemento pg_roast pgfincore pg_cooldown ddlx pglinter \
 	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \
 	pg_pathcheck pg_savior pg_drop_events table_log pg_wait_sampling pg_flight_recorder pgmonitor pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \
 	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_relusage \
-	pagevis supautils pgsodium column_encrypt pg_vault hyperion_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
+	pagevis supautils pgsodium column_encrypt pg_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
 	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
 	block_copy_command sslutils pg_noset pgspider_ext wrappers sqlite_fdw etcd_fdw rdf_fdw nominatim_fdw redis_fdw \
 	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \

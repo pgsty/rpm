@@ -6,7 +6,7 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.8.5
+Version:	0.8.6
 Release:	1PIGSTY%{?dist}
 Summary:	Open-source vector similarity search for Postgres
 License:	PostgreSQL
@@ -51,11 +51,11 @@ This package provides JIT support for pgvector
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} OPTFLAGS="" LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} OPTFLAGS="" LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md
@@ -73,6 +73,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Thu Jul 30 2026 Vonng <rh@vonng.com> - 0.8.6-1PIGSTY
+- Update to upstream PGXN 0.8.6
+- Disable upstream -march=native for portable builder artifacts
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 0.8.5-1PIGSTY
 - Update to upstream PGXN 0.8.5
 

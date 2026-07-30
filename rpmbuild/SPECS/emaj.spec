@@ -1,15 +1,17 @@
 %define debug_package %{nil}
 %global pname emaj
 %global sname emaj
+%global rpmname e-maj
+%global oldname emaj_%{pgmajorversion}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
 %{error:emaj only supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
-Name:		%{sname}_%{pgmajorversion}
+Name:		%{rpmname}_%{pgmajorversion}
 Version:	5.0.0
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	Table change logging and rollback extension for PostgreSQL
 License:	GPL-3.0-or-later
 URL:		https://github.com/dalibo/emaj
@@ -21,6 +23,8 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	postgresql%{pgmajorversion}-contrib
 Requires:	perl-DBI perl-DBD-Pg
+Provides:	%{oldname} = %{version}-%{release}
+Obsoletes:	%{oldname} < %{version}-%{release}
 
 %description
 E-Maj logs table changes with triggers and can inspect or roll back those
@@ -45,5 +49,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %{pginstdir}/share/%{pname}/
 
 %changelog
+* Thu Jul 30 2026 Vonng <rh@vonng.com> - 5.0.0-2PIGSTY
+- Align package name with PGDG and obsolete emaj_$v
+
 * Mon Jul 27 2026 Vonng <rh@vonng.com> - 5.0.0-1PIGSTY
 - Add RPM package for upstream PGXN 5.0.0

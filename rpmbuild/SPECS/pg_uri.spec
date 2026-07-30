@@ -1,6 +1,12 @@
 %global pname uri
 %global sname pg_uri
+%global rpmname pguri
+%global oldname pg_uri_%{pgmajorversion}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_uri only supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -12,9 +18,9 @@
  %{!?llvm:%global llvm 1}
 %endif
 
-Name:		%{sname}_%{pgmajorversion}
+Name:		%{rpmname}_%{pgmajorversion}
 Version:	1.20251029
-Release:	1PIGSTY%{?dist}
+Release:	2PIGSTY%{?dist}
 Summary:	URI Data type for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/petere/pguri
@@ -22,6 +28,9 @@ Source0:	pguri-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 uriparser-devel
 Requires:	postgresql%{pgmajorversion}-server
+Provides:	%{oldname} = %{version}-%{release}
+Provides:	%{oldname}%{?_isa} = %{version}-%{release}
+Obsoletes:	%{oldname} < %{version}-%{release}
 
 %description
 https://twitter.com/pvh/status/567395527357001728
@@ -39,6 +48,9 @@ Note that this might not be the right data type to use if you want to store user
 %package llvmjit
 Summary:	Just-in-time compilation support for %{sname}
 Requires:	%{name}%{?_isa} = %{version}-%{release}
+Provides:	%{oldname}-llvmjit = %{version}-%{release}
+Provides:	%{oldname}-llvmjit%{?_isa} = %{version}-%{release}
+Obsoletes:	%{oldname}-llvmjit < %{version}-%{release}
 %if 0%{?rhel} && 0%{?rhel} == 7
 %ifarch aarch64
 Requires:	llvm-toolset-7.0-llvm >= 7.0.1
@@ -82,9 +94,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
    %{pginstdir}/lib/bitcode/*
 %endif
 %exclude /usr/lib/.build-id/*
-%exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Thu Jul 30 2026 Vonng <rh@vonng.com> - 1.20251029-2PIGSTY
+- Align package name with PGDG and obsolete pg_uri_$v packages
+- Limit PGSTY builds to PostgreSQL 14 through 18
+
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.20251029-1PIGSTY
 - https://github.com/petere/pguri/releases/tag/1.20251029
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.20151224

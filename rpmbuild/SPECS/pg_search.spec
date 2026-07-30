@@ -9,18 +9,18 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.24.3
+Version:	0.25.0
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.24.3.tar.gz
-Patch0:		pg-search-0.24.3.patch
+#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.25.0.tar.gz
+Patch0:		pg-search-0.25.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
-Requires:	postgresql%{pgmajorversion}-server
+BuildRequires:	cargo clang rust rustfmt openssl-devel openblas-devel pkgconfig
+Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion}
 
 %description
 pg_search is a PostgreSQL extension that enables full text search over SQL tables using the BM25 algorithm,
@@ -70,6 +70,13 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Jul 30 2026 Vonng <rh@vonng.com> - 0.25.0-1PIGSTY
+- Update to upstream PGXN 0.25.0
+- Add the new OpenBLAS build dependency for SuperKMeans
+- Add the new runtime dependency on pgvector
+- Align upstream pgrx 0.19.0 dependencies with builder cargo-pgrx 0.19.1
+- Use the validated builder stable Rust toolchain
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.24.3-1PIGSTY
 - Update to upstream 0.24.3 and migrate all active pgrx workspace crates to 0.19.1
 - Use the validated builder stable Rust toolchain without downloading another toolchain

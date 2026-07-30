@@ -58,7 +58,7 @@ time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj
 #                       Category: TIME                        #
 ###############################################################
 timescaledb:
-	./build timescaledb 15 16 17 18
+	./build timescaledb 16 17 18
 
 timescaledb_toolkit:	# rust pgrx 0.19.1
 	./build timescaledb_toolkit 15 16 17 18

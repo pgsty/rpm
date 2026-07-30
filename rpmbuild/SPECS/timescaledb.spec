@@ -2,13 +2,13 @@
 %global sname timescaledb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:timescaledb 2.28.3 only supports PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
+%{error:timescaledb 2.29.0 only supports PostgreSQL 16 through 18}
 %endif
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.28.3
+Version:	2.29.0
 Release:	1PIGSTY%{?dist}
 License:	Timescale
 Source0:	%{sname}-%{version}.tar.gz
@@ -56,6 +56,10 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Thu Jul 30 2026 Vonng <rh@vonng.com> - 2.29.0-1PIGSTY
+- https://github.com/timescale/timescaledb/releases/tag/2.29.0
+- Drop PostgreSQL 15, which is no longer supported upstream
+
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 2.28.3-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.28.3
 * Wed Jul 01 2026 Vonng <rh@vonng.com> - 2.28.2-1PIGSTY

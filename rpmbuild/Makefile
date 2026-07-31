@@ -1136,7 +1136,7 @@ postgresbson:
 #                          Misc                               #
 ###############################################################
 haproxy:
-	rpmbuild -ba SPECS/haproxy.spec
+	rpmbuild -ba SPECS/haproxy.spec --define "debug_package %{nil}"
 
 pdu:
 	./build pdu 14 15 16 17 18

@@ -5,34 +5,39 @@
 %define haproxy_datadir %{_datadir}/haproxy
 
 %global _hardened_build 1
+%global source0_sha256 7fa666d36d198275999e2a68dda44d3d37960f2f7aed3a595fb811f4fd0515b5
+%global source1_sha256 89457600f60554d6fed74ca18491e99e5600899999615e834c59cd4dad8732de
+%global source2_sha256 d9ecbd2b112e658f06ce6960a72fdc4303198c34d0a549850b91d0beb8300127
+%global source3_sha256 234409fa4142e7f35fd1ee6bf54960f9d37382f34f517a95550fe3a90524eda9
+%global source4_sha256 c2bb334d3b9320773a368e544c6f8c47e39b0f6e70be32aed38c39cf28adab11
+%global source5_sha256 dc2fdd7eb120cfc4696d896340f397c84c8ef372c83b0d42ffbc547454c00688
 
 Name:           haproxy
-Version:        3.4.2
-Release:        1PGDG%{?dist}
+Version:        3.4.3
+Release:        1PIGSTY%{?dist}
 Summary:        HAProxy reverse proxy for high availability environments
 
-License:        GPLv2+
+License:        GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.haproxy.org/
-Source0:        https://www.haproxy.org/download/3.4/src/%{name}-%{version}.tar.gz
-Source1:        %{name}.service
-Source2:        %{name}.cfg
-Source3:        %{name}.logrotate
-Source4:        %{name}.sysconfig
-Source5:        halog.1
-Source6:        %{name}-sysusers.conf
-Source7:        %{name}-tmpfiles.d
+Source0:        https://www.haproxy.org/download/%(v=%{version}; echo ${v%.*})/src/%{name}-%{version}.tar.gz
+Source1:        %{name}.cfg
+Source2:        %{name}.logrotate
+Source3:        %{name}.sysconfig
+Source4:        halog.1
+Source5:        %{name}-sysusers.conf
 
-BuildRequires:  gcc lua-devel pcre2-devel make
-BuildRequires:  systemd-devel systemd
-%if 0%{?suse_version} >= 1500
-Requires:       libopenssl3
-BuildRequires:  libopenssl-3-devel
-%endif
-%if 0%{?fedora} >= 42 || 0%{?rhel} >= 8
+BuildRequires:  gcc
+BuildRequires:  libxcrypt-devel
+BuildRequires:  lua-devel
+BuildRequires:  make
+BuildRequires:  pcre2-devel
+BuildRequires:  pkgconf-pkg-config
+BuildRequires:  systemd-rpm-macros
 Requires:       openssl-libs >= 1.1.1k
 BuildRequires:  openssl-devel
-%endif
 
+Requires(pre):  systemd
+Recommends:     logrotate
 %{?systemd_requires}
 
 %description
@@ -50,49 +55,59 @@ availability environments. Indeed, it can:
    intercepted from the application
 
 %prep
-%setup -q
+echo "%{source0_sha256}  %{SOURCE0}" | sha256sum -c -
+echo "%{source1_sha256}  %{SOURCE1}" | sha256sum -c -
+echo "%{source2_sha256}  %{SOURCE2}" | sha256sum -c -
+echo "%{source3_sha256}  %{SOURCE3}" | sha256sum -c -
+echo "%{source4_sha256}  %{SOURCE4}" | sha256sum -c -
+echo "%{source5_sha256}  %{SOURCE5}" | sha256sum -c -
+%autosetup
 
 %build
-regparm_opts=
-%ifarch %ix86 x86_64
-regparm_opts="USE_REGPARM=1"
-%endif
+quic_compat=
+if ! pkg-config --atleast-version=3.5.2 openssl; then
+    quic_compat="USE_QUIC_OPENSSL_COMPAT=1"
+fi
 
-%{__make} %{?_smp_mflags} CPU="generic" TARGET="linux-glibc" USE_OPENSSL=1 USE_PCRE2=1 USE_SLZ=1 USE_LUA=1 USE_CRYPT_H=1 USE_LINUX_TPROXY=1 USE_GETADDRINFO=1 USE_PROMEX=1 DEFINE=-DMAX_SESS_STKCTR=12 ${regparm_opts} \
-%if 0%{?fedora} >= 40 || 0%{?rhel} >= 8
-    ADDLIB="%{build_ldflags}" \
-%endif
-    ADDINC="%{build_cflags}"
-
-%{__make} admin/halog/halog \
-%if 0%{?fedora} >= 40 || 0%{?rhel} >= 8
-    ADDLIB="%{build_ldflags}" \
-%endif
-    ADDINC="%{build_cflags}"
-
-pushd admin/iprange
-%{__make} \
-%if 0%{?fedora} >= 40 || 0%{?rhel} >= 8
+%{__make} %{?_smp_mflags} \
+    TARGET="linux-glibc" \
+    EXTRAVERSION="-%{release}" \
+    USE_OPENSSL=1 \
+    USE_QUIC=1 \
+    USE_PCRE2=1 \
+    USE_PCRE2_JIT=1 \
+    USE_SLZ=1 \
+    USE_LUA=1 \
+    USE_PROMEX=1 \
+    CC=%{__cc} \
+    CFLAGS="%{build_cflags}" \
     LDFLAGS="%{build_ldflags}" \
-%endif
-    OPTIMIZE="%{build_cflags}"
-popd
+    OPT_CFLAGS="" \
+    ARCH_FLAGS="" \
+    EXTRA="admin/halog/halog admin/iprange/iprange admin/iprange/ip6range" \
+    ${quic_compat}
+
+%{__make} -C admin/systemd PREFIX=%{_prefix} SBINDIR=%{_sbindir}
 
 %install
-%{__make} install-bin DESTDIR=%{buildroot} PREFIX=%{_prefix} SBINDIR=%{_sbindir} TARGET="linux2628"
-%{__make} install-man DESTDIR=%{buildroot} PREFIX=%{_prefix}
+%{__make} install-bin install-man \
+    DESTDIR=%{buildroot} \
+    PREFIX=%{_prefix} \
+    SBINDIR=%{_sbindir}
 
-%{__install} -p -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
-%{__install} -p -D -m 0644 %{SOURCE2} %{buildroot}%{haproxy_confdir}/%{name}.cfg
-%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-%{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_mandir}/man1/halog.1
+%{__install} -p -D -m 0644 admin/systemd/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
+%{__install} -p -D -m 0644 %{SOURCE1} %{buildroot}%{haproxy_confdir}/%{name}.cfg
+%{__install} -p -D -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_mandir}/man1/halog.1
+# Keep the chroot root-owned and non-writable by the service account.
 %{__install} -d -m 0755 %{buildroot}%{haproxy_homedir}
 %{__install} -d -m 0755 %{buildroot}%{haproxy_datadir}
+%{__install} -d -m 0755 %{buildroot}%{haproxy_confdir}/conf.d
 %{__install} -d -m 0755 %{buildroot}%{_bindir}
-%{__install} -p -m 0755 ./admin/halog/halog %{buildroot}%{_bindir}/halog
-%{__install} -p -m 0755 ./admin/iprange/iprange %{buildroot}%{_bindir}/iprange
-%{__install} -p -m 0755 ./admin/iprange/ip6range %{buildroot}%{_bindir}/ip6range
+%{__install} -p -m 0755 admin/halog/halog %{buildroot}%{_bindir}/halog
+%{__install} -p -m 0755 admin/iprange/iprange %{buildroot}%{_bindir}/iprange
+%{__install} -p -m 0755 admin/iprange/ip6range %{buildroot}%{_bindir}/ip6range
 
 for httpfile in $(find ./examples/errorfiles/ -type f)
 do
@@ -102,19 +117,19 @@ done
 %{__rm} -rf ./examples/errorfiles/
 find ./examples/* -type f ! -name "*.cfg" -exec %{__rm} -f "{}" \;
 
-for textfile in $(find ./ -type f -name '*.txt')
-do
-    %{__mv} $textfile $textfile.old
-    iconv --from-code ISO8859-1 --to-code UTF-8 --output $textfile $textfile.old
-    %{__rm} -f $textfile.old
-done
+# Convert the only ISO-8859-1 document without rewriting unrelated text files.
+iconv -f ISO-8859-1 -t UTF-8 \
+    -o doc/internals/connection-scale.txt{.utf8,}
+touch -c -r doc/internals/connection-scale.txt{,.utf8}
+%{__mv} -f doc/internals/connection-scale.txt{.utf8,}
 
-%{__install} -m 0644 -D %{SOURCE6} %{buildroot}%{_sysusersdir}/%{name}-pgdg.conf
-%{__mkdir} -p %{buildroot}/%{_tmpfilesdir}
-%{__install} -m 0644 %{SOURCE7} %{buildroot}/%{_tmpfilesdir}/%{name}.conf
+%{__install} -m 0644 -D %{SOURCE5} %{buildroot}%{_sysusersdir}/%{name}.conf
+
+%{__mv} -f doc/{gpl,lgpl}.txt .
+%{__rm} -f doc/%{name}.1 examples/%{name}.init
 
 %pre
-%sysusers_create_package %{name} %SOURCE6
+%sysusers_create_package %{name} %SOURCE5
 
 %post
 %systemd_post %{name}.service
@@ -126,11 +141,11 @@ done
 %systemd_postun_with_restart %{name}.service
 
 %files
-%doc doc/* examples/*
-%doc CHANGELOG VERSION
-%license LICENSE
+%license LICENSE gpl.txt lgpl.txt
+%doc CHANGELOG README.md doc/* examples/
 %dir %{haproxy_homedir}
 %dir %{haproxy_confdir}
+%dir %{haproxy_confdir}/conf.d
 %dir %{haproxy_datadir}
 %{haproxy_datadir}/*
 %config(noreplace) %{haproxy_confdir}/%{name}.cfg
@@ -142,10 +157,20 @@ done
 %{_bindir}/iprange
 %{_bindir}/ip6range
 %{_mandir}/man1/*
-%{_sysusersdir}/%{name}-pgdg.conf
-%{_tmpfilesdir}/%{name}.conf
+%{_sysusersdir}/%{name}.conf
 
 %changelog
+* Fri Jul 31 2026 Ruohang Feng <rh@vonng.com> 3.4.3-1PIGSTY
+- Update to 3.4.3.
+- Generate the vendor unit from upstream and load haproxy.cfg plus conf.d.
+- Create the package-owned /etc/haproxy/conf.d directory.
+- Modernize build flags and package metadata.
+- Remove the obsolete libsystemd build dependency.
+- Keep the chroot root-owned and align sysconfig with upstream EXTRAOPTS.
+- Use native OpenSSL QUIC APIs when the build platform provides them.
+- Ship a listener-free default config and resilient log rotation.
+- Verify every source input against a fixed SHA-256 digest.
+
 * Tue Jul 07 2026 Devrim Gündüz <devrim@gunduz.org> 3.4.2-1PGDG
 - Update to 3.4.2 per changes described at:
   https://mail-archive.com/haproxy@formilux.org/msg47291.html

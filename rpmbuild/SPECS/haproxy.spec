@@ -6,11 +6,7 @@
 
 %global _hardened_build 1
 %global source0_sha256 7fa666d36d198275999e2a68dda44d3d37960f2f7aed3a595fb811f4fd0515b5
-%global source1_sha256 89457600f60554d6fed74ca18491e99e5600899999615e834c59cd4dad8732de
-%global source2_sha256 d9ecbd2b112e658f06ce6960a72fdc4303198c34d0a549850b91d0beb8300127
-%global source3_sha256 234409fa4142e7f35fd1ee6bf54960f9d37382f34f517a95550fe3a90524eda9
-%global source4_sha256 c2bb334d3b9320773a368e544c6f8c47e39b0f6e70be32aed38c39cf28adab11
-%global source5_sha256 dc2fdd7eb120cfc4696d896340f397c84c8ef372c83b0d42ffbc547454c00688
+%global source1_sha256 08fea6dc7c1e62fa0acfe0eeee07e6202fee84338b49fab220066c4fcdff916d
 
 Name:           haproxy
 Version:        3.4.3
@@ -20,11 +16,7 @@ Summary:        HAProxy reverse proxy for high availability environments
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.haproxy.org/
 Source0:        https://www.haproxy.org/download/%(v=%{version}; echo ${v%.*})/src/%{name}-%{version}.tar.gz
-Source1:        %{name}.cfg
-Source2:        %{name}.logrotate
-Source3:        %{name}.sysconfig
-Source4:        halog.1
-Source5:        %{name}-sysusers.conf
+Source1:        %{name}-utils.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  libxcrypt-devel
@@ -36,7 +28,7 @@ BuildRequires:  systemd-rpm-macros
 Requires:       openssl-libs >= 1.1.1k
 BuildRequires:  openssl-devel
 
-Requires(pre):  systemd
+Requires(post): systemd
 Recommends:     logrotate
 %{?systemd_requires}
 
@@ -57,11 +49,7 @@ availability environments. Indeed, it can:
 %prep
 echo "%{source0_sha256}  %{SOURCE0}" | sha256sum -c -
 echo "%{source1_sha256}  %{SOURCE1}" | sha256sum -c -
-echo "%{source2_sha256}  %{SOURCE2}" | sha256sum -c -
-echo "%{source3_sha256}  %{SOURCE3}" | sha256sum -c -
-echo "%{source4_sha256}  %{SOURCE4}" | sha256sum -c -
-echo "%{source5_sha256}  %{SOURCE5}" | sha256sum -c -
-%autosetup
+%autosetup -a 1
 
 %build
 quic_compat=
@@ -96,10 +84,10 @@ fi
     SBINDIR=%{_sbindir}
 
 %{__install} -p -D -m 0644 admin/systemd/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
-%{__install} -p -D -m 0644 %{SOURCE1} %{buildroot}%{haproxy_confdir}/%{name}.cfg
-%{__install} -p -D -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_mandir}/man1/halog.1
+%{__install} -p -D -m 0644 haproxy-utils/%{name}.cfg %{buildroot}%{haproxy_confdir}/%{name}.cfg
+%{__install} -p -D -m 0644 haproxy-utils/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+%{__install} -p -D -m 0644 haproxy-utils/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+%{__install} -p -D -m 0644 haproxy-utils/halog.1 %{buildroot}%{_mandir}/man1/halog.1
 # Keep the chroot root-owned and non-writable by the service account.
 %{__install} -d -m 0755 %{buildroot}%{haproxy_homedir}
 %{__install} -d -m 0755 %{buildroot}%{haproxy_datadir}
@@ -123,15 +111,13 @@ iconv -f ISO-8859-1 -t UTF-8 \
 touch -c -r doc/internals/connection-scale.txt{,.utf8}
 %{__mv} -f doc/internals/connection-scale.txt{.utf8,}
 
-%{__install} -m 0644 -D %{SOURCE5} %{buildroot}%{_sysusersdir}/%{name}.conf
+%{__install} -m 0644 -D haproxy-utils/%{name}-sysusers.conf %{buildroot}%{_sysusersdir}/%{name}.conf
 
 %{__mv} -f doc/{gpl,lgpl}.txt .
 %{__rm} -f doc/%{name}.1 examples/%{name}.init
 
-%pre
-%sysusers_create_package %{name} %SOURCE5
-
 %post
+%{_bindir}/systemd-sysusers %{_sysusersdir}/%{name}.conf >/dev/null 2>&1 || :
 %systemd_post %{name}.service
 
 %preun
@@ -162,6 +148,7 @@ touch -c -r doc/internals/connection-scale.txt{,.utf8}
 %changelog
 * Fri Jul 31 2026 Ruohang Feng <rh@vonng.com> 3.4.3-1PIGSTY
 - Update to 3.4.3.
+- Bundle downstream packaging assets in haproxy-utils.tar.gz.
 - Generate the standard debuginfo and debugsource subpackages.
 - Generate the vendor unit from upstream and load haproxy.cfg plus conf.d.
 - Create the package-owned /etc/haproxy/conf.d directory.

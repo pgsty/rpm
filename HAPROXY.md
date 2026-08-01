@@ -85,33 +85,44 @@ restart。因此，从旧加载参数迁移时，单独执行 `dnf update` 不�
 6. 构建产物显示预期的 OpenSSL、PCRE2 JIT、Lua、SLZ、QUIC 与 PROMEX 特性。
 
 RPM 构建应使用非 PostgreSQL 版本化的专用目标，避免重复构建同一产物。源码
-镜像与 spec 同步后，常规流程必须按真实文件名显式获取全部六个输入：
+镜像与 spec 同步后，常规流程必须按真实文件名显式获取两个输入：
 
 ```bash
 cd ~/rpmbuild
 pig build get -f \
-  haproxy-3.4.3.tar.gz haproxy.cfg haproxy.logrotate \
-  haproxy.sysconfig halog.1 haproxy-sysusers.conf
+  haproxy-3.4.3.tar.gz haproxy-utils.tar.gz
 make haproxy
+```
+
+`haproxy-utils.tar.gz` 使用 GNU tar 确定性生成，固定文件顺序、所有者、时间戳和
+gzip header，并包含 RPM 所需的五个发行版集成文件：
+
+```text
+haproxy-utils/haproxy.cfg
+haproxy-utils/haproxy.logrotate
+haproxy-utils/haproxy.sysconfig
+haproxy-utils/halog.1
+haproxy-utils/haproxy-sysusers.conf
 ```
 
 `pig build get haproxy` 会请求一个字面名称为 `haproxy` 的文件，不是这个
 recipe 的有效获取命令。`-f` 也只应在公共源码镜像已经同步并核验后使用。
 
-在新版源码镜像正式同步之前，公共镜像仍可能返回旧版辅助文件或缺少 3.4.3
-tarball。此时不能混用公共镜像输入；必须从本地权威目录逐个复制这六个文件，
-而不是同步整个 `src`：
+在新版源码镜像正式同步之前，公共镜像仍可能返回旧版辅助归档或缺少 3.4.3
+tarball。此时不能混用公共镜像输入；必须从本地权威目录复制这两个文件，而不
+是同步整个 `src`：
 
 ```bash
-cp ~/pgsty/repo/ext/src/{haproxy-3.4.3.tar.gz,haproxy.cfg,haproxy.logrotate,haproxy.sysconfig,halog.1,haproxy-sysusers.conf} \
+cp ~/pgsty/repo/ext/src/{haproxy-3.4.3.tar.gz,haproxy-utils.tar.gz} \
   ~/rpmbuild/SOURCES/
 ```
 
-RPM spec 在 `%prep` 对全部六个输入做固定 SHA-256 校验；DEB recipe 在解包
-前校验上游 tarball。3.4.3 官方 tarball 的 SHA-256 是：
+RPM spec 在 `%prep` 对两个输入做固定 SHA-256 校验；DEB recipe 在解包前校验
+上游 tarball。3.4.3 官方 tarball 与 RPM 辅助归档的 SHA-256 分别是：
 
 ```text
 7fa666d36d198275999e2a68dda44d3d37960f2f7aed3a595fb811f4fd0515b5
+08fea6dc7c1e62fa0acfe0eeee07e6202fee84338b49fab220066c4fcdff916d
 ```
 
 因此，过期、混合或被意外改写的镜像输入必须让构建失败，而不是静默产生错误

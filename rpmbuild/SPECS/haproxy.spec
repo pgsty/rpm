@@ -6,7 +6,7 @@
 
 %global _hardened_build 1
 %global source0_sha256 7fa666d36d198275999e2a68dda44d3d37960f2f7aed3a595fb811f4fd0515b5
-%global source1_sha256 08fea6dc7c1e62fa0acfe0eeee07e6202fee84338b49fab220066c4fcdff916d
+%global source1_sha256 31ca22f6ed294509f87427241c1acc9e38415b14edd9a469f778acf92acb95dc
 
 Name:           haproxy
 Version:        3.4.3
@@ -50,6 +50,11 @@ availability environments. Indeed, it can:
 echo "%{source0_sha256}  %{SOURCE0}" | sha256sum -c -
 echo "%{source1_sha256}  %{SOURCE1}" | sha256sum -c -
 %autosetup -a 1
+# Pigsty uses one documented environment interface on every distribution.
+test "$(grep -Fxc 'EnvironmentFile=-/etc/default/haproxy' admin/systemd/%{name}.service.in)" -eq 1
+test "$(grep -Fxc 'EnvironmentFile=-/etc/sysconfig/haproxy' admin/systemd/%{name}.service.in)" -eq 1
+sed -i '\|^EnvironmentFile=-/etc/sysconfig/haproxy$|d' admin/systemd/%{name}.service.in
+! grep -Fqx 'EnvironmentFile=-/etc/sysconfig/haproxy' admin/systemd/%{name}.service.in
 
 %build
 quic_compat=
@@ -86,7 +91,8 @@ fi
 %{__install} -p -D -m 0644 admin/systemd/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
 %{__install} -p -D -m 0644 haproxy-utils/%{name}.cfg %{buildroot}%{haproxy_confdir}/%{name}.cfg
 %{__install} -p -D -m 0644 haproxy-utils/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-%{__install} -p -D -m 0644 haproxy-utils/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+%{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/default
+%{__install} -p -D -m 0644 haproxy-utils/%{name}.default %{buildroot}%{_sysconfdir}/default/%{name}
 %{__install} -p -D -m 0644 haproxy-utils/halog.1 %{buildroot}%{_mandir}/man1/halog.1
 # Keep the chroot root-owned and non-writable by the service account.
 %{__install} -d -m 0755 %{buildroot}%{haproxy_homedir}
@@ -130,13 +136,14 @@ touch -c -r doc/internals/connection-scale.txt{,.utf8}
 %license LICENSE gpl.txt lgpl.txt
 %doc CHANGELOG README.md doc/* examples/
 %dir %{haproxy_homedir}
+%dir %{_sysconfdir}/default
 %dir %{haproxy_confdir}
 %dir %{haproxy_confdir}/conf.d
 %dir %{haproxy_datadir}
 %{haproxy_datadir}/*
 %config(noreplace) %{haproxy_confdir}/%{name}.cfg
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/default/%{name}
 %{_unitdir}/%{name}.service
 %{_sbindir}/%{name}
 %{_bindir}/halog
@@ -154,9 +161,14 @@ touch -c -r doc/internals/connection-scale.txt{,.utf8}
 - Create the package-owned /etc/haproxy/conf.d directory.
 - Modernize build flags and package metadata.
 - Remove the obsolete libsystemd build dependency.
-- Keep the chroot root-owned and align sysconfig with upstream EXTRAOPTS.
+- Use /etc/default/haproxy as the shared RPM and DEB environment interface.
 - Use native OpenSSL QUIC APIs when the build platform provides them.
-- Ship a listener-free default config and resilient log rotation.
+- Ship a conservative TCP baseline with stdout logging and loopback-only
+  health, statistics, and Prometheus endpoints on port 9101.
+- Remove obsolete sysconfig, daemon, pidfile, legacy syslog, and Web sample
+  assumptions.
+- Restore the upstream stick-counter limit; configurations using track-sc3 or
+  above must set tune.stick-counters explicitly in the global section.
 - Verify every source input against a fixed SHA-256 digest.
 
 * Tue Jul 07 2026 Devrim Gündüz <devrim@gunduz.org> 3.4.2-1PGDG

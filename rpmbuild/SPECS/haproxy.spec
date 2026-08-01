@@ -162,6 +162,7 @@ touch -c -r doc/internals/connection-scale.txt{,.utf8}
 %changelog
 * Fri Jul 31 2026 Ruohang Feng <rh@vonng.com> 3.4.3-1PIGSTY
 - Update to 3.4.3.
+- Generate the standard debuginfo and debugsource subpackages.
 - Generate the vendor unit from upstream and load haproxy.cfg plus conf.d.
 - Create the package-owned /etc/haproxy/conf.d directory.
 - Modernize build flags and package metadata.

@@ -1,0 +1,28 @@
+From: Ruohang Feng <rh@vonng.com>
+Date: Sat, 1 Aug 2026 17:00:00 +0800
+Subject: Fix zero-radius GEOSEARCH on GCC 8 aarch64
+
+Origin: vendor
+Bug: https://github.com/valkey-io/valkey/issues/2051
+Forwarded: no
+Last-Update: 2026-08-01
+
+GCC 8 on aarch64 contracts the latitude conversion and subtraction into
+an FMA sequence. Even when both latitude inputs are bit-identical, this can
+produce a tiny non-zero distance and exclude the source member from a
+zero-radius GEOSEARCH. Return the mathematically exact result before the
+floating-point conversion.
+---
+ src/geohash_helper.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/geohash_helper.c b/src/geohash_helper.c
+--- a/src/geohash_helper.c
++++ b/src/geohash_helper.c
+@@ -282,5 +282,6 @@ GeoHashFix52Bits geohashAlign52Bits(const GeoHashBits hash) {
+  * we can simplify arcsin(sin(x)) to x.
+  */
+ double geohashGetLatDistance(double lat1d, double lat2d) {
++    if (lat1d == lat2d) return 0.0;
+     return EARTH_RADIUS_IN_METERS * fabs(deg_rad(lat2d) - deg_rad(lat1d));
+ }

@@ -12,6 +12,7 @@ Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
 URL:            https://valkey.io/
 Source0:        https://github.com/valkey-io/valkey/archive/refs/tags/%{version}.tar.gz#/valkey-%{version}.tar.gz
+Patch0:         valkey-9.1.1-el8a-geosearch-zero-radius.patch
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -58,6 +59,11 @@ Header file and RPM macros required for building loadable Valkey modules.
 %prep
 echo "%{source0_sha256}  %{SOURCE0}" | sha256sum -c -
 %setup -q -n valkey-%{version}
+%if 0%{?rhel} == 8
+%ifarch aarch64
+%patch -P 0 -p1
+%endif
+%endif
 
 cp deps/jemalloc/COPYING COPYING-jemalloc
 cp deps/lua/COPYRIGHT COPYRIGHT-lua

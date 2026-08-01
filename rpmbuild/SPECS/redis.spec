@@ -187,9 +187,7 @@ EOF
     --skiptest "diskless all replicas drop during rdb pipe"
 %if 0%{?rhel} < 10
 ./runtest --clients 1 --tls --verbose --no-latency \
-%ifarch x86_64
     --skiptest "For unauthenticated clients output buffer is limited" \
-%endif
     --skiptest "diskless no replicas drop during rdb pipe" \
     --skiptest "diskless slow replicas drop during rdb pipe" \
     --skiptest "diskless fast replicas drop during rdb pipe" \
@@ -272,4 +270,4 @@ exit 0
 * Sat Aug 01 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-1PIGSTY
 - Build Redis 7.2.15 as non-modular RPMs for EL8, EL9, and EL10.
 - Provide redis, redis-devel, and redis-debuginfo with TLS and systemd support.
-- Avoid an x86 TclTLS zero-window stall in one output-buffer pressure test.
+- Avoid a TclTLS zero-window stall in one duplicated output-buffer test.

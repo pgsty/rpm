@@ -12,6 +12,7 @@ Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0
 URL:            https://redis.io/
 Source0:        https://download.redis.io/releases/redis-%{version}.tar.gz
+Patch0:         redis-7.2.15-geosearch-zero-radius.patch
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -55,6 +56,7 @@ Header file and RPM macros required for building loadable Redis modules.
 %prep
 echo "%{source0_sha256}  %{SOURCE0}" | sha256sum -c -
 %setup -q -n redis-%{version}
+%patch -P 0 -p1
 
 cp deps/jemalloc/COPYING COPYING-jemalloc
 cp deps/lua/COPYRIGHT COPYRIGHT-lua

@@ -1138,6 +1138,9 @@ postgresbson:
 haproxy:
 	rpmbuild -ba SPECS/haproxy.spec
 
+redis:
+	rpmbuild -ba SPECS/redis.spec
+
 pdu:
 	./build pdu 14 15 16 17 18
 
@@ -1250,7 +1253,7 @@ rmdbg:
 # even if a file with the same name exists
 
 .PHONY: env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
-	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time haproxy timescaledb \
+	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time haproxy redis timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \

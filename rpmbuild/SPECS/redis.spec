@@ -7,7 +7,7 @@
 
 Name:           redis
 Version:        7.2.15
-Release:        1PIGSTY%{?dist}
+Release:        3PIGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0
 URL:            https://redis.io/
@@ -99,6 +99,12 @@ test "$api" = "%{redis_modules_abi}"
 %install
 %{__make} %{make_flags} install
 
+test -x %{buildroot}%{_bindir}/redis-server
+test ! -L %{buildroot}%{_bindir}/redis-server
+test "$(readlink %{buildroot}%{_bindir}/redis-check-rdb)" = redis-server
+test "$(readlink %{buildroot}%{_bindir}/redis-check-aof)" = redis-server
+test "$(readlink %{buildroot}%{_bindir}/redis-sentinel)" = redis-server
+
 install -d \
     %{buildroot}%{_sysconfdir}/redis \
     %{buildroot}%{_sysconfdir}/logrotate.d \
@@ -134,6 +140,8 @@ Wants=network-online.target
 
 [Service]
 Type=notify
+TimeoutStartSec=infinity
+TimeoutStopSec=infinity
 User=redis
 Group=redis
 WorkingDirectory=/var/lib/redis
@@ -158,6 +166,8 @@ Wants=network-online.target
 
 [Service]
 Type=notify
+TimeoutStartSec=infinity
+TimeoutStopSec=infinity
 User=redis
 Group=redis
 WorkingDirectory=/var/lib/redis
@@ -172,6 +182,12 @@ LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target
 EOF
+
+for unit in redis.service redis-sentinel.service; do
+    grep -qxF Type=notify %{buildroot}%{_unitdir}/${unit}
+    grep -qxF TimeoutStartSec=infinity %{buildroot}%{_unitdir}/${unit}
+    grep -qxF TimeoutStopSec=infinity %{buildroot}%{_unitdir}/${unit}
+done
 
 cat > %{buildroot}%{_rpmmacrodir}/macros.redis <<'EOF'
 %%redis_version %{version}
@@ -272,6 +288,10 @@ exit 0
 %{_rpmmacrodir}/macros.redis
 
 %changelog
+* Mon Aug 03 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-3PIGSTY
+- Align systemd startup and shutdown timeouts with the upstream service units.
+- Assert the upstream multicall symlink layout during packaging.
+
 * Sat Aug 01 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-1PIGSTY
 - Build Redis 7.2.15 as non-modular RPMs for EL8, EL9, and EL10.
 - Provide redis, redis-devel, and redis-debuginfo with TLS and systemd support.

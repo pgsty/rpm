@@ -7,7 +7,7 @@
 
 Name:           valkey
 Version:        9.1.1
-Release:        1PIGSTY%{?dist}
+Release:        3PIGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
 URL:            https://valkey.io/
@@ -107,6 +107,11 @@ test "$api" = "%{valkey_modules_abi}"
 
 %install
 %{__make} %{make_flags} install
+test -x %{buildroot}%{_bindir}/valkey-server
+test ! -L %{buildroot}%{_bindir}/valkey-server
+test "$(readlink %{buildroot}%{_bindir}/valkey-check-rdb)" = valkey-server
+test "$(readlink %{buildroot}%{_bindir}/valkey-check-aof)" = valkey-server
+test "$(readlink %{buildroot}%{_bindir}/valkey-sentinel)" = valkey-server
 rm -rf %{buildroot}%{_datadir}/valkey
 # Keep Valkey co-installable with Redis. Upstream installs these compatibility
 # symlinks by default, but they would conflict with the native Redis package.
@@ -147,6 +152,8 @@ Wants=network-online.target
 
 [Service]
 Type=notify
+TimeoutStartSec=infinity
+TimeoutStopSec=infinity
 User=valkey
 Group=valkey
 WorkingDirectory=/var/lib/valkey
@@ -171,6 +178,8 @@ Wants=network-online.target
 
 [Service]
 Type=notify
+TimeoutStartSec=infinity
+TimeoutStopSec=infinity
 User=valkey
 Group=valkey
 WorkingDirectory=/var/lib/valkey
@@ -185,6 +194,12 @@ LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target
 EOF
+
+for unit in valkey.service valkey-sentinel.service; do
+    grep -qxF Type=notify %{buildroot}%{_unitdir}/${unit}
+    grep -qxF TimeoutStartSec=infinity %{buildroot}%{_unitdir}/${unit}
+    grep -qxF TimeoutStopSec=infinity %{buildroot}%{_unitdir}/${unit}
+done
 
 cat > %{buildroot}%{_rpmmacrodir}/macros.valkey <<'EOF'
 %%valkey_version %{version}
@@ -285,6 +300,10 @@ exit 0
 %{_rpmmacrodir}/macros.valkey
 
 %changelog
+* Mon Aug 03 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-3PIGSTY
+- Align systemd startup and shutdown timeouts with the upstream service units.
+- Assert the upstream multicall symlink layout during packaging.
+
 * Sat Aug 01 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-1PIGSTY
 - Build Valkey 9.1.1 for EL8, EL9, and EL10.
 - Provide valkey, valkey-devel, and valkey-debuginfo with TLS and systemd support.

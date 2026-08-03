@@ -100,7 +100,8 @@ sed -ri \
 api=$(sed -n -e 's/#define VALKEYMODULE_APIVER_[0-9][0-9]* //p' src/valkeymodule.h)
 test "$api" = "%{valkey_modules_abi}"
 
-%global make_flags DEBUG="" V="echo" LDFLAGS="%{build_ldflags}" CFLAGS+="%{build_cflags} -fPIC" PREFIX=%{buildroot}%{_prefix} MALLOC=jemalloc BUILD_WITH_SYSTEMD=yes BUILD_TLS=yes
+# Keep Valkey co-installable with Redis without post-install cleanup.
+%global make_flags DEBUG="" V="echo" LDFLAGS="%{build_ldflags}" CFLAGS+="%{build_cflags} -fPIC" PREFIX=%{buildroot}%{_prefix} MALLOC=jemalloc BUILD_WITH_SYSTEMD=yes BUILD_TLS=yes USE_REDIS_SYMLINKS=no
 
 %build
 %{__make} %{?_smp_mflags} %{make_flags}
@@ -113,9 +114,6 @@ test "$(readlink %{buildroot}%{_bindir}/valkey-check-rdb)" = valkey-server
 test "$(readlink %{buildroot}%{_bindir}/valkey-check-aof)" = valkey-server
 test "$(readlink %{buildroot}%{_bindir}/valkey-sentinel)" = valkey-server
 rm -rf %{buildroot}%{_datadir}/valkey
-# Keep Valkey co-installable with Redis. Upstream installs these compatibility
-# symlinks by default, but they would conflict with the native Redis package.
-rm -f %{buildroot}%{_bindir}/redis-*
 
 install -d \
     %{buildroot}%{_sysconfdir}/valkey \
@@ -152,13 +150,14 @@ Wants=network-online.target
 
 [Service]
 Type=notify
-TimeoutStartSec=infinity
-TimeoutStopSec=infinity
+TimeoutStartSec=1800s
+TimeoutStopSec=900s
 User=valkey
 Group=valkey
 WorkingDirectory=/var/lib/valkey
 ExecStart=/usr/bin/valkey-server /etc/valkey/valkey.conf --daemonize no --supervised systemd
 RuntimeDirectory=valkey
+RuntimeDirectoryPreserve=yes
 RuntimeDirectoryMode=0755
 UMask=007
 PrivateTmp=true
@@ -178,13 +177,12 @@ Wants=network-online.target
 
 [Service]
 Type=notify
-TimeoutStartSec=infinity
-TimeoutStopSec=infinity
 User=valkey
 Group=valkey
 WorkingDirectory=/var/lib/valkey
 ExecStart=/usr/bin/valkey-sentinel /etc/valkey/sentinel.conf --daemonize no --supervised systemd
 RuntimeDirectory=valkey
+RuntimeDirectoryPreserve=yes
 RuntimeDirectoryMode=0755
 UMask=007
 PrivateTmp=true
@@ -194,12 +192,6 @@ LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target
 EOF
-
-for unit in valkey.service valkey-sentinel.service; do
-    grep -qxF Type=notify %{buildroot}%{_unitdir}/${unit}
-    grep -qxF TimeoutStartSec=infinity %{buildroot}%{_unitdir}/${unit}
-    grep -qxF TimeoutStopSec=infinity %{buildroot}%{_unitdir}/${unit}
-done
 
 cat > %{buildroot}%{_rpmmacrodir}/macros.valkey <<'EOF'
 %%valkey_version %{version}
@@ -301,8 +293,9 @@ exit 0
 
 %changelog
 * Mon Aug 03 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-3PIGSTY
-- Align systemd startup and shutdown timeouts with the upstream service units.
+- Set bounded server timeouts, use systemd defaults for Sentinel, and preserve the shared runtime directory.
 - Assert the upstream multicall symlink layout during packaging.
+- Disable upstream Redis compatibility symlinks at install time.
 
 * Sat Aug 01 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-1PIGSTY
 - Build Valkey 9.1.1 for EL8, EL9, and EL10.

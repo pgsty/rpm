@@ -140,13 +140,14 @@ Wants=network-online.target
 
 [Service]
 Type=notify
-TimeoutStartSec=infinity
-TimeoutStopSec=infinity
+TimeoutStartSec=1800s
+TimeoutStopSec=900s
 User=redis
 Group=redis
 WorkingDirectory=/var/lib/redis
 ExecStart=/usr/bin/redis-server /etc/redis/redis.conf --daemonize no --supervised systemd
 RuntimeDirectory=redis
+RuntimeDirectoryPreserve=yes
 RuntimeDirectoryMode=0755
 UMask=007
 PrivateTmp=true
@@ -166,13 +167,12 @@ Wants=network-online.target
 
 [Service]
 Type=notify
-TimeoutStartSec=infinity
-TimeoutStopSec=infinity
 User=redis
 Group=redis
 WorkingDirectory=/var/lib/redis
 ExecStart=/usr/bin/redis-sentinel /etc/redis/sentinel.conf --daemonize no --supervised systemd
 RuntimeDirectory=redis
+RuntimeDirectoryPreserve=yes
 RuntimeDirectoryMode=0755
 UMask=007
 PrivateTmp=true
@@ -182,12 +182,6 @@ LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target
 EOF
-
-for unit in redis.service redis-sentinel.service; do
-    grep -qxF Type=notify %{buildroot}%{_unitdir}/${unit}
-    grep -qxF TimeoutStartSec=infinity %{buildroot}%{_unitdir}/${unit}
-    grep -qxF TimeoutStopSec=infinity %{buildroot}%{_unitdir}/${unit}
-done
 
 cat > %{buildroot}%{_rpmmacrodir}/macros.redis <<'EOF'
 %%redis_version %{version}
@@ -289,7 +283,7 @@ exit 0
 
 %changelog
 * Mon Aug 03 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-3PIGSTY
-- Align systemd startup and shutdown timeouts with the upstream service units.
+- Set bounded server timeouts, use systemd defaults for Sentinel, and preserve the shared runtime directory.
 - Assert the upstream multicall symlink layout during packaging.
 
 * Sat Aug 01 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-1PIGSTY

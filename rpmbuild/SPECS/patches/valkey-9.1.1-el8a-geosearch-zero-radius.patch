@@ -19,10 +19,7 @@ floating-point conversion.
 diff --git a/src/geohash_helper.c b/src/geohash_helper.c
 --- a/src/geohash_helper.c
 +++ b/src/geohash_helper.c
-@@ -282,5 +282,6 @@ GeoHashFix52Bits geohashAlign52Bits(const GeoHashBits hash) {
-  * we can simplify arcsin(sin(x)) to x.
-  */
+@@ -287,2 +287,3 @@ double geohashGetLatDistance(double lat1d, double lat2d) {
  double geohashGetLatDistance(double lat1d, double lat2d) {
 +    if (lat1d == lat2d) return 0.0;
      return EARTH_RADIUS_IN_METERS * fabs(deg_rad(lat2d) - deg_rad(lat1d));
- }

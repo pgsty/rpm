@@ -7,7 +7,7 @@
 
 Name:           valkey
 Version:        9.1.1
-Release:        3PIGSTY%{?dist}
+Release:        4PIGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
 URL:            https://valkey.io/
@@ -113,7 +113,6 @@ test ! -L %{buildroot}%{_bindir}/valkey-server
 test "$(readlink %{buildroot}%{_bindir}/valkey-check-rdb)" = valkey-server
 test "$(readlink %{buildroot}%{_bindir}/valkey-check-aof)" = valkey-server
 test "$(readlink %{buildroot}%{_bindir}/valkey-sentinel)" = valkey-server
-rm -rf %{buildroot}%{_datadir}/valkey
 
 install -d \
     %{buildroot}%{_sysconfdir}/valkey \
@@ -266,7 +265,10 @@ exit 0
 %systemd_preun valkey.service valkey-sentinel.service
 
 %postun
-%systemd_postun_with_restart valkey.service valkey-sentinel.service
+# Do not restart on upgrade: Valkey holds its dataset in memory, so an
+# unattended restart drops client connections and any unpersisted data. The
+# DEB packaging behaves the same way, and Pigsty drives the service lifecycle.
+%systemd_postun valkey.service valkey-sentinel.service
 
 %files
 %license COPYING COPYRIGHT-lua COPYING-libvalkey COPYING-jemalloc
@@ -284,7 +286,6 @@ exit 0
 %{_bindir}/valkey-*
 %{_unitdir}/valkey.service
 %{_unitdir}/valkey-sentinel.service
-%dir %attr(0755, valkey, valkey) %ghost %{_localstatedir}/run/valkey
 
 %files devel
 %license COPYING
@@ -292,6 +293,13 @@ exit 0
 %{_rpmmacrodir}/macros.valkey
 
 %changelog
+* Thu Aug 06 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-4PIGSTY
+- Leave the running server alone during upgrades instead of restarting it.
+- Stop owning a ghost /var/run/valkey. The unit declares RuntimeDirectory, and
+  /var/run has been a symlink into the /run tmpfs for a long time.
+- Drop a dead removal of %{_datadir}/valkey. Upstream install only writes to
+  bindir, so the rule would only ever hide a future payload change.
+
 * Mon Aug 03 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-3PIGSTY
 - Set bounded server timeouts, use systemd defaults for Sentinel, and preserve the shared runtime directory.
 - Assert the upstream multicall symlink layout during packaging.

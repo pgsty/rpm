@@ -7,7 +7,7 @@
 
 Name:           redis
 Version:        7.2.15
-Release:        3PIGSTY%{?dist}
+Release:        4PIGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0
 URL:            https://redis.io/
@@ -192,7 +192,7 @@ EOF
 %check
 %if %{with tests}
 ./utils/gen-test-certs.sh
-./runtest --clients 1 --verbose --no-latency \
+./runtest --clients 1 --verbose --dump-logs --no-latency \
     --skiptest "diskless no replicas drop during rdb pipe" \
     --skiptest "diskless slow replicas drop during rdb pipe" \
     --skiptest "diskless fast replicas drop during rdb pipe" \
@@ -200,7 +200,7 @@ EOF
 %if 0%{?rhel} < 10
 # TclTLS can deadlock on large bidirectional buffers in containers. Both
 # skipped cases are exercised by the normal suite above.
-./runtest --clients 1 --tls --verbose --no-latency \
+./runtest --clients 1 --tls --verbose --dump-logs --no-latency \
     --skiptest "For unauthenticated clients output buffer is limited" \
     --skiptest "Test child sending info" \
     --skiptest "diskless no replicas drop during rdb pipe" \
@@ -257,7 +257,10 @@ exit 0
 %systemd_preun redis.service redis-sentinel.service
 
 %postun
-%systemd_postun_with_restart redis.service redis-sentinel.service
+# Do not restart on upgrade: Redis holds its dataset in memory, so an
+# unattended restart drops client connections and any unpersisted data. The
+# DEB packaging behaves the same way, and Pigsty drives the service lifecycle.
+%systemd_postun redis.service redis-sentinel.service
 
 %files
 %license COPYING COPYRIGHT-lua COPYING-hiredis COPYING-jemalloc
@@ -274,7 +277,6 @@ exit 0
 %{_bindir}/redis-*
 %{_unitdir}/redis.service
 %{_unitdir}/redis-sentinel.service
-%dir %attr(0755, redis, redis) %ghost %{_localstatedir}/run/redis
 
 %files devel
 %license COPYING
@@ -282,6 +284,12 @@ exit 0
 %{_rpmmacrodir}/macros.redis
 
 %changelog
+* Thu Aug 06 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-4PIGSTY
+- Leave the running server alone during upgrades instead of restarting it.
+- Stop owning a ghost /var/run/redis. The unit declares RuntimeDirectory, and
+  /var/run has been a symlink into the /run tmpfs for a long time.
+- Dump server logs on test failure, matching the Valkey spec.
+
 * Mon Aug 03 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-3PIGSTY
 - Set bounded server timeouts, use systemd defaults for Sentinel, and preserve the shared runtime directory.
 - Assert the upstream multicall symlink layout during packaging.

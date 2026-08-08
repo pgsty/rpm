@@ -922,6 +922,9 @@ toastinfo:
 pg_explain_ui:		# rust pgrx 0.19.1
 	./build pg_explain_ui 14 15 16 17 18
 
+pg_describe:
+	./build pg_describe 17 18
+
 pg_relusage:
 	./build pg_relusage 14 15 16 17 18
 
@@ -1286,7 +1289,7 @@ rmdbg:
 	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \
 	pg_pathcheck pg_savior pg_drop_events table_log pg_wait_sampling pg_flight_recorder pgmonitor pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \
-	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_relusage \
+	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_describe pg_relusage \
 	pagevis supautils pgsodium column_encrypt pg_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
 	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
 	block_copy_command sslutils pg_noset pgspider_ext wrappers sqlite_fdw etcd_fdw rdf_fdw nominatim_fdw redis_fdw \

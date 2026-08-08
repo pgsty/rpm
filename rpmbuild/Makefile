@@ -843,6 +843,9 @@ pg_qos:
 pg_pathcheck:	# preload-only diagnostics module for PG17/18
 	./build pg_pathcheck 17 18
 
+pg_disorder:	# test-only session preload module
+	./build pg_disorder 14 15 16 17 18
+
 pg_savior:		# breaks on pg18 (fixed)
 	./build pg_savior 14 15 16 17 18
 
@@ -1287,7 +1290,7 @@ rmdbg:
 	aggs_for_arrays pg_arraymath pg_math pg_random pg_base36 pg_base62 pg_base58 pg_financial \
 	pg_accumulator pg_convert parray_gin pg_rewrite pg_query_rewrite pg_column_tetris online_advisor pgmemento pg_roast pgfincore pg_cooldown ddlx pglinter \
 	pgdd preprepare pg_upless pgcozy pg_orphaned pg_crash pg_cheat_funcs pg_fio pg_qos \
-	pg_pathcheck pg_savior pg_drop_events table_log pg_wait_sampling pg_flight_recorder pgmonitor pg_tracing pg_stat_ch pg_stat_backtrace \
+	pg_pathcheck pg_disorder pg_savior pg_drop_events table_log pg_wait_sampling pg_flight_recorder pgmonitor pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \
 	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_describe pg_relusage \
 	pagevis supautils pgsodium column_encrypt pg_vault pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \

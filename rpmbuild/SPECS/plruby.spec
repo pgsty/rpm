@@ -10,7 +10,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        2.5.0
-Release:        1PIGSTY%{?dist}
+Release:        2PIGSTY%{?dist}
 Summary:        Ruby procedural language for PostgreSQL
 License:        MIT
 URL:            https://github.com/commandprompt/plruby
@@ -18,10 +18,23 @@ Source0:        %{sname}-%{version}.tar.gz
 #               https://github.com/commandprompt/plruby/archive/refs/tags/v2.5.0.tar.gz
 Patch0:         plruby-2.5.0-ruby-method-signatures.patch
 
-BuildRequires:  gcc make ruby-devel
+BuildRequires:  gcc make
+# Keep native AppStream filtering enabled; module_hotfixes=1 can mix Ruby ABIs.
+%if 0%{?rhel} == 8
+# Enable the supported ruby:3.3 module stream before resolving build deps.
+BuildRequires:  (ruby-devel >= 3.3 with ruby-devel < 3.4)
+%else
+%if 0%{?rhel} == 9
+# Use EL9's non-modular, full-life Ruby instead of a newer module stream.
+BuildRequires:  (ruby-devel >= 3.0 with ruby-devel < 3.1)
+%else
+# EL10 ships non-modular Ruby 3.3.
+BuildRequires:  (ruby-devel >= 3.3 with ruby-devel < 3.4)
+%endif
+%endif
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:       postgresql%{pgmajorversion}-server
-Requires:       postgresql%{pgmajorversion}-contrib ruby-libs
+Requires:       postgresql%{pgmajorversion}-contrib
 
 %description
 PL/Ruby embeds the MRI Ruby interpreter as an untrusted PostgreSQL procedural
@@ -74,6 +87,10 @@ done
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Aug 08 2026 Vonng <rh@vonng.com> - 2.5.0-2PIGSTY
+- Pin the native Ruby 3 ABI selected on EL8, EL9, and EL10
+- Rely on the generated libruby SONAME dependency at runtime
+
 * Fri Aug 07 2026 Vonng <rh@vonng.com> - 2.5.0-1PIGSTY
 - Initial RPM release for PL/Ruby 2.5.0 and PostgreSQL 14 through 18
 - Package the jsonb, hstore, and ltree transform extensions

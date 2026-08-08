@@ -51,6 +51,7 @@ rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_oidc_validator_rust pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform pgwasm
 rust10: pg_command_fw pg_trickle pggraph pgcontext pgrdf jsonschema
+rust11: pg_mentat
 time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
 
 
@@ -360,6 +361,9 @@ pg_jsonschema:	# rust pgrx 0.19.1
 
 jsonschema:		# rust pgrx 0.19.1, distinct from pg_jsonschema
 	./build jsonschema 14 15 16 17 18
+
+pg_mentat:		# rust pgrx 0.19.1 (upstream 0.17.0)
+	./build pg_mentat 14 15 16 17 18
 
 #jsquery:
 #pg_hint_plan
@@ -1272,7 +1276,7 @@ rmdbg:
 # even if a file with the same name exists
 
 .PHONY: env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
-	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 time haproxy redis valkey timescaledb \
+	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
@@ -1281,7 +1285,7 @@ rmdbg:
 	citus hydra pg_duckdb \
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgcontext pgzint pgrdf pgwasm pgmq pgmb ulak fsm_core rum pg_ai_query \
-	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
+	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema pg_mentat index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
 	pg_cardano inchi rdkit pg_tle plv8 plruby pljs plx plprql plpgsql_check pg_mockable pgsqlmock \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \

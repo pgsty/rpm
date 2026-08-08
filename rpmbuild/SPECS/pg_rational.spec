@@ -2,6 +2,10 @@
 %global sname pg_rational
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_rational only supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -13,7 +17,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.2
+Version:	0.0.3
 Release:	1PIGSTY%{?dist}
 Summary:	Precise fractional arithmetic for PostgreSQL
 License:	MIT
@@ -57,7 +61,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -87,5 +91,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Aug 08 2026 Vonng <rh@vonng.com> - 0.0.3-1PIGSTY
+- Bump to 0.0.3
+
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 0.0.2
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

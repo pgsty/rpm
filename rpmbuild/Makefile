@@ -419,6 +419,9 @@ pg_tle:
 plv8:
 	./build plv8 14 15 16 17 18
 
+plruby:
+	./build plruby 14 15 16 17 18
+
 pljs:
 	./build pljs 14 15 16 17 18
 
@@ -1280,7 +1283,7 @@ rmdbg:
 	pg_sorted_heap age onesparse pggraph pgcontext pgzint pgrdf pgwasm pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
-	pg_cardano inchi rdkit pg_tle plv8 pljs plx plprql plpgsql_check pg_mockable pgsqlmock \
+	pg_cardano inchi rdkit pg_tle plv8 plruby pljs plx plprql plpgsql_check pg_mockable pgsqlmock \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \
 	numeral pg_rational pgmp pguint pg_uint128 hashtypes pg_uri pg_emailaddr pg_acl pg_duration \

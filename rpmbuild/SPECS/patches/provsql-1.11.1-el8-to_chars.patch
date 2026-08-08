@@ -1,9 +1,6 @@
 --- a/src/RandomVariable.cpp
 +++ b/src/RandomVariable.cpp
-@@ -36,16 +36,13 @@ double parse_double_strict(const std::string &s)
-   return v;
- }
-
+@@ -39,12 +39,9 @@
 -/* std::ostringstream is used rather than std::snprintf in the fallback
 - * because including <cstdio> after PostgreSQL's port.h would expand
 - * std::snprintf to the non-existent std::pg_snprintf via the
@@ -20,4 +17,3 @@
    std::ostringstream oss;
    oss << std::setprecision(17) << v;
    return oss.str();
- }

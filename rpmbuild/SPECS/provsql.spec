@@ -4,12 +4,12 @@
 %global sname provsql
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14
-%{error:provsql only supports PostgreSQL 14+}
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:provsql only supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.11.0
+Version:	1.12.0
 Release:	1PIGSTY%{?dist}
 Summary:	Semiring provenance and uncertainty management for PostgreSQL
 License:	MIT
@@ -51,6 +51,15 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/doc/extension/%{pname}.md
 
 %changelog
+* Sat Aug 08 2026 Vonng <rh@vonng.com> - 1.12.0-1PIGSTY
+- Update to upstream PGXN 1.12.0
+- Refresh the EL8 std::to_chars compatibility patch
+
+* Fri Aug 07 2026 Vonng <rh@vonng.com> - 1.11.1-1PIGSTY
+- Update to upstream PGXN 1.11.1
+- Refresh the EL8 std::to_chars compatibility patch
+- Restrict builds to active PostgreSQL 14 through 18 releases
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 1.11.0-1PIGSTY
 - Update to upstream PGXN 1.11.0
 - Refresh the EL8 std::to_chars compatibility patch

@@ -9,14 +9,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.25.0
+Version:	0.25.1
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           https://github.com/paradedb/paradedb/archive/refs/tags/v0.25.0.tar.gz
-Patch0:		pg-search-0.25.0.patch
+#           normalized from https://api.pgxn.org/dist/pg_search/0.25.1/pg_search-0.25.1.zip
+Patch0:		pg-search-0.25.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt openssl-devel openblas-devel pkgconfig
@@ -70,6 +70,10 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Aug 07 2026 Vonng <rh@vonng.com> - 0.25.1-1PIGSTY
+- Update to upstream PGXN 0.25.1
+- Keep the validated cargo-pgrx 0.19.1 compatibility patch
+
 * Thu Jul 30 2026 Vonng <rh@vonng.com> - 0.25.0-1PIGSTY
 - Update to upstream PGXN 0.25.0
 - Add the new OpenBLAS build dependency for SuperKMeans

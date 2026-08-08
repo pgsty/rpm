@@ -624,6 +624,9 @@ external_file:
 pg_render:		# rust pgrx 0.19.1
 	./build pg_render 14 15 16 17 18
 
+cat_tools:
+	./build cat_tools 14 15 16 17 18
+
 #pg_readme
 
 ddl_historization:
@@ -1274,7 +1277,7 @@ rmdbg:
 	pg_bikram_sambat pg_rrule chkpass pg_gzip pg_bzip pg_zstd pg_http pg_net pg_csv pg_curl \
 	pg_retry pg_protobuf pgproto pgjq pgjwt pg_smtp_client pg_html5_email_address url_encode \
 	pgsql_tweaks pg_extra_time pgpcre re2 icu_ext pgqr pg_envvar pg_byteamagic external_file \
-	pg_render ddl_historization data_historization pg_schedoc pg_isok pg_hashlib pg_xxhash \
+	pg_render cat_tools ddl_historization data_historization pg_schedoc pg_isok pg_hashlib pg_xxhash \
 	shacrypt cryptint pg_ecdsa pgsparql pg_idkit pgx_ulid pg_uuid_v8 permuteseq pg_hashids \
 	sequential_uuids pg_typeid quantile lower_quantile count_distinct omnisketch ddsketch vasco \
 	pgxicor pg_weighted_statistics datasketches first_last_agg argm floatvec aggs_for_vecs \

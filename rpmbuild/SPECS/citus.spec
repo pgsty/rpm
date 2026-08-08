@@ -7,12 +7,12 @@
 %{!?llvm:%global llvm 1}
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:citus 14.1.0 only supports PostgreSQL 16-18}
+%{error:citus 14.2.0 only supports PostgreSQL 16-18}
 %endif
 
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
-Version:	14.1.0
+Version:	14.2.0
 Release:	1PIGSTY%{?dist}
 License:	AGPL-3.0
 URL:		https://github.com/citusdata/%{sname}
@@ -116,6 +116,9 @@ make install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 %endif
 
 %changelog
+* Fri Aug 07 2026 Vonng <rh@vonng.com> - 14.2.0-1PIGSTY
+- Update to upstream 14.2.0
+
 * Wed Jul 01 2026 Vonng <rh@vonng.com> - 14.1.0-1PIGSTY
 - Update to upstream 14.1.0 with PostgreSQL 18 support
 - Use system llvm-lto path for builder LLVM version compatibility

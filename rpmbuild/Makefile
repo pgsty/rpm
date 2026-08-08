@@ -148,6 +148,9 @@ vchord:    # rust pgrx 0.19.1
 pgvectorscale:  # rust pgrx 0.19.1
 	./build pgvectorscale 14 15 16 17 18
 
+pg_turbovec:	# rust pgrx 0.19.1, Rust 1.96, OpenBLAS
+	./build pg_turbovec 14 15 16 17 18
+
 pg_vectorize:	# rust pgrx 0.19.1
 	./build pg_vectorize 14 15 16 17 18
 
@@ -1285,7 +1288,7 @@ rmdbg:
 	citus hydra pg_duckdb \
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgcontext pgzint pgrdf pgwasm pgmq pgmb ulak fsm_core rum pg_ai_query \
-	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema pg_mentat index_advisor \
+	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema pg_mentat pg_turbovec index_advisor \
 	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
 	pg_cardano inchi rdkit pg_tle plv8 plruby pljs plx plprql plpgsql_check pg_mockable pgsqlmock \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \

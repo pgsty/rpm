@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:timescaledb 2.29.0 only supports PostgreSQL 16 through 18}
+%{error:timescaledb 2.29.1 only supports PostgreSQL 16 through 18}
 %endif
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.29.0
+Version:	2.29.1
 Release:	1PIGSTY%{?dist}
 License:	Timescale
 Source0:	%{sname}-%{version}.tar.gz
@@ -26,6 +26,7 @@ TimescaleDB is an open-source database designed to make SQL scalable for time-se
 %setup -q -n %{sname}-%{version}
 
 sed -i 's/^version = %{version}-dev$/version = %{version}/' version.config
+grep -qx 'version = %{version}' version.config
 
 # Disable telemetry
 export PATH=%{pginstdir}/bin:$PATH
@@ -56,6 +57,9 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Sat Aug 08 2026 Vonng <rh@vonng.com> - 2.29.1-1PIGSTY
+- https://github.com/timescale/timescaledb/releases/tag/2.29.1
+
 * Thu Jul 30 2026 Vonng <rh@vonng.com> - 2.29.0-1PIGSTY
 - https://github.com/timescale/timescaledb/releases/tag/2.29.0
 - Drop PostgreSQL 15, which is no longer supported upstream

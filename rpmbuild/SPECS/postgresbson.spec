@@ -2,6 +2,10 @@
 %global sname postgresbson
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:postgresbson only supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -13,13 +17,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.4
+Version:	2.1.0
 Release:	1PIGSTY%{?dist}
 Summary:	BSON data type and accessor functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/buzzm/postgresbson
 Source0:	%{sname}-%{version}.tar.gz
-#		normalized from https://api.pgxn.org/dist/bson/2.0.4/bson-2.0.4.zip
+#		normalized from https://api.pgxn.org/dist/bson/2.1.0/bson-2.1.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libbson-devel pkgconf-pkg-config
@@ -86,6 +90,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Aug 07 2026 Vonng <rh@vonng.com> - 2.1.0-1PIGSTY
+- Update to upstream PGXN bson 2.1.0
+- Refresh the system libbson compatibility fix
+- Restrict builds to active PostgreSQL 14 through 18 releases
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.0.4-1PIGSTY
 - Update to upstream PGXN bson 2.0.4
 - Keep the system libbson compatibility fix for ISO-8601 date formatting

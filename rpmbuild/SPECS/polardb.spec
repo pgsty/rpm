@@ -12,7 +12,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        17.10.1.0
-Release:        1PIGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        PolarDB PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/polardb/PolarDB-for-PostgreSQL
@@ -27,7 +27,7 @@ BuildRequires:  openssl-devel, pam-devel, krb5-devel, openldap-devel
 BuildRequires:  perl-interpreter, perl-ExtUtils-Embed, perl-FindBin, perl-Opcode
 BuildRequires:  python3-devel, tcl-devel, lz4-devel, libzstd-devel, libunwind-devel
 BuildRequires:  clang, llvm-devel, file, binutils
-BuildRequires:  polarstore
+BuildRequires:  polarstore >= 1.2.42
 Requires:       tzdata
 Requires(pre):  shadow-utils
 
@@ -164,5 +164,8 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Sun Aug 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.10.1.0-2PGSTY
+- Require PolarStore 1.2.42 or newer and use the PGSTY package release brand
+
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.10.1.0-1PIGSTY
 - Add PolarDB PostgreSQL 17 kernel package under /usr/polar-17

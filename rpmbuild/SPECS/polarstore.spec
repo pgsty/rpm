@@ -4,13 +4,14 @@
 
 Name:           polarstore
 Version:        %{sdk_version}
-Release:        1PIGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        PolarStore PFSD SDK for PolarDB
 License:        Apache-2.0
 URL:            https://github.com/ApsaraDB/PolarDB-FileSystem
 Source0:        polarstore-%{version}-%{pfs_commit}.tar.gz
 BuildRequires:  cmake, gcc, gcc-c++, make
-BuildRequires:  zlog, libaio-devel
+BuildRequires:  zlog >= 1.2.18, libaio-devel
+Requires:       zlog >= 1.2.18, libaio-devel
 
 %description
 PolarStore PFSD SDK files built from PolarDB-FileSystem source and used by
@@ -39,5 +40,8 @@ install -m 0644 lib/libpfsd.a %{buildroot}/usr/local/polarstore/pfsd/lib/
 /usr/local/polarstore/pfsd/lib/libpfsd.a
 
 %changelog
+* Sun Aug 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.42-2PGSTY
+- Require zlog 1.2.18 or newer and use the PGSTY package release brand
+
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.42-1PIGSTY
 - Build PolarStore PFSD SDK from PolarDB-FileSystem source

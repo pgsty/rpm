@@ -1,6 +1,6 @@
 Name:           zlog
 Version:        1.2.18
-Release:        1PIGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        High-performance C logging library
 License:        Apache-2.0
 URL:            https://github.com/HardySimpson/zlog
@@ -45,5 +45,8 @@ ln -s libzlog.so.1.2 %{buildroot}%{_libdir}/libzlog.so
 /sbin/ldconfig
 
 %changelog
+* Sun Aug 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.18-2PGSTY
+- Rebuild with the PGSTY package release brand
+
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.18-1PIGSTY
 - Initial Pigsty package for zlog

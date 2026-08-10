@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.2
+Version:	2.0.5
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension for spatial indexing on a sphere
 License:	GPL-2.0
@@ -76,6 +76,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/q3c.md
 
 %changelog
+* Mon Aug 10 2026 Vonng <rh@vonng.com> - 2.0.5-1PIGSTY
+- https://github.com/segasai/q3c/releases/tag/v2.0.5
 * Wed Feb 25 2026 Vonng <rh@vonng.com> - 2.0.2-1PIGSTY
 - https://github.com/segasai/q3c/releases/tag/v2.0.2
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 2.0.1

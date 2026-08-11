@@ -4,13 +4,13 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	4.0
+Version:	4.1
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension for exposing system metrics
 License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#		https://github.com/EnterpriseDB/system_stats/archive/refs/tags/v4.0.tar.gz
+#		https://github.com/EnterpriseDB/system_stats/archive/refs/tags/v4.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -58,6 +58,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Tue Aug 11 2026 Vonng <rh@vonng.com> - 4.1-1PIGSTY
+- Update to 4.1
+- https://github.com/EnterpriseDB/system_stats/releases/tag/v4.1
 * Fri Apr 10 2026 Vonng <rh@vonng.com> - 4.0-1PIGSTY
 - Initial RPM release
 - https://github.com/EnterpriseDB/system_stats/releases/tag/v4.0

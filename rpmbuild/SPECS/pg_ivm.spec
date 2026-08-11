@@ -4,13 +4,13 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.14
+Version:	1.15
 Release:	1PIGSTY%{?dist}
 Summary:	Incremental View Maintenance extension for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/sraoss/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#		https://github.com/sraoss/pg_ivm/archive/refs/tags/v1.14.tar.gz
+#		https://api.github.com/repos/sraoss/pg_ivm/tarball/v1.15
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -34,7 +34,7 @@ This package provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n sraoss-%{sname}-377a37d
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -47,6 +47,7 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %license LICENSE
 %doc README.md
 %{pginstdir}/lib/%{sname}.so
+%{pginstdir}/bin/pg_ivm_dump_metadata
 %{pginstdir}/share/extension/%{sname}.control
 %{pginstdir}/share/extension/%{sname}--*.sql
 
@@ -56,6 +57,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Tue Aug 11 2026 Vonng <rh@vonng.com> - 1.15-1PIGSTY
+- Update to 1.15
+- Package the pg_ivm_dump_metadata utility
+- https://github.com/sraoss/pg_ivm/releases/tag/v1.15
 * Fri Apr 10 2026 Vonng <rh@vonng.com> - 1.14-1PIGSTY
 - Initial RPM release
 - https://github.com/sraoss/pg_ivm/releases/tag/v1.14

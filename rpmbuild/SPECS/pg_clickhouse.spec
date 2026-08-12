@@ -23,18 +23,19 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.2
+Version:	0.10.0
 Release:	1PIGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.3.2/pg_clickhouse-0.3.2.zip
-#           vendor/clickhouse-c is already included in the PGXN source bundle
+Patch0:		pg_clickhouse-0.10.0-openssl-init.patch
+#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.10.0/pg_clickhouse-0.10.0.zip
+#           vendor/pg-clickhouse-c and clickhouse-c are included in the PGXN source bundle
 #           Supported: PostgreSQL 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	gcc-c++
+BuildRequires:	gcc
 BuildRequires:	openssl-devel
 BuildRequires:	libcurl-devel
 BuildRequires:	libuuid-devel
@@ -83,9 +84,9 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%autosetup -p1 -n %{sname}-%{version}
 
-# Skip git submodule command since vendor/clickhouse-c is already included in tarball
+# Skip git submodule command since the recursive vendor tree is included.
 sed -i 's/git submodule update --init/@echo "Skipping submodule (included in tarball)"/' Makefile
 # PostgreSQL packages on EL9 x86_64 inject -flto=auto through pg_config,
 # which trips gcc's LTO jobserver path for this PGXS build.
@@ -94,8 +95,6 @@ sed -i 's/git submodule update --init/@echo "Skipping submodule (included in tar
 sed -i '/^PG_CFLAGS =/a PG_CFLAGS += -fno-lto' Makefile
 %endif
 %endif
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-openssl-init.patch
-
 %build
 # Makefile uses the vendored clickhouse-c headers from the PGXN bundle
 %if %llvm
@@ -127,6 +126,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} with_llvm=no
 %endif
 
 %changelog
+* Wed Aug 12 2026 Vonng <rh@vonng.com> - 0.10.0-1PIGSTY
+- Update to upstream PGXN 0.10.0 with the recursive vendored C client
+- Replace the obsolete C++ build dependency with the upstream C toolchain
+- Mark the endpoint pointer volatile across PG_TRY for GCC 16 builds
+
 * Thu Jun 18 2026 Vonng <rh@vonng.com> - 0.3.2-1PIGSTY
 - Update to upstream PGXN 0.3.2 using the normalized source tarball
 - Disable JIT subpackages on EL9 x86_64 to avoid llvm-lto install crashes

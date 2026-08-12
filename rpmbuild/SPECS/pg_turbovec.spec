@@ -10,13 +10,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.28.3
+Version:        1.29.0
 Release:        1PIGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v1.28.3.tar.gz
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v1.29.0.tar.gz
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt openblas-devel
@@ -85,6 +85,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Aug 12 2026 Vonng <rh@vonng.com> - 1.29.0-1PIGSTY
+- Update to upstream pg_turbovec 1.29.0
+
 * Fri Aug 07 2026 Vonng <rh@vonng.com> - 1.28.3-1PIGSTY
 - Initial RPM release for pg_turbovec 1.28.3 and PostgreSQL 14 through 18
 - Build with the upstream pgrx 0.19.1 dependency graph and OpenBLAS

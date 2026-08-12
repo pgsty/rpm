@@ -9,23 +9,25 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.25.1
+Version:	0.25.2
 Release:	1PIGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_search/0.25.1/pg_search-0.25.1.zip
-Patch0:		pg-search-0.25.1.patch
+#           normalized from https://api.pgxn.org/dist/pg_search/0.25.2/pg_search-0.25.2.zip
+Patch0:		pg-search-0.25.2.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt openssl-devel openblas-devel pkgconfig
+BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel pkgconfig
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion}
 
 %description
 pg_search is a PostgreSQL extension that enables full text search over SQL tables using the BM25 algorithm,
 the state-of-the-art ranking function for full text search.
 It is built on top of Tantivy, the Rust-based alternative to Apache Lucene, using pgrx.
+The module must be added to shared_preload_libraries and PostgreSQL restarted
+before the extension can be created or used.
 
 %prep
 %setup -q -n %{srcdir}
@@ -64,12 +66,20 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
+%license LICENSE
+%doc %{pname}/README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Aug 12 2026 Vonng <rh@vonng.com> - 0.25.2-1PIGSTY
+- Update to upstream PGXN 0.25.2
+- Keep the validated cargo-pgrx 0.19.1 compatibility patch
+- Document the new shared_preload_libraries requirement
+- Package the upstream license and declare the Git build dependency
+
 * Fri Aug 07 2026 Vonng <rh@vonng.com> - 0.25.1-1PIGSTY
 - Update to upstream PGXN 0.25.1
 - Keep the validated cargo-pgrx 0.19.1 compatibility patch

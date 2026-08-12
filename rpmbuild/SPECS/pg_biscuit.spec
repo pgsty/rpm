@@ -14,17 +14,17 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.4.3
+Version:	3.0.0
 Release:	1PIGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
 Source0:	Biscuit-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/biscuit/2.4.3/biscuit-2.4.3.zip
+#           normalized from https://api.pgxn.org/dist/biscuit/3.0.0/biscuit-3.0.0.zip
+Patch0:		biscuit-3.0.0-upgrade-path.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
-Requires:	postgresql%{pgmajorversion}-contrib
 
 %description
 Biscuit is a PostgreSQL Index Access Method (IAM) for high-performance pattern matching
@@ -51,6 +51,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n Biscuit-%{version}
+%patch -P 0 -p1
 sed -i '1i .DEFAULT_GOAL := all' Makefile
 # PostgreSQL packages on EL9 x86_64 inject -flto=auto through pg_config,
 # which trips gcc's LTO jobserver path for this PGXS build.
@@ -87,6 +88,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginst
 %endif
 
 %changelog
+* Wed Aug 12 2026 Vonng <rh@vonng.com> - 3.0.0-1PIGSTY
+- Update to stable PGXN distribution 3.0.0
+- Ship the WAL-logged on-disk format; existing 2.x indexes require REINDEX
+- Restore the missing update path from packaged extension versions 2.4.0/2.4.1
+- Drop the unused PostgreSQL contrib runtime dependency
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 2.4.3-1PIGSTY
 - Update to latest stable PGXN distribution 2.4.3
 - Package the upstream extension SQL/default version 2.4.1

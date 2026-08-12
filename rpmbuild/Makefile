@@ -391,6 +391,9 @@ pg_incremental:
 pg_trickle:		# rust pgrx 0.19.1, PG18 only
 	./build pg_trickle 18
 
+pg_local_cache:	# shared_preload_libraries
+	./build pg_local_cache 14 15 16 17 18
+
 pg_durable:		# rust pgrx 0.19.1, shared_preload_libraries
 	./build pg_durable 14 15 16 17 18
 
@@ -1292,7 +1295,7 @@ rmdbg:
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgcontext pgzint pgrdf pgwasm pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema pg_mentat pg_turbovec index_advisor \
-	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_durable provsql fbsql \
+	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_local_cache pg_durable provsql fbsql \
 	pg_cardano inchi rdkit pg_tle plv8 plruby pljs plx plprql plpgsql_check pg_mockable pgsqlmock \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \

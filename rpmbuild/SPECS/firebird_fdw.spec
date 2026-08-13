@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4.2
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL foreign data wrapper (FDW) for Firebird
 License:	PostgreSQL
 URL:		https://github.com/ibarwick/firebird_fdw

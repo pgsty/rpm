@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.0
-Release:	4PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Execute SQL now and get the results later.
 License:	PostgreSQL
 Source0:    pg_later-%{version}.tar.gz

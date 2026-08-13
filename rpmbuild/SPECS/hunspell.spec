@@ -4,12 +4,12 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Hunspell dictionaries for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/postgrespro/hunspell_dicts
 Source0:        hunspell-%{version}.tar.gz
-Patch0:         hunspell-1.0-pt-stopwords.patch
+Patch0:         hunspell-1.0.patch
 
 BuildArch:      noarch
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -46,7 +46,7 @@ hunspell_ru_ru, and hunspell_ru_ru_aot.
 
 %prep
 %setup -q -n hunspell-%{version}
-%patch0 -p1
+%patch -P 0 -p1
 %{__mv} hunspell_pt_pt/portuguese.stop hunspell_pt_pt/pt_pt.stop
 for dictionary in \
     hunspell_cs_cz hunspell_de_de hunspell_en_us hunspell_fr \

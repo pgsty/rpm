@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.19
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Extension Whitelisting
 License:	PostgreSQL
 URL:		https://github.com/dimitri/pgextwlist

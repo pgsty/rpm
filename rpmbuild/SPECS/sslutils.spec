@@ -14,13 +14,13 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A Postgres extension for managing SSL certificates through SQL.
 License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/sslutils
 Source0:	sslutils-%{version}.tar.gz
 %if 0%{?pgmajorversion} >= 18
-Patch0:		sslutils-pg18-openssl-api-compat.patch
+Patch0:		sslutils-1.4.patch
 %endif
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 openssl-devel

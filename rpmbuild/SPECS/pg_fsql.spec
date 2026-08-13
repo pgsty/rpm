@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Recursive SQL template engine for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/yurc/pg_fsql
@@ -58,7 +58,7 @@ This package provides JIT support for %{sname}.
 mkdir -p %{_builddir}/%{sname}-%{version}
 tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 cd %{_builddir}/%{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg_fsql-1.1.0-use-tupledescattr-for-pg18.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg_fsql-1.1.0.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}

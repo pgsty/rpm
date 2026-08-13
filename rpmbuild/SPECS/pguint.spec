@@ -14,8 +14,8 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:    1.20250815
-Release:    1PIGSTY%{?dist}
-License:    BSD
+Release:    1PGSTY%{?dist}
+License:    PostgreSQL
 Summary:	Unsigned and other extra integer types for PostgreSQL
 URL:		https://github.com/petere/%{sname}
 Source0:    %{sname}-%{version}.tar.gz

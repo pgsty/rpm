@@ -4,8 +4,8 @@
 Summary:	A PostgreSQL API to interface with memcached
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.3.0
-Release:	5PIGSTY%{?dist}
-License:	BSD
+Release:	1PGSTY%{?dist}
+License:	MIT
 Source0:	%{sname}-%{version}.tar.gz
 URL:		https://github.com/Ohmu/%{sname}
 BuildRequires:	postgresql%{pgmajorversion}-devel libmemcached-devel

@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Stable hash functions for Postgres
-License:	PostgreSQL
+License:	LicenseRef-Public-Domain AND PostgreSQL AND MIT AND ISC
 URL:		https://github.com/markokr/pghashlib
 Source0:	%{sname}-%{version}.tar.gz
 

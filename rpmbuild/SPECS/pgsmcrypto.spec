@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.1
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL SM Algorithm Extension
 License:	MIT
 URL:		https://github.com/zhuobie/pgsmcrypto

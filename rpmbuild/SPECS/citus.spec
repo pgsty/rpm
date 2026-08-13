@@ -13,8 +13,8 @@
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
 Version:	14.2.0
-Release:	1PIGSTY%{?dist}
-License:	AGPL-3.0
+Release:	1PGSTY%{?dist}
+License:	AGPL-3.0-only
 URL:		https://github.com/citusdata/%{sname}
 Source0:    %{sname}-%{version}.tar.gz
 #Source0:	https://github.com/citusdata/%%{sname}/archive/v%%{version}.tar.gz

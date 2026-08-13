@@ -4,7 +4,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Infinite calendar and recurring schedule extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/h4kbas/pgcalendar
@@ -24,7 +24,7 @@ projections, and exception handling.
 mkdir -p %{_builddir}/%{sname}-%{version}
 tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 cd %{_builddir}/%{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pgcalendar-1.1.0-fix-extension-metadata.patch
+patch -p1 --forward -f < %{_specdir}/patches/pgcalendar-1.1.0.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}

@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Functions and operators for executing similarity queries
 License:	BSD-3-Clause
 URL:		https://github.com/eulerto/pg_similarity

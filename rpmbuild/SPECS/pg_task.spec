@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.1.29
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Background SQL task scheduler for PostgreSQL
 License:	MIT
 URL:		https://github.com/RekGRpth/pg_task
@@ -28,7 +28,7 @@ install a CREATE EXTENSION control file.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-pcre2grep.patch
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} with_llvm=no

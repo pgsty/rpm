@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Sparse linear algebra and graph extension for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/OneSparse/OneSparse
@@ -67,7 +67,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/onesparse-1.0.0-use-system-suitesparse-packages.patch
+patch -p1 --forward -f < %{_specdir}/patches/onesparse-1.0.0.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH PKG_CONFIG_LIBDIR=%{_libdir}/pkgconfig:%{_datadir}/pkgconfig %{__make} %{?_smp_mflags}

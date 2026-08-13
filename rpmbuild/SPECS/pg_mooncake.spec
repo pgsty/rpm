@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Columnstore Table in Postgres
 License:	MIT
 URL:		https://github.com/Mooncake-Labs/pg_mooncake

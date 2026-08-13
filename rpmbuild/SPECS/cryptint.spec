@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension implementing Skip32 and XTEA encryption for int and bigint types
-License:	PostgreSQL
+License:	PostgreSQL AND LicenseRef-Public-Domain
 URL:		https://github.com/dverite/cryptint
 Source0:	cryptint-%{version}.tar.gz
 

@@ -15,9 +15,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Hydra: Column-oriented Postgres. Add scalable analytics to your project in minutes.
-License:	AGPL-3.0
+License:	AGPL-3.0-only AND MIT AND PostgreSQL
 URL:		https://github.com/hydradatabase/columnar
 Source0:	hydra-%{version}.tar.gz
 #           https://github.com/hydradatabase/hydra/archive/refs/tags/v1.1.2.tar.gz
@@ -72,6 +72,7 @@ cd columnar
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
+%license LICENSE columnar/LICENSE columnar/NOTICE columnar/vendor/safestringlib/LICENSE
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control

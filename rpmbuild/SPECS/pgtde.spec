@@ -22,7 +22,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Percona PostgreSQL kernel with transparent data encryption
 License:        PostgreSQL AND GPL-2.0-or-later AND GPL-3.0-only AND BSD-3-Clause
 URL:            https://www.percona.com/postgresql/software/postgresql-distribution
@@ -91,7 +91,7 @@ and pg_gather. pg_tde is intentionally part of the main %{name} package.
 %{__tar} -xzf %{SOURCE6}
 %{__mv} percona-pg_repack-%{pgrepackversion} .pg_repack-src
 patch -d .pg_repack-src -p1 --forward -f < \
-  %{_specdir}/patches/pg_repack-%{pgrepackversion}-preserve-table-am.patch
+  %{_specdir}/patches/pg_repack-%{pgrepackversion}.patch
 %{__tar} -xzf %{SOURCE7}
 %{__mv} percona-pgaudit-%{pgauditversion} .pgaudit-src
 %{__tar} -xzf %{SOURCE8}

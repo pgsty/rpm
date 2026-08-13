@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Block SET/RESET command for change a parameter in session
-License:	AGPL-3.0
+License:	AGPL-3.0-only
 URL:		https://gitlab.com/ongresinc/extensions/noset
 Source0:	noset-v%{version}.tar.gz
 

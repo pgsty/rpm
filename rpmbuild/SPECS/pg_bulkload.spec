@@ -10,7 +10,7 @@
 Summary:	High speed data loading utility for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{pgbulkloadmajver}.%{pgbulkloadmidver}.%{pgbulkloadminver}
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 URL:		https://github.com/ossc-db/%{sname}
 Source0:	https://repo.pigsty.cc/ext/%{sname}-VERSION%{pgbulkloadpackagever}.tar.gz
 #           https://github.com/ossc-db/%{sname}/archive/VERSION%{pgbulkloadpackagever}.tar.gz

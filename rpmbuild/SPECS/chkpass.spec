@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Stand alone version of chkpass type for PG 11+
 License:	PostgreSQL
 URL:		https://github.com/lacanoid/chkpass

@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Implementing a fast and fully-mergeable quantile sketch with relative-error guarantees
 License:	PostgreSQL
 URL:		https://github.com/tvondra/ddsketch

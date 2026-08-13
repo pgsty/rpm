@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.11
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 Summary:	Prefix Range module for PostgreSQL
 Source0:	prefix-%{version}.tar.gz

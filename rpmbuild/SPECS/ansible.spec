@@ -1,6 +1,6 @@
 Name:           ansible
 Version:        2.16.14
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Meta package for Pigsty Ansible stack on EL10
 
 License:        MIT

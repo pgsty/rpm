@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:    PostgreSQL data page visualisation
 License:	MIT
 URL:		https://github.com/hollobon/pagevis

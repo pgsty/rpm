@@ -1,6 +1,6 @@
 Name:           cloudberry
 Version:        2.1.0
-Release:        3PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        High-performance open-source data warehouse based on PostgreSQL/Greenplum
 
 License:        Apache-2.0
@@ -9,8 +9,11 @@ Source0:        apache-cloudberry-2.1.0-incubating-src.tar.gz
 Source1:        psutil-5.7.0.tar.gz
 Source2:        PyGreSQL-5.2.tar.gz
 Source3:        PyYAML-5.4.1.tar.gz
-Source4:        cloudberry-2.1.0-rpm-patches.tar.gz
-Source5:        Cython-0.29.37.tar.gz
+Source4:        Cython-0.29.37.tar.gz
+Patch0:         cloudberry-2.1.0-env-symlink.patch
+Patch1:         cloudberry-2.1.0-initdb-cdb-initd-errno.patch
+Patch2:         cloudberry-2.1.0-el10-build-fixes.patch
+Patch3:         cloudberry-2.1.0-el8-pax-storage-build-fixes.patch
 %global cb_prefix /usr/cloudberry
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{cb_prefix}/lib(64)?/.*\\.so.*$
@@ -41,22 +44,20 @@ data warehouse developed from PostgreSQL and Greenplum.
 
 %prep
 %setup -q -n apache-cloudberry-2.1.0-incubating
-mkdir -p .rpm-patches
-tar -xzf %{SOURCE4} -C .rpm-patches
-patch -p1 --forward -f < .rpm-patches/cloudberry-2.1.0-env-symlink.patch
-patch -p1 --forward -f < .rpm-patches/cloudberry-2.1.0-initdb-cdb-initd-errno.patch
+%patch -P 0 -p1
+%patch -P 1 -p1
 %if 0%{?rhel} >= 10
-patch -p1 --forward -f < .rpm-patches/cloudberry-2.1.0-el10-build-fixes.patch
+%patch -P 2 -p1
 %endif
 %if 0%{?rhel} <= 9
-patch -p1 --forward -f < .rpm-patches/cloudberry-2.1.0-el8-pax-storage-build-fixes.patch
+%patch -P 3 -p1
 %endif
 mkdir -p gpMgmt/bin/pythonSrc/ext
 # Pre-seed gpMgmt Python sdists so make install stays reproducible and offline.
 cp -fp %{SOURCE1} gpMgmt/bin/pythonSrc/ext/
 cp -fp %{SOURCE2} gpMgmt/bin/pythonSrc/ext/
 cp -fp %{SOURCE3} gpMgmt/bin/pythonSrc/ext/
-cp -fp %{SOURCE5} gpMgmt/bin/pythonSrc/ext/
+cp -fp %{SOURCE4} gpMgmt/bin/pythonSrc/ext/
 sed -i 's|pip3 install --user wheel "cython<3.0.0"|pip3 install --user wheel $(PYLIB_SRC_EXT)/Cython-0.29.37.tar.gz|' gpMgmt/bin/Makefile
 
 %build

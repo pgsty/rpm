@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.1
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to send email using SMTP
 License:	MIT
 URL:		https://github.com/Vonng/pg_smtp_client

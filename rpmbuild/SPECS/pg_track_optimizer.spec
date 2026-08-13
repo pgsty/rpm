@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.9.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Track planning decisions in comparison with execution reality
 License:	MIT
 URL:		https://github.com/danolivo/pg_track_optimizer

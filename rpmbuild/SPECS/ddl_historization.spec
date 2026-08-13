@@ -5,9 +5,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Extension to historize in a table all DDL changes made on a database
-License:	GPL-2.0
+License:	GPL-2.0-only
 URL:		https://github.com/rodo/pg_ddl_historization
 Source0:	pg_ddl_historization-%{version}.tar.gz
 

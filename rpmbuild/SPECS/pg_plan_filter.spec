@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Filter statements by their execution plans.
 License:	PostgreSQL
 URL:		https://github.com/pgexperts/pg_plan_filter

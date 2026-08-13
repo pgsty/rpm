@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.5
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Session variables with various types for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/pg_variables
@@ -58,8 +58,7 @@ This package provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg_variables-1.2.5-pgpro-7614.patch
-patch -p1 --forward -f < %{_specdir}/patches/pg_variables-1.2.5-pg18-compact-attribute.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg_variables-1.2.5.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}

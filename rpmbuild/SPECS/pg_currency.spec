@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	1 Byte Currency ISO type for PostgreSQL
 License:	MIT
 URL:		https://github.com/adjust/pg-currency

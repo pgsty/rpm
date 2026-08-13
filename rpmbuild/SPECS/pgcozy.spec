@@ -5,8 +5,8 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
-Summary:	PostgreSQL extension for spatial indexing on a sphere
+Release:	1PGSTY%{?dist}
+Summary:	Snapshot and prewarm the PostgreSQL buffer cache
 License:	PostgreSQL
 URL:		https://github.com/vventirozos/pgcozy
 Source0:	pgcozy-%{version}.tar.gz

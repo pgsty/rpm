@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to generate QR code
-License:	BSD-3
+License:	BSD-3-Clause
 URL:		https://github.com/Fenoman/pgqr
 Source0:	%{sname}-%{version}.tar.gz
 

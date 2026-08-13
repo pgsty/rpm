@@ -18,7 +18,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        3.5
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        GPU-accelerated SQL execution for PostgreSQL 14
 License:        PostgreSQL
 URL:            https://github.com/heterodb/pg-strom

@@ -20,7 +20,7 @@
 
 Name:		%{rpmname}_%{pgmajorversion}
 Version:	1.20251029
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	URI Data type for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/petere/pguri

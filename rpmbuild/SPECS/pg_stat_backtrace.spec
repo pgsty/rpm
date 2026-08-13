@@ -8,7 +8,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Capture C-level backtraces of PostgreSQL processes
 License:	PostgreSQL
 URL:		https://github.com/Nickyoung0/pg_stat_backtrace
@@ -27,7 +27,7 @@ use depends on host ptrace policy such as kernel.yama.ptrace_scope.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg-stat-backtrace-%{version}-libunwind-ptrace-linktest.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg-stat-backtrace-%{version}.patch
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config with_llvm=no

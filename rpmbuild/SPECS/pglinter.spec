@@ -10,9 +10,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Database Linting and Analysis Extension
-License:	PostgreSQL
+License:	Apache-2.0
 URL:		https://github.com/pmpetit/pglinter
 Source0:	pglinter-%{version}.tar.gz
 

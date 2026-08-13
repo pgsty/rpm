@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.20190509
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PCRE functions for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/petere/pgpcre

@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Precise fractional arithmetic for PostgreSQL
 License:	MIT
 URL:		https://github.com/begriffs/pg_rational

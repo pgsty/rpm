@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Examine and manage the OS buffer cache from PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/klando/%{sname}

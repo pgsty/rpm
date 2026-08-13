@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Hybrid vector and full-text retrieval engine for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/evokoa/pgcontext

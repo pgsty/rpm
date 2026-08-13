@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension for an effective similarity search
-License:	PostgreSQL
+License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/jirutka/smlar
 Source0:	smlar-%{version}.tar.gz
 

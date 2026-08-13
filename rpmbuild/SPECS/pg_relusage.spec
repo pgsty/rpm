@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	discover and log the relations used in your statements
-License:	PostgreSQL
+License:	BSD-3-Clause
 URL:		https://github.com/adept/pg_relusage
 Source0:	pg_relusage-%{version}.tar.gz
 

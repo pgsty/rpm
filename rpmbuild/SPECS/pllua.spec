@@ -9,11 +9,11 @@
 Summary:	Procedural language interface between PostgreSQL and Lua
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{plluangmajver}.%{plluangmidver}.%{plluangminver}
-Release:	7PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 License:	MIT
 Source0:	%{sname}-%{version}.tar.gz
 %if 0%{?pgmajorversion} >= 18
-Patch0:		pllua-pg18-noreturn.patch
+Patch0:		pllua-2.0.12.patch
 %endif
 URL:		https://github.com/%{sname}/%{sname}
 

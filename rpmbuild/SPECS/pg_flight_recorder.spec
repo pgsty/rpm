@@ -8,7 +8,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        2.29.2
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Server-side PostgreSQL performance flight recorder
 License:        Apache-2.0
 URL:            https://github.com/dventimisupabase/pg_flight_recorder

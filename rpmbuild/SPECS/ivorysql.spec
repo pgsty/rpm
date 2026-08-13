@@ -13,7 +13,7 @@
 
 Name:           %{sname}
 Version:        %{ivoryversion}
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        IvorySQL %{ivoryversion} PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/IvorySQL/IvorySQL

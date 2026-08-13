@@ -13,7 +13,7 @@ TARGET_ARCH="${3:?missing architecture (x86_64 or aarch64)}"
 PGROOT="${IVORYSQL_ROOT:-/usr/ivory-18}"
 PORT="${IVORYSQL_TEST_PORT:-55432}"
 TEST_ROOT="${IVORYSQL_TEST_ROOT:-/var/tmp/ivorysql-pair-test}"
-KERNEL_NEVRA="ivorysql-18-5.4-1PIGSTY.el${TARGET_EL}.${TARGET_ARCH}"
+KERNEL_NEVRA="ivorysql-18-5.4-1PGSTY.el${TARGET_EL}.${TARGET_ARCH}"
 TARGET="el${TARGET_EL}.${TARGET_ARCH}"
 
 fail() {
@@ -58,7 +58,7 @@ kernel_nevra=$(rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}' ivorysql-18)
 contrib_nevra=$(rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}' ivorysql-18-contrib)
 [[ "${kernel_nevra}" == "${KERNEL_NEVRA}" ]] || \
   fail "unexpected kernel: ${kernel_nevra}"
-[[ "${contrib_nevra}" == "ivorysql-18-contrib-5.4-2PIGSTY.el${TARGET_EL}.${TARGET_ARCH}" ]] || \
+[[ "${contrib_nevra}" == "ivorysql-18-contrib-5.4-1PGSTY.el${TARGET_EL}.${TARGET_ARCH}" ]] || \
   fail "unexpected contrib: ${contrib_nevra}"
 rpm -V ivorysql-18
 rpm -V ivorysql-18-contrib

@@ -11,7 +11,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.6
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Multiple precision arithmetic types for PostgreSQL
 License:	LGPL-3.0-or-later
 URL:		https://github.com/dvarrazzo/pgmp

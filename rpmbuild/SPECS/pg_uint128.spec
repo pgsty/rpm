@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL extension that adds native support for unsigned integers and 128-bit signed/unsigned integer types.
 License:	PostgreSQL
 URL:		https://github.com/pg-uint/pg-uint128

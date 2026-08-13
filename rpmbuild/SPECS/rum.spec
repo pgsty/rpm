@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.3.15
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	RUM access method - inverted index with additional information in posting lists
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/%{sname}

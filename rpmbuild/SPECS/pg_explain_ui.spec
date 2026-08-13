@@ -9,9 +9,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.2
-Release:	3PIGSTY%{?dist}
-Summary:	A Postgres extension that allows you to easily jump into a visual plan UI for any SQL query,
-License:	No License
+Release:	1PGSTY%{?dist}
+Summary:	Open PostgreSQL query plans in a visual EXPLAIN UI
+License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/Vonng/pg-explain-ui
 Source0:	%{sname}-%{version}.tar.gz
 

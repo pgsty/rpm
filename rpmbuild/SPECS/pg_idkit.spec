@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	pg_idkit is a Postgres extension for generating many popular types of identifiers
 License:	Apache-2.0
 URL:		https://github.com/Vonng/pg_idkit

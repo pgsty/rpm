@@ -9,7 +9,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.7.4
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Audit trail with schema versioning for PostgreSQL
 License:        LGPL-3.0-only
 URL:            https://github.com/pgMemento/pgMemento

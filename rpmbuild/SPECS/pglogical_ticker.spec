@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4.1
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Have an accurate view on pglogical replication delay
 License:	MIT
 URL:		https://github.com/enova/pglogical_ticker

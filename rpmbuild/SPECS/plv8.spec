@@ -15,11 +15,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	3.2.4
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	V8 Engine Javascript Procedural Language add-on for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/plv8/plv8
-SOURCE0:    plv8-%{version}.tar.gz
+Source0:    plv8-%{version}.tar.gz
 #           https://github.com/plv8/plv8/archive/refs/tags/v3.2.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -65,7 +65,7 @@ This packages provides JIT support for %{sname}
 # plv8's Makefile passes g++ as the C compiler to v8-cmake, and the bundled
 # v8-cmake needs minor source fixes for GCC 14 plus direct linkage of the
 # conservative stack-scanner helper into both mksnapshot and the final module.
-patch -p1 --forward -f < %{_specdir}/patches/plv8-3.2.4-el10-build-fixes.patch
+patch -p1 --forward -f < %{_specdir}/patches/plv8-3.2.4.patch
 %endif
 
 %build

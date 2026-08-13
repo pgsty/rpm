@@ -7,12 +7,12 @@
 
 Name:           redis
 Version:        7.2.15
-Release:        4PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0
 URL:            https://redis.io/
 Source0:        https://download.redis.io/releases/redis-%{version}.tar.gz
-Patch0:         redis-7.2.15-geosearch-zero-radius.patch
+Patch0:         redis-7.2.15.patch
 
 BuildRequires:  gcc
 BuildRequires:  make

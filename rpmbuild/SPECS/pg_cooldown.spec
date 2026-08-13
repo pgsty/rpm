@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to remove buffered pages for specific relations.
 License:	Apache-2.0
 URL:		https://github.com/rbergm/pg_cooldown

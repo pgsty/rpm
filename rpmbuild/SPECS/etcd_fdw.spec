@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Foreign data wrapper for etcd
 License:	MIT
 URL:		https://github.com/cybertec-postgresql/etcd_fdw

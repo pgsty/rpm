@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.5.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Trusted Language Extensions for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/aws/pg_tle

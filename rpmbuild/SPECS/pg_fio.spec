@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL File I/O Functions
-License:	BSD-3
+License:	BSD-3-Clause
 URL:		https://github.com/csimsek/pgsql-fio
 Source0:	%{sname}-%{version}.tar.gz
 

@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	xxhash functions for PostgreSQL
-License:	PostgreSQL
+License:	MIT AND BSD-2-Clause
 URL:		https://github.com/hatarist/pg_xxhash
 Source0:	%{sname}-%{version}.tar.gz
 

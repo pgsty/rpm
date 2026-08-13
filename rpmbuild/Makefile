@@ -201,7 +201,7 @@ scws:
 	QA_RPATHS=2 rpmbuild -ba ~/rpmbuild/SPECS/scws.spec
 scws-install:
 	sudo yum remove -y scws || /bin/true
-	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/scws-1.2.3-1PIGSTY.el*.$(ARCH).rpm
+	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/scws-1.2.3-1PGSTY.el*.$(ARCH).rpm
 zhparser:
 	QA_RPATHS=2 ./build zhparser 14 15 16 17 18
 

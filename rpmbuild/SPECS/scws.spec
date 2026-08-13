@@ -1,8 +1,8 @@
 Name:           scws
 Version:        1.2.3
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Simple Chinese Word Segmentation
-License:        BSD
+License:        BSD-3-Clause
 URL:            http://www.xunsearch.com/scws/
 Source0:        scws-%{version}.tar.bz2
 #               http://www.xunsearch.com/scws/down/scws-1.2.3.tar.bz2

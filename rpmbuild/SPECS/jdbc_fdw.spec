@@ -31,13 +31,12 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.5.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        JDBC Foreign Data Wrapper for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/pgspider/%{sname}
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         %{sname}-%{version}-portable-jvm.patch
-Patch1:         %{sname}-%{version}-pg18.patch
+Patch0:         %{sname}-%{version}.patch
 
 BuildRequires:  gcc make pgdg-srpm-macros >= 1.0.27
 BuildRequires:  postgresql%{pgmajorversion}-devel

@@ -5,8 +5,8 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.0
-Release:	1PIGSTY%{?dist}
-Summary:	PLPGSQL Script to historize data in partitionned table
+Release:	1PGSTY%{?dist}
+Summary:	PL/pgSQL data historization for partitioned tables
 License:	PostgreSQL
 URL:		https://github.com/rodo/postgresql-data-historization
 Source0:	postgresql-data-historization-%{version}.tar.gz
@@ -15,7 +15,7 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-PLPGSQL Script to historize data in partitioned table
+PL/pgSQL functions to historize data in partitioned tables.
 
 %prep
 %setup -q -n postgresql-data-historization-%{version}

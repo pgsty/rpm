@@ -13,9 +13,9 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{bbfversion}
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Babelfish PostgreSQL kernel and core extensions for PG %{pgmajorversion}
-License:        PostgreSQL
+License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/babelfish-for-postgresql
 Source0:        %{sname}-%{pgmajorversion}-%{sourceversion}.tar.gz
 

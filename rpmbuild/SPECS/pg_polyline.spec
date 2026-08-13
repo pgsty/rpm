@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	4PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Fast Google Encoded Polyline encoding & decoding for postgres Extension
 License:	MIT
 URL:		https://github.com/yihong0618/pg_polyline

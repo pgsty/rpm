@@ -5,9 +5,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Cross documentation between Django and DBT projects
-License:	GPL-3.0
+License:	GPL-3.0-only
 URL:		https://github.com/ZeroGachis/pg_schedoc
 Source0:	%{sname}-%{version}.tar.gz
 
@@ -15,9 +15,9 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server ddl_historization_%{pgmajorversion}
 
 %description
-schedoc means schema documentation, it's a tool to build an automatic documentation
-based on COMMENT on PostgresSQL objects. schedoc require the extension (ddl_historization to work）
-COMMENT are set on columns in a json format with predefined values like status.
+schedoc generates schema documentation from COMMENT metadata on PostgreSQL
+objects. It requires the ddl_historization extension. Column comments use a
+JSON format with predefined values such as status.
 
 %prep
 %setup -q -n %{sname}-%{version}

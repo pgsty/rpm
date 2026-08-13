@@ -13,9 +13,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.6
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL query telemetry exporter to ClickHouse
-License:	Apache-2.0
+License:	Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
 URL:		https://github.com/ClickHouse/pg_stat_ch
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/pg_stat_ch/0.3.6/pg_stat_ch-0.3.6.zip

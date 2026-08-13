@@ -9,13 +9,13 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Mocking and faking functions for PostgreSQL unit tests
 License:	PostgreSQL
 URL:		https://github.com/v-maliutin/pgSQLMock
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/pgsqlmock/1.0.1/pgsqlmock-1.0.1.zip
-Patch0:		pgsqlmock-1.0.1-pgtap-name.patch
+Patch0:		pgsqlmock-1.0.1.patch
 
 BuildArch:	noarch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

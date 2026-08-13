@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	DDL and utility command firewall for PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/rustwizard/pg_command_fw

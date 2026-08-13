@@ -2,7 +2,7 @@
 
 Name:           %{sname}
 Version:        4.13.2
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        ANTLR4 C++ runtime library 4.13
 License:        BSD-3-Clause
 URL:            https://www.antlr.org/

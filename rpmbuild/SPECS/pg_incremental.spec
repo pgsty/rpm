@@ -13,7 +13,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.5.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Incremental Data Processing in PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/CrunchyData/pg_incremental

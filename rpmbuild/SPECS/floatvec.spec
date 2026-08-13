@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Postgres functions for arithmetic on numeric arrays
 License:	MIT
 URL:		https://github.com/pjungwir/floatvec

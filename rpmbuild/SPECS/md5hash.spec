@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A custom data type for storing MD5 hashes (instead of the native TEXT varlena type).
 License:	BSD-2-Clause
 URL:		https://github.com/tvondra/md5hash

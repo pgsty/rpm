@@ -27,7 +27,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        pgEdge PostgreSQL kernel with bundled replication extensions
 License:        PostgreSQL
 URL:            https://github.com/pgEdge

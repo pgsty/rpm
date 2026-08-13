@@ -16,7 +16,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	DuckLake lakehouse extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/relytcloud/pg_ducklake
@@ -55,7 +55,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-rpm-tarball-build.patch
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
 tar -xzf %{SOURCE1}
 mkdir -p .rpm-licenses
 cp LICENSE .rpm-licenses/%{sname}-LICENSE

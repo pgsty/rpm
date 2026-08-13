@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	OIDC bearer-token validator for PostgreSQL 18
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/UnAfraid/pg_oidc_validator_rust

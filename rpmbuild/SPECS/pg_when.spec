@@ -8,13 +8,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.9
+Version:	0.1.10
 Release:	1PGSTY%{?dist}
 Summary:	Natural-language timestamp parser for PostgreSQL
 License:	MIT
 URL:		https://github.com/frectonz/pg-when
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from upstream git tag https://github.com/frectonz/pg-when/tree/0.1.9
+#           normalized from https://api.pgxn.org/dist/pg_when/0.1.10/pg_when-0.1.10.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -27,7 +27,7 @@ phrases such as "next friday at 8:00 pm in America/New_York".
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg-when-0.1.9.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg-when-0.1.10.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -70,6 +70,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.1.10-1PGSTY
+- Update to upstream PGXN 0.1.10
+- Build with cargo-pgrx 0.19.1 using the patched, locked dependency graph
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.1.9-3PIGSTY
 - Build with cargo-pgrx 0.19.1 using the patched, locked dependency graph
 

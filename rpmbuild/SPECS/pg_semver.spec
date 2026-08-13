@@ -5,7 +5,7 @@
 Summary:	A semantic version data type for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.41.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 Source0:	pg-semver-%{version}.tar.gz
 URL:		https://github.com/theory/pg-%{sname}/

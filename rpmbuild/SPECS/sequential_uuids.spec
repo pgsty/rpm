@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.3
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	generator of sequential UUIDs
 License:	MIT
 URL:		https://github.com/tvondra/sequential-uuids

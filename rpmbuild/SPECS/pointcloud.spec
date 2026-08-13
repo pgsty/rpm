@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.5
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL extension for storing point cloud (LIDAR) data
 License:	BSD-3-Clause
 URL:		https://github.com/pgpointcloud/pointcloud

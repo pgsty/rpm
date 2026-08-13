@@ -4,7 +4,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Access external server-side files through PostgreSQL functions
 License:	PostgreSQL
 URL:		https://github.com/darold/external_file

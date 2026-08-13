@@ -4,7 +4,7 @@
 
 Name:           polarstore
 Version:        %{sdk_version}
-Release:        2PGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        PolarStore PFSD SDK for PolarDB
 License:        Apache-2.0
 URL:            https://github.com/ApsaraDB/PolarDB-FileSystem

@@ -8,7 +8,7 @@
 
 Name:           %{sname}
 Version:        202503.6
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        RDKit runtime libraries and PostgreSQL cartridge with InChI enabled
 License:        BSD-3-Clause
 URL:            https://github.com/rdkit/rdkit
@@ -62,7 +62,7 @@ search, and InChI / InChIKey functions to PostgreSQL %{pgmajorversion}.
 
 %prep
 %setup -q -n rdkit-Release_2025_03_6
-patch -p1 --forward -f < %{_specdir}/patches/rdkit-202503.6-skip-catch2-fetch-when-tests-disabled.patch
+patch -p1 --forward -f < %{_specdir}/patches/rdkit-202503.6.patch
 cp -f %{SOURCE1} Code/RDGeneral/enum.h
 %{__mkdir_p} External
 tar -xzf %{SOURCE2} -C External

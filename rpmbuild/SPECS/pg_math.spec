@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	pg_math extension to support statistical distribution functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/chanukyasds/pg_math

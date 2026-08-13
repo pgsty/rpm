@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.2
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Generate BM25 sparse vector inside PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/tensorchord/pg_bestmatch.rs

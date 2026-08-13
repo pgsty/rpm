@@ -10,9 +10,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.23.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Extension for more hyperfunctions, fully compatible with TimescaleDB and PostgreSQL
-License:	Timescale
+License:	LicenseRef-Timescale
 URL:		https://github.com/timescale/timescaledb-toolkit
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		timescaledb-toolkit-1.23.0.patch

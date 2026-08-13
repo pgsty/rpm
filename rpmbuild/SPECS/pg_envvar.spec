@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Postgers extension to fetch the value of an environment variable
 License:	PostgreSQL
 URL:		https://github.com/theory/pg-envvar

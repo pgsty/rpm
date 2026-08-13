@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.6.4
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Log changes on a table and restore the state of table/row on any time in the past
 License:	PostgreSQL
 URL:		https://github.com/df7cb/table_log

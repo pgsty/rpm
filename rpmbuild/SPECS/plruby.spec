@@ -10,13 +10,13 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        2.5.0
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Ruby procedural language for PostgreSQL
 License:        MIT
 URL:            https://github.com/commandprompt/plruby
 Source0:        %{sname}-%{version}.tar.gz
 #               https://github.com/commandprompt/plruby/archive/refs/tags/v2.5.0.tar.gz
-Patch0:         plruby-2.5.0-ruby-method-signatures.patch
+Patch0:         plruby-2.5.0.patch
 
 BuildRequires:  gcc make
 # Keep native AppStream filtering enabled; module_hotfixes=1 can mix Ruby ABIs.

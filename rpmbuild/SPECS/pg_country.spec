@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Country data type, ISO 3166-1
 License:	PostgreSQL
 URL:		https://github.com/adjust/pg-country

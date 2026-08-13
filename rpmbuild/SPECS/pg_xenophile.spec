@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.8.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	More than the bare necessities for PostgreSQL i18n and l10n.
 License:	PostgreSQL
 URL:		https://github.com/bigsmoke/pg_xenophile

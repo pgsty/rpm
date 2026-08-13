@@ -6,7 +6,7 @@
 Summary:	PostgreSQL Query Performance Monitoring Tool
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.3.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/percona/%{sname}
 Source0:	%{sname}-%{version}.tar.gz

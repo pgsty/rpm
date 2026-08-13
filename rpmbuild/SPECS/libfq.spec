@@ -2,7 +2,7 @@
 
 Name:		libfq
 Version:	0.6.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A wrapper library for the Firebird C API, loosely based on libpq
 
 License:	PostgreSQL

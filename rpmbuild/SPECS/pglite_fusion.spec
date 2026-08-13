@@ -9,7 +9,7 @@
 
 Name:		%{pname}_%{pgmajorversion}
 Version:	0.0.6
-Release:	4PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Embed an SQLite database in your PostgreSQL table. AKA multitenancy has been solved.
 License:	MIT
 URL:		https://github.com/frectonz/%{sname}

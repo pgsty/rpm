@@ -5,7 +5,7 @@
 Summary:	PostgreSQL extension compatible with Oracle DBMS_METADATA
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/HexaCluster/%{sname}
 Source0:	%{sname}-%{version}.tar.gz

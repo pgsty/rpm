@@ -19,7 +19,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Transactional outbox extension with background-worker delivery
 License:	Apache-2.0
 URL:		https://github.com/zeybek/ulak

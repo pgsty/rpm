@@ -3,7 +3,7 @@
 
 Name:           %{sname}
 Version:        1.2.1
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Graph algorithms and test harness built on GraphBLAS
 License:        BSD-2-Clause
 URL:            https://github.com/GraphBLAS/LAGraph

@@ -5,9 +5,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Extension: More friendly system catalog for PostgreSQL
-License:	BSD-2
+License:	BSD-2-Clause
 URL:		https://github.com/aquameta/meta
 Source0:	meta-%{version}.tar.gz
 

@@ -1,6 +1,6 @@
 Name:           zlog
 Version:        1.2.18
-Release:        2PGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        High-performance C logging library
 License:        Apache-2.0
 URL:            https://github.com/HardySimpson/zlog

@@ -6,11 +6,11 @@
 Summary:	Postgres extension and service for automated failover and high-availability
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.2
-Release:	5PIGSTY%{?dist}
-License:	Apache
+Release:	1PGSTY%{?dist}
+License:	PostgreSQL
 Source0:	pg_auto_failover-%{version}.tar.gz
 %if 0%{?pgmajorversion} >= 18
-Patch0:		pg_auto_failover-pg18.patch
+Patch0:		pg_auto_failover-2.2.patch
 %endif
 URL:		https://github.com/hapostgres/%{sname}/
 BuildRequires:	postgresql%{pgmajorversion}-devel

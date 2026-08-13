@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.26.2
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize

@@ -9,13 +9,13 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.2
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        OAuth and OIDC token validator for PostgreSQL 18
-License:        Apache-2.0
+License:        Apache-2.0 AND MIT
 URL:            https://github.com/percona/pg_oidc_validator
 Source0:        %{sname}-%{version}.tar.gz
 #               https://github.com/percona/pg_oidc_validator/archive/refs/tags/0.2.tar.gz
-Patch0:         pg-oidc-validator-0.2-gcc11.patch
+Patch0:         pg-oidc-validator-0.2.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if 0%{?rhel} == 8 || 0%{?rhel} == 9

@@ -8,10 +8,10 @@
 Summary:	Database Test 2 Differences from the TPC-C - Extensions
 Name:		%{sname}-pg%{pgmajorversion}-extensions
 Version:	0.61.7
-Release:	1PIGSTY%{?dist}
-License:	GPLv2+
+Release:	1PGSTY%{?dist}
+License:	Artistic-2.0
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		dbt2-cmakelists-rpm.patch
+Patch0:		dbt2-0.61.7.patch
 URL:		https://github.com/osdldbt/%{sname}/
 Requires:	%{sname}-common
 

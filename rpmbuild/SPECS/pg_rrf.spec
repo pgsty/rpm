@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Reciprocal Rank Fusion functions for hybrid search in PostgreSQL
 License:	MIT
 URL:		https://github.com/yuiseki/pg_rrf

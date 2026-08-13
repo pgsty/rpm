@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Extended Quarter Degree Grid Cell codes for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/ragnvald/qdgc

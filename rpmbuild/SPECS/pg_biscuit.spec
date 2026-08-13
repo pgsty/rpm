@@ -15,13 +15,13 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	3.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
 Source0:	Biscuit-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/biscuit/3.0.0/biscuit-3.0.0.zip
-Patch0:		biscuit-3.0.0-upgrade-path.patch
+Patch0:		biscuit-3.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

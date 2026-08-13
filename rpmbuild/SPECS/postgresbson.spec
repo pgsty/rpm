@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	BSON data type and accessor functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/buzzm/postgresbson
@@ -63,7 +63,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/postgresbson-avoid-private-libbson-symbol.patch
+patch -p1 --forward -f < %{_specdir}/patches/postgresbson-2.1.0.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} \

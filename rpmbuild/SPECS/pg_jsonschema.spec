@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.4
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension providing JSON Schema validation
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_jsonschema

@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.5
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL extension to prevent dangerous UPDATE and DELETE without WHERE clause
 License:	MIT
 URL:		https://github.com/spa5k/pg_strict

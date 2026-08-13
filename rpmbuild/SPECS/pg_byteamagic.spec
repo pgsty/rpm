@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.4
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Detect MIME types and file formats from PostgreSQL bytea values
 License:	BSD-2-Clause
 URL:		https://github.com/nmandery/pg_byteamagic

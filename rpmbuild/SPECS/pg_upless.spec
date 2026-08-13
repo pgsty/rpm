@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Extension to Detect Useless UPDATE
 License:	PostgreSQL
 URL:		https://github.com/rodo/pg_upless

@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.3
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	ULID type and functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/pksunkara/%{pname}

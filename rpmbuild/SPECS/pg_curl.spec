@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.4.5
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL tool for transferring data with URL syntax
 License:	MIT
 URL:		https://github.com/RekGRpth/pg_curl

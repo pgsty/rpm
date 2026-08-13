@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.3.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A Postgres extension in C to compute statistics on arrays of numbers
 License:	MIT
 URL:		https://github.com/pjungwir/aggs_for_arrays

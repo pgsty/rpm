@@ -10,13 +10,13 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.5.7
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Datomic-compatible Datalog query engine for PostgreSQL
 License:        Apache-2.0
 URL:            https://github.com/gburd/pg_mentat
 Source0:        %{sname}-%{version}.tar.gz
 #               https://github.com/gburd/pg_mentat/archive/refs/tags/v1.5.7.tar.gz
-Patch0:         pg-mentat-1.5.7-pgrx-0.19.1.patch
+Patch0:         pg-mentat-1.5.7.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt

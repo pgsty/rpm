@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL foreign data wrapper for Redis
 License:	PostgreSQL
 URL:		https://github.com/pg-redis-fdw/redis_fdw

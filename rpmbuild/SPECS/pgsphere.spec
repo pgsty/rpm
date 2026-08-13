@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.5.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PgSphere provides spherical data types, functions, operators, and indexing for PostgreSQL.
 License:	BSD-3-Clause
 URL:		https://github.com/postgrespro/pgsphere

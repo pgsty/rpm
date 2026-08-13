@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension with functions and aggregates for financial calculations
 License:	PostgreSQL
 URL:		https://github.com/intgr/pg_financial

@@ -1182,8 +1182,9 @@ pgdog-install:
 	sudo yum remove -y pgdog || /bin/true
 	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/pgdog-[0-9]*.$(ARCH).rpm
 
-pg_filedump:
-	./build pg_filedump 18
+pg_adhoc:
+	./build pg_adhoc 18
+pg_filedump: pg_adhoc
 
 ###############################################################
 #                       Kernels                               #

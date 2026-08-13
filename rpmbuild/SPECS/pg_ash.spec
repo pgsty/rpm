@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Active Session History for PostgreSQL with a pure SQL implementation
 License:	Apache-2.0
 URL:		https://github.com/NikolayS/pg_ash

@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Base62 extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/adjust/pg-base62

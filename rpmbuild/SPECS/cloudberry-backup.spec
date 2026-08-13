@@ -3,7 +3,7 @@
 
 Name:           cloudberry-backup
 Version:        2.1.0
-Release:        3PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Backup and restore utilities for Apache Cloudberry
 
 License:        Apache-2.0

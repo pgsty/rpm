@@ -17,7 +17,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.1
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	AI-powered SQL query generation for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/benodiwal/pg_ai_query

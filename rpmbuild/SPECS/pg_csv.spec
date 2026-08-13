@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Flexible CSV processing as a solution for PostgreSQL
 License:	MIT
 URL:		https://github.com/PostgREST/%{sname}

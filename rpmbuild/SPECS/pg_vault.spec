@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Extension for storing encrypted secrets in the Vault
 License:	Apache-2.0
 URL:		https://github.com/supabase/vault

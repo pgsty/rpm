@@ -9,7 +9,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.7.1
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Generate Markdown documentation from PostgreSQL comments
 License:        PostgreSQL
 URL:            https://github.com/bigsmoke/pg_readme

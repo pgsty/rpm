@@ -5,12 +5,12 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        2.2.1
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Transparent DDL replication for PostgreSQL
 License:        MIT
 URL:            https://github.com/enova/%{sname}
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pgl_ddl_deploy-2.2.1-pg18.patch
+Patch0:         pgl_ddl_deploy-2.2.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 Requires:       postgresql%{pgmajorversion}-server

@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Redis Publish from PostgreSQL
 License:	MIT
 URL:		https://github.com/brettlaforge/pg_redis_pubsub

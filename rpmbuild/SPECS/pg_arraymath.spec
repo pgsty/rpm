@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Functions and operators for element-by-element math and logic on arrays
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-arraymath

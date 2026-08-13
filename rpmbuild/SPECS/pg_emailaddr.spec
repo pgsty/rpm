@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Email address type for PostgreSQL
-License:	PostgreSQL
+License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/petere/pgemailaddr
 Source0:	pgemailaddr-%{version}.tar.gz
 

@@ -5,12 +5,12 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0.7
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Logical decoding output plugin for MongoDB
 License:        Apache-2.0
 URL:            https://github.com/HighgoSoftware/%{sname}
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         wal2mongo-1.0.7-pg17.patch
+Patch0:         wal2mongo-1.0.7.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 Requires:       postgresql%{pgmajorversion}-server

@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL implementation of JSON Web Tokens
 License:	MIT
 URL:		https://github.com/michelp/pgjwt

@@ -9,9 +9,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.1
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
-License:	AGPL-3.0
+License:	AGPL-3.0-only OR Elastic-2.0
 URL:		https://github.com/supervc-stack/VectorChord
 Source0:	VectorChord-%{version}.tar.gz
 Patch0:		vchord-1.1.1.patch

@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.5.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Encrypted data type for PostgreSQL with PGP and RSA support
 License:	MIT
 URL:		https://github.com/SoftwareLibreMx/pg_enigma

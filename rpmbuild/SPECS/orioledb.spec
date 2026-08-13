@@ -26,14 +26,14 @@
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 
 Name:		%{sname}-%{pgmajorversion}
-Version:	1.8
-Release:	beta16PIGSTY%{?dist}
+Version:	1.8~beta16
+Release:	1PGSTY%{?dist}
 Summary:	OrioleDB PostgreSQL kernel with bundled storage engine extension
-License:	PostgreSQL
+License:	PostgreSQL AND Apache-2.0
 URL:		https://github.com/orioledb/orioledb
 Source0:	%{srcdir}.tar.gz
 Source1:	%{sname}-%{orioledb_beta}.tar.gz
-Patch0:		oriolepg-postgresql-branding.patch
+Patch0:		orioledb-1.8~beta16.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35, chrpath
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -53,7 +53,7 @@ Requires(pre):  shadow-utils
 %description
 OrioleDB is a modern cloud-native storage engine for PostgreSQL.
 This package bundles the patched PostgreSQL %{pgmajorversion} kernel and the
-OrioleDB %{version} %{orioledb_beta} extension under %{pgbaseinstdir}.
+OrioleDB %{version} extension under %{pgbaseinstdir}.
 It is based on PostgreSQL %{upstream_pgver} and upstream OrioleDB patchset
 %{orioledb_patchset}.
 
@@ -88,7 +88,7 @@ export CFLAGS
 --docdir=%{pgbaseinstdir}/doc \
 --htmldir=%{pgbaseinstdir}/doc/html \
 --with-system-tzdata=/usr/share/zoneinfo \
---with-extra-version=" (OrioleDB %{version}-%{orioledb_beta})" \
+--with-extra-version=" (OrioleDB %{version})" \
 --with-lz4 \
 --with-zstd \
 --with-uuid=e2fs \
@@ -137,6 +137,9 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Thu Aug 13 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.8~beta16-1PGSTY
+- Encode beta16 in Version and normalize Release
+
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.8-beta16PIGSTY
 - Merge the OriolePG kernel and OrioleDB extension into bundled orioledb packages
 - Rename package output to orioledb-PGMAJOR

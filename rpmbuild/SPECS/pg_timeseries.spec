@@ -5,11 +5,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Simple and focused time-series tables for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_timeseries
-SOURCE0:    pg_timeseries-%{version}.tar.gz
+Source0:    pg_timeseries-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/timeseries/0.2.1/timeseries-0.2.1.zip
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion} pg_partman_%{pgmajorversion}

@@ -30,14 +30,14 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        3.4.0
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        PostgreSQL lakehouse extensions powered by DuckDB
 License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND ICU AND ISC AND PostgreSQL AND Unicode-3.0 AND Zlib AND curl AND OpenSSL AND LicenseRef-TPC-EULA-2.2
 URL:            https://github.com/Snowflake-Labs/pg_lake
 # Repacked upstream release with the pinned Avro, DuckDB, and duckdb-postgres
 # submodules required by the build.  SHA256 is verified in %%prep.
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pg_lake-3.4.0-pg-libdir.patch
+Patch0:         pg_lake-3.4.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27

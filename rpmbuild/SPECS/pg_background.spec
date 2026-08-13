@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Execute SQL commands in PostgreSQL background worker processes
 License:	PostgreSQL
 URL:		https://github.com/vibhorkum/%{sname}

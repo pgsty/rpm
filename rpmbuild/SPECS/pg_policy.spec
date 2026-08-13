@@ -9,13 +9,13 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Agent policy language for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/rahiakil/pg-policy
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/pg_policy/0.1.0/pg_policy-0.1.0.zip
-Patch0:		pg-policy-0.1.0-schema.patch
+Patch0:		pg-policy-0.1.0.patch
 BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

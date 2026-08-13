@@ -9,8 +9,8 @@
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
 Version:	2.29.1
-Release:	1PIGSTY%{?dist}
-License:	Timescale
+Release:	1PGSTY%{?dist}
+License:	Apache-2.0 AND LicenseRef-Timescale AND PostgreSQL
 Source0:	%{sname}-%{version}.tar.gz
 URL:		https://github.com/timescale/timescaledb
 BuildRequires:	postgresql%{pgmajorversion}-devel

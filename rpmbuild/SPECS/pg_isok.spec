@@ -4,7 +4,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Query-based data integrity management and soft alerting for PostgreSQL
 License:	AGPL-3.0-or-later
 URL:		https://codeberg.org/kop/pg_isok

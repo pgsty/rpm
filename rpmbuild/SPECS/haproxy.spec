@@ -22,7 +22,7 @@
 
 Name:           haproxy
 Version:        3.4.3
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        HAProxy reverse proxy for high availability environments
 
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later

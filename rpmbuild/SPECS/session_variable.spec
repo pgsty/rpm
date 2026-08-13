@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	3.4
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	The session_variable Postgres database extension provides a way to create and maintain session scoped variables and constants, more or less like Oracle's global variables.
-License:	GPL-3.0
+License:	GPL-3.0-only
 URL:		https://github.com/splendiddata/session_variable
 Source0:	session_variable-%{version}.tar.gz
 

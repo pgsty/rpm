@@ -7,7 +7,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{pduver}
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL data recovery and extraction utility
 License:	Apache-2.0 AND PostgreSQL
 URL:		https://github.com/wublabdubdub/PDU-PostgreSQLDataUnloader

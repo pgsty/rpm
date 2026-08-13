@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.4
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Access Control Lists (ACL) PostgreSQL Extension
-License:	BSD-2
+License:	BSD-2-Clause
 URL:		https://github.com/arkhipov/acl
 Source0:	%{sname}-%{version}.tar.gz
 

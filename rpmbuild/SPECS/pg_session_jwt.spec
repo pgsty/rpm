@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.5.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Postgres Extension for JWT Sessions
 License:	Apache-2.0
 URL:		https://github.com/neondatabase/pg_session_jwt

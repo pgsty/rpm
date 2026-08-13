@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.7.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	HTTP client for PostgreSQL, retrieve a web page from inside the database.
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-http

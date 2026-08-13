@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.9
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Natural-language timestamp parser for PostgreSQL
 License:	MIT
 URL:		https://github.com/frectonz/pg-when

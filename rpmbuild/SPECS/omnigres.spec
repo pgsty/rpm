@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	20251108
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Postgres as a Platform
 License:	Apache-2.0
 URL:		https://github.com/omnigres/omnigres

@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Finite state machine core SQL objects for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/nirajkashyap/fsm

@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension that logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery
 License:	PostgreSQL
 URL:		https://github.com/bolajiwahab/pg_drop_events

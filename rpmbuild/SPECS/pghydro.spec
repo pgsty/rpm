@@ -4,7 +4,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	6.6
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Drainage network analysis extensions for PostgreSQL and PostGIS
 License:	GPL-2.0-only
 URL:		https://github.com/pghydro/pghydro

@@ -14,12 +14,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension which implements similar images searching functionality.
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/imgsmlr
 Source0:	imgsmlr-%{version}.tar.gz
-Patch0:		imgsmlr-detoast-datum.patch
+Patch0:		imgsmlr-1.0.patch
 #           https://github.com/postgrespro/imgsmlr/archive/refs/heads/master.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 gd-devel

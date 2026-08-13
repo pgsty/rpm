@@ -5,12 +5,12 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.3.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Foreign data wrapper for remote PGSpider servers
 License:        PostgreSQL
 URL:            https://github.com/pgspider/%{sname}
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pgspider_ext-1.3.0-pg18.patch
+Patch0:         pgspider_ext-1.3.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 Requires:       postgresql%{pgmajorversion}-server

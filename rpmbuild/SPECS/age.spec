@@ -19,7 +19,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.8.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases for PostgreSQL %{pgmajorversion}
 License:	Apache-2.0
 URL:		https://github.com/apache/age

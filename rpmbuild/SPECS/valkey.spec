@@ -7,12 +7,12 @@
 
 Name:           valkey
 Version:        9.1.1
-Release:        4PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
 URL:            https://valkey.io/
 Source0:        https://github.com/valkey-io/valkey/archive/refs/tags/%{version}.tar.gz#/valkey-%{version}.tar.gz
-Patch0:         valkey-9.1.1-el8a-geosearch-zero-radius.patch
+Patch0:         valkey-9.1.1.patch
 
 BuildRequires:  gcc
 BuildRequires:  make

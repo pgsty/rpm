@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	4.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Transparent column-level encryption for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/vibhorkum/column_encrypt

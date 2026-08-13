@@ -10,7 +10,7 @@
 
 Name:		pg_anon_%{pgmajorversion}
 Version:	3.1.3
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL
 License:	PostgreSQL
 URL:		https://gitlab.com/dalibo/%{sname}

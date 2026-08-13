@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Extra date-time functions and operators for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/bigsmoke/pg_extra_time

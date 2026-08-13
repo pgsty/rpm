@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Replicate supported DDL changes over PostgreSQL logical replication
 License:	MIT
 URL:		https://github.com/samedyildirim/logical_ddl
@@ -60,7 +60,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/logical_ddl-0.1.0-fix-raise-warning-typo.patch
+patch -p1 --forward -f < %{_specdir}/patches/logical_ddl-0.1.0.patch
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}

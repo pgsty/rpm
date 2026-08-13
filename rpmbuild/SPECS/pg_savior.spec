@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Prevent accidental data loss and risky schema changes
 License:	MIT
 URL:		https://github.com/viggy28/pg_savior

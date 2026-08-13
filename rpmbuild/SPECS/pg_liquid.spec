@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.7
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Liquid-inspired Datalog graph query extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/michael-golfi/pg_liquid
@@ -59,7 +59,7 @@ This package provides JIT support for %{sname}.
 mkdir -p %{_builddir}/%{sname}-%{version}
 tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 cd %{_builddir}/%{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg_liquid-0.1.7-set-default-goal-to-all.patch
+patch -p1 --forward -f < %{_specdir}/patches/pg_liquid-0.1.7.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}

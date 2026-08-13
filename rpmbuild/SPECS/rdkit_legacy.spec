@@ -8,17 +8,14 @@
 
 Name:           %{sname}
 Version:        202303.3
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        RDKit runtime libraries and PostgreSQL cartridges
 License:        BSD-3-Clause
 URL:            https://github.com/rdkit/rdkit
 Source0:        rdkit_202303.3.orig.tar.xz
 # Imported from the official PGDG source package:
 # https://apt.postgresql.org/pub/repos/apt/pool/main/r/rdkit/
-Patch0:         rdkit-202303.3-pg16.patch
-Patch1:         rdkit-202303.3-postgres-makefile.patch
-Patch2:         rdkit-202303.3-pg17-operators.patch
-Patch3:         rdkit-202303.3-skip-catch2-fetch-when-tests-disabled.patch
+Patch0:         rdkit-202303.3.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  bison
@@ -56,10 +53,7 @@ The RDKit PostgreSQL cartridge for PostgreSQL %{pgmajorversion}.
 
 %prep
 %setup -q -n rdkit-Release_2023_03_3
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
+%patch -P 0 -p1
 
 %build
 cmake -S . -B build \

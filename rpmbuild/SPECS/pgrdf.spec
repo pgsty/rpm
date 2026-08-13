@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.6.20
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	RDF, SPARQL, SHACL, and OWL reasoning for PostgreSQL
 License:	MIT
 URL:		https://github.com/styk-tv/pgRDF

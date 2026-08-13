@@ -4,7 +4,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Lightweight distributed lock service inside PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/fraruiz/pglock
@@ -24,7 +24,7 @@ using SQL functions and a lock table with TTL cleanup through pg_cron.
 mkdir -p %{_builddir}/%{sname}-%{version}
 tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 cd %{_builddir}/%{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pglock-1.0.0-add-pglock-control-file.patch
+patch -p1 --forward -f < %{_specdir}/patches/pglock-1.0.0.patch
 
 %build
 # Pure SQL extension, nothing to compile.

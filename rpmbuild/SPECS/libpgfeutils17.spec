@@ -8,7 +8,7 @@
 
 Name:		libpgfeutils17
 Version:	17.10
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org

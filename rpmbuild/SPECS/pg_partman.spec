@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	5.5.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Partition management extension for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/pgpartman/%{sname}

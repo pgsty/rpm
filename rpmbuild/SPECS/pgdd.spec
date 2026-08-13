@@ -9,9 +9,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.6.1
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Data Dictionary, Inspect data dictionary via SQL
-License:	Apache-2.0
+License:	MIT
 URL:		https://github.com/Vonng/pgdd
 Source0:    pgdd-%{version}.tar.gz
 #           https://github.com/rustprooflabs/pgdd/archive/refs/tags/0.6.0.tar.gz

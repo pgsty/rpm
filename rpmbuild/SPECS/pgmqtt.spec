@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	CDC-to-MQTT broker extension for PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/pgmqtt

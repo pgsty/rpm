@@ -6,7 +6,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.85
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL table versioning extension
 License:	PostgreSQL
 URL:		http://momjian.us/download/%{sname}/

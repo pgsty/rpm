@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Fast PG extension to lookup timezone name by GPS coordinates
 License:	MIT
 URL:		https://github.com/ringsaturn/pg-tzf

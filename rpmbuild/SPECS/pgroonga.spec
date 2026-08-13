@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	4.0.4
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Fast full-text search plugin for PostgreSQL based on Groonga
 Group:		Applications/Text
 License:	PostgreSQL

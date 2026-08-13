@@ -21,7 +21,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{pg_net_version}
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL extension that enables asynchronous (non-blocking) HTTP/HTTPS requests with SQL
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_net

@@ -5,9 +5,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:    1.7.0
-Release:    1PIGSTY%{?dist}
-License:    GPL-2.0
-Summary:	Unsigned and other extra integer types for PostgreSQL
+Release:    1PGSTY%{?dist}
+License:    GPL-2.0-only
+Summary:	Table partitioning by foreign key for PostgreSQL
 URL:		https://github.com/lemoineat/%{sname}
 Source0:    %{sname}-%{version}.tar.gz
 

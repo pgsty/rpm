@@ -9,7 +9,7 @@
 Summary:	PostgreSQL tool to rewrite a table
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{pgrwmajver}.%{pgrwmidver}
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/cybertec-postgresql/%{sname}
 Source0:	pg_rewrite-REL%{pgrwmajver}_%{pgrwmidver}.tar.gz

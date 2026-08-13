@@ -11,7 +11,7 @@
 
 Name:		%{rpmname}_%{pgmajorversion}
 Version:	5.0.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Table change logging and rollback extension for PostgreSQL
 License:	GPL-3.0-or-later
 URL:		https://github.com/dalibo/emaj

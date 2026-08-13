@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	TypeID support for PostgreSQL
 License:	MIT
 URL:		https://github.com/blitss/typeid-postgres

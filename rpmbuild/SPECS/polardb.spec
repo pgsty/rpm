@@ -12,9 +12,9 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        17.10.1.0
-Release:        2PGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        PolarDB PostgreSQL %{pgmajorversion} kernel
-License:        Apache-2.0 AND PostgreSQL
+License:        Apache-2.0 AND PostgreSQL AND BSD-2-Clause AND BSD-3-Clause AND MIT AND Spencer-94
 URL:            https://github.com/polardb/PolarDB-for-PostgreSQL
 Source0:        polardb-for-postgresql-%{version}.tar.gz
 # Bundle-style private prefix package; do not register copied libraries as system providers.

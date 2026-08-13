@@ -19,14 +19,13 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Fast tiktoken BPE tokenizer for PostgreSQL, implemented in C
 License:	Apache-2.0
 URL:		https://github.com/relytcloud/pg_tiktoken_c
 Source0:	%{sname}-%{version}.tar.gz
 #           upstream main snapshot fa2957b6ece483322f4c4ce0c374b3b77e22b892; no release tag is available
-Patch0:		pg-tiktoken-c-1.1-destdir.patch
-Patch1:		pg-tiktoken-c-1.1-correctness.patch
+Patch0:		pg-tiktoken-c-1.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc pcre2-devel

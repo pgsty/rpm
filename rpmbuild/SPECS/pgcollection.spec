@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL extension to add a collection data type
 License:	Apache-2.0
 URL:		https://github.com/aws/pgcollection

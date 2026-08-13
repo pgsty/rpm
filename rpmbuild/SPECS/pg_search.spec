@@ -10,9 +10,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.25.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
-License:	AGPL-3.0
+License:	AGPL-3.0-only
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/pg_search/0.25.2/pg_search-0.25.2.zip

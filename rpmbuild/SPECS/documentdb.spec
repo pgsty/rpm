@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.114
-Release:	0PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/documentdb/documentdb

@@ -17,7 +17,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.7.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Apache DataSketches extension for approximate analytics in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/apache/datasketches-postgresql

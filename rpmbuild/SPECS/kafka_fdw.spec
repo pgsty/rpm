@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	kafka foreign database wrapper for postresql
 License:	PostgreSQL
 URL:		https://github.com/Vonng/kafka_fdw

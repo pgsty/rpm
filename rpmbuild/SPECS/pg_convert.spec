@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Postgres extension for common conversions when working with spatial data.
 License:	MIT
 URL:		https://github.com/Vonng/%{pname}

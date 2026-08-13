@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.12.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Semiring provenance and uncertainty management for PostgreSQL
 License:	MIT
 URL:		https://github.com/PierreSenellart/provsql
@@ -32,7 +32,7 @@ CREATE EXTENSION provsql CASCADE.
 %prep
 %setup -q -n %{sname}-%{version}
 %if 0%{?rhel} == 8
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}-el8-to_chars.patch
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
 %endif
 
 %build

@@ -19,7 +19,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	ClickHouse-compatible regular expression functions powered by RE2
 License:	PostgreSQL
 URL:		https://github.com/ClickHouse/pg_re2

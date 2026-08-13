@@ -10,7 +10,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Suggest missing indexes and extended statistics online
 License:        PostgreSQL
 URL:            https://github.com/knizhnik/online_advisor

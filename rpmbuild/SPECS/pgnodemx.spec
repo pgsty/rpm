@@ -14,12 +14,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Capture node OS metrics via SQL queries
-License:	Apache-2.0
+License:	Apache-2.0 AND BSD-3-Clause
 URL:		https://github.com/pgnodemx/pgnodemx
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pgnodemx-2.0.1-cgroup-disabled.patch
+Patch0:		pgnodemx-2.0.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

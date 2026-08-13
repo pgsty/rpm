@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL email validation that is consistent with the HTML5 spec
 License:	PostgreSQL
 URL:		https://github.com/bigsmoke/pg_html5_email_address

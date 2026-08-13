@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	4PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	OpenAI tiktoken tokenizer for postgres
 License:	Apache-2.0
 URL:		https://github.com/kelvich/pg_tiktoken

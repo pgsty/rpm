@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	foreign-data wrapper for Postgres log file access
 License:	Apache-2.0
 URL:		https://github.com/aws/postgresql-logfdw

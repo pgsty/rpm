@@ -10,9 +10,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.3.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Kazakh full-text search dictionary and stemmer for PostgreSQL
-License:	LGPL-3.0
+License:	LGPL-3.0-only
 URL:		https://github.com/darkhanakh/pg-kazsearch
 Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/darkhanakh/pg-kazsearch/archive/refs/tags/v2.3.0.tar.gz

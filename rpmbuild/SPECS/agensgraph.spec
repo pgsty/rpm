@@ -9,7 +9,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        2.17.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        AgensGraph kernel (PG%{pgmajorversion} fork)
 License:        PostgreSQL
 URL:            https://github.com/skaiworldwide-oss/agensgraph

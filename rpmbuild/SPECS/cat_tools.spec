@@ -9,7 +9,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.3.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Tools for interfacing with the PostgreSQL catalog
 License:        MIT
 URL:            https://github.com/decibel/cat_tools

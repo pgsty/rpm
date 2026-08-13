@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Chinese full-text search parser for PostgreSQL
 License:	BSD-3-Clause AND MIT
 URL:		https://github.com/jaiminpan/pg_jieba

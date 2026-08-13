@@ -5,9 +5,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to log each DML statement and flashback transactions
-License:	BSD-3
+License:	BSD-3-Clause
 URL:		https://github.com/kouber/pg_auditor
 Source0:	pg_auditor-%{version}.tar.gz
 

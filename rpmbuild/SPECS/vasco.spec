@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Maximal Information Coefficient (MIC) Extension for Postgres
-License:	GPL-3.0
+License:	GPL-3.0-only
 URL:		https://github.com/Florents-Tselai/vasco
 Source0:	%{sname}-%{version}.tar.gz
 

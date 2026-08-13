@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	ECDSA for PostgreSQL
-License:	BSD-2
+License:	BSD-2-Clause
 URL:		https://github.com/ameensol/pg-ecdsa
 Source0:	pg-ecdsa-%{version}.tar.gz
 

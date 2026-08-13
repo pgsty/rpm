@@ -5,11 +5,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	A simple PostgreSQL Message Broker system
 License:	PostgreSQL
 URL:		https://github.com/fraruiz/pgmb
-SOURCE0:	%{sname}-%{version}.tar.gz
+Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/fraruiz/pgmb/archive/refs/tags/release.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

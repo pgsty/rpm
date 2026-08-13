@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.5
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension for spatial indexing on a sphere
-License:	GPL-2.0
+License:	GPL-2.0-only
 URL:		https://github.com/segasai/q3c
 Source0:	q3c-%{version}.tar.gz
 

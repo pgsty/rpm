@@ -14,12 +14,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Output plugin for logical replication in Raw SQL format
 License:	PostgreSQL
 URL:		https://github.com/michaelpq/pg_plugins/blob/main/decoder_raw/
 Source0:	decoder_raw-%{version}.tar.gz
-Patch0:		decoder_raw-reorderbuffer-tuple.patch
+Patch0:		decoder_raw-1.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

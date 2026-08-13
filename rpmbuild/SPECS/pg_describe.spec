@@ -11,7 +11,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Describe query parameters and result columns without execution
 License:        MIT
 URL:            https://github.com/sajonaro/pg_describe

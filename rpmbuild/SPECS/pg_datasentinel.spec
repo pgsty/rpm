@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Observability and activity monitoring extension for PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/datasentinel/%{sname}

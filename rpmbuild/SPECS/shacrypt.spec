@@ -15,7 +15,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to generate SHA256-CRYPT and SHA512-CRYPT password hashes
 License:	PostgreSQL
 URL:		https://github.com/dverite/postgres-shacrypt

@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	QoS resource governor extension for PostgreSQL
-License:	GPL-3.0
+License:	GPL-3.0-only
 URL:		https://github.com/appstonia/pg_qos
 Source0:	pg_qos-%{version}.tar.gz
 

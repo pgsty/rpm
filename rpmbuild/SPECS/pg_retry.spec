@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Retry SQL statements on transient errors with exponential backoff
 License:	PostgreSQL
 URL:		https://github.com/Agent-Hellboy/pg_retry

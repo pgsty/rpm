@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.2
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Postgres module for Zstandard compression/decompression with preset dictionary support
 License:	ISC
 URL:		https://github.com/grahamedgecombe/pgzstd

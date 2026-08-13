@@ -6,11 +6,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.1.7
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Active-active Replication Extension for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/aws/pgactive
-SOURCE0:    %{sname}-%{version}.tar.gz
+Source0:    %{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros libselinux-devel libxslt-devel pam-devel numactl-devel
 %if %{pgmajorversion} >= 14

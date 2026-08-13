@@ -7,7 +7,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.3.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Geospatial trajectory data management and analysis platform
 # MobilityDB is PostgreSQL-licensed; the shared library embeds GPL-2.0-or-later
 # PostGIS liblwgeom/libpgcommon objects, as documented by debian/copyright.

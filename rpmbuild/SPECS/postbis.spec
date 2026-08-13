@@ -12,13 +12,13 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Biological sequence data types and functions for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/no0p/postbis
 Source0:        %{sname}-%{version}.tar.gz
 # Source archive: https://github.com/no0p/postbis/archive/ce454ebfbc27e0b6c8357ef6bfc8da1c4b2967c8.tar.gz
-Patch0:         postbis-1.0-pg14-18.patch
+Patch0:         postbis-1.0.patch
 
 BuildRequires:  gcc make pgdg-srpm-macros >= 1.0.27
 BuildRequires:  postgresql%{pgmajorversion}-devel

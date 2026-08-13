@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.5
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Pinyin romanization and search helpers for PostgreSQL
 License:	MIT
 URL:		https://github.com/aiyou178/pg_pinyin

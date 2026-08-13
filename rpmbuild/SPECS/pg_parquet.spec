@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.5.1
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Copy to/from Parquet in S3 from within PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/CrunchyData/pg_parquet

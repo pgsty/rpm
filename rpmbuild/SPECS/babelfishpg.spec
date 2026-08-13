@@ -6,7 +6,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        17.8
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Babelfish PostgreSQL kernel (PG17)
 License:        PostgreSQL
 URL:            https://github.com/babelfish-for-postgresql/postgresql_modified_for_babelfish

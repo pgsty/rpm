@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.3
-Release:	2PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Distributed Tracing for PostgreSQL
 License:	MIT
 URL:		https://github.com/DataDog/pg_tracing

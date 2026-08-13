@@ -11,7 +11,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Opinionated PostgreSQL database auditor
 License:        PostgreSQL
 URL:            https://github.com/samirketema/pg_roast

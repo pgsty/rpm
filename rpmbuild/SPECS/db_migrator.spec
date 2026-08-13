@@ -5,9 +5,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	migrating databases from other data sources to PostgreSQL
-License:	BSD-3
+License:	PostgreSQL
 URL:		https://github.com/cybertec-postgresql/db_migrator
 Source0:	db_migrator-RELEASE_1_0_0.tar.gz
 

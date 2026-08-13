@@ -12,7 +12,7 @@
 
 Name:           %{sname}
 Version:        %{ivoryversion}
-Release:        2PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        External extensions for IvorySQL 5 / PostgreSQL 18
 License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND PostgreSQL
 URL:            https://github.com/IvorySQL/IvorySQL

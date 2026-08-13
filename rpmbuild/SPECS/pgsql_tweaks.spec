@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.5
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL functions and views for daily work
 License:	PostgreSQL
 URL:		https://codeberg.org/pgsql_tweaks/pgsql_tweaks

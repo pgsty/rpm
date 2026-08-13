@@ -8,7 +8,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Time series analysis functions for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/nadyaloseva/pg_ts_analysis

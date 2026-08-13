@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	CJK bigram full-text search parser for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/huangjimmy/pg_cjk_parser

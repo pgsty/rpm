@@ -14,9 +14,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0a4
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Redis-like In-Memory DB Embedded in Postgres
-License:	AGPL-3.0
+License:	AGPL-3.0-only
 URL:		https://github.com/Florents-Tselai/spat
 Source0:	%{sname}-%{version}.tar.gz
 

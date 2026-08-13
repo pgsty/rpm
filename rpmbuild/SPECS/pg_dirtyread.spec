@@ -15,9 +15,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.8
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Read dead but unvacuumed tuples from a PostgreSQL relation
-License:	PostgreSQL
+License:	BSD-3-Clause
 URL:		https://github.com/df7cb/pg_dirtyread
 Source0:	pg_dirtyread-%{version}.tar.gz
 #           https://deb.debian.org/debian/pool/main/p/pg-dirtyread/pg-dirtyread_2.8.orig.tar.gz

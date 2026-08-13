@@ -6,9 +6,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.10
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Store execution plans like pg_stat_statements does for queries
-License:	PostgreSQL
+License:	BSD-3-Clause
 URL:		https://github.com/ossc-db/%{sname}/
 Source0:	https://repo.pigsty.cc/ext/%{sname}-%{version}.tar.gz
 

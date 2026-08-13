@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	4PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Base58 Encoder/Decoder Extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/Vonng/pg_base58

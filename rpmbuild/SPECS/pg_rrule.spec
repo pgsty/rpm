@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.0
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	RRULE data type for PostgreSQL
 License:	MIT
 URL:		https://github.com/petropavel13/pg_rrule

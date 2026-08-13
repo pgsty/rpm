@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Cardano-related tools, including cryptographic functions, address encoding/decoding, and blockchain data processing.
 License:	MIT
 URL:		https://github.com/cardano-community/pg_cardano

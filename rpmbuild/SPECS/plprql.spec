@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	18.0.1
-Release:	4PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Use PRQL in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/kaspermarstal/plprql

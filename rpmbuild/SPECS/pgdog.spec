@@ -4,9 +4,9 @@
 
 Name:           %{sname}
 Version:        0.1.32
-Release:        1PIGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Modern PostgreSQL proxy, pooler, load balancer and query router
-License:        AGPL-3.0
+License:        AGPL-3.0-only
 URL:            https://github.com/pgdogdev/pgdog
 Source0:        pgdog-%{version}.tar.gz
 #               https://github.com/pgdogdev/pgdog/archive/refs/tags/v0.1.32.tar.gz
@@ -26,7 +26,7 @@ This package ships the PgDog daemon, a systemd service unit, default configurati
 %prep
 %setup -q -n %{sname}-%{version}
 mkdir -p packaging/rpm
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}.patch || true
+patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch || true
 
 %build
 if [ "%{_arch}" = "aarch64" ]; then

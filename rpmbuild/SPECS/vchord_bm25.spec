@@ -9,9 +9,9 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.0
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Native BM25 Ranking Index in PostgreSQL
-License:	AGPL-3.0
+License:	AGPL-3.0-only OR Elastic-2.0
 URL:		https://github.com/supervc-stack/VectorChord-bm25
 Source0:	VectorChord-bm25-%{version}.tar.gz
 Patch0:		vchord-bm25-0.3.0.patch

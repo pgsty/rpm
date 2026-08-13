@@ -18,7 +18,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4.3
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	DuckDB foreign data wrapper for PostgreSQL via pg_duckdb
 License:	MIT
 URL:		https://github.com/alitrack/%{sname}
@@ -77,9 +77,7 @@ tar -C duckdb-headers --strip-components=5 -xf %{SOURCE1} \
 test -f duckdb-headers/duckdb.h
 test -f duckdb-headers/duckdb.hpp
 
-patch -p1 --forward -f < %{_specdir}/patches/duckdb_fdw-git20251102-870bc43-duckdb-1.4.3-compat.patch
-patch -p1 --forward -f < %{_specdir}/patches/duckdb_fdw-git20251102-870bc43-pg_duckdb-linkage.patch
-patch -p1 --forward -f < %{_specdir}/patches/duckdb_fdw-git20251102-870bc43-cxx11-abi.patch
+patch -p1 --forward -f < %{_specdir}/patches/duckdb_fdw-1.4.3.patch
 
 %build
 test -f %{pginstdir}/lib/libduckdb.so

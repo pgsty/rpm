@@ -19,7 +19,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.9.1
-Release:	1PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Validate planner Path trees for freed or corrupt memory
 License:	MIT
 URL:		https://github.com/danolivo/pg_pathcheck

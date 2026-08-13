@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.5
-Release:	3PIGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Block COPY commands cluster-wide with a ProcessUtility hook
 License:	BSD-3-Clause
 URL:		https://github.com/rustwizard/block_copy_command

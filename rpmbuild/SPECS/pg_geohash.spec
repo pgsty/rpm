@@ -16,7 +16,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
 Release:	1PGSTY%{?dist}
 Summary:	Geohashing library for HAWQ, Greenplum DB, PostgreSQL
-License:	LicenseRef-Upstream-No-License
+License:	MIT
 URL:		https://github.com/jistok/pg_geohash
 Source0:	%{sname}-%{version}.tar.gz
 

@@ -16,7 +16,7 @@ Name:		%{pname}_%{pgmajorversion}
 Version:	7.10
 Release:	1PGSTY%{?dist}
 Summary:	SI Units for PostgreSQL
-License:	LicenseRef-Upstream-No-License
+License:	GPL-3.0-or-later
 URL:		https://github.com/df7cb/postgresql-unit
 Source0:	postgresql-unit-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

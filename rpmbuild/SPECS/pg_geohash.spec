@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	2PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	Geohashing library for HAWQ, Greenplum DB, PostgreSQL
 License:	MIT
 URL:		https://github.com/jistok/pg_geohash
@@ -55,13 +55,16 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
+%{__mv} %{pname}-1.0.sql %{pname}--1.0.sql
+%{__sed} -i 's/%{pname}-1.0.sql/%{pname}--1.0.sql/' Makefile
+%{__sed} -i -e '/^PGXS :=/i PG_CONFIG ?= pg_config' -e 's/pg_config --pgxs/$(PG_CONFIG) --pgxs/' Makefile
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} PG_CONFIG=%{pginstdir}/bin/pg_config
 
 %files
 %doc README.md
@@ -76,6 +79,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.0-4PGSTY
+- Honor PG_CONFIG so each package is built against its target PostgreSQL version.
+
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.0-3PGSTY
+- Fix the extension SQL filename so CREATE EXTENSION works.
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.0-2PGSTY
 - Rebuild with corrected license metadata.
 

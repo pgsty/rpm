@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.9
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	PostgreSQL prepare statements made pooling friendly
 License:	PostgreSQL
 URL:		https://github.com/dimitri/preprepare
@@ -75,5 +75,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.9-2PGSTY
+- Rebuild with corrected license metadata.
+
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 0.9
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

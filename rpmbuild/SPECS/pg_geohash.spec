@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Geohashing library for HAWQ, Greenplum DB, PostgreSQL
 License:	MIT
 URL:		https://github.com/jistok/pg_geohash
@@ -76,5 +76,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.0-2PGSTY
+- Rebuild with corrected license metadata.
+
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

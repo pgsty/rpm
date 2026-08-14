@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.6
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	ASN.1 OID datatype for PostgreSQL
 License:	GPL-3.0-or-later
 URL:		https://github.com/df7cb/pgsql-asn1oid
@@ -75,6 +75,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.6-2PGSTY
+- Rebuild with corrected license metadata.
+
 * Thu Mar 20 2025 Vonng <rh@vonng.com> - 1.6
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.5
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

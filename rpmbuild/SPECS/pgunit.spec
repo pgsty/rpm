@@ -14,7 +14,7 @@
 
 Name:		%{pname}_%{pgmajorversion}
 Version:	7.10
-Release:	1PGSTY%{?dist}
+Release:	7PGSTY%{?dist}
 Summary:	SI Units for PostgreSQL
 License:	GPL-3.0-or-later
 URL:		https://github.com/df7cb/postgresql-unit
@@ -82,6 +82,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 7.10-7PGSTY
+- Rebuild with corrected license metadata.
+
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 7.10-1PIGSTY
 - https://github.com/df7cb/postgresql-unit/releases/tag/7.10
 * Tue Jul 30 2024 Vonng <rh@vonng.com> - 7.7

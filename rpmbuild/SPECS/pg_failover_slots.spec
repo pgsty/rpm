@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.1
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	PG Failover Slots extension
 License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/pg_failover_slots
@@ -87,6 +87,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.2.1-2PGSTY
+- Align the RPM release with the Debian license metadata rebuild.
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.2.1-1PIGSTY
 - Fix assertion failure while synchronizing logical replication slots on standby
 - https://github.com/EnterpriseDB/pg_failover_slots/releases/tag/v1.2.1

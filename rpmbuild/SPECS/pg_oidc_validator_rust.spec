@@ -10,7 +10,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	OIDC bearer-token validator for PostgreSQL 18
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/UnAfraid/pg_oidc_validator_rust
@@ -70,6 +70,9 @@ readelf -Ws target/release/lib%{pname}.so | grep -q _PG_oauth_validator_module_i
 %{pginstdir}/lib/%{pname}.so
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.1.0-2PGSTY
+- Align the RPM release with the Debian license metadata rebuild.
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Rename the package to pg_oidc_validator_rust to distinguish the Rust module
 

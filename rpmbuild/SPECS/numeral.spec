@@ -26,7 +26,7 @@
 
 Name:		%{rpmname}_%{pgmajorversion}
 Version:	1.3
-Release:	1PGSTY%{?dist}
+Release:	6PGSTY%{?dist}
 Summary:	Textual numeric datatypes for PostgreSQL
 License:	GPL-2.0-or-later
 URL:		https://github.com/df7cb/postgresql-numeral
@@ -99,6 +99,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{make_passbyvalue} install DESTDIR=%{buil
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.3-6PGSTY
+- Rebuild with corrected license metadata.
+
 * Thu Jul 30 2026 Vonng <rh@vonng.com> - 1.3-3PIGSTY
 - Align package name with PGDG and obsolete numeral_$v packages
 - Force passed-by-value numeral types on 64-bit EL builders

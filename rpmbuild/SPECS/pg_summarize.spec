@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PGSTY%{?dist}
+Release:	6PGSTY%{?dist}
 Summary:	A PostgreSQL Extension for Text Summarization using Rust and OpenAI
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/HexaCluster/pg_summarize
@@ -63,6 +63,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.0.1-6PGSTY
+- Rebuild with corrected license metadata.
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.1-3PIGSTY
 - Migrate the direct-on-pristine source patch and fixed dependency graph to pgrx 0.19.1
 - Build offline after locked fetch and reject Cargo.lock rewrites

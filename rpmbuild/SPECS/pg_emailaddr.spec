@@ -14,7 +14,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0
-Release:	1PGSTY%{?dist}
+Release:	3PGSTY%{?dist}
 Summary:	Email address type for PostgreSQL
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/petere/pgemailaddr
@@ -77,5 +77,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 0-3PGSTY
+- Rebuild with corrected license metadata.
+
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

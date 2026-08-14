@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.2
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	Open PostgreSQL query plans in a visual EXPLAIN UI
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/Vonng/pg-explain-ui
@@ -61,6 +61,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.0.2-4PGSTY
+- Rebuild with corrected license metadata.
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.2-3PIGSTY
 - Migrate the direct-on-pristine source patch and locked dependency graph to pgrx 0.19.1
 - Fetch the fixed Cargo.lock and verify cargo pgrx package does not rewrite it

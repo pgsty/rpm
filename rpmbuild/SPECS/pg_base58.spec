@@ -9,14 +9,14 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Base58 Encoder/Decoder Extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/Vonng/pg_base58
 Source0:	pg_base58-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt
+BuildRequires:	clang rust-toolchain >= 1.96.0 cargo-pgrx-0191
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -28,19 +28,26 @@ patch -p1 --forward -f < %{_specdir}/patches/pg-base58-0.0.1.patch
 
 %build
 cd %{_builddir}/%{sname}-%{version}
-export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export PATH=%{pginstdir}/bin:$PATH
+export PGRX_HOME=%{_builddir}/.pgrx-0191-pg%{pgmajorversion}
+unset RUSTUP_HOME RUSTUP_TOOLCHAIN
 
 PGRX_VERSION=0.19.1
-CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
+CURRENT_PGRX=$(cargo-pgrx-0191 --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
-	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+	echo "cargo-pgrx-0191 $PGRX_VERSION is required" >&2
 	exit 1
 fi
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
+RUST_VERSION=$(rust-toolchain rustc --version | awk '{print $2}')
+if [ "$(printf '%s\n' 1.96.0 "$RUST_VERSION" | sort -V | head -1)" != "1.96.0" ]; then
+	echo "rust-toolchain 1.96 or newer is required, found $RUST_VERSION" >&2
+	exit 1
+fi
+cargo-pgrx-0191 init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+CARGO_NET_GIT_FETCH_WITH_CLI=true rust-toolchain cargo fetch --locked
 LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo-pgrx-0191 package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
 	echo "Cargo.lock changed during cargo pgrx package" >&2
@@ -61,6 +68,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu Aug 20 2026 Vonng <rh@vonng.com> - 0.0.1-2PGSTY
+- Build with packaged rust-toolchain and cargo-pgrx-0191
+- Isolate PGRX_HOME from rustup and other cargo-pgrx slots
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.1-4PIGSTY
 - Migrate the direct-on-pristine source patch and locked dependency graph to pgrx 0.19.1
 - Fetch the fixed Cargo.lock and verify cargo pgrx package does not rewrite it

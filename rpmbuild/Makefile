@@ -229,6 +229,9 @@ pg_textsearch:
 pg_fts:
 	./build pg_fts 17 18
 
+acdat:
+	./build acdat 14 15 16 17 18
+
 pg_pinyin:			# rust pgrx 0.19.1
 	./build pg_pinyin 14 15 16 17 18
 
@@ -1294,7 +1297,7 @@ rmdbg:
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
 	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_jieba pg_bestmatch vchord_bm25 \
-	pg_tokenizer pg_biscuit pg_textsearch pg_fts pg_pinyin pg_kazsearch psql_bm25s hunspell \
+	pg_tokenizer pg_biscuit pg_textsearch pg_fts acdat pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	citus hydra pg_duckdb \
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgcontext pgzint pgrdf pgwasm pgmq pgmb ulak fsm_core rum pg_ai_query \

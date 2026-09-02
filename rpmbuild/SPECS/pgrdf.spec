@@ -9,14 +9,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.20
+Version:	0.6.34
 Release:	1PGSTY%{?dist}
 Summary:	RDF, SPARQL, SHACL, and OWL reasoning for PostgreSQL
 License:	MIT
 URL:		https://github.com/styk-tv/pgRDF
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.20.tar.gz
-Patch0:		pgrdf-0.6.20.patch
+#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.34.tar.gz
+#           tag commit 1b82842dcb60b74c060b0344310b47d1c84a8e8d
+Patch0:		pgrdf-0.6.34.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt git
@@ -30,25 +31,27 @@ pgrdf through shared_preload_libraries before starting PostgreSQL.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 CARGO_NET_GIT_FETCH_WITH_CLI=true CARGO_HTTP_TIMEOUT=600 CARGO_NET_RETRY=10 cargo fetch --locked
-LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true CARGO_HTTP_TIMEOUT=600 CARGO_NET_RETRY=10 cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
+EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
+cp -f sql/%{pname}--*--*.sql "$EXT_DIR/"
+test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
 	exit 1
 }
@@ -72,6 +75,11 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.6.34-1PGSTY
+- Update to upstream 0.6.34 with pgrx 0.19.2 for PostgreSQL 14-18
+- Pin the reasonable fork commit and preserve the locked dependency graph
+- Add the missing 0.6.20 to 0.6.22 bridge before the upstream upgrade chain
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.6.20-1PIGSTY
 - Update to upstream v0.6.20 with native pgrx 0.19.1 and PostgreSQL 18 support
 - Align the manifest MSRV with pgrx 0.19 and build from the committed Cargo.lock

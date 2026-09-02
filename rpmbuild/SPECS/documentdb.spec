@@ -17,7 +17,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.114
+Version:	0.116
 Release:	1PGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
@@ -25,6 +25,7 @@ URL:		https://github.com/documentdb/documentdb
 Source0:	%{sname}-%{version}-0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 pkgconf-pkg-config
+BuildRequires:	gcc gcc-c++ make cmake clang llvm libicu-devel krb5-devel
 %if %{pgmajorversion} == 15
 BuildRequires: systemtap-sdt-devel
 %endif
@@ -83,7 +84,7 @@ This packages provides JIT support for %{sname}
 sed -i '/internal\/pg_documentdb_distributed/d' Makefile
 
 %build
-# Match the upstream 0.114 RPM packaging: keep linker-generated ELF boundary
+# Match the upstream 0.116 RPM packaging: keep linker-generated ELF boundary
 # symbols out of the two bundled RUM libraries without changing upstream code.
 cat > %{_builddir}/documentdb-hide-linker-syms.map <<'EOF'
 {
@@ -125,6 +126,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.116-1PGSTY
+- switch to upstream documentdb v0.116-0
+- keep PG18 on the bundled documentdb_extended_rum implementation
+
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 0.114-0PIGSTY
 - switch to upstream documentdb v0.114-0
 - use the upstream RPM linker map for toolchain-provided ELF boundary symbols

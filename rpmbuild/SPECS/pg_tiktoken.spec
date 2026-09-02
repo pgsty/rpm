@@ -2,6 +2,10 @@
 %global pname pg_tiktoken
 %global sname pg_tiktoken
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global snapshot_date 20260825
+%global snapshot_commit 99cb61d1f64b8c4aeb2fe7c5f7839fba54a7ccbf
+%global snapshot_short 99cb61d
+%global source_version 0.0.1+git%{snapshot_date}.%{snapshot_short}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
 %{error:pg_tiktoken only supports PostgreSQL 14 through 18}
@@ -9,28 +13,29 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PGSTY%{?dist}
+Release:	5.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
 Summary:	OpenAI tiktoken tokenizer for postgres
 License:	Apache-2.0
 URL:		https://github.com/kelvich/pg_tiktoken
-Source0:    pg_tiktoken-0.0.1.tar.gz
+Source0:	%{sname}-%{source_version}.tar.gz
+Patch0:		pg-tiktoken-0.0.1+git20260825.99cb61d.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt
+BuildRequires:	cargo clang git rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
 Postgres extension that does input tokenization using OpenAI's tiktoken.
 
 %prep
-%setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg-tiktoken-0.0.1.patch
+%setup -q -n %{sname}-%{source_version}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
-cd %{_builddir}/%{sname}-%{version}
+cd %{_builddir}/%{sname}-%{source_version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -50,17 +55,24 @@ fi
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{sname}-%{source_version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{sname}-%{source_version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{sname}-%{source_version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
+%license LICENSE
+%doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.1-5.git20260825.99cb61dPGSTY
+- Package upstream main snapshot 99cb61d while keeping extension version 0.0.1
+- Build PostgreSQL 14 through 18 with cargo-pgrx/pgrx 0.19.2
+- Lock tiktoken-rs at 90e77bdd and reject dependency lock rewrites
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.1-4PIGSTY
 - Migrate the direct-on-pristine source patch and dependency graph to pgrx 0.19.1
 - Add a fixed Cargo.lock for the upstream git dependency, build offline after locked fetch, and reject lock rewrites

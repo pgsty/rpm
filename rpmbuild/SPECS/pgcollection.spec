@@ -13,12 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.0
+Version:	2.1.3
 Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL extension to add a collection data type
 License:	Apache-2.0
 URL:		https://github.com/aws/pgcollection
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		pgcollection-2.1.3.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -49,7 +50,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -58,11 +59,10 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
-# Generate required header file before parallel build
-PATH=%{pginstdir}/bin:$PATH %{__make} include/collection_config.h
-PATH=%{pginstdir}/bin:$PATH %{__make}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
@@ -83,6 +83,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.1.3-1PGSTY
+- Bump to 2.1.3
+- Share the LLVM generated-header dependency patch with DEB packaging
+
 * Sat Mar 21 2026 Vonng <rh@vonng.com> - 2.0.0-1PIGSTY
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.1.1-1PIGSTY
 - https://github.com/aws/pgcollection/releases/tag/v1.1.1

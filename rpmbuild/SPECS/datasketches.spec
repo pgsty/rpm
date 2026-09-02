@@ -1,9 +1,13 @@
 %global pname datasketches
 %global sname datasketches
-%global core_version 5.0.0
+%global core_version 5.2.0
 %global buildsrc apache-datasketches-postgresql-%{version}-src
 %global corebuildsrc apache-datasketches-cpp-%{core_version}-src
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:datasketches supports PostgreSQL 14 through 18 in Pigsty}
+%endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -17,14 +21,15 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.7.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Apache DataSketches extension for approximate analytics in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/apache/datasketches-postgresql
 Source0:	apache-datasketches-postgresql-%{version}-src.tar.gz
 #		https://archive.apache.org/dist/datasketches/postgresql/1.7.0/apache-datasketches-postgresql-1.7.0-src.tar.gz
 Source1:	apache-datasketches-cpp-%{core_version}-src.tar.gz
-#		https://archive.apache.org/dist/datasketches/cpp/5.0.0/apache-datasketches-cpp-5.0.0-src.tar.gz
+#		https://downloads.apache.org/datasketches/cpp/5.2.0/apache-datasketches-cpp-5.2.0-src.zip
+Patch0:		datasketches-1.7.0-core-5.2.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc-c++
@@ -57,6 +62,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
+BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
 Requires:	llvm >= 19.0
 %endif
 
@@ -69,6 +75,7 @@ This package provides JIT support for %{sname}.
 cd %{_builddir}
 tar -xf %{SOURCE0}
 tar -xf %{SOURCE1}
+patch -d %{buildsrc} -p1 --fuzz=0 < %{PATCH0}
 
 %build
 cd %{_builddir}/%{buildsrc}
@@ -105,6 +112,11 @@ install -m 644 %{_builddir}/%{corebuildsrc}/NOTICE %{buildroot}%{_docdir}/%{name
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.7.0-2PGSTY
+- Rebuild the current PostgreSQL extension with DataSketches C++ core 5.2.0
+- Normalize the official Apache zip release into the shared deterministic tarball
+- Fix PGXS C++ LLVM builds by including cstdint explicitly
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.7.0-1PIGSTY
 - Initial RPM release based on Apache DataSketches PostgreSQL 1.7.0
 - Build against Apache DataSketches C++ core 5.0.0 and system boost-devel

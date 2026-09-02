@@ -18,13 +18,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.2
+Version:	0.0.3
 Release:	1PGSTY%{?dist}
 Summary:	Transactional outbox extension with background-worker delivery
 License:	Apache-2.0
 URL:		https://github.com/zeybek/ulak
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/ulak/0.0.2/ulak-0.0.2.zip
+Patch0:		ulak-0.0.3.patch
+#           https://github.com/zeybek/ulak/archive/refs/tags/v0.0.3.tar.gz
 #           Built with HTTP, Kafka, MQTT, Redis, and AMQP dispatchers on EL9; upstream NATS support is left disabled because cnats packages are unavailable in the builder repos
 
 BuildRequires:	gcc
@@ -78,7 +79,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/ulak-0.0.2.patch
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 %{?redis_make_flags} ENABLE_AMQP=1 %{?_smp_mflags}
@@ -101,6 +102,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} ENABLE_KAFKA=1 ENABLE_MQTT=1 %{?redis_make
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.0.3-1PGSTY
+- Bump to 0.0.3
+- Rebase the hiredis and libcurl compatibility patch
+
 * Sat Apr 18 2026 Vonng <rh@vonng.com> - 0.0.2-1PIGSTY
 - Disable the Redis dispatcher on EL8, where the available hiredis 0.13 headers do not ship hiredis_ssl.h
 

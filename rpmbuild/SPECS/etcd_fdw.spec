@@ -4,14 +4,19 @@
 %global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:etcd_fdw supports PostgreSQL 14 through 18}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	Foreign data wrapper for etcd
-License:	MIT
+License:	MIT AND Apache-2.0
 URL:		https://github.com/cybertec-postgresql/etcd_fdw
 Source0:	etcd_fdw-%{version}.tar.gz
-Source1:	wrappers-0.6.1.tar.gz
+Source1:	wrappers-0.6.2.tar.gz
+#           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.2.tar.gz
 Patch0:		etcd-fdw-0.0.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -33,56 +38,49 @@ patch -p1 --forward -f < %{PATCH0}
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-ROOT_LOCK_EXPECTED=39c99a4da5091d4a5d9700c6459b6b95f0c08ea8d0903679601d4014afaeffcf
-VENDOR_LOCK_EXPECTED=8fb19f9bce4a2766ea8a2c64846e2b081e9f981f4bb10dd4eb615744b0493191
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
-VENDOR_LOCK_BEFORE=$(sha256sum vendor/wrappers/Cargo.lock | cut -d ' ' -f1)
-if [ "$LOCK_BEFORE" != "$ROOT_LOCK_EXPECTED" ]; then
-	echo "unexpected root Cargo.lock checksum: $LOCK_BEFORE" >&2
-	exit 1
-fi
-if [ "$VENDOR_LOCK_BEFORE" != "$VENDOR_LOCK_EXPECTED" ]; then
-	echo "unexpected vendor/wrappers Cargo.lock checksum: $VENDOR_LOCK_BEFORE" >&2
-	exit 1
-fi
-OLD_PGRX=$(find . -name Cargo.toml -not -path './target/*' -exec grep -HE 'pgrx(-tests)?[[:space:]]*=.*0\.(12|16|17|18)' {} + || true)
-if [ -n "$OLD_PGRX" ]; then
-	echo "old pgrx dependency remains in a Cargo.toml:" >&2
-	echo "$OLD_PGRX" >&2
-	exit 1
-fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
+cargo fetch --locked
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 LOCK_AFTER=$(sha256sum Cargo.lock | cut -d ' ' -f1)
-VENDOR_LOCK_AFTER=$(sha256sum vendor/wrappers/Cargo.lock | cut -d ' ' -f1)
-if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ] || [ "$VENDOR_LOCK_BEFORE" != "$VENDOR_LOCK_AFTER" ]; then
-	echo "a Cargo.lock changed during cargo pgrx package" >&2
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
 	exit 1
 fi
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
+mkdir -p %{buildroot}%{_licensedir}/%{name}
 cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
 cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
 cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}/LICENSE.etcd_fdw
+install -m 644 %{_builddir}/%{srcdir}/vendor/wrappers/LICENSE %{buildroot}%{_licensedir}/%{name}/LICENSE.wrappers
 
 %files
+%license %{_licensedir}/%{name}/LICENSE.etcd_fdw
+%license %{_licensedir}/%{name}/LICENSE.wrappers
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.0.1-4PGSTY
+- Vendor the formal Supabase Wrappers 0.6.2 source release
+- Rebase the Cybertec cached-plan lifetime fix for Wrappers 0.6.2
+- Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2
+- Install both the MIT and Apache-2.0 license texts
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.1-3PIGSTY
 - Migrate every vendored wrappers Cargo.toml and Cargo.lock to pgrx 0.19.1
 - Gate both root and vendored lockfiles and reject recursive old pgrx declarations

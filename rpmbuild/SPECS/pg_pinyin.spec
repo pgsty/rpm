@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.5
+Version:	0.0.6
 Release:	1PGSTY%{?dist}
 Summary:	Pinyin romanization and search helpers for PostgreSQL
 License:	MIT
 URL:		https://github.com/aiyou178/pg_pinyin
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/aiyou178/pg_pinyin/archive/refs/tags/v0.0.5.tar.gz
-Patch0:		pg-pinyin-0.0.5.patch
+#           https://github.com/aiyou178/pg_pinyin/archive/refs/tags/v0.0.6.tar.gz
+Patch0:		pg-pinyin-0.0.6.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -32,7 +32,7 @@ patch -p1 --forward -f < %{PATCH0}
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -43,6 +43,8 @@ CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension
+cp -f %{pname}--*.sql "$EXT_DIR/"
 test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
 	exit 1
@@ -64,6 +66,11 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.6-1PGSTY
+- Update to upstream v0.0.6 with native pgrx 0.19.2 and PostgreSQL 14-18 support
+- Keep the locked dependency graph and declare the pgrx 0.19.2 Rust 1.96 MSRV
+- Ship the complete 0.0.2 through 0.0.6 extension upgrade chain
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.5-1PIGSTY
 - Update to upstream v0.0.5 with native pgrx 0.19.1 support
 - Declare the pgrx 0.19 MSRV and build from the committed Cargo.lock

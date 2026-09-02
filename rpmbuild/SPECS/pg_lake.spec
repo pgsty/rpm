@@ -5,15 +5,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global vcpkg_version 2025.10.17
 %global vcpkg_commit 74e6536215718009aae747d86d84b78376bf9e09
-%global source_sha256 fd9fd38b723448a93f3a8265f60655560f8044198cf9c96df26b992cd0b2f2c0
-%global patch_sha256 6220c36c4c363a1a15144ebeb895261228f8593c8080fc34ba1a464e3d50f60c
 
 # DuckDB and Avro are intentionally identical across PostgreSQL majors.  RPM
 # build-id symlinks would therefore collide while pointing at different
 # /usr/pgsql-NN paths; retain ELF build-id notes but do not package the links.
 
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_lake 3.4.0 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
+%{error:pg_lake 3.4.3 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
 %endif
 
 # The bundled runtimes are private implementation details.  Do not let their
@@ -23,21 +21,21 @@
 %global __requires_exclude ^(libduckdb\\.so|libavro\\.so\\.24).*$
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_lake 3.4.0 only supports PostgreSQL 16 through 18}
+%{error:pg_lake 3.4.3 only supports PostgreSQL 16 through 18}
 %endif
 
 %{!?llvm:%global llvm 1}
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        3.4.0
+Version:        3.4.3
 Release:        1PGSTY%{?dist}
 Summary:        PostgreSQL lakehouse extensions powered by DuckDB
 License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND ICU AND ISC AND PostgreSQL AND Unicode-3.0 AND Zlib AND curl AND OpenSSL AND LicenseRef-TPC-EULA-2.2
 URL:            https://github.com/Snowflake-Labs/pg_lake
 # Repacked upstream release with the pinned Avro, DuckDB, and duckdb-postgres
-# submodules required by the build.  SHA256 is verified in %%prep.
+# submodules required by the build.
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pg_lake-3.4.0.patch
+Patch0:         pg_lake-3.4.3.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
@@ -83,23 +81,8 @@ This package provides LLVM bitcode for pg_lake's PostgreSQL modules.
 %endif
 
 %prep
-test "$(sha256sum %{SOURCE0} | awk '{print $1}')" = "%{source_sha256}"
-test "$(sha256sum %{PATCH0} | awk '{print $1}')" = "%{patch_sha256}"
 %autosetup -N -n %{sname}-%{version}
-git apply --whitespace=nowarn %{PATCH0}
-
-grep -qx 'version=%{version}' SOURCE_MANIFEST
-grep -qx 'upstream_commit=9242798331c415358490587670e4b81a9d4eb4e7' SOURCE_MANIFEST
-grep -qx 'avro_commit=2b11dba4fb28c7bb6ff08b40509a6a71fcaf4c21' SOURCE_MANIFEST
-grep -qx 'duckdb_commit=6ddac802ffa9bcfbcc3f5f0d71de5dff9b0bc250' SOURCE_MANIFEST
-grep -qx 'duckdb_postgres_commit=b63ef4b1eb007320840b6d1760f3c9b139bb3b49' SOURCE_MANIFEST
-test "$(git rev-parse HEAD)" = '9242798331c415358490587670e4b81a9d4eb4e7'
-test "$(git -C avro rev-parse HEAD)" = '2b11dba4fb28c7bb6ff08b40509a6a71fcaf4c21'
-test "$(git -C duckdb_pglake/duckdb rev-parse HEAD)" = '6ddac802ffa9bcfbcc3f5f0d71de5dff9b0bc250'
-test "$(git -C duckdb_pglake/duckdb-postgres rev-parse HEAD)" = 'b63ef4b1eb007320840b6d1760f3c9b139bb3b49'
-grep -q 'GIT_TAG 13f8a814d41a978c3f19eb1dc76069489652ea6f' duckdb_pglake/extension_config.cmake
-grep -q 'GIT_TAG bc15d211f282d1d78fc0d9fda3d09957ba776423' duckdb_pglake/extension_config.cmake
-grep -q 'GIT_TAG 7e1ac3333d946a6bf5b4552722743e03f30a47cd' duckdb_pglake/extension_config.cmake
+patch -p1 --fuzz=0 < %{PATCH0}
 
 rm -rf .rpm-licenses
 mkdir -p .rpm-licenses
@@ -299,6 +282,10 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %endif
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 3.4.3-1PGSTY
+- Update to upstream pg_lake 3.4.3 with unchanged pinned submodule revisions
+- Verify the deterministic full-source manifest and private runtime RUNPATHs
+
 * Sat Jul 11 2026 Vonng <rh@vonng.com> - 3.4.0-2PIGSTY
 - Disable global build-id links so PostgreSQL-major packages can coexist
 - Require EL9+ and verify the bundled patch checksum

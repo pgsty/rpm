@@ -9,14 +9,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.90.0
+Version:	0.92.0
 Release:	1PGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/trickle-labs/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg-trickle-0.90.0.patch
-#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.90.0
+Patch0:		pg-trickle-0.92.0.patch
+#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.92.0
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
@@ -84,6 +84,12 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Sep 03 2026 Vonng <rh@vonng.com> - 0.92.0-1PGSTY
+- Update to the signed upstream v0.92.0 tag archive
+- Keep PostgreSQL 18 on cargo-pgrx and pgrx 0.19.2 with a locked dependency graph
+- Ship all 29 update edges from 0.81.0 through 0.92.0 and the recovery safeguards
+- Refresh the downstream migration guide for the 0.92.0 capture identity boundary
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.90.0-1PGSTY
 - Update to the signed upstream v0.90.0 tag archive
 - Rebase to cargo-pgrx/pgrx 0.19.2 with locked dependencies

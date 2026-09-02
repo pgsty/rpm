@@ -2,14 +2,14 @@
 %global sname inchi
 
 Name:           %{sname}
-Version:        1.07.3
+Version:        1.07.5
 Release:        1PGSTY%{?dist}
 Summary:        IUPAC International Chemical Identifier shared library
 License:        MIT
 URL:            https://github.com/IUPAC-InChI/InChI
-Source0:        %{sname}-%{version}.tar.gz
-# normalized from the official upstream release archive:
-# https://github.com/IUPAC-InChI/InChI/releases/download/v1.07.3/INCHI-1-SRC.zip
+Source0:        %{sname}_%{version}+dfsg.orig.tar.xz
+# Repacked reproducibly from the official v1.07.5 tag with the same
+# Files-Excluded policy as the matching Debian source package.
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -28,14 +28,16 @@ Headers and link-time symlink for building software against the InChI shared
 library.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n InChI-%{version}
 
 %build
 %{__mkdir_p} build
-make -C INCHI_API/demos/inchi_main/gcc \
+make -C INCHI-1-SRC/INCHI_API/demos/inchi_main/gcc \
   CREATE_MAIN= \
-  LIB_DIR=%{_builddir}/%{sname}-%{version}/build \
+  LIB_DIR=%{_builddir}/InChI-%{version}/build \
   INCHI_LIB_NAME=libinchi \
+  MAIN_VERSION=.1 \
+  VERSION=.1.07 \
   C_COMPILER="%{__cc}" \
   C_SO_OPTIONS="-fPIC -DTARGET_API_LIB -DCOMPILE_ANSI_ONLY" \
   C_OPTIONS="%{optflags} -std=c11 -c -fno-strict-aliasing"
@@ -47,11 +49,11 @@ install -m 0755 build/libinchi.so.1.07 %{buildroot}%{_libdir}/libinchi.so.1.07
 ln -sf libinchi.so.1.07 %{buildroot}%{_libdir}/libinchi.so
 
 %{__mkdir_p} %{buildroot}%{_includedir}/inchi
-install -m 0644 INCHI_BASE/src/inchi_api.h %{buildroot}%{_includedir}/inchi/
-install -m 0644 INCHI_BASE/src/bcf_s.h %{buildroot}%{_includedir}/inchi/
-install -m 0644 INCHI_BASE/src/ichi.h %{buildroot}%{_includedir}/inchi/
-install -m 0644 INCHI_BASE/src/ixa.h %{buildroot}%{_includedir}/inchi/
-install -m 0644 INCHI_BASE/src/inchicmp.h %{buildroot}%{_includedir}/inchi/
+install -m 0644 INCHI-1-SRC/INCHI_BASE/src/inchi_api.h %{buildroot}%{_includedir}/inchi/
+install -m 0644 INCHI-1-SRC/INCHI_BASE/src/bcf_s.h %{buildroot}%{_includedir}/inchi/
+install -m 0644 INCHI-1-SRC/INCHI_BASE/src/ichi.h %{buildroot}%{_includedir}/inchi/
+install -m 0644 INCHI-1-SRC/INCHI_BASE/src/ixa.h %{buildroot}%{_includedir}/inchi/
+install -m 0644 INCHI-1-SRC/INCHI_BASE/src/inchicmp.h %{buildroot}%{_includedir}/inchi/
 
 %post
 /sbin/ldconfig
@@ -60,7 +62,8 @@ install -m 0644 INCHI_BASE/src/inchicmp.h %{buildroot}%{_includedir}/inchi/
 /sbin/ldconfig
 
 %files
-%doc readme.txt
+%doc README.md
+%license LICENSE
 %{_libdir}/libinchi.so.1.07
 
 %files devel
@@ -72,6 +75,10 @@ install -m 0644 INCHI_BASE/src/inchicmp.h %{buildroot}%{_includedir}/inchi/
 %{_libdir}/libinchi.so
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.07.5-1PGSTY
+- Update to InChI 1.07.5 using the shared DFSG-repacked source archive
+- Keep the libinchi 1.07 ABI and RDKit-facing development header layout
+
 * Mon Apr 13 2026 Vonng <rh@vonng.com> - 1.07.3-1PIGSTY
 - Package InChI 1.07.3 as standalone runtime and devel RPMs for EL10
 - Install the shared library and headers in the locations expected by RDKit

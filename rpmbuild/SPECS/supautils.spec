@@ -3,14 +3,18 @@
 %global sname supautils
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:supautils 3.4.2 supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.2.1
+Version:	3.4.2
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
-License:	Apache-2.0
+License:	Apache-2.0 AND PostgreSQL AND LicenseRef-Public-Domain
 URL:		https://github.com/supabase/supautils
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/supabase/supautils/archive/refs/tags/v3.2.1.tar.gz
+#           https://github.com/supabase/supautils/archive/refs/tags/v3.4.2.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
@@ -36,6 +40,9 @@ install -m 755 %{pname}.so %{buildroot}%{pginstdir}/lib/%{pname}.so
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 3.4.2-1PGSTY
+- Bump to 3.4.2
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 3.2.1-1PIGSTY
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 3.1.0-1PIGSTY
 * Fri Oct 31 2025 Vonng <rh@vonng.com> - 3.0.2-1PIGSTY

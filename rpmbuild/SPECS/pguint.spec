@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:    1.20250815
+Version:    1.20260630
 Release:    1PGSTY%{?dist}
 License:    PostgreSQL
 Summary:	Unsigned and other extra integer types for PostgreSQL
@@ -52,7 +52,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -81,6 +81,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.20260630-1PGSTY
+- Bump to 1.20260630
+
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.20250815-1PIGSTY
 * Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.20231206-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

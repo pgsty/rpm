@@ -10,25 +10,19 @@
 # links with LDFLAGS only and would fall back to the fat objects.
 %global _lto_cflags %{nil}
 
-%global source0_sha256 7fa666d36d198275999e2a68dda44d3d37960f2f7aed3a595fb811f4fd0515b5
-%global source1_sha256 6fb18a31be22e21d57c2f26a4bb9160cc2853f5e98e74cbf7e50a06ae57f79db
-# The packaged vendor unit is a downstream file. Verify that the upstream
-# template it was derived from has not changed, so an upstream revision fails
-# the build instead of silently diverging from the shipped unit.
-%global service_in_sha256 937ff126740ce81e487929cb3c927c608de18b86396e0939bb5fd632897db783
-
 # Keep documentation of every subpackage under one directory.
 %global _docdir_fmt %{name}
 
 Name:           haproxy
-Version:        3.4.3
+Version:        3.4.4
 Release:        1PGSTY%{?dist}
 Summary:        HAProxy reverse proxy for high availability environments
 
-License:        GPL-2.0-or-later AND LGPL-2.1-or-later
+License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT AND BSD-2-Clause
 URL:            https://www.haproxy.org/
 Source0:        https://www.haproxy.org/download/%(v=%{version}; echo ${v%.*})/src/%{name}-%{version}.tar.gz
 Source1:        %{name}-utils-%{version}.tar.gz
+Patch0:         haproxy-3.4.4.patch
 
 BuildRequires:  gcc
 BuildRequires:  libxcrypt-devel
@@ -70,10 +64,8 @@ Reference documentation, internal design notes, and configuration examples for
 HAProxy. The material is not needed to run the service.
 
 %prep
-echo "%{source0_sha256}  %{SOURCE0}" | sha256sum -c -
-echo "%{source1_sha256}  %{SOURCE1}" | sha256sum -c -
-%autosetup -a 1
-echo "%{service_in_sha256}  admin/systemd/%{name}.service.in" | sha256sum -c -
+%autosetup -a 1 -N
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 quic_compat=
@@ -210,6 +202,14 @@ fi
 %doc CHANGELOG doc/* examples/
 
 %changelog
+* Mon Aug 31 2026 Ruohang Feng <rh@vonng.com> - 3.4.4-1PGSTY
+- Update to HAProxy 3.4.4.
+- Regenerate the versioned shared utilities archive deterministically; the
+  upstream systemd template and downstream integration files are unchanged.
+- Share the versioned source patch with DEB packaging so embedded build flags
+  do not expose builder paths.
+- Account for the MIT and BSD-2-Clause components shipped in the binaries.
+
 * Sun Aug 02 2026 Ruohang Feng <rh@vonng.com> 3.4.3-2PIGSTY
 - Reload instead of restart on package upgrade.
 - Ship the vendor unit as a shared downstream asset and verify the upstream

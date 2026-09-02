@@ -5,15 +5,20 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.2
-Release:	1PGSTY%{?dist}
+Version:	2.0.3
+Release:	2PGSTY%{?dist}
 Summary:	Execute SQL commands in PostgreSQL background worker processes
 License:	PostgreSQL
 URL:		https://github.com/vibhorkum/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#		https://github.com/vibhorkum/pg_background/archive/refs/tags/v2.0.2.tar.gz
+Patch0:		pg_background-2.0.3.patch
+#		https://github.com/vibhorkum/pg_background/archive/refs/tags/v2.0.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:	clang >= 19.0
+BuildRequires:	llvm >= 19.0
+%endif
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -35,6 +40,7 @@ This package provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
@@ -56,6 +62,14 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.0.3-2PGSTY
+- Add downstream extension version 2.0.3 and a 2.0 to 2.0.3 security upgrade edge
+- Preserve every previously published 2.0 install and upgrade script byte-for-byte
+- Declare the Clang and LLVM toolchain required by the llvmjit build
+
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.0.3-1PIGSTY
+- Update to upstream 2.0.3 with search-path, catalog, cancellation, worker lifecycle, and result safety fixes
+
 * Fri Jun 19 2026 Vonng <rh@vonng.com> - 2.0.2-1PIGSTY
 - https://github.com/vibhorkum/pg_background/releases/tag/v2.0.2
 

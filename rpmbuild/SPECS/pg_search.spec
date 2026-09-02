@@ -3,23 +3,28 @@
 %global sname pg_search
 %global srcdir paradedb-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global rust_toolchain 1.97.1
+%global pgrx_version 0.19.2
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
 %{error:pg_search only supports PostgreSQL 15 through 18 in PGSTY builds}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.25.2
+Version:	0.25.6
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
-License:	AGPL-3.0-only
+# Exact per-crate expressions are installed as third-party/LICENSE-EXPRESSIONS.txt.
+# This aggregate enumerates every atomic license family in the resolved package closure.
+License:	(AGPL-3.0-or-later) AND 0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND CDLA-Permissive-2.0 AND ISC AND MIT AND MIT-0 AND MPL-2.0 AND Unicode-3.0 AND Unlicense AND Zlib AND zlib-acknowledgement
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_search/0.25.2/pg_search-0.25.2.zip
-Patch0:		pg-search-0.25.2.patch
+#           normalized from https://api.pgxn.org/dist/pg_search/0.25.6/pg_search-0.25.6.zip
+Source1:	pg_search_collect_third_party_licenses.py
+Patch0:		pg-search-0.25.6.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel pkgconfig
+BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel pkgconfig python3
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion}
 
 %description
@@ -31,42 +36,54 @@ before the extension can be created or used.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{PATCH0}
+patch --fuzz=0 --batch --forward -p1 < %{PATCH0}
 
 %build
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_TOOLCHAIN=stable
+export RUSTUP_TOOLCHAIN=%{rust_toolchain}
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
-PGRX_VERSION=0.19.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
-if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
-	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
+if [ "$CURRENT_PGRX" != "%{pgrx_version}" ]; then
+	echo "cargo-pgrx %{pgrx_version} is required; run pig build pgrx -v %{pgrx_version} before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
-LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 
 export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-2}"
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 
 cd %{pname}
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-test "$LOCK_SHA256" = "$(sha256sum ../Cargo.lock | awk '{print $1}')" || {
-	echo "Cargo.lock changed during package" >&2
+cd ..
+TARGET_TRIPLE=$(rustc -vV | sed -n 's/^host: //p')
+CARGO_NET_OFFLINE=true cargo metadata --locked --offline \
+	--manifest-path %{pname}/Cargo.toml --no-default-features \
+	--features pg%{pgmajorversion} --filter-platform "$TARGET_TRIPLE" \
+	--format-version=1 > .cargo-metadata-pg-search.json
+python3 %{SOURCE1} .cargo-metadata-pg-search.json third-party-licenses
+LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
+if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
+	echo "Cargo.lock changed during cargo pgrx package" >&2
 	exit 1
-}
+fi
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
+cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+install -d %{buildroot}%{_licensedir}/%{name}/third-party
+cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 
 %files
 %license LICENSE
+%license %{_licensedir}/%{name}/third-party
 %doc %{pname}/README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -74,6 +91,14 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.25.6-1PGSTY
+- Update to upstream PGXN 0.25.6
+- Build the fixed Cargo graph with Rust 1.97.1 and cargo-pgrx 0.19.2
+- Build from the locked Git dependency graph without mutating Cargo.lock
+- Keep the upstream PostgreSQL 15 through 18 support matrix
+- Align package metadata with upstream's AGPL-3.0-or-later source headers
+- Ship license and notice files for the resolved static Rust dependency closure
+
 * Wed Aug 12 2026 Vonng <rh@vonng.com> - 0.25.2-1PIGSTY
 - Update to upstream PGXN 0.25.2
 - Keep the validated cargo-pgrx 0.19.1 compatibility patch

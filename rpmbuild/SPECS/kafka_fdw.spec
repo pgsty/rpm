@@ -1,6 +1,7 @@
 %global pname kafka_fdw
 %global sname kafka_fdw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global snapshot_commit 8615082d986ba11ed70191bb4ca53c8cb7e4def3
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -14,13 +15,16 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	1PGSTY%{?dist}
+Release:	2.git20251030.8615082PGSTY%{?dist}
 Summary:	kafka foreign database wrapper for postresql
 License:	PostgreSQL
-URL:		https://github.com/Vonng/kafka_fdw
-Source0:	%{sname}-%{version}.tar.gz
+URL:		https://github.com/adjust/kafka_fdw
+Source0:	%{sname}-0.0.3+git20251030.8615082.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 librdkafka-devel >= 1.6.0
+%if %llvm
+BuildRequires:	clang llvm
+%endif
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -48,7 +52,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -56,7 +60,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}-%{snapshot_commit}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -77,6 +81,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.0.3-2.git20251030.8615082PGSTY
+- Package upstream master snapshot 8615082d986b
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 0.0.3-2PIGSTY
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.3-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

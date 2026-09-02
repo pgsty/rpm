@@ -1,6 +1,13 @@
 %global pname spat
 %global sname spat
+%global commit fccb581ff3fd537a9df0114098e3e22d2d5fa465
+%global gitdate 20250512
+%global shortcommit fccb581
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+
+%if 0%{?pgmajorversion} != 17
+%{error:spat 0.1.0a5 supports PostgreSQL 17 only}
+%endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -13,12 +20,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0a4
-Release:	1PGSTY%{?dist}
+Version:	0.1.0a5
+Release:	1.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
 Summary:	Redis-like In-Memory DB Embedded in Postgres
 License:	AGPL-3.0-only
 URL:		https://github.com/Florents-Tselai/spat
-Source0:	%{sname}-%{version}.tar.gz
+Source0:	%{sname}-%{version}+git%{gitdate}.%{shortcommit}.tar.gz
+Patch0:		spat-0.1.0a5.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -48,7 +56,8 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -56,7 +65,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%autosetup -p1 -n %{sname}-%{commit}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -76,8 +85,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
-%exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.1.0a5-1.git20250512.fccb581PGSTY
+- Update to upstream commit fccb581 (0.1.0a5)
+- Add downstream metadata-only 0.1.0a4 to 0.1.0a5 transition
+
 * Fri May 23 2025 Vonng <rh@vonng.com> - 0.1.0a4-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -1,0 +1,83 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -95 +95 @@
+-set(RDK_BOOST_VERSION "1.81.0")
++set(RDK_BOOST_VERSION "1.75.0")
+@@ -181,15 +181,17 @@
+ #include catch
+-find_package(Catch2 3 QUIET)
+-if(NOT Catch2_FOUND)
+-  Include(FetchContent)
++if(RDK_BUILD_CPP_TESTS)
++  find_package(Catch2 3 QUIET)
++  if(NOT Catch2_FOUND)
++    Include(FetchContent)
+ 
+-  FetchContent_Declare(
+-    Catch2
+-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+-    GIT_TAG        v3.4.0 # or a later release
+-  )
++    FetchContent_Declare(
++      Catch2
++      GIT_REPOSITORY https://github.com/catchorg/Catch2.git
++      GIT_TAG        v3.4.0 # or a later release
++    )
+ 
+-  FetchContent_MakeAvailable(Catch2)
+-endif()
++    FetchContent_MakeAvailable(Catch2)
++  endif()
++endif()
+ 
+ # make sure we have better_enums
+--- a/Code/RDGeneral/CMakeLists.txt
++++ b/Code/RDGeneral/CMakeLists.txt
+@@ -6,4 +6,6 @@
+-FetchContent_MakeAvailable(better_enums)
+ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/enum.h)
+-    file(COPY ${better_enums_SOURCE_DIR}/enum.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
++    FetchContent_MakeAvailable(better_enums)
++    if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/enum.h)
++        file(COPY ${better_enums_SOURCE_DIR}/enum.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
++    endif()
+ endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/enum.h)
+--- a/Code/GraphMol/MolInterchange/Parser.cpp
++++ b/Code/GraphMol/MolInterchange/Parser.cpp
+@@ -216,12 +216,13 @@
+ template <typename T>
+ void parseProperties(T &obj, const bj::value &propsVal) {
+   for (const auto &propVal : propsVal.as_object()) {
++    const std::string key(propVal.key().data(), propVal.key().size());
+     if (propVal.value().is_int64()) {
+-      obj.setProp(propVal.key(), static_cast<int>(propVal.value().as_int64()));
++      obj.setProp(key, static_cast<int>(propVal.value().as_int64()));
+     } else if (propVal.value().is_double()) {
+-      obj.setProp(propVal.key(), propVal.value().as_double());
++      obj.setProp(key, propVal.value().as_double());
+     } else if (propVal.value().is_string()) {
+-      obj.setProp(propVal.key(), propVal.value().as_string().data());
++      obj.setProp(key, propVal.value().as_string().data());
+     }
+   }
+ }
+--- a/Code/GraphMol/SynthonSpaceSearch/SearchResults.h
++++ b/Code/GraphMol/SynthonSpaceSearch/SearchResults.h
+@@ -13,7 +13,6 @@
+ 
+ #include <unordered_map>
+ #include <functional>
+-#include <boost/unordered/unordered_flat_set.hpp>
+ #include <RDGeneral/export.h>
+ #include <GraphMol/ROMol.h>
+ 
+--- a/Code/GraphMol/SynthonSpaceSearch/SynthonSpaceSearcher.cpp
++++ b/Code/GraphMol/SynthonSpaceSearch/SynthonSpaceSearcher.cpp
+@@ -14,7 +14,6 @@
+ #include <thread>
+ #include <boost/algorithm/string.hpp>
+ #include <boost/random/discrete_distribution.hpp>
+-#include <boost/unordered/unordered_flat_set.hpp>
+ 
+ #include <GraphMol/Chirality.h>
+ #include <GraphMol/MolOps.h>

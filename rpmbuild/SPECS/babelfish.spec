@@ -1,7 +1,7 @@
 %global sname babelfish
 %{!?pgmajorversion:%global pgmajorversion 17}
-%{!?pgversion:%global pgversion 17.7}
-%{!?bbfversion:%global bbfversion 5.4.0}
+%{!?pgversion:%global pgversion 17.10}
+%{!?bbfversion:%global bbfversion 5.7.0}
 %global sourceversion %{pgversion}-%{bbfversion}
 %global pginstdir /usr/babelfish-%{pgmajorversion}
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
@@ -63,7 +63,12 @@ cd buildsrc
 CFLAGS="${CFLAGS:-%optflags} %{bbf_prefix_map}"
 CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -v ffast-math | xargs -n 100`
 %if 0%{?pgmajorversion} >= 18
-CFLAGS="$CFLAGS -Wno-error=missing-variable-declarations -DHAVE_OPENSSL_INIT_SSL -DHAVE_BIO_METH_NEW"
+CFLAGS="$CFLAGS -DHAVE_OPENSSL_INIT_SSL -DHAVE_BIO_METH_NEW"
+if printf 'int main(void) { return 0; }' | \
+   %{__cc} -x c -Wno-error=missing-variable-declarations -c -o /dev/null - \
+   >/dev/null 2>&1; then
+  CFLAGS="$CFLAGS -Wno-error=missing-variable-declarations"
+fi
 %endif
 CXXFLAGS="${CXXFLAGS:-%optflags} %{bbf_prefix_map}"
 LDFLAGS="-Wl,--as-needed"; export LDFLAGS
@@ -246,5 +251,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Sep 01 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.7.0-1PGSTY
+- Update PG17 to Babelfish 5.7.0 on its PostgreSQL 17.10 source base
+- Add the PG18 Babelfish 6.2.0 on its PostgreSQL 18.4 source base
+
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.4.0-1PIGSTY
 - Bundle Babelfish PG 17.7 kernel and 5.4.0 core extensions into babelfish-17

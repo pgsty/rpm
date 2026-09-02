@@ -1,6 +1,13 @@
 %global pname pg_orphaned
 %global sname pg_orphaned
+%global gitdate 20260427
+%global commit 4e23c9c3379bdedc878d585a3d81f7f4d5151993
+%global shortcommit 4e23c9c
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_orphaned supports PostgreSQL 14 through 18 in Pigsty}
+%endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -14,11 +21,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PGSTY%{?dist}
+Release:	2.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
 Summary:	Allow to manipulate orphaned files thanks to a few functions
 License:	PostgreSQL
 URL:		https://github.com/bdrouvot/pg_orphaned
-Source0:	%{sname}-%{version}.tar.gz
+Source0:	%{sname}-git%{gitdate}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -52,7 +59,8 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -60,7 +68,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}-%{commit}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -71,6 +79,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 %files
 %doc README.md
+%license LICENSE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
@@ -78,9 +87,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
-%exclude /usr/lib/.build-id/*
-%exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0-2.git20260427.4e23c9cPGSTY
+- Update to upstream snapshot 4e23c9c from 2026-04-27
+- Add PostgreSQL 18 compatibility while retaining extension SQL version 1.0
+
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

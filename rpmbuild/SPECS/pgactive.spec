@@ -5,12 +5,13 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.1.7
+Version:	2.1.9
 Release:	1PGSTY%{?dist}
 Summary:	Active-active Replication Extension for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/aws/pgactive
 Source0:    %{sname}-%{version}.tar.gz
+Patch0:     pgactive-2.1.9.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros libselinux-devel libxslt-devel pam-devel numactl-devel
 %if %{pgmajorversion} >= 14
@@ -42,7 +43,7 @@ Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -51,6 +52,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{pname}-%{version}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 ./configure
@@ -67,7 +69,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %{pginstdir}/lib/%{sname}.so
 %{pginstdir}/share/extension/%{sname}*.sql
 %{pginstdir}/share/extension/%{sname}.control
-%{pginstdir}/share/extension/%{sname}.control
 
 %if %llvm
 %files llvmjit
@@ -79,6 +80,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.1.9-1PGSTY
+- New upstream release
+- Correct the upstream control default version
 * Mon Oct 27 2025 Vonng <rh@vonng.com> - 2.1.7-1PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 2.1.6-1PIGSTY
 * Tue Jun 24 2025 Vonng <rh@vonng.com> - 2.1.5-1PIGSTY

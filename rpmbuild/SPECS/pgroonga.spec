@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	4.0.4
+Version:	4.0.8
 Release:	1PGSTY%{?dist}
 Summary:	Fast full-text search plugin for PostgreSQL based on Groonga
 Group:		Applications/Text
@@ -23,12 +23,12 @@ URL:		https://pgroonga.github.io/
 Source0:	pgroonga-%{version}.tar.gz
 
 BuildRequires:	ccache
-BuildRequires:	clang
 BuildRequires:	gcc
 BuildRequires:	groonga-devel >= 15.1.7
-BuildRequires:	llvm-devel
 BuildRequires:	make
+BuildRequires:	meson
 BuildRequires:	msgpack-devel
+BuildRequires:	ninja-build
 BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	xxhash-devel
 #BuildRequires:	libpq-devel
@@ -41,48 +41,20 @@ Requires:	xxhash-libs
 %description
 This package provides a fast full-text search plugin for PostgreSQL based on Groonga
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n pgroonga-%{version}
 
 %build
-PATH="%{pginstdir}/bin:$PATH" \
-  PKG_CONFIG_PATH="${PWD}" \
-  make \
-    HAVE_MSGPACK=1 \
-    HAVE_XXHASH=1 \
-    enable_rpath=no \
-    %{?_smp_mflags}
+meson setup build \
+  -Dinstall_to_postgresql=true \
+  -Dmessage_pack=enabled \
+  -Dtest=false \
+  -Dxxhash=enabled \
+  -Dpg_config=%{pginstdir}/bin/pg_config
+meson compile -C build
 
 %install
-PATH="%{pginstdir}/bin:$PATH" \
-  make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
+DESTDIR=$RPM_BUILD_ROOT meson install -C build
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/%{sname}_%{pgmajorversion} <<EOF
@@ -105,20 +77,12 @@ EOF
 %{pginstdir}/bin/pgroonga-primary-maintainer.sh
 %{pginstdir}/share/extension/*.control
 %{pginstdir}/share/extension/*.sql
+%{pginstdir}/share/pgroonga/
 %{pginstdir}/lib/*.so
-%{pginstdir}/include/server/contrib/pgroonga_check/
-%{pginstdir}/include/server/contrib/pgroonga_crash_safer/
-%{pginstdir}/include/server/contrib/pgroonga_standby_maintainer/
-%{pginstdir}/include/server/contrib/pgroonga_wal_applier/
-%{pginstdir}/include/server/contrib/pgroonga_wal_resource_manager/
-%{pginstdir}/include/server/extension/pgroonga/
-%{pginstdir}/include/server/extension/pgroonga_database/
-%if %llvm
-%files llvmjit
-   %{pginstdir}/lib/bitcode/*
-%endif
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 4.0.8-1PGSTY
+- Build with the upstream Meson workflow and retain Groonga 15.1 ABI support
 * Wed Oct 29 2025 Vonng <rh@vonng.com> - 4.0.4-1PIGSTY
 * Tue Feb 11 2025 Vonng <rh@vonng.com> - 4.0.0-1PIGSTY
 * Sat Dec 21 2024 Vonng <rh@vonng.com> - 3.2.5-1PIGSTY

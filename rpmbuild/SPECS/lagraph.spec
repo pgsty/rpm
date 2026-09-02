@@ -2,19 +2,19 @@
 %global sname lagraph
 
 Name:           %{sname}
-Version:        1.2.1
+Version:        1.2.2
 Release:        1PGSTY%{?dist}
 Summary:        Graph algorithms and test harness built on GraphBLAS
 License:        BSD-2-Clause
 URL:            https://github.com/GraphBLAS/LAGraph
 Source0:        lagraph-%{version}.tar.gz
 
-BuildRequires:  cmake >= 3.20
+BuildRequires:  cmake >= 3.23
 BuildRequires:  gcc
 BuildRequires:  make
-BuildRequires:  graphblas-devel >= 10.2.0
+BuildRequires:  graphblas-devel >= 10.5.0
 
-Requires:       graphblas%{?_isa} >= 10.2.0
+Requires:       graphblas%{?_isa} >= 10.5.0
 
 %description
 LAGraph is a library plus test harness for collecting graph algorithms that
@@ -24,13 +24,13 @@ liblagraphx.so.1.
 %package devel
 Summary:        Development files for LAGraph
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       graphblas-devel >= 10.2.0
+Requires:       graphblas-devel >= 10.5.0
 
 %description devel
 Headers, pkg-config metadata, and CMake package files for LAGraph.
 
 %prep
-%setup -q -n lagraph-%{version}
+%setup -q -n LAGraph-%{version}
 
 %build
 cmake -S . -B build \
@@ -66,6 +66,9 @@ DESTDIR=%{buildroot} cmake --install build
 %{_libdir}/cmake/LAGraph/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.2.2-1PGSTY
+- Update LAGraph and LAGraphX to 1.2.2 with both .so.1 ABIs retained
+
 * Tue Jul 28 2026 Vonng <rh@vonng.com> - 1.2.1-2PIGSTY
 - Match the normalized lowercase source archive root
 

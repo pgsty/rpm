@@ -5,7 +5,7 @@
 %global llvm_binpath /usr/bin
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pg_fts 0.2.0 only supports PostgreSQL 17 and 18}
+%{error:pg_fts 1.5.3 only supports PostgreSQL 17 and 18}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -19,13 +19,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	1.5.3
 Release:	1PGSTY%{?dist}
 Summary:	Full-text search with BM25 ranking for PostgreSQL
 License:	PostgreSQL AND MIT
 URL:		https://codeberg.org/gregburd/pg_fts
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_fts/0.2.0/pg_fts-0.2.0.zip
+#           https://codeberg.org/gregburd/pg_fts/archive/v1.5.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc clang llvm
@@ -48,7 +48,7 @@ This package provides JIT support for %{sname}.
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
@@ -71,6 +71,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %endif
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.5.3-1PGSTY
+- Bump to 1.5.3
+- Use the official Codeberg archive root
+
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 0.2.0-1PIGSTY
 - Initial RPM release for upstream PGXN 0.2.0
 - Package PostgreSQL 17 and 18 builds with LLVM bitcode subpackages

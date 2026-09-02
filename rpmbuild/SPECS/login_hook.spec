@@ -5,7 +5,7 @@
 
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7
+Version:	1.8
 Release:	1PGSTY%{?dist}
 Summary:	Postgres database extension to execute some code on user login, comparable to Oracle's after logon trigger.
 License:	GPL-3.0-only
@@ -69,5 +69,8 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} DESTDIR=%{build
 %endif
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.8-1PGSTY
+- Bump to Version_1.8
+
 * Sat Nov 01 2025 Vonng <rh@vonng.com> - 1.7.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

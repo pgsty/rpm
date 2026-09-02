@@ -9,17 +9,17 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.1
+Version:	0.4.2
 Release:	1PGSTY%{?dist}
 Summary:	CDC-to-MQTT broker extension for PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/pgmqtt
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/RayElg/pgmqtt/archive/refs/tags/0.4.1.tar.gz
-Patch0:		pgmqtt-0.4.1.patch
+#           https://github.com/RayElg/pgmqtt/archive/refs/tags/0.4.2.tar.gz
+Patch0:		pgmqtt-0.4.2.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	clang
+BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -37,19 +37,19 @@ patch -p1 --forward -f < %{PATCH0}
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 cargo fetch --locked
-LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
+test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
 	exit 1
 }
@@ -75,6 +75,11 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE.md %{buildroot}%{_licensedir}/%{na
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.4.2-1PGSTY
+- Update the source package to upstream release 0.4.2
+- Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2
+- Retain upstream SQL extension version 0.4.1
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.4.1-1PIGSTY
 - Update to upstream 0.4.1 and add a committed pgrx 0.19.1 Cargo.lock
 

@@ -26,7 +26,7 @@ spec:
 	pig build spec
 rust:
 	pig build rust
-pgrx: pgrx0191
+pgrx: pgrx0192
 pgrx0161:
 	pig build pgrx -v 0.16.1
 pgrx0170:
@@ -37,6 +37,8 @@ pgrx0181:
 	pig build pgrx -v 0.18.1
 pgrx0191:
 	pig build pgrx -v 0.19.1
+pgrx0192:
+	pig build pgrx -v 0.19.2
 
 ###############################################################
 #                            Summary                          #
@@ -61,8 +63,8 @@ time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj
 timescaledb:
 	./build timescaledb 16 17 18
 
-timescaledb_toolkit:	# rust pgrx 0.19.1
-	./build timescaledb_toolkit 15 16 17 18
+timescaledb_toolkit:	# rust pgrx 0.19.2, post-install upgrade scripts
+	./build timescaledb_toolkit 16 17 18
 
 pg_timeseries:
 	./build pg_timeseries 14 15 16 17 18
@@ -120,7 +122,7 @@ geoip:
 pg_polyline:    # rust pgrx 0.19.1
 	./build pg_polyline 14 15 16 17 18
 
-pg_eviltransform:	# rust pgrx 0.19.1
+pg_eviltransform:	# rust pgrx 0.19.2
 	./build pg_eviltransform 14 15 16 17 18
 
 pg_geohash:
@@ -132,7 +134,7 @@ mobilitydb:
 pghydro:
 	./build pghydro 14 15 16 17 18
 
-pg_tzf:         # rust pgrx 0.19.1
+pg_tzf:         # rust pgrx 0.19.2
 	./build pg_tzf 14 15 16 17 18
 
 
@@ -148,10 +150,10 @@ vchord:    # rust pgrx 0.19.1
 pgvectorscale:  # rust pgrx 0.19.1
 	./build pgvectorscale 14 15 16 17 18
 
-pg_turbovec:	# rust pgrx 0.19.1, Rust 1.96, OpenBLAS
+pg_turbovec:	# rust pgrx 0.19.2, Rust 1.96
 	./build pg_turbovec 14 15 16 17 18
 
-pg_vectorize:	# rust pgrx 0.19.1
+pg_vectorize:	# rust pgrx 0.19.2; SQL extension 0.23.0
 	./build pg_vectorize 14 15 16 17 18
 
 pg_similarity:	# covered by pgdg
@@ -166,7 +168,7 @@ smlar:          # break for pg18, fixed
 pg_summarize:	# rust pgrx 0.19.1 (forked)
 	./build pg_summarize 14 15 16 17 18
 
-pg_tiktoken:	# rust pgrx 0.19.1
+pg_tiktoken:	# rust pgrx 0.19.2
 	./build pg_tiktoken 14 15 16 17 18
 
 pg_tiktoken_c:
@@ -186,7 +188,8 @@ pgmnemo:
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
-pg_search:      # rust pgrx 0.19.1
+pg_search:      # rust pgrx 0.19.2, Rust 1.97.1, OpenBLAS
+	install -D -m 0644 SPECS/pg_search_collect_third_party_licenses.py SOURCES/pg_search_collect_third_party_licenses.py
 	./build pg_search 15 16 17 18
 
 pgroonga:
@@ -232,7 +235,7 @@ pg_fts:
 acdat:
 	./build acdat 14 15 16 17 18
 
-pg_pinyin:			# rust pgrx 0.19.1
+pg_pinyin:			# rust pgrx 0.19.2
 	./build pg_pinyin 14 15 16 17 18
 
 pg_kazsearch:		# rust pgrx 0.19.1
@@ -309,16 +312,16 @@ age:
 onesparse:
 	./build onesparse 18
 
-pggraph:		# rust pgrx 0.19.1, installs graph extension
+pggraph:		# rust pgrx 0.19.2, installs graph extension
 	./build pggraph 14 15 16 17 18
 
-pgcontext:		# rust pgrx 0.19.1, installs pgcontext and pgcontext_pgvector
+pgcontext:		# rust pgrx 0.19.2, clean-install only; PG17/18
 	./build pgcontext 17 18
 
 pgzint:			# deferred: active EL repos do not provide Zint 2.14+
 	@echo "pgzint is deferred; zint-devel 2.14 or newer is unavailable in active EL repos"
 
-pgrdf:			# rust pgrx 0.19.1
+pgrdf:			# rust pgrx 0.19.2
 	./build pgrdf 14 15 16 17 18
 
 pgwasm:		# rust pgrx 0.19.1, Wasmtime 44
@@ -359,7 +362,7 @@ pg_igraph:		# deferred: draft spec kept in SPECS/obsolete
 pg_ttl_index:
 	./build pg_ttl_index 15 16 17 18
 
-pg_graphql:		# rust pgrx 0.19.1
+pg_graphql:		# rust pgrx 0.19.2
 	./build pg_graphql 14 15 16 17 18
 
 pg_jsonschema:	# rust pgrx 0.19.1
@@ -368,7 +371,7 @@ pg_jsonschema:	# rust pgrx 0.19.1
 jsonschema:		# rust pgrx 0.19.1, distinct from pg_jsonschema
 	./build jsonschema 14 15 16 17 18
 
-pg_mentat:		# rust pgrx 0.19.1 (upstream 0.17.0)
+pg_mentat:		# rust pgrx 0.19.2 (upstream 0.17.0)
 	./build pg_mentat 14 15 16 17 18
 
 #jsquery:
@@ -391,13 +394,13 @@ pg_ivm:
 pg_incremental:
 	./build pg_incremental 16 17 18
 
-pg_trickle:		# rust pgrx 0.19.1, PG18 only
+pg_trickle:		# rust pgrx 0.19.2, PG18 only; breaking V2 DAG recreation
 	./build pg_trickle 18
 
 pg_local_cache:	# shared_preload_libraries
 	./build pg_local_cache 14 15 16 17 18
 
-pg_durable:		# rust pgrx 0.19.1, shared_preload_libraries
+pg_durable:		# rust pgrx 0.19.2, shared_preload_libraries
 	./build pg_durable 14 15 16 17 18
 
 provsql:
@@ -482,7 +485,7 @@ pgunit:
 pgpdf: 		# covered by PGDG
 	./build pgpdf 14 15 16 17 18
 
-pglite_fusion:
+pglite_fusion:	# rust pgrx 0.19.2
 	./build pglite_fusion 14 15 16 17 18
 
 md5hash:
@@ -839,6 +842,9 @@ pg_strict:		# rust pgrx 0.19.1
 preprepare:
 	./build preprepare 14 15 16 17 18
 
+pg_permissions:
+	./build pg_permissions 14 15 16 17 18
+
 pg_upless:
 	./build pg_upless 14 15 16 17 18
 
@@ -859,6 +865,9 @@ pg_fio:
 
 pg_qos:
 	./build pg_qos 15 16 17 18
+
+pgtt:
+	./build pgtt 14 15 16 17 18
 
 pg_pathcheck:	# preload-only diagnostics module for PG17/18
 	./build pg_pathcheck 17 18
@@ -881,7 +890,8 @@ table_log:
 ###############################################################
 #                       Category: STAT                         #
 ###############################################################
-#pg_profile
+pg_profile:
+	./build pg_profile 14 15 16 17 18
 #pg_show_plans
 #pg_stat_kcache
 #pg_stat_monitor      	# break on pg18
@@ -975,6 +985,9 @@ pagevis:
 supautils:
 	./build supautils 14 15 16 17 18
 
+pgsodium-libsodium:
+	./build pgsodium-libsodium 18
+
 pgsodium:
 	./build pgsodium 14 15 16 17 18
 
@@ -1055,7 +1068,7 @@ wrappers:			# rust pgrx 0.19.1
 sqlite_fdw:
 	./build sqlite_fdw 14 15 16 17 18
 
-etcd_fdw:			# rust pgrx 0.19.1
+etcd_fdw:			# rust pgrx 0.19.2
 	./build etcd_fdw 14 15 16 17 18
 
 rdf_fdw:
@@ -1071,7 +1084,7 @@ pg_redis_pubsub:
 	./build pg_redis_pubsub 14 15 16 17 18
 
 kafka_fdw:
-	./build kafka_fdw 14 15 16 17
+	./build kafka_fdw 14 15 16 17 18
 
 firebird_fdw:
 	./build firebird_fdw 14 15 16 17 18
@@ -1152,7 +1165,10 @@ pgactive:
 pgclone:
 	./build pgclone 14 15 16 17 18
 
-pgmqtt:			# rust pgrx 0.19.1
+pgcopydb:
+	./build pgcopydb 14 15 16 17 18
+
+pgmqtt:			# rust pgrx 0.19.2; SQL extension 0.4.1
 	./build pgmqtt 14 15 16 17 18
 
 decoder_raw:
@@ -1173,16 +1189,26 @@ postgresbson:
 haproxy:
 	rpmbuild -ba SPECS/haproxy.spec
 
+libduckdb:
+	rpmbuild -ba SPECS/libduckdb.spec
+
 redis:
 	rpmbuild -ba SPECS/redis.spec
 
 valkey:
 	rpmbuild -ba SPECS/valkey.spec
 
+# Standalone Neon suite.  The generic build helper is invoked for one dummy
+# PG major so it stages declared patches and runs the non-version-looping spec
+# exactly once; the resulting RPM itself contains upstream PG14-17 runtimes.
+neon:
+	./build neon 17
+
 pdu:
 	./build pdu 14 15 16 17 18
 
-pgdog:
+pgdog:			# rust 1.96.1, deterministic pg_raw_parse/scram vendor
+	cp -f SPECS/patches/pgdog-0.1.56.patch SOURCES/pgdog-0.1.56.patch
 	rpmbuild -ba SPECS/pgdog.spec
 pgdog-install:
 	sudo yum remove -y pgdog || /bin/true
@@ -1240,9 +1266,9 @@ antlr4:
 
 babelfish: babelfish-17
 babelfish-18:
-	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 18" --define "pgversion 18.3" --define "bbfversion 6.0.0"
+	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 18" --define "pgversion 18.4" --define "bbfversion 6.2.0"
 babelfish-17:
-	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 17" --define "pgversion 17.7" --define "bbfversion 5.4.0"
+	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 17" --define "pgversion 17.10" --define "bbfversion 5.7.0"
 
 orioledb: orioledb-18
 orioledb-18:
@@ -1323,12 +1349,12 @@ rmdbg:
 	pg_pathcheck pg_disorder pg_savior pg_policy pg_drop_events table_log pg_wait_sampling pg_flight_recorder pgmonitor pg_tracing pg_stat_ch pg_stat_backtrace \
 	pg_stat_monitor pg_store_plans pg_track_optimizer pg_datasentinel pgsentinel pg_ash \
 	system_stats pg_meta pgnodemx pg_sqlog pgmeminfo toastinfo pg_explain_ui pg_describe pg_relusage \
-	pagevis supautils pgsodium column_encrypt pg_vault pg_vault_tde pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
+	pagevis supautils pgsodium-libsodium pgsodium column_encrypt pg_vault pg_vault_tde pg_session_jwt pg_oidc_validator_rust pg_oidc_validator pg_anon \
 	pgsmcrypto pg_enigma pg_auditor pgcryptokey login_hook pg_snakeoil pgextwlist pg_command_fw \
 	block_copy_command sslutils pg_noset pgspider_ext wrappers sqlite_fdw etcd_fdw rdf_fdw nominatim_fdw redis_fdw \
 	pg_redis_pubsub kafka_fdw firebird_fdw aws_s3 documentdb pg_projection session_variable \
 	db2fce spat pgl_ddl_deploy wal2mongo pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
-	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson pdu \
+	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson neon pdu \
 	pgdog pgdog-install pg_adhoc pg_filedump openhalo openhalodb ivorysql ivorysql-contrib ivorysql-all agensgraph zlog polarstore polardb \
 	pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \
 	orioledb-16 orioledb-17 orioledb-18 orioledb-all cloudberry cloudberry-backup cloudberry-pxf \

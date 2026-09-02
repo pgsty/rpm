@@ -1,18 +1,17 @@
 %undefine _debugsource_packages
-%global source0_sha256 7bf7975331511fdb788e85dae63964b128fccee1df026a10db57444babc9c9c4
 %global redis_modules_abi 1
 %global redis_modules_dir %{_libdir}/redis/modules
 
 %bcond_without tests
 
 Name:           redis
-Version:        7.2.15
+Version:        7.2.16
 Release:        1PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0
 URL:            https://redis.io/
 Source0:        https://download.redis.io/releases/redis-%{version}.tar.gz
-Patch0:         redis-7.2.15.patch
+Patch0:         redis-7.2.16.patch
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -54,7 +53,6 @@ BuildArch:      noarch
 Header file and RPM macros required for building loadable Redis modules.
 
 %prep
-echo "%{source0_sha256}  %{SOURCE0}" | sha256sum -c -
 %setup -q -n redis-%{version}
 %patch -P 0 -p1
 
@@ -284,6 +282,11 @@ exit 0
 %{_rpmmacrodir}/macros.redis
 
 %changelog
+* Mon Aug 31 2026 Ruohang Feng <rh@vonng.com> - 7.2.16-1PGSTY
+- Update to the Redis 7.2.16 security release.
+- Fix TLS and blocked-client use-after-free issues plus ACL validation bugs.
+- Keep the package on the 7.2 LTS series; defer Redis 8.10.1 separately.
+
 * Thu Aug 06 2026 Ruohang Feng <rh@vonng.com> - 7.2.15-4PIGSTY
 - Leave the running server alone during upgrades instead of restarting it.
 - Stop owning a ghost /var/run/redis. The unit declares RuntimeDirectory, and

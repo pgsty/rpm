@@ -5,7 +5,7 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.2
+Version:	1.5.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension providing Active session history
 License:	PostgreSQL
@@ -75,6 +75,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %endif
 %exclude /usr/lib/.build-id/*
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.5.0-1PGSTY
+- https://github.com/pgsentinel/pgsentinel/releases/tag/v1.5.0
+- Require PostgreSQL contrib for pg_stat_statements
+
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 1.4.2-1PIGSTY
 - https://github.com/pgsentinel/pgsentinel/releases/tag/v1.4.2
 - Require PostgreSQL contrib for pg_stat_statements

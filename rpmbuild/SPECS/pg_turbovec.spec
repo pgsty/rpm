@@ -10,16 +10,20 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.29.0
+Version:        2.0.0
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v1.29.0.tar.gz
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.0.0.tar.gz
+#               tag commit de35e27e4540a4ec7e7a2d24f60b5317a2091032
+Patch0:         pg-turbovec-2.0.0.patch
+# Package installation is not the database migration: restart PostgreSQL,
+# ALTER EXTENSION to 2.0.0, then REINDEX every turbovec index (wire v7 -> v8).
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:  cargo clang git rust rustfmt openblas-devel
+BuildRequires:  cargo clang git rust rustfmt
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -28,27 +32,19 @@ method backed by the TurboQuant quantizer. It supports exact and approximate
 nearest-neighbor search with L2, inner-product, cosine, and L1 distances.
 
 %prep
-%autosetup -n %{srcdir}
+%autosetup -n %{srcdir} -p1
 
 %build
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=stable
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-RUSTC_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
-echo "$RUSTC_VERSION" | awk 'NF {split($1, v, "."); if (v[1] > 1 || (v[1] == 1 && v[2] >= 96)) exit 0} {exit 1}' || {
-	echo "rustc 1.96.0 or newer is required" >&2
-	exit 1
-}
-grep -Fq 'rust-version = "1.96.0"' Cargo.toml
-grep -Fq 'pgrx = "=0.19.1"' Cargo.toml
-grep -Fq 'pgrx-tests = "=0.19.1"' Cargo.toml
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 CARGO_HTTP_TIMEOUT=600 CARGO_NET_RETRY=10 CARGO_NET_GIT_FETCH_WITH_CLI=true \
@@ -59,6 +55,8 @@ export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true \
     cargo pgrx package -v --no-default-features \
     --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
+cp -f sql/%{pname}--*--*.sql "$EXT_DIR/"
 test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during cargo pgrx package" >&2
 	exit 1
@@ -69,15 +67,16 @@ test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 %{__mkdir_p} %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
 PKGDIR=%{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}
-test -d "$PKGDIR%{pginstdir}"
 cp -a "$PKGDIR%{pginstdir}/lib/%{pname}.so" %{buildroot}%{pginstdir}/lib/
 cp -a "$PKGDIR%{pginstdir}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
 cp -a "$PKGDIR%{pginstdir}/share/extension/%{pname}"*.sql %{buildroot}%{pginstdir}/share/extension/
 install -m 644 README.md %{buildroot}%{_docdir}/%{name}/
+install -m 644 docs/UPGRADING.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 
 %files
 %doc %{_docdir}/%{name}/README.md
+%doc %{_docdir}/%{name}/UPGRADING.md
 %license %{_licensedir}/%{name}/LICENSE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -85,6 +84,11 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.0.0-1PGSTY
+- Update to upstream pg_turbovec 2.0.0 and pgrx 0.19.2 for PostgreSQL 14-18
+- Ship the complete 1.29.x upgrade chain and drop the obsolete OpenBLAS dependency
+- Require restart, ALTER EXTENSION, and one REINDEX per turbovec index for wire v8
+
 * Wed Aug 12 2026 Vonng <rh@vonng.com> - 1.29.0-1PIGSTY
 - Update to upstream pg_turbovec 1.29.0
 

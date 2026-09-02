@@ -5,12 +5,12 @@
 %{!?llvm:%global llvm 1}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.0.1
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to allow to access to memory usage diagnostics
 License:	MIT
 URL:		https://github.com/okbob/%{sname}
-Source0:	%{sname}-VERSION_1_0_0.tar.gz
+Source0:	%{sname}-VERSION_1_0_1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros
 Requires:	postgresql%{pgmajorversion}-server
@@ -39,7 +39,7 @@ Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -47,7 +47,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-VERSION_1_0_0
+%setup -q -n %{sname}-VERSION_1_0_1
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
@@ -69,5 +69,8 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %{pginstdir}/lib/bitcode/%{sname}/src/*.bc
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0.1-1PGSTY
+- Bump to VERSION_1_0_1
+
 * Sat Nov 02 2024 Vonng <rh@vonng.com> - 1.0.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

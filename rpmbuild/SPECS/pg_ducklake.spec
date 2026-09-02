@@ -3,31 +3,39 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_ducklake 1.0.0 is currently supported on EL9 and later; EL8 GCC8 filesystem compatibility is not validated}
+%{error:pg_ducklake 1.0.2 is currently supported on EL9 and later; EL8 GCC8 filesystem compatibility is not validated}
 %endif
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_ducklake 1.0.0 only supports PostgreSQL 14 through 18}
+%{error:pg_ducklake 1.0.2 only supports PostgreSQL 14 through 18}
 %endif
 
-# PGXS and LLVM toolchain paths are not yet aligned across the supported
-# builders, so ship the primary extension package without bitcode for now.
-%global llvm 0
+%if 0%{?pgmajorversion} == 18
+%{!?llvm:%global llvm 1}
+%else
+# PG14-17 retain the existing main-package default until their LLVM matrix is
+# validated; maintainers can still opt in explicitly with --define 'llvm 1'.
+%{!?llvm:%global llvm 0}
+%endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.0.2
 Release:	1PGSTY%{?dist}
 Summary:	DuckLake lakehouse extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/relytcloud/pg_ducklake
-# Source0 is a repacked v1.0.0 release tarball with submodules:
+# Source0 is a normalized v1.0.2 release tarball with all build-time sources:
+# pg_ducklake b7da9fc28f4845a7c84c026ca6569d2d289ea303
 # duckdb 9a64d338f2fa1d3c1d43c016b09c538b529dd397
 # pg_ducklake/third_party/ducklake 93cc490d9b5554f6fd5322dbef23f41d4fa91bb8
 # pg_ducklake/third_party/duckdb-postgres c89234f0b1985f4ee0f52f16e742a1ab2d4ae4f0
 # pg_ducklake/third_party/duckdb-postgres/database-connector 746b56c4063f3682f4eb4facdc49408ed1885555
 # pg_ducklake/third_party/duckdb-postgres/postgres REL_15_13
 Source0:	%{sname}-%{version}.tar.gz
+# Upstream v1.0.2 CI pins vcpkg 84bab45d, whose roaring port is 4.5.0.
+# Keep Pigsty's already-validated 4.7.1; CRoaring 5 is a separate major upgrade.
 Source1:	CRoaring-4.7.1-amalgamation.tar.gz
+Patch0:		pg_ducklake-1.0.2.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc gcc-c++ make cmake ninja-build patch pkgconf-pkg-config
@@ -55,7 +63,7 @@ This package provides JIT support for %{sname}.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
+patch -p1 --fuzz=0 < %{PATCH0}
 tar -xzf %{SOURCE1}
 mkdir -p .rpm-licenses
 cp LICENSE .rpm-licenses/%{sname}-LICENSE
@@ -90,16 +98,26 @@ set_target_properties(roaring::roaring-headers-cpp PROPERTIES
 EOF
 cp "$croaring_prefix/lib/cmake/roaring/roaringConfig.cmake" "$croaring_prefix/lib/cmake/roaring/roaring-config.cmake"
 
+%if %llvm
+CMAKE_PREFIX_PATH="$croaring_prefix" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
+	%{__make} ROARING_LIB_DIR="$croaring_prefix/lib" -j2
+%else
 CMAKE_PREFIX_PATH="$croaring_prefix" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
 	%{__make} ROARING_LIB_DIR="$croaring_prefix/lib" with_llvm=no -j2
+%endif
 
 %install
 %{__rm} -rf %{buildroot}
+%if %llvm
+CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
+	%{__make} ROARING_LIB_DIR="$(pwd)/.croaring/lib" -j2 install DESTDIR=%{buildroot}
+%else
 CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
 	%{__make} ROARING_LIB_DIR="$(pwd)/.croaring/lib" with_llvm=no -j2 install DESTDIR=%{buildroot}
+%endif
 
 %files
-%doc README.md pg_ducklake/docs
+%doc README.md SOURCE_MANIFEST pg_ducklake/docs
 %license .rpm-licenses/*
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -111,6 +129,11 @@ CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pgi
 %endif
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.0.2-1PGSTY
+- Upgrade to pg_ducklake 1.0.2 with a checksummed complete source bundle
+- Retain CRoaring 4.7.1 after validating the 5.1.1 API and serialization
+- Build the PostgreSQL LLVM bitcode subpackage on supported EL9 builders
+
 * Sat Jul 11 2026 Vonng <rh@vonng.com> - 1.0.0-2PIGSTY
 - Mark the current package as EL9+ pending EL8 GCC8 filesystem support
 - Enforce the supported PostgreSQL 14 through 18 range

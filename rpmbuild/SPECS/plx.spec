@@ -9,17 +9,17 @@
 %endif
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:plx 1.3.1 supports PostgreSQL 14 through 18 in PGSTY builds}
+%{error:plx 2.0.1 supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.3.1
+Version:        2.0.1
 Release:        1PGSTY%{?dist}
 Summary:        Transpile multiple procedural dialects to PL/pgSQL
 License:        MIT
 URL:            https://github.com/commandprompt/plx
 Source0:        %{sname}-%{version}.tar.gz
-#               https://github.com/commandprompt/plx/archive/refs/tags/v1.3.1.tar.gz
+#               https://github.com/commandprompt/plx/archive/refs/tags/v2.0.1.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -68,5 +68,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config \
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.0.1-1PGSTY
+- Bump to 2.0.1
+- Package extension SQL through version 2.0.0
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 1.3.1-1PIGSTY
 - Initial RPM release for plx 1.3.1 and PostgreSQL 14 through 18

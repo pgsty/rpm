@@ -1,56 +1,57 @@
 %define debug_package %{nil}
 %global pname timescaledb_toolkit
 %global sname timescaledb-toolkit
-%global srcdir timescale-timescaledb-toolkit-845ed35
+%global srcdir timescaledb-toolkit-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:timescaledb_toolkit supports PostgreSQL 15-18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
+%{error:timescaledb_toolkit 1.26 supports PostgreSQL 16 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.23.0
+Version:	1.26.0
 Release:	1PGSTY%{?dist}
-Summary:	Extension for more hyperfunctions, fully compatible with TimescaleDB and PostgreSQL
+Summary:	Analytical hyperfunctions for PostgreSQL and TimescaleDB
 License:	LicenseRef-Timescale
 URL:		https://github.com/timescale/timescaledb-toolkit
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		timescaledb-toolkit-1.23.0.patch
+#           https://codeload.github.com/timescale/timescaledb-toolkit/tar.gz/refs/tags/1.26.0
+Patch0:		timescaledb-toolkit-1.26.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt
+BuildRequires:	cargo clang rust rustfmt gcc make pkgconfig openssl-devel
 Requires:	postgresql%{pgmajorversion}-server
-Recommends: pg_cron_%{pgmajorversion}
 
 %description
-Extension for more hyperfunctions, fully compatible with TimescaleDB and PostgreSQL
+TimescaleDB Toolkit provides approximate aggregates, counter and gauge
+analysis, time-weighted averages, state tracking, downsampling, and SQL
+pipeline utilities for PostgreSQL and TimescaleDB. This package supports
+PostgreSQL 16 through 18.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
-cd %{_builddir}/%{srcdir}/extension
+cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export RUSTUP_TOOLCHAIN=stable
+export CARGO_INCREMENTAL=0
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=cccb4e0301ffcaa678ab2e7d2e69cde10e1590864b3a75b449b252d52dac954a
-LOCK_BEFORE=$(sha256sum ../Cargo.lock | cut -d ' ' -f1)
-if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
-	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
-	exit 1
-fi
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
+(cd extension && cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run)
 cargo fetch --locked
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-LOCK_AFTER=$(sha256sum ../Cargo.lock | cut -d ' ' -f1)
+(cd extension && CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config)
+PKGROOT=target/release/%{pname}-pg%{pgmajorversion}
+CARGO_NET_OFFLINE=true cargo run --locked --manifest-path tools/post-install/Cargo.toml -- --dir "$PKGROOT"
+LOCK_AFTER=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
 	echo "Cargo.lock changed during cargo pgrx package" >&2
 	exit 1
@@ -59,17 +60,31 @@ fi
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+mkdir -p %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
+PKGROOT=%{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}
+cp -a "$PKGROOT%{pginstdir}/lib/%{pname}-%{version}.so" %{buildroot}%{pginstdir}/lib/
+cp -a "$PKGROOT%{pginstdir}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
+cp -a "$PKGROOT%{pginstdir}/share/extension/%{pname}"--*.sql %{buildroot}%{pginstdir}/share/extension/
+install -m 644 README.md CHANGELOG.md %{buildroot}%{_docdir}/%{name}/
+install -m 644 LICENSE NOTICE %{buildroot}%{_licensedir}/%{name}/
 
 %files
-%{pginstdir}/lib/%{pname}.so
+%doc %{_docdir}/%{name}/README.md
+%doc %{_docdir}/%{name}/CHANGELOG.md
+%license %{_licensedir}/%{name}/LICENSE
+%license %{_licensedir}/%{name}/NOTICE
+%{pginstdir}/lib/%{pname}-%{version}.so
 %{pginstdir}/share/extension/%{pname}.control
-%{pginstdir}/share/extension/%{pname}*sql
+%{pginstdir}/share/extension/%{pname}--*.sql
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Sep 02 2026 Vonng <rh@vonng.com> - 1.26.0-1PGSTY
+- Update to upstream 1.26.0 for PostgreSQL 16 through 18
+- Build with pgrx and cargo-pgrx 0.19.2 using the locked dependency graph
+- Run the upstream post-install generator and ship all 21 direct upgrade paths
+- Install the versioned shared library together with README, LICENSE, and NOTICE
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 1.23.0-2PIGSTY
 - Build with cargo-pgrx 0.19.1 and a locked dependency graph
 - Keep release debuginfo disabled and preserve linker metadata retention

@@ -1,7 +1,7 @@
 %global sname polardb
 %global pgmajorversion 17
 %global pgbaseinstdir /usr/polar-%{pgmajorversion}
-%global polar_commit accf02e2
+%global polar_commit ff510dfc
 %global polar_branch POLARDB_17_STABLE
 %global pgport 5432
 
@@ -11,12 +11,13 @@
 %global _lto_cflags %{nil}
 
 Name:           %{sname}-%{pgmajorversion}
-Version:        17.10.1.0
+Version:        17.11.1.0
 Release:        1PGSTY%{?dist}
 Summary:        PolarDB PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL AND BSD-2-Clause AND BSD-3-Clause AND MIT AND Spencer-94
 URL:            https://github.com/polardb/PolarDB-for-PostgreSQL
 Source0:        polardb-for-postgresql-%{version}.tar.gz
+Patch0:         polardb-17.11.1.0.patch
 # Bundle-style private prefix package; do not register copied libraries as system providers.
 AutoReqProv:    no
 
@@ -40,17 +41,7 @@ PGXS files, and bundled contrib extensions under %{pgbaseinstdir}.
 %setup -q -n PolarDB-for-PostgreSQL-%{version}
 sed -i -e 's|^POLAR_COMMIT=.*|POLAR_COMMIT="%{polar_commit}"|' configure configure.ac
 sed -i -e 's|^port=$(random_unused_port)|port=%{pgport}|' build.sh
-patch -p1 <<'PATCH'
---- a/build.sh
-+++ b/build.sh
-@@ -82 +82,2 @@
--  configure_flag+=" --prefix=$base_dir --with-pgport=$port ${extra_configure_flag-}"
-+  package_prefix="${POLAR_PACKAGE_PREFIX:-$base_dir}"
-+  configure_flag+=" --prefix=$package_prefix --with-pgport=$port ${extra_configure_flag-}"
-@@ -251 +252 @@
--export LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib:$base_dir/lib',--build-id=sha1 ${LDFLAGS-}"
-+export LDFLAGS="-Wl,-rpath,'\$\$ORIGIN/../lib',--build-id=sha1 ${LDFLAGS-}"
-PATCH
+patch -p1 --fuzz=0 < %{PATCH0}
 %if 0%{?rhel} == 8 && "%{_arch}" == "aarch64"
 sed -i -e 's|-lpfsd -lpthread|-lpfsd -latomic -lpthread|' src/Makefile.global.in
 %endif
@@ -164,6 +155,10 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Mon Aug 31 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11.1.0-1PGSTY
+- Update PolarDB PostgreSQL 17 kernel to v17.11.1.0 (ff510dfc)
+- Use the shared DEB/RPM package-prefix and relative-RPATH source patch
+
 * Sun Aug 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.10.1.0-2PGSTY
 - Require PolarStore 1.2.42 or newer and use the PGSTY package release brand
 

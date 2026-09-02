@@ -13,12 +13,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.1
+Version:	1.0.0
 Release:	1PGSTY%{?dist}
 Summary:	Filter statements by their execution plans.
 License:	PostgreSQL
 URL:		https://github.com/pgexperts/pg_plan_filter
-Source0:	pg_plan_filter.tar.gz
+Source0:	pg_plan_filter-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -47,7 +47,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -55,7 +55,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}
+%setup -q -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -75,5 +75,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0.0-1PGSTY
+- Bump to official v1.0.0 source
+
 * Sat Oct 19 2024 Vonng <rh@vonng.com> - 0.0.1
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

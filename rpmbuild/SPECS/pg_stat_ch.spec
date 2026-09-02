@@ -1,43 +1,73 @@
+%global debug_package %{nil}
+%global _build_id_links none
 %global pname pg_stat_ch
 %global sname pg_stat_ch
 %global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global vcpkg_commit cd61e1e26a038e82d6550a3ebbe0fbbfe7da78e3
 
-%if 0%{?pgmajorversion} < 16
-%{error:pg_stat_ch only supports PostgreSQL 16+}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
+%{error:pg_stat_ch only supports PostgreSQL 16 through 18}
 %endif
 
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_stat_ch requires EL9+ packaged gRPC/abseil stack}
+%{error:pg_stat_ch 0.4.0 requires EL9 or later}
 %endif
 
-Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.6
-Release:	1PGSTY%{?dist}
-Summary:	PostgreSQL query telemetry exporter to ClickHouse
-License:	Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
-URL:		https://github.com/ClickHouse/pg_stat_ch
-Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_stat_ch/0.3.6/pg_stat_ch-0.3.6.zip
+%ifarch aarch64
+%global vcpkg_triplet arm64-linux-pic
+%else
+%global vcpkg_triplet x64-linux-pic
+%endif
 
-BuildRequires:	cmake gcc-c++ ninja-build openssl-devel pkgconf-pkg-config
-BuildRequires:	protobuf-devel protobuf-compiler grpc-devel grpc-plugins abseil-cpp-devel
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server
+Name:           %{sname}_%{pgmajorversion}
+Version:        0.4.0
+Release:        1PGSTY%{?dist}
+Summary:        PostgreSQL query telemetry exporter to ClickHouse
+License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT AND OpenSSL
+URL:            https://github.com/ClickHouse/pg_stat_ch
+Source0:        %{sname}-%{version}.tar.gz
+Patch0:         pg_stat_ch-0.4.0.patch
+# Normalized from https://api.pgxn.org/dist/pg_stat_ch/0.4.0/pg_stat_ch-0.4.0.zip
+
+BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:  bison cmake flex gcc gcc-c++ git make ninja-build openssl-devel
+BuildRequires:  curl zip unzip tar pkgconf-pkg-config perl-core python3
+Requires:       postgresql%{pgmajorversion}-server
 
 %description
 pg_stat_ch captures per-query telemetry from PostgreSQL and exports raw events to
-ClickHouse in real time.
+ClickHouse in real time. This package builds the upstream-pinned vcpkg Arrow and
+OpenTelemetry dependency stack for PostgreSQL %{pgmajorversion}.
 
 %prep
-%setup -q -n %{srcdir}
-patch -p1 --forward -f < %{_specdir}/patches/pg_stat_ch-0.3.6.patch
+%autosetup -p1 -n %{srcdir}
 
 %build
-git config --global http.version HTTP/1.1
-cmake -B build -G Ninja \
+VCPKG_ROOT="$HOME/.cache/pg_stat_ch/vcpkg-%{vcpkg_commit}"
+VCPKG_BINARY_CACHE="$HOME/.cache/pg_stat_ch/vcpkg-archives"
+if [ ! -d "$VCPKG_ROOT/.git" ]; then
+    mkdir -p "$(dirname "$VCPKG_ROOT")"
+    git init -q "$VCPKG_ROOT"
+    git -C "$VCPKG_ROOT" remote add origin https://github.com/microsoft/vcpkg.git
+    git -C "$VCPKG_ROOT" fetch --depth=1 origin "%{vcpkg_commit}"
+    git -C "$VCPKG_ROOT" checkout -q --detach FETCH_HEAD
+fi
+test "$(git -C "$VCPKG_ROOT" rev-parse HEAD)" = "%{vcpkg_commit}"
+if [ ! -x "$VCPKG_ROOT/vcpkg" ]; then
+    (cd "$VCPKG_ROOT" && ./bootstrap-vcpkg.sh -disableMetrics)
+fi
+mkdir -p "$VCPKG_BINARY_CACHE"
+
+VCPKG_ROOT="$VCPKG_ROOT" \
+VCPKG_DISABLE_METRICS=1 \
+VCPKG_DEFAULT_BINARY_CACHE="$VCPKG_BINARY_CACHE" \
+cmake -S . -B build -G Ninja \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
+  -DVCPKG_TARGET_TRIPLET=%{vcpkg_triplet} \
+  -DVCPKG_OVERLAY_TRIPLETS="$PWD/triplets" \
+  -DPG_STAT_CH_PACKAGE_VERSION=%{version} \
   -DPG_CONFIG=%{pginstdir}/bin/pg_config \
-  -DOTELCPP_PROTO_PATH=%{_builddir}/%{srcdir}/third_party/opentelemetry-cpp/third_party/opentelemetry-proto \
   -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel 2
 
@@ -45,15 +75,22 @@ cmake --build build --parallel 2
 rm -rf %{buildroot}
 DESTDIR=%{buildroot} cmake --install build
 
+%check
+test -f build/%{pname}.so
+test -f %{buildroot}%{pginstdir}/share/extension/%{pname}.control
+test -f %{buildroot}%{pginstdir}/share/extension/%{pname}--0.3--0.4.sql
+
 %files
-%doc README.md
+%doc README.md INSTALL.md docs/
 %license LICENSE.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*.sql
-%exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.4.0-1PGSTY
+- Update to upstream 0.4.0 with its pinned vcpkg Arrow and OpenTelemetry stack
+
 * Sat Apr 18 2026 Vonng <rh@vonng.com> - 0.3.6-1PIGSTY
 - Restrict RPM builds to EL9+ because EL8 builder repos do not ship the gRPC stack required by the packaged opentelemetry path
 
@@ -68,9 +105,3 @@ DESTDIR=%{buildroot} cmake --install build
 * Wed Apr 08 2026 Vonng <rh@vonng.com> - 0.3.3-1PIGSTY
 - https://github.com/ClickHouse/pg_stat_ch/releases/tag/v0.3.3
 - Keep EL9 build on system gRPC/abseil with vendored sources
-
-* Mon Apr 06 2026 Vonng <rh@vonng.com> - 0.3.2-1PIGSTY
-- Restrict builds to PostgreSQL 16+ after EL10A validation
-
-* Sun Apr 05 2026 Vonng <rh@vonng.com> - 0.3.2-1PIGSTY
-- Initial RPM release, using system gRPC/abseil on EL9 to avoid network fetches

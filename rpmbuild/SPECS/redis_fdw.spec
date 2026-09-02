@@ -1,6 +1,7 @@
 %global pname redis_fdw
 %global sname redis_fdw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global snapshot_commit ff37a7c82f3f10d5478e56082733f2af87e69380
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -13,14 +14,17 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0
-Release:	1PGSTY%{?dist}
+Version:	2.0
+Release:	1.git20260808.ff37a7c8PGSTY%{?dist}
 Summary:	A PostgreSQL foreign data wrapper for Redis
 License:	PostgreSQL
 URL:		https://github.com/pg-redis-fdw/redis_fdw
-Source0:	%{sname}-1.0.tar.gz
+Source0:	%{sname}-2.0+git20260808.ff37a7c8.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 hiredis-devel git
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 hiredis-devel
+%if %llvm
+BuildRequires:	clang llvm
+%endif
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -48,7 +52,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -56,8 +60,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n redis_fdw-%{version}
-git checkout REL_%{pgmajorversion}_STABLE
+%setup -q -n redis_fdw-%{snapshot_commit}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
@@ -79,6 +82,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_PGXS=1 install DESTDIR
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.0-1.git20260808.ff37a7c8PGSTY
+- Package upstream master snapshot ff37a7c82f3f
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 1.0-2PIGSTY
 - add PG 18 support, merge into one source tarball
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 1.0-1PIGSTY

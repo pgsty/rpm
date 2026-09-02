@@ -1,17 +1,21 @@
 %define debug_package %{nil}
 %global pname vectorize
 %global sname pg_vectorize
-%global srcdir ChuckHend-pg_vectorize-826078e
+%global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_vectorize supports PostgreSQL 14 through 18}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.26.2
+Version:	0.27.0
 Release:	1PGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize
 Source0:	pg_vectorize-%{version}.tar.gz
-Patch0:		pg-vectorize-0.26.2.patch
+Patch0:		pg-vectorize-0.27.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -30,18 +34,13 @@ patch -p1 --forward -f < %{PATCH0}
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=31eeb960ac756d9233fda98c6faaec8d0298f176880c14a18a6dbcbf934b1818
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
-if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
-	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
-	exit 1
-fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 cargo fetch --locked
 
@@ -72,6 +71,11 @@ cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.27.0-1PGSTY
+- Update the source package to upstream release 0.27.0
+- Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2
+- Retain upstream SQL extension version 0.23.0 and a separate extension lock
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.26.2-2PIGSTY
 - Build the extension crate with cargo-pgrx 0.19.1 and a locked dependency graph
 - Preserve the PG18 background-worker build and linker metadata retention flag

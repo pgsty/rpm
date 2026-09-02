@@ -1,6 +1,9 @@
 %global pname imgsmlr
 %global sname imgsmlr
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global snapshot_date 20180223
+%global snapshot_commit c484a15cc4ad254b0cc6cd7dc4820ad6472fcfac
+%global snapshot_short c484a15
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -14,15 +17,15 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PGSTY%{?dist}
+Release:	2.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
 Summary:	PostgreSQL extension which implements similar images searching functionality.
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/imgsmlr
-Source0:	imgsmlr-%{version}.tar.gz
+Source0:	%{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}.tar.gz
 Patch0:		imgsmlr-1.0.patch
 #           https://github.com/postgrespro/imgsmlr/archive/refs/heads/master.zip
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 gd-devel
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 clang llvm gd-devel
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -51,7 +54,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -60,7 +63,7 @@ This packages provides JIT support for %{sname}
 
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}
 %patch -P 0 -p1
 
 %build
@@ -82,6 +85,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0-2.git20180223.c484a15PGSTY
+- Pin the clean upstream master snapshot c484a15
+- Preserve PostgreSQL 14-18 and varlena compatibility in the local patch
+- Declare clang and llvm for PGXS bitcode generation
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 1.0-2PIGSTY
 - Fix varlena detoasting with newer toolchains
 

@@ -1,7 +1,9 @@
-diff --git a/lib/pg_repack.sql.in b/lib/pg_repack.sql.in
-index 39a6bc9..914f897 100644
---- a/lib/pg_repack.sql.in
-+++ b/lib/pg_repack.sql.in
+Description: preserve the source table access method during repack
+Author: Pigsty
+Forwarded: not-yet
+Last-Update: 2026-07-22
+--- a/.pg_repack-src/lib/pg_repack.sql.in
++++ b/.pg_repack-src/lib/pg_repack.sql.in
 @@ -62,8 +62,16 @@
  CREATE FUNCTION repack.create_table(oid, name) RETURNS void AS
  $$

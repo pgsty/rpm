@@ -1,10 +1,10 @@
 %global sname pgtde
 %global pgmajorversion 18
-%global pgversion 18.4
-%global perconarelease 2
-%global pgtdeversion 2.2.1
+%global pgversion 18.6
+%global perconarelease 1
+%global pgtdeversion 2.2.2
 %global postgisversion 3.5.7
-%global pgvectorversion 0.8.3
+%global pgvectorversion 0.8.6
 %global wal2jsonversion 2.6
 %global pgrepackversion 1.5.3
 %global pgauditversion 18.0
@@ -24,7 +24,7 @@ Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
 Release:        1PGSTY%{?dist}
 Summary:        Percona PostgreSQL kernel with transparent data encryption
-License:        PostgreSQL AND GPL-2.0-or-later AND GPL-3.0-only AND BSD-3-Clause
+License:        PostgreSQL AND GPL-2.0-or-later AND GPL-3.0-only AND BSD-3-Clause AND (Apache-2.0 OR BSD-3-Clause)
 URL:            https://www.percona.com/postgresql/software/postgresql-distribution
 Source0:        percona-postgresql-%{pgversion}.tar.gz
 Source1:        percona-pg_tde%{pgmajorversion}-%{pgtdeversion}.tar.gz
@@ -38,6 +38,8 @@ Source8:        percona-pgaudit%{pgmajorversion}_set_user-%{setuserversion}.tar.
 Source9:        percona-pg-stat-monitor%{pgmajorversion}-%{pgstatmonitorversion}.tar.gz
 Source10:       percona-pg_gather-%{pggatherversion}.tar.gz
 Source11:       pgtde-sfcgal-config
+Source12:       pgtde.sources.sha256
+Patch0:         pg_repack-1.5.3.patch
 
 ExclusiveArch:  aarch64 x86_64
 
@@ -46,7 +48,7 @@ BuildRequires:  readline-devel zlib-devel libselinux-devel libxml2-devel libxslt
 BuildRequires:  libuuid-devel lz4-devel libzstd-devel libicu-devel openldap-devel
 BuildRequires:  pam-devel krb5-devel python3-devel tcl-devel systemtap-sdt-devel
 BuildRequires:  openssl-devel systemd-devel libcurl-devel liburing-devel json-c-devel
-BuildRequires:  meson ninja-build pkgconf-pkg-config
+BuildRequires:  cmake meson ninja-build pkgconf-pkg-config
 BuildRequires:  perl perl-ExtUtils-Embed
 # PostGIS dependencies. Pigsty builders resolve these from the OS, EPEL, and
 # PGDG repositories; the private PostgreSQL ABI itself remains self-contained.
@@ -79,6 +81,7 @@ pgvector, wal2json, pg_repack, pgaudit, pgaudit set_user, pg_stat_monitor,
 and pg_gather. pg_tde is intentionally part of the main %{name} package.
 
 %prep
+(cd %{_sourcedir} && sha256sum --check %{SOURCE12})
 %setup -q -n percona-postgresql-%{pgversion}
 %{__tar} -xzf %{SOURCE1}
 %{__mv} percona-pg_tde%{pgmajorversion}-%{pgtdeversion} .pg_tde-src
@@ -90,8 +93,7 @@ and pg_gather. pg_tde is intentionally part of the main %{name} package.
 %{__mv} percona-wal2json-%{wal2jsonversion} .wal2json-src
 %{__tar} -xzf %{SOURCE6}
 %{__mv} percona-pg_repack-%{pgrepackversion} .pg_repack-src
-patch -d .pg_repack-src -p1 --forward -f < \
-  %{_specdir}/patches/pg_repack-%{pgrepackversion}.patch
+patch -p1 --fuzz=0 < %{PATCH0}
 %{__tar} -xzf %{SOURCE7}
 %{__mv} percona-pgaudit-%{pgauditversion} .pgaudit-src
 %{__tar} -xzf %{SOURCE8}
@@ -173,7 +175,7 @@ find "$PGTDE_STAGE%{pgbaseinstdir}" -type f \
   xargs -0 -r -n 1 chrpath --replace %{pgbaseinstdir}/lib 2>/dev/null || :
 
 # Build Percona's tested PG18 extension set from the Source0 archives carried
-# by its 18.4 source RPMs. The wrapper resolves compile inputs inside the
+# by its 18.6 source RPMs. The wrapper resolves compile inputs inside the
 # staged kernel while retaining final installation directories for DESTDIR.
 export PGTDE_BUILD_PG_CONFIG="$(pwd)/.pgtde-pg-config"
 export CPPFLAGS="-I$PGTDE_STAGE%{pgbaseinstdir}/include/server -I$PGTDE_STAGE%{pgbaseinstdir}/include ${CPPFLAGS:-}"
@@ -258,6 +260,10 @@ export QA_RPATHS=0x0002
   %{buildroot}%{_licensedir}/%{name}/core-COPYRIGHT
 %{__install} -D -m 0644 .pg_tde-src/COPYRIGHT \
   %{buildroot}%{_licensedir}/%{name}/pg_tde-COPYRIGHT
+for license_file in LICENSE LICENSE.APACHE LICENSE.BSD; do
+  %{__install} -D -m 0644 ".pg_tde-src/subprojects/libkmip/${license_file}" \
+    "%{buildroot}%{_licensedir}/%{name}/libkmip-${license_file}"
+done
 %{__install} -D -m 0644 .postgis-src/COPYING \
   %{buildroot}%{_licensedir}/%{name}-contrib/postgis-COPYING
 %{__install} -D -m 0644 .postgis-src/LICENSE.TXT \
@@ -351,6 +357,11 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Mon Aug 31 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.6-1PGSTY
+- Update Percona Server for PostgreSQL to 18.6.1
+- Update pg_tde to 2.2.2 and pgvector to 0.8.6
+- Refresh the complete bundle from the Percona 18.6 vendor SRPM set
+
 * Wed Jul 22 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.4-2PIGSTY
 - Move pg_tde into the main kernel package
 - Bundle the Percona PostgreSQL 18 key extension set in the contrib package

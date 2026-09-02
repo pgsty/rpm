@@ -51,11 +51,11 @@ done
 server_version=$("${PGROOT}/bin/postgres" --version)
 basebackup_version=$("${PGROOT}/bin/pg_basebackup" --version)
 rewind_version=$("${PGROOT}/bin/pg_rewind" --version)
-[[ "${server_version}" == *'Percona Server for PostgreSQL 18.4.2'* ]] || \
+[[ "${server_version}" == *'Percona Server for PostgreSQL 18.6.1'* ]] || \
   fail "unexpected server version: ${server_version}"
-[[ "${basebackup_version}" == *'Percona Server for PostgreSQL 18.4.2'* ]] || \
+[[ "${basebackup_version}" == *'Percona Server for PostgreSQL 18.6.1'* ]] || \
   fail "unexpected pg_basebackup version: ${basebackup_version}"
-[[ "${rewind_version}" == *'Percona Server for PostgreSQL 18.4.2'* ]] || \
+[[ "${rewind_version}" == *'Percona Server for PostgreSQL 18.6.1'* ]] || \
   fail "unexpected pg_rewind version: ${rewind_version}"
 
 unresolved=0
@@ -79,6 +79,7 @@ runuser -u postgres -- "${PGROOT}/bin/initdb" -D "${PRIMARY_DATA}" \
   printf "shared_preload_libraries = 'pg_tde,pgaudit,set_user,pg_stat_monitor,pg_stat_statements'\n"
   printf "compute_query_id = on\n"
   printf "wal_level = logical\n"
+  printf "output_plugin_libraries = 'wal2json,test_decoding'\n"
   printf "max_wal_senders = 10\n"
   printf "max_replication_slots = 10\n"
   printf "hot_standby = on\n"
@@ -150,6 +151,14 @@ expected_extensions=$("${PRIMARY_PSQL[@]}" -Atc 'SELECT count(*) FROM pg_availab
   fail "installed extensions=${installed_extensions}, available=${expected_extensions}"
 
 printf '[PHASE] smoke-test Percona extension payloads\n'
+pg_tde_version=$("${PRIMARY_PSQL[@]}" -Atc \
+  'SELECT _pg_tde.pg_tde_version()')
+[[ "${pg_tde_version}" == 'pg_tde 2.2.2' ]] || \
+  fail "unexpected pg_tde software version: ${pg_tde_version}"
+vector_version=$("${PRIMARY_PSQL[@]}" -Atc \
+  "SELECT extversion FROM pg_extension WHERE extname = 'vector'")
+[[ "${vector_version}" == '0.8.6' ]] || \
+  fail "unexpected pgvector extension version: ${vector_version}"
 vector_distance=$("${PRIMARY_PSQL[@]}" -Atc \
   "SELECT ('[1,2,3]'::vector <-> '[1,2,4]'::vector)::int")
 [[ "${vector_distance}" == '1' ]] || fail "unexpected vector distance: ${vector_distance}"
@@ -189,6 +198,23 @@ SQL
 encrypted=$("${PRIMARY_PSQL[@]}" -Atc \
   "SELECT _pg_tde.pg_tde_is_encrypted('tde_qa')")
 [[ "${encrypted}" == 't' ]] || fail 'tde_qa is not encrypted'
+
+printf '[PHASE] restart and verify the file key provider and encrypted data\n'
+runuser -u postgres -- "${PGROOT}/bin/pg_ctl" -D "${PRIMARY_DATA}" \
+  -m fast -w restart >"${LOG_DIR}/primary-key-restart.log" 2>&1
+restart_state=$("${PRIMARY_PSQL[@]}" -Atc \
+  "SELECT _pg_tde.pg_tde_is_encrypted('tde_qa')::int || '|' || count(*) || '|' || min(id) || '|' || max(id) FROM tde_qa")
+[[ "${restart_state}" == '1|1000|1|1000' ]] || \
+  fail "encrypted data or file key did not survive restart: ${restart_state}"
+
+printf '[PHASE] reject an invalid KMIP provider without crashing the backend\n'
+if "${PRIMARY_PSQL[@]}" -c \
+    "SELECT _pg_tde.pg_tde_add_database_key_provider_kmip('invalid_kmip', '127.0.0.1', 1, '', '', '')" \
+    >"${LOG_DIR}/invalid-kmip.log" 2>&1; then
+  fail 'invalid KMIP provider with empty certificate parameters was accepted'
+fi
+kmip_negative_health=$("${PRIMARY_PSQL[@]}" -Atc 'SELECT 1')
+[[ "${kmip_negative_health}" == '1' ]] || fail 'backend did not survive invalid KMIP provider input'
 
 printf '[PHASE] standard pg_repack preserves the TDE table access method\n'
 "${PGROOT}/bin/pg_repack" -h 127.0.0.1 -p "${PRIMARY_PORT}" \
@@ -280,5 +306,6 @@ if LC_ALL=C grep -aF "${MARKER}" "${relation_path}"* >/dev/null 2>&1; then
   fail 'plaintext marker found in the encrypted relation files'
 fi
 
-printf '[RESULT] server=%s extensions=%s/%s encrypted=1 repack=pass wal2json=pass pg_gather=pass basebackup=pass rewind=pass plaintext=absent\n' \
-  "${server_version}" "${installed_extensions}" "${expected_extensions}"
+printf '[RESULT] server=%s pg_tde=%s pgvector=%s extensions=%s/%s encrypted=1 restart_key=pass kmip_invalid_input=pass repack=pass wal2json=pass pg_gather=pass basebackup=pass rewind=pass plaintext=absent\n' \
+  "${server_version}" "${pg_tde_version}" "${vector_version}" \
+  "${installed_extensions}" "${expected_extensions}"

@@ -1,19 +1,18 @@
 %global pname pg_flight_recorder
 %global sname pg_flight_recorder
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
 %{error:pg_flight_recorder supports PostgreSQL 15 through 18}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.29.2
+Version:        2.32.1
 Release:        1PGSTY%{?dist}
 Summary:        Server-side PostgreSQL performance flight recorder
 License:        Apache-2.0
 URL:            https://github.com/dventimisupabase/pg_flight_recorder
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pg_flight_recorder-2.29.2.patch
+Patch0:         pg_flight_recorder-2.32.1.patch
 BuildArch:      noarch
 
 BuildRequires:  bash gawk
@@ -27,7 +26,8 @@ reporting extensions. pg_stat_statements is optional and enables query-level
 analysis.
 
 %prep
-%autosetup -p1 -n %{sname}-%{version}
+%setup -q -n %{sname}-%{version}
+patch -p1 --fuzz=0 --no-backup-if-mismatch < %{PATCH0}
 
 %build
 bash scripts/build_dbdev_package.sh pgfr_record pgfr_record/pgfr_record--%{version}.sql
@@ -52,6 +52,11 @@ sed "s/default_version = '0.0.0'/default_version = '%{version}'/" \
 %{pginstdir}/share/extension/pgfr_analyze--%{version}.sql
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.32.1-1PGSTY
+- Update pgfr_record and pgfr_analyze to 2.32.1
+- Keep fresh installation outside transaction-sensitive snapshot and cron work
+- Do not invent a destructive downstream upgrade edge for existing telemetry
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 2.29.2-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
 - Package pgfr_record and pgfr_analyze for PostgreSQL 15 through 18

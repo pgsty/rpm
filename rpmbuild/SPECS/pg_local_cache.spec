@@ -17,15 +17,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.3.0
+Version:	2.0.1
 Release:	1PGSTY%{?dist}
 Summary:	Transaction-aware cache for PostgreSQL primary-key reads
 License:	MIT
 URL:		https://github.com/profundium/pg_local_cache
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_local_cache/1.3.0/pg_local_cache-1.3.0.zip
+Patch0:		pg_local_cache-2.0.1.patch
+#           official v2.0.1 source archive
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 clang llvm
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -48,7 +49,8 @@ This package provides JIT support for %{sname}.
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}-%{version}-source
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -71,6 +73,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %endif
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.0.1-1PGSTY
+- Upgrade to pg_local_cache 2.0.1
+- Retain the 1.x get API with C compatibility entry points and catalog identity
+
 * Wed Aug 12 2026 Vonng <rh@vonng.com> - 1.3.0-1PIGSTY
 - Add RPM package for upstream PGXN 1.3.0 and PostgreSQL 14 through 18
 - Document the shared_preload_libraries and single-primary requirements

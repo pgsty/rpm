@@ -1,6 +1,9 @@
 %global pname sslutils
 %global sname sslutils
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:sslutils 1.4.1 supports PostgreSQL 14 through 18 in Pigsty builds}
+%endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -13,17 +16,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4
+Version:	1.4.1
 Release:	1PGSTY%{?dist}
 Summary:	A Postgres extension for managing SSL certificates through SQL.
 License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/sslutils
 Source0:	sslutils-%{version}.tar.gz
-%if 0%{?pgmajorversion} >= 18
-Patch0:		sslutils-1.4.patch
-%endif
+Patch0:		sslutils-1.4.1.patch
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 openssl-devel
+BuildRequires:	clang gcc llvm make openssl-devel
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -60,9 +62,7 @@ This packages provides JIT support for %{sname}
 
 %prep
 %setup -q -n %{sname}-%{version}
-%if 0%{?pgmajorversion} >= 18
-%patch -P 0 -p1
-%endif
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -87,6 +87,7 @@ strip %{buildroot}%{pginstdir}/lib/*.so
 
 %files
 %defattr(-,root,root,-)
+%license LICENSE
 %attr(644,root,root) %{pginstdir}/share/doc/extension/README-%{sname}.txt
 %{pginstdir}/lib/sslutils.so
 %{pginstdir}/share/extension/sslutils*.sql
@@ -100,6 +101,14 @@ strip %{buildroot}%{pginstdir}/lib/*.so
 %endif
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.4.1-1PGSTY
+- Upgrade to upstream sslutils 1.4.1
+- Use the repository PostgreSQL license as the packaging license authority
+- Retire the obsolete PostgreSQL 18 OpenSSL compatibility patch
+- Preserve legacy function OIDs, ACLs, comments, and dependents on upgrade
+- Reject sibling-prefix and non-canonical certificate paths
+- Require pg_read_server_files for private-key file access
+
 * Wed Jul 22 2026 Vonng <rh@vonng.com> - 1.4-3PIGSTY
 - Add PostgreSQL 18 OpenSSL API compatibility
 

@@ -1,6 +1,9 @@
 %global pname decoder_raw
 %global sname decoder_raw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global snapshot_date 20260728
+%global snapshot_commit 2271b0d525ea8a42319b0e3e85a81d152bd3ba31
+%global snapshot_short 2271b0d
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -14,14 +17,14 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PGSTY%{?dist}
+Release:	2.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
 Summary:	Output plugin for logical replication in Raw SQL format
 License:	PostgreSQL
 URL:		https://github.com/michaelpq/pg_plugins/blob/main/decoder_raw/
-Source0:	decoder_raw-%{version}.tar.gz
+Source0:	%{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}.tar.gz
 Patch0:		decoder_raw-1.0.patch
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 clang llvm
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -70,7 +73,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -78,7 +81,7 @@ This packages provides JIT support for %{sname}
 %endif
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}
 %patch -P 0 -p1
 
 %build
@@ -97,6 +100,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0-2.git20260728.2271b0dPGSTY
+- Package upstream main snapshot 2271b0d with TRUNCATE support
+- Keep PostgreSQL 14-18 callback and tuple API compatibility
+- Declare clang and llvm for PGXS bitcode generation
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 1.0-2PIGSTY
 - Fix PostgreSQL 14-16 tuple buffer handling with newer toolchains
 

@@ -2,17 +2,27 @@
 %global pname schedoc
 %global sname pg_schedoc
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global source_commit 9f135c3427415c61771bbe69dc1cffbb999239f4
+%global source_date 20260430
+%global source_short 9f135c3
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_schedoc supports PostgreSQL 14 through 18 in Pigsty}
+%endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.1
-Release:	1PGSTY%{?dist}
+Version:	0.0.2
+Release:	1.git%{source_date}.%{source_short}PGSTY%{?dist}
 Summary:	Cross documentation between Django and DBT projects
 License:	GPL-3.0-only
 URL:		https://github.com/ZeroGachis/pg_schedoc
-Source0:	%{sname}-%{version}.tar.gz
+Source0:	%{sname}-%{version}+git%{source_date}.%{source_short}.tar.gz
+Patch0:		pg_schedoc-0.0.2.patch
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server ddl_historization_%{pgmajorversion}
+Requires:	postgresql%{pgmajorversion}-server
+Requires:	ddl_historization_%{pgmajorversion} >= 0.0.8
 
 %description
 schedoc generates schema documentation from COMMENT metadata on PostgreSQL
@@ -20,7 +30,7 @@ objects. It requires the ddl_historization extension. Column comments use a
 JSON format with predefined values such as status.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%autosetup -p1 -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH make
@@ -34,8 +44,12 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %license LICENSE
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.2-1.git20260430.9f135c3PGSTY
+- Pin upstream develop snapshot 9f135c3
+- Add the audited 0.0.1 to 0.0.2 migration
+- Fix non-public same-schema calls and PostgreSQL 14 JSON validation
+
 * Fri Jan 10 2025 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

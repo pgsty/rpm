@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.3
+Version:	0.0.4
 Release:	1PGSTY%{?dist}
 Summary:	Country data type, ISO 3166-1
 License:	PostgreSQL
@@ -48,7 +48,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -77,5 +77,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.0.4-1PGSTY
+- Bump to PGXN stable 0.0.4
+
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.0.3
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

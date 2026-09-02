@@ -8,33 +8,31 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.4
+Version:	0.0.5
 Release:	1PGSTY%{?dist}
 Summary:	Coordinate transformation extension for PostgreSQL/PostGIS
 License:	MIT
 URL:		https://github.com/aiyou178/pg_eviltransform
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/aiyou178/pg_eviltransform/archive/refs/tags/v0.0.4.tar.gz
-Patch0:		pg-eviltransform-0.0.4.patch
+#           https://github.com/aiyou178/pg_eviltransform/archive/refs/tags/v0.0.5.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
 BuildRequires:	librttopo-devel geos-devel
 Requires:	postgresql%{pgmajorversion}-server
-Requires:	postgis36_%{pgmajorversion}
+Requires:	postgis3_%{pgmajorversion}
 
 %description
 Coordinate transformation extension for PostgreSQL/PostGIS.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{PATCH0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -45,6 +43,8 @@ CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension
+cp -f %{pname}--*.sql "$EXT_DIR/"
 test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
 	exit 1
@@ -58,12 +58,20 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
+%license LICENSE
+%doc README.md README.zh-CN.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.5-1PGSTY
+- Update to upstream v0.0.5 with native pgrx 0.19.2 and PostgreSQL 14-18 support
+- Build reproducibly with cargo-pgrx 0.19.2 and the committed Cargo.lock
+- Require the version-neutral PostGIS 3 provider across PG14-18
+- Ship the complete 0.0.2 through 0.0.5 extension upgrade chain
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.4-1PIGSTY
 - Update to upstream v0.0.4 with native pgrx 0.19.1 support
 - Build reproducibly with cargo-pgrx 0.19.1 and the committed Cargo.lock

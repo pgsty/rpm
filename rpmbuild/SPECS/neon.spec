@@ -15,7 +15,7 @@
 
 Name:           neon
 Version:        20260525
-Release:        1.git%{shortcommit}PGSTY%{?dist}
+Release:        2.git%{shortcommit}PGSTY%{?dist}
 Summary:        Serverless PostgreSQL storage and compute platform
 License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/neondatabase/neon
@@ -24,6 +24,10 @@ Source0:        neon-%{version}.tar.gz
 # including the pinned PostgreSQL 14-17 submodules.
 Source1:        protoc-%{protoc_version}-linux-x86_64.zip
 # https://github.com/protocolbuffers/protobuf/releases/download/v25.1/protoc-25.1-linux-x86_64.zip
+Source2:        neon-cargo-vendor-%{version}.tar.gz
+Patch0:         neon-20260525-port-allocation.patch
+Patch1:         neon-20260525-packaging.patch
+Patch2:         neon-20260525-snapshot-version.patch
 
 # This first package iteration is intentionally scoped to the validated EL9
 # x86_64 builder.  Add aarch64 only with its matching protoc asset and build QA.
@@ -32,10 +36,11 @@ ExclusiveArch:  x86_64
 BuildRequires:  autoconf, automake, bison, cargo >= 1.88, clang, cmake
 BuildRequires:  flex, gcc, gcc-c++, git, libcurl-devel, libffi-devel
 BuildRequires:  libicu-devel, libseccomp-devel, libtool, make, openssl-devel
+BuildRequires:  patchelf
 BuildRequires:  perl, pkgconf-pkg-config, protobuf-devel, readline-devel
 BuildRequires:  rust >= 1.88, systemd-rpm-macros, unzip, zlib-devel
 
-Requires:       ca-certificates, libpq, lsof, openssl, systemd
+Requires:       ca-certificates, lsof, openssl, systemd
 Requires:       %{name}-compute14%{?_isa} = %{version}-%{release}
 Requires:       %{name}-compute15%{?_isa} = %{version}-%{release}
 Requires:       %{name}-compute16%{?_isa} = %{version}-%{release}
@@ -86,10 +91,15 @@ nodes.  It is installed below %{neon_pgroot}/v17 and does not replace PGDG
 PostgreSQL packages.
 
 %prep
-%setup -q -n %{name}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/neon-%{version}-port-allocation.patch
-patch -p1 --forward -f < %{_specdir}/patches/neon-%{version}-packaging.patch
-patch -p1 --forward -f < %{_specdir}/patches/neon-%{version}-snapshot-version.patch
+%autosetup -p1 -n %{name}-%{version}
+
+# Cargo.lock contains both crates.io and git dependencies.  Source2 is the
+# exact cargo vendor output for this snapshot; merge its source replacement
+# into the project config so every Cargo invocation is offline.
+tar -xzf %{SOURCE2}
+test -d cargo-vendor/vendor
+test -s cargo-vendor/config.toml
+cat cargo-vendor/config.toml >> .cargo/config.toml
 
 mkdir -p .protoc
 unzip -q %{SOURCE1} -d .protoc
@@ -102,8 +112,8 @@ cd %{_builddir}/%{name}-%{version}
 # newer compilers are supported and the actual versions are recorded in logs.
 export PATH=$PWD/.protoc/bin:/usr/bin:/bin
 unset RUSTUP_HOME RUSTUP_TOOLCHAIN
-export CARGO_HOME=%{_builddir}/.cargo-neon-%{version}
-export CARGO_NET_GIT_FETCH_WITH_CLI=true
+export CARGO_HOME=$PWD/.cargo-home
+export CARGO_NET_OFFLINE=true
 export GIT_VERSION=%{commit}
 export BUILD_TAG=%{version}-%{release}
 
@@ -112,11 +122,10 @@ cargo --version
 protoc --version
 
 LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
-cargo fetch --locked
+cargo fetch --locked --offline
 
-export CARGO_NET_OFFLINE=true
 BUILD_TYPE=release \
-CARGO_BUILD_FLAGS="--locked" \
+CARGO_BUILD_FLAGS="--locked --offline" \
 %{__make} %{?_smp_mflags} -s
 
 LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
@@ -158,23 +167,66 @@ install -pm 0644 packaging/rpm/neon-local.service %{buildroot}%{_unitdir}/neon-l
 for pgversion in 14 15 16 17; do
   install -d %{buildroot}%{neon_pgroot}/v${pgversion}
   cp -a pg_install/v${pgversion}/. %{buildroot}%{neon_pgroot}/v${pgversion}/
+
+  # PostgreSQL/PGXS records the temporary build prefix in executable and
+  # extension RUNPATHs.  Make every such ELF resolve libraries from its own
+  # private, relocatable Neon distribution.
+  find %{buildroot}%{neon_pgroot}/v${pgversion}/bin \
+       %{buildroot}%{neon_pgroot}/v${pgversion}/lib -type f | while read elf; do
+    old_rpath=$(patchelf --print-rpath "${elf}" 2>/dev/null || true)
+    case "${old_rpath}" in
+      *%{_builddir}*)
+        case "${elf}" in
+          */bin/*)            new_rpath='$ORIGIN/../lib' ;;
+          */lib/postgresql/*) new_rpath='$ORIGIN/..' ;;
+          */lib/*)            new_rpath='$ORIGIN' ;;
+          *) echo "unexpected Neon ELF path: ${elf}" >&2; exit 1 ;;
+        esac
+        patchelf --set-rpath "${new_rpath}" "${elf}"
+        ;;
+    esac
+  done
 done
 
 %check
 cd %{_builddir}/%{name}-%{version}
-target/release/neon_local --version
-target/release/pageserver --version
-target/release/safekeeper --version
+target/release/neon_local --version | grep -F 'git-env:%{commit}'
+target/release/pageserver --version | grep -F 'git-env:%{commit}'
+target/release/safekeeper --version | grep -F 'git-env:%{commit}'
 for pgversion in 14 15 16 17; do
   pg_install/v${pgversion}/bin/postgres --version
   test -f pg_install/v${pgversion}/lib/postgresql/neon.so
+
+  neon_so=%{buildroot}%{neon_pgroot}/v${pgversion}/lib/postgresql/neon.so
+  test "$(patchelf --print-rpath "${neon_so}")" = '$ORIGIN/..'
+  neon_libpq=$(ldd "${neon_so}" | awk '/libpq[.]so[.]5 =>/ { print $3 }')
+  test "$(realpath "${neon_libpq}")" = \
+    "$(realpath %{buildroot}%{neon_pgroot}/v${pgversion}/lib/libpq.so.5)"
+  test "$(patchelf --print-rpath \
+    %{buildroot}%{neon_pgroot}/v${pgversion}/bin/psql)" = '$ORIGIN/../lib'
+  psql_libpq=$(ldd %{buildroot}%{neon_pgroot}/v${pgversion}/bin/psql | \
+    awk '/libpq[.]so[.]5 =>/ { print $3 }')
+  test "$(realpath "${psql_libpq}")" = \
+    "$(realpath %{buildroot}%{neon_pgroot}/v${pgversion}/lib/libpq.so.5)"
+
+  if find %{buildroot}%{neon_pgroot}/v${pgversion}/bin \
+          %{buildroot}%{neon_pgroot}/v${pgversion}/lib -type f | \
+     while read elf; do
+       patchelf --print-rpath "${elf}" 2>/dev/null || true
+     done | grep -F '%{_builddir}'; then
+    echo "temporary build RUNPATH remains in PostgreSQL ${pgversion}" >&2
+    exit 1
+  fi
 done
 
 %pre
-getent group neon >/dev/null 2>&1 || groupadd -r neon >/dev/null 2>&1 || :
-getent passwd neon >/dev/null 2>&1 || \
+if ! getent group neon >/dev/null 2>&1; then
+  groupadd -r neon
+fi
+if ! getent passwd neon >/dev/null 2>&1; then
   useradd -r -g neon -d %{_localstatedir}/lib/neon -s /sbin/nologin \
-    -c "Neon Serverless PostgreSQL" neon >/dev/null 2>&1 || :
+    -c "Neon Serverless PostgreSQL" neon
+fi
 
 %post
 %systemd_post neon-local.service
@@ -214,6 +266,12 @@ getent passwd neon >/dev/null 2>&1 || \
 %{neon_pgroot}/v17
 
 %changelog
+* Mon Aug 24 2026 Vonng <rh@vonng.com> - 20260525-2.git8f60b04PGSTY
+- Vendor the locked Cargo graph and make the RPM build fully offline
+- Make the SRPM self-contained by declaring all three packaging patches
+- Use each compute runtime's private libpq through a relative RUNPATH
+- Rewrite all private PostgreSQL ELF RUNPATHs to relocatable $ORIGIN paths
+
 * Mon Aug 24 2026 Vonng <rh@vonng.com> - 20260525-1.git8f60b04PGSTY
 - Package Neon snapshot 8f60b04 with PostgreSQL 14 through 17 runtimes
 - Use upstream protoc 25.1 and a locked Cargo dependency graph

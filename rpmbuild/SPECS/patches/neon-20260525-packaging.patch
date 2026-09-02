@@ -3,7 +3,7 @@ new file mode 100755
 index 0000000..92d5738
 --- /dev/null
 +++ b/packaging/rpm/neon
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,20 @@
 +#!/usr/bin/bash
 +
 +# neon_local discovers companion Neon binaries from its executable directory.
@@ -12,14 +12,16 @@ index 0000000..92d5738
 +
 +# The CLI probes services on loopback, including compute_ctl's 0.0.0.0 address.
 +# Keep those probes away from an inherited HTTP proxy without discarding the
-+# caller's existing exclusions.
++# caller's existing exclusions.  Normalize both spellings because reqwest,
++# curl, and subprocesses do not all prefer the same one.
 +neon_loopback="127.0.0.1,localhost,0.0.0.0,::1"
-+if [ -n "${NO_PROXY:-}" ]; then
-+  export NO_PROXY="${neon_loopback},${NO_PROXY}"
-+else
-+  export NO_PROXY="${neon_loopback}"
-+fi
-+export no_proxy="${no_proxy:-${NO_PROXY}}"
++inherited_no_proxy="${NO_PROXY:-${no_proxy:-}}"
++export NO_PROXY="${neon_loopback}${inherited_no_proxy:+,${inherited_no_proxy}}"
++export no_proxy="${NO_PROXY}"
++
++# Local installs do not run an OTLP collector by default.  Avoid a permanent
++# stream of connection errors while still allowing an explicit opt-in.
++export OTEL_SDK_DISABLED="${OTEL_SDK_DISABLED:-true}"
 +
 +exec /usr/libexec/neon/neon_local "$@"
 diff --git a/packaging/rpm/neon-local.service b/packaging/rpm/neon-local.service

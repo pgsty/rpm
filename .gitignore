@@ -28,3 +28,8 @@ src/
 doc/
 .claude/
 .codex/
+
+# Keep the Neon integration research alongside its standalone packaging.
+!doc/
+doc/*
+!doc/neon.md

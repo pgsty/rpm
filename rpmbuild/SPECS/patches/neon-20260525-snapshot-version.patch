@@ -1,0 +1,15 @@
+diff --git a/postgres.mk b/postgres.mk
+index 99c7c57..c22d46e 100644
+--- a/postgres.mk
++++ b/postgres.mk
+@@ -88,6 +88,9 @@ $(BUILD_DIR)/%/config.status:
+ 
+ 	VERSION=$*; \
+-	EXTRA_VERSION=$$(cd $(ROOT_PROJECT_DIR)/vendor/postgres-$$VERSION && git rev-parse HEAD); \
++	EXTRA_VERSION=$$(cd $(ROOT_PROJECT_DIR)/vendor/postgres-$$VERSION && git rev-parse HEAD 2>/dev/null || \
++		sed -n "/\"$$VERSION\"/,/]/ s/.*\"\([0-9a-f]\{40\}\)\".*/\1/p" \
++			$(ROOT_PROJECT_DIR)/vendor/revisions.json); \
++	test -n "$$EXTRA_VERSION"; \
+ 	(cd $(BUILD_DIR)/$$VERSION && \
+ 	env PATH="$(EXTRA_PATH_OVERRIDES):$$PATH" $(ROOT_PROJECT_DIR)/vendor/postgres-$$VERSION/configure \
+ 		CFLAGS='$(PG_CFLAGS)' LDFLAGS='$(PG_LDFLAGS)' \

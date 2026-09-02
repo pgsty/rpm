@@ -1,0 +1,18 @@
+diff --git a/control_plane/src/endpoint.rs b/control_plane/src/endpoint.rs
+index 5bb7d01..b22b7ac 100644
+--- a/control_plane/src/endpoint.rs
++++ b/control_plane/src/endpoint.rs
+@@ -121,7 +121,12 @@ impl ComputeControlPlane {
+         1 + self
+             .endpoints
+             .values()
+-            .map(|ep| std::cmp::max(ep.pg_address.port(), ep.external_http_address.port()))
++            .map(|ep| {
++                ep.pg_address
++                    .port()
++                    .max(ep.external_http_address.port())
++                    .max(ep.internal_http_address.port())
++            })
+             .max()
+             .unwrap_or(self.base_port)
+     }

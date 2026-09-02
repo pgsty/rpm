@@ -1,0 +1,51 @@
+diff --git a/packaging/rpm/neon b/packaging/rpm/neon
+new file mode 100755
+index 0000000..92d5738
+--- /dev/null
++++ b/packaging/rpm/neon
+@@ -0,0 +1,18 @@
++#!/usr/bin/bash
++
++# neon_local discovers companion Neon binaries from its executable directory.
++# The patched PostgreSQL distributions are private and live below /usr/lib64.
++export POSTGRES_DISTRIB_DIR="${POSTGRES_DISTRIB_DIR:-/usr/lib64/neon/pg_install}"
++
++# The CLI probes services on loopback, including compute_ctl's 0.0.0.0 address.
++# Keep those probes away from an inherited HTTP proxy without discarding the
++# caller's existing exclusions.
++neon_loopback="127.0.0.1,localhost,0.0.0.0,::1"
++if [ -n "${NO_PROXY:-}" ]; then
++  export NO_PROXY="${neon_loopback},${NO_PROXY}"
++else
++  export NO_PROXY="${neon_loopback}"
++fi
++export no_proxy="${no_proxy:-${NO_PROXY}}"
++
++exec /usr/libexec/neon/neon_local "$@"
+diff --git a/packaging/rpm/neon-local.service b/packaging/rpm/neon-local.service
+new file mode 100644
+index 0000000..1cc2952
+--- /dev/null
++++ b/packaging/rpm/neon-local.service
+@@ -0,0 +1,21 @@
++[Unit]
++Description=Neon local development environment
++Documentation=https://github.com/neondatabase/neon
++After=network-online.target
++Wants=network-online.target
++ConditionPathExists=/var/lib/neon/.neon/config
++
++[Service]
++Type=oneshot
++RemainAfterExit=yes
++User=neon
++Group=neon
++WorkingDirectory=/var/lib/neon
++ExecStart=/usr/bin/neon start
++ExecStop=/usr/bin/neon stop
++TimeoutStartSec=120
++TimeoutStopSec=180
++KillMode=control-group
++
++[Install]
++WantedBy=multi-user.target

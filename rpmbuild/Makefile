@@ -1188,6 +1188,9 @@ pgdog-install:
 	sudo yum remove -y pgdog || /bin/true
 	sudo rpm -Uvh --replacepkgs ~/rpmbuild/RPMS/$(ARCH)/pgdog-[0-9]*.$(ARCH).rpm
 
+neon:
+	rpmbuild -ba SPECS/neon.spec
+
 pg_adhoc:
 	./build pg_adhoc 18
 pg_filedump: pg_adhoc

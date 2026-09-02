@@ -1,30 +1,28 @@
 %global debug_package %{nil}
-%global _vpath_builddir .
 %global sname dbt2
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %{!?llvm:%global llvm 1}
 
-Summary:	Database Test 2 Differences from the TPC-C - Extensions
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:dbt2 0.62.0 supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
+Summary:	DBT-2 PostgreSQL stored functions
 Name:		%{sname}-pg%{pgmajorversion}-extensions
-Version:	0.61.7
+Version:	0.62.0
 Release:	1PGSTY%{?dist}
 License:	Artistic-2.0
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		dbt2-0.61.7.patch
+Patch0:		dbt2-0.62.0.patch
 URL:		https://github.com/osdldbt/%{sname}/
-Requires:	%{sname}-common
-
-BuildRequires:	gcc-c++
-BuildRequires:	cmake >= 3.2.0
+Requires:	postgresql%{pgmajorversion}-server
+BuildRequires:	gcc make
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	libpq5-devel openssl-devel curl-devel expat-devel
-%if 0%{?rhel} == 8
-BuildRequires:	libev-devel
-%endif
 
 %description
-The Open Source Development Lab's Database Test 2 (DBT-2) test kit.
+The C stored functions used by the DBT-2 benchmark. The benchmark driver,
+schemas, data generator, and full DBT-2 toolchain are intentionally excluded.
 
 %if %llvm
 %package llvmjit
@@ -39,54 +37,25 @@ This package provides JIT support for dbt2-extensions.
 
 %prep
 %setup -q -n %{sname}-%{version}
-%patch -P 0 -p0
+patch -d storedproc/pgsql/c -p1 --fuzz=0 < %{PATCH0}
 
 %build
-CFLAGS="$CFLAGS -I%{pginstdir}/include/server -g -fPIE"; export CFLAGS
-export PATH=%{pginstdir}/bin/:$PATH
-%{__install} -d build
-pushd build
-%cmake ..
-popd
-%{__make} -C "%{_vpath_builddir}" %{?_smp_mflags} build
 pushd storedproc/pgsql/c
-%{__make} DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
 popd
 
 %install
 %{__rm} -rf %{buildroot}
-export PATH=%{pginstdir}/bin/:$PATH
-pushd build
-%{__make} -C "%{_vpath_builddir}" %{?_smp_mflags} install DESTDIR=%{buildroot}
-popd
 pushd storedproc/pgsql/c
-%{__make} DESTDIR=%{buildroot} install
+PATH=%{pginstdir}/bin:$PATH %{__make} DESTDIR=%{buildroot} install
 popd
-%{__mkdir} -p %{buildroot}/%{pginstdir}/share/extension
-%{__mkdir} -p %{buildroot}/%{pginstdir}/share/lib
-%{__cp} storedproc/pgsql/c/%{sname}.control %{buildroot}/%{pginstdir}/share/extension
-%{__cp} storedproc/pgsql/c/%{sname}.so %{buildroot}/%{pginstdir}/lib
-%{__cp} storedproc/pgsql/c/%{sname}--0.45.0.sql \
-	%{buildroot}/%{pginstdir}/share/extension/%{sname}--%{version}.sql
-%{__rm} -f %{buildroot}/%{_bindir}/*
-%{__rm} -f %{buildroot}/%{_mandir}/man1/dbt2*
-%{__rm} -rf %{buildroot}/usr/src/%{sname}/storedproc/
-
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
 
 %files
-%defattr(644,root,root,755)
 %license LICENSE
 %doc README
 %{pginstdir}/lib/%{sname}.so
-%{pginstdir}/share/stock_level.sql
-%{pginstdir}/share/delivery.sql
-%{pginstdir}/share/new_order.sql
-%{pginstdir}/share/order_status.sql
-%{pginstdir}/share/payment.sql
 %{pginstdir}/share/extension/%{sname}.control
-%{pginstdir}/share/extension/%{sname}*.sql
+%{pginstdir}/share/extension/%{sname}--*.sql
 
 %if %llvm
 %files llvmjit
@@ -95,6 +64,13 @@ popd
 %endif
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.62.0-1PGSTY
+- Bump to 0.62.0
+- Package only the PostgreSQL stored functions, matching the narrow DEB scope
+- Drop full-kit CMake, driver, datagen and dbt2-common dependencies
+- Preserve legacy function OIDs, dependencies, ACLs and comments during the row-shape migration
+- Preserve strictness and parse-bind compatibility calls against search-path shadowing
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 0.61.7-1PIGSTY
 - Add libev development dependency for EL8 builds
 

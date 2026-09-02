@@ -9,15 +9,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.2.0
 Release:	1PGSTY%{?dist}
 Summary:	Graph database capabilities for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/evokoa/pggraph
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgGraph/1.0.0/pgGraph-1.0.0.zip
+#           normalized from https://github.com/Evokoa/pgGraph/releases/download/v1.2.0/pgGraph-1.2.0.zip
+#           tag commit 0c853efc9b9b4123d450ee89e4eea398c8d6c101
 #           SQL extension payload is named graph.
-Patch0:		pggraph-1.0.0.patch
+Patch0:		pggraph-1.2.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -30,28 +31,30 @@ pggraph, while the installed PostgreSQL extension is named graph.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 cd %{_builddir}/%{srcdir}/graph
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:/usr/bin:$PATH
 export RUSTUP_TOOLCHAIN=stable
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
+LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 cargo fetch --locked
-LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
 # pgrx 0.19 embeds extension schema metadata in a linker section; without this
 # flag the EL9A linker can garbage-collect it and cargo-pgrx reports a missing
 # .pgrxsc section during packaging.
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
+EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
+cp -f sql/%{pname}--*--*.sql "$EXT_DIR/"
+test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
 	exit 1
 }
@@ -77,6 +80,10 @@ install -m 644 %{_builddir}/%{srcdir}/NOTICE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Sep 02 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
+- Update to upstream 1.2.0 and ship the 1.0 to 1.2 migration chain
+- Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2
+
 * Mon Jul 27 2026 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Update to upstream PGXN 1.0.0 with pgrx 0.19.1
 - Keep Cargo.lock immutable and use the validated builder stable toolchain

@@ -13,13 +13,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7.1
+Version:	1.7.2
 Release:	1PGSTY%{?dist}
 Summary:	HTTP client for PostgreSQL, retrieve a web page from inside the database.
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-http
 Source0:	pgsql-http-%{version}.tar.gz
-#           https://github.com/pramsey/pgsql-http/archive/refs/tags/v1.7.1.tar.gz
+#           https://github.com/pramsey/pgsql-http/archive/refs/tags/v1.7.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 libcurl-devel
 Requires:	postgresql%{pgmajorversion}-server
@@ -51,7 +51,7 @@ BuildRequires:	llvm15-devel clang15-devel
 Requires:	llvm15
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
+Requires:	llvm >= 19.0
 %endif
 
 %description llvmjit
@@ -81,6 +81,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.7.2-1PGSTY
+- Bump to 1.7.2
+
 * Fri Jun 19 2026 Vonng <rh@vonng.com> - 1.7.1-1PIGSTY
 - Update to 1.7.1
 * Fri Jun 19 2026 Vonng <rh@vonng.com> - 1.7.0-1PIGSTY

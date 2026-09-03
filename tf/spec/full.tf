@@ -1,22 +1,34 @@
 #==============================================================#
-# File      :   terraform.tf
-# Desc      :   5-node oss building env for x86_64/aarch64
+# File      :   full.tf
+# Desc      :   6-node RPM building env for x86_64/aarch64
 # Ctime     :   2024-12-12
-# Mtime     :   2026-04-30
-# Path      :   tf/terraform
-# License   :   AGPLv3 @ https://pigsty.io/docs/about/license
-# Copyright :   2018-2025  Ruohang Feng / Vonng (rh@vonng.com)
+# Mtime     :   2026-09-03
+# Path      :   tf/spec/full.tf
+# License   :   Apache-2.0 @ https://pigsty.io/docs/about/license/
+# Copyright :   2018-2026  Ruohang Feng / Vonng (rh@vonng.com)
 #==============================================================#
 
 
 #===========================================================#
 # Architecture, Instance Type, OS Images
 #===========================================================#
+variable "region" {
+  description = "Aliyun region (e.g., cn-shanghai)"
+  type        = string
+  default     = "cn-hongkong"
+}
+
+variable "zone" {
+  description = "Aliyun availability zone for VSwitch (e.g., cn-shanghai-l)"
+  type        = string
+  default     = "cn-hongkong-d"
+}
+
 locals {
-  bandwidth = 100                       # internet bandwidth in Mbps (100Mbps)
-  disk_size = 100                       # system disk size in GB (100GB)
-  spot_policy = "SpotAsPriceGo"         # NoSpot, SpotWithPriceLimit, SpotAsPriceGo
-  spot_price_limit = 5                  # only valid when spot_policy is SpotWithPriceLimit
+  bandwidth        = 100             # internet bandwidth in Mbps (100Mbps)
+  disk_size        = 100             # system disk size in GB (100GB)
+  spot_policy      = "SpotAsPriceGo" # NoSpot, SpotWithPriceLimit, SpotAsPriceGo
+  spot_price_limit = 5               # only valid when spot_policy is SpotWithPriceLimit
   instance_type_map = {
     amd64 = "ecs.c9i.4xlarge"
     arm64 = "ecs.c8y.4xlarge"
@@ -26,7 +38,7 @@ locals {
 }
 
 #===========================================================#
-# Terraform Provider
+# Provider Requirements
 #===========================================================#
 terraform {
   required_version = ">= 1.0"
@@ -50,22 +62,22 @@ data "alicloud_images" "el8_arm64_img" {
 }
 data "alicloud_images" "el9_amd64_img" {
   owners      = "system"
-  name_regex  = "^rockylinux_9_7_x64"
+  name_regex  = "^rockylinux_9_8_x64"
   most_recent = true
 }
 data "alicloud_images" "el9_arm64_img" {
   owners      = "system"
-  name_regex  = "^rockylinux_9_7_arm64"
+  name_regex  = "^rockylinux_9_8_arm64"
   most_recent = true
 }
 data "alicloud_images" "el10_amd64_img" {
   owners      = "system"
-  name_regex  = "^rockylinux_10_1_x64"
+  name_regex  = "^rockylinux_10_2_x64"
   most_recent = true
 }
 data "alicloud_images" "el10_arm64_img" {
   owners      = "system"
-  name_regex  = "^rockylinux_10_1_arm64"
+  name_regex  = "^rockylinux_10_2_arm64"
   most_recent = true
 }
 
@@ -79,7 +91,7 @@ data "alicloud_images" "el10_arm64_img" {
 provider "alicloud" {
   # access_key = "????????????????????"
   # secret_key = "????????????????????"
-  region = "cn-hongkong"
+  region = var.region
 }
 
 
@@ -94,15 +106,15 @@ resource "alicloud_vpc" "vpc" {
 
 # add virtual switch for pigsty demo network
 resource "alicloud_vswitch" "vsw" {
-  vpc_id     = "${alicloud_vpc.vpc.id}"
+  vpc_id     = alicloud_vpc.vpc.id
   cidr_block = "10.10.10.0/24"
-  zone_id    = "cn-hongkong-d"
+  zone_id    = var.zone
 }
 
 # add default security group and allow all tcp traffic
 resource "alicloud_security_group" "default" {
-  security_group_name   = "default"
-  vpc_id = "${alicloud_vpc.vpc.id}"
+  security_group_name = "default"
+  vpc_id              = alicloud_vpc.vpc.id
 }
 resource "alicloud_security_group_rule" "allow_all_tcp" {
   ip_protocol       = "tcp"
@@ -111,7 +123,7 @@ resource "alicloud_security_group_rule" "allow_all_tcp" {
   policy            = "accept"
   port_range        = "1/65535"
   priority          = 1
-  security_group_id = "${alicloud_security_group.default.id}"
+  security_group_id = alicloud_security_group.default.id
   cidr_ip           = "0.0.0.0/0"
 }
 
@@ -125,9 +137,9 @@ resource "alicloud_instance" "pg-el8" {
   host_name                     = "pg-el8"
   private_ip                    = "10.10.10.8"
   instance_type                 = local.amd64_instype
-  image_id                      = "${data.alicloud_images.el8_amd64_img.images.0.id}"
-  vswitch_id                    = "${alicloud_vswitch.vsw.id}"
-  security_groups               = ["${alicloud_security_group.default.id}"]
+  image_id                      = data.alicloud_images.el8_amd64_img.images.0.id
+  vswitch_id                    = alicloud_vswitch.vsw.id
+  security_groups               = [alicloud_security_group.default.id]
   password                      = "PigstyDemo4"
   instance_charge_type          = "PostPaid"
   internet_charge_type          = "PayByTraffic"
@@ -140,7 +152,7 @@ resource "alicloud_instance" "pg-el8" {
 }
 
 output "el8_ip" {
-  value = "${alicloud_instance.pg-el8.public_ip}"
+  value = alicloud_instance.pg-el8.public_ip
 }
 
 
@@ -152,9 +164,9 @@ resource "alicloud_instance" "pg-el8a" {
   host_name                     = "pg-el8a"
   private_ip                    = "10.10.10.108"
   instance_type                 = local.arm64_instype
-  image_id                      = "${data.alicloud_images.el8_arm64_img.images.0.id}"
-  vswitch_id                    = "${alicloud_vswitch.vsw.id}"
-  security_groups               = ["${alicloud_security_group.default.id}"]
+  image_id                      = data.alicloud_images.el8_arm64_img.images.0.id
+  vswitch_id                    = alicloud_vswitch.vsw.id
+  security_groups               = [alicloud_security_group.default.id]
   password                      = "PigstyDemo4"
   instance_charge_type          = "PostPaid"
   internet_charge_type          = "PayByTraffic"
@@ -167,7 +179,7 @@ resource "alicloud_instance" "pg-el8a" {
 }
 
 output "el8a_ip" {
-  value = "${alicloud_instance.pg-el8a.public_ip}"
+  value = alicloud_instance.pg-el8a.public_ip
 }
 
 
@@ -179,9 +191,9 @@ resource "alicloud_instance" "pg-el9" {
   host_name                     = "pg-el9"
   private_ip                    = "10.10.10.9"
   instance_type                 = local.amd64_instype
-  image_id                      = "${data.alicloud_images.el9_amd64_img.images.0.id}"
-  vswitch_id                    = "${alicloud_vswitch.vsw.id}"
-  security_groups               = ["${alicloud_security_group.default.id}"]
+  image_id                      = data.alicloud_images.el9_amd64_img.images.0.id
+  vswitch_id                    = alicloud_vswitch.vsw.id
+  security_groups               = [alicloud_security_group.default.id]
   password                      = "PigstyDemo4"
   instance_charge_type          = "PostPaid"
   internet_charge_type          = "PayByTraffic"
@@ -194,7 +206,7 @@ resource "alicloud_instance" "pg-el9" {
 }
 
 output "el9_ip" {
-  value = "${alicloud_instance.pg-el9.public_ip}"
+  value = alicloud_instance.pg-el9.public_ip
 }
 
 
@@ -207,9 +219,9 @@ resource "alicloud_instance" "pg-el9a" {
   host_name                     = "pg-el9a"
   private_ip                    = "10.10.10.109"
   instance_type                 = local.arm64_instype
-  image_id                      = "${data.alicloud_images.el9_arm64_img.images.0.id}"
-  vswitch_id                    = "${alicloud_vswitch.vsw.id}"
-  security_groups               = ["${alicloud_security_group.default.id}"]
+  image_id                      = data.alicloud_images.el9_arm64_img.images.0.id
+  vswitch_id                    = alicloud_vswitch.vsw.id
+  security_groups               = [alicloud_security_group.default.id]
   password                      = "PigstyDemo4"
   instance_charge_type          = "PostPaid"
   internet_charge_type          = "PayByTraffic"
@@ -222,7 +234,7 @@ resource "alicloud_instance" "pg-el9a" {
 }
 
 output "el9a_ip" {
-  value = "${alicloud_instance.pg-el9a.public_ip}"
+  value = alicloud_instance.pg-el9a.public_ip
 }
 
 
@@ -234,9 +246,9 @@ resource "alicloud_instance" "pg-el10" {
   host_name                     = "pg-el10"
   private_ip                    = "10.10.10.10"
   instance_type                 = local.amd64_instype
-  image_id                      = "${data.alicloud_images.el10_amd64_img.images.0.id}"
-  vswitch_id                    = "${alicloud_vswitch.vsw.id}"
-  security_groups               = ["${alicloud_security_group.default.id}"]
+  image_id                      = data.alicloud_images.el10_amd64_img.images.0.id
+  vswitch_id                    = alicloud_vswitch.vsw.id
+  security_groups               = [alicloud_security_group.default.id]
   password                      = "PigstyDemo4"
   instance_charge_type          = "PostPaid"
   internet_charge_type          = "PayByTraffic"
@@ -249,7 +261,7 @@ resource "alicloud_instance" "pg-el10" {
 }
 
 output "el10_ip" {
-  value = "${alicloud_instance.pg-el10.public_ip}"
+  value = alicloud_instance.pg-el10.public_ip
 }
 
 
@@ -261,9 +273,9 @@ resource "alicloud_instance" "pg-el10a" {
   host_name                     = "pg-el10a"
   private_ip                    = "10.10.10.110"
   instance_type                 = local.arm64_instype
-  image_id                      = "${data.alicloud_images.el10_arm64_img.images.0.id}"
-  vswitch_id                    = "${alicloud_vswitch.vsw.id}"
-  security_groups               = ["${alicloud_security_group.default.id}"]
+  image_id                      = data.alicloud_images.el10_arm64_img.images.0.id
+  vswitch_id                    = alicloud_vswitch.vsw.id
+  security_groups               = [alicloud_security_group.default.id]
   password                      = "PigstyDemo4"
   instance_charge_type          = "PostPaid"
   internet_charge_type          = "PayByTraffic"
@@ -276,7 +288,7 @@ resource "alicloud_instance" "pg-el10a" {
 }
 
 output "el10a_ip" {
-  value = "${alicloud_instance.pg-el10a.public_ip}"
+  value = alicloud_instance.pg-el10a.public_ip
 }
 
 
@@ -287,4 +299,3 @@ output "el10a_ip" {
 # sshpass -p PigstyDemo4 ssh-copy-id el8a
 # sshpass -p PigstyDemo4 ssh-copy-id el9a
 # sshpass -p PigstyDemo4 ssh-copy-id el10a
-

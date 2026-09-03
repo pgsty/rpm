@@ -9,6 +9,12 @@
 %{error:postbis supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0
 Release:        1PGSTY%{?dist}
@@ -21,6 +27,11 @@ Patch0:         postbis-1.0.patch
 
 BuildRequires:  gcc make pgdg-srpm-macros >= 1.0.27
 BuildRequires:  postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -28,27 +39,15 @@ PostBIS provides compact DNA, RNA, amino-acid, and aligned biological
 sequence types for PostgreSQL. It also provides sequence functions,
 type modifiers, comparison operators, and btree and hash operator classes.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %autosetup -p1 -n %{sname}-%{commit}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} install PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -58,12 +57,15 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install PG_CONFIG=%{pginstdir}/bin/pg_conf
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}.index.bc
 %{pginstdir}/lib/bitcode/%{pname}/
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Tue Jul 28 2026 Vonng <rh@vonng.com> - 1.0-2PIGSTY
 - Fix alphabet output allocation and indexed sequence slice decoding
 

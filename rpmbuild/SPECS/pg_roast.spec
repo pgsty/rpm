@@ -9,6 +9,12 @@
 %{error:pg_roast supports PostgreSQL 14 through 18}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0
 Release:        1PGSTY%{?dist}
@@ -20,6 +26,11 @@ Source0:        %{sname}-%{version}.tar.gz
 
 BuildRequires:  gcc make pgdg-srpm-macros >= 1.0.27
 BuildRequires:  postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -28,27 +39,15 @@ and query behavior from inside PostgreSQL. Its background worker can run
 periodic audits when pg_roast is added to shared_preload_libraries, while
 manual audits remain available without preloading.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %setup -q -n %{sname}-%{snapshot_commit}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_PGXS=1 PG_CONFIG=%{pginstdir}/bin/pg_config
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} USE_PGXS=1 PG_CONFIG=%{pginstdir}/bin/pg_config
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} install USE_PGXS=1 PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install USE_PGXS=1 PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -58,12 +57,15 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install USE_PGXS=1 PG_CONFIG=%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}.index.bc
 %{pginstdir}/lib/bitcode/%{pname}/
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 1.0-1PIGSTY
 - Initial RPM release from upstream snapshot ccbf012
 - Build for PostgreSQL 14 through 18

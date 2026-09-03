@@ -1,7 +1,6 @@
 %global pname biscuit
 %global sname biscuit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global llvm_binpath /usr/bin
 
 %ifarch x86_64
 %if 0%{?rhel} && 0%{?rhel} == 9
@@ -11,6 +10,12 @@
 %endif
 %else
 %{!?llvm:%global llvm 1}
+%endif
+
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -24,6 +29,11 @@ Source0:	Biscuit-%{version}.tar.gz
 Patch0:		biscuit-3.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -32,22 +42,6 @@ on text columns. Biscuit indexes are specifically designed to accelerate LIKE qu
 arbitrary wildcards using roaring bitmaps. It provides superior performance for wildcard
 pattern matching compared to traditional B-tree, GIN, or GiST indexes, especially for
 queries with leading wildcards like '%%pattern%%'.
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
 
 %prep
 %setup -q -n Biscuit-%{version}
@@ -62,19 +56,11 @@ sed -i '/^[[:space:]]*-fPIC$/a override CFLAGS += -fno-lto' Makefile
 %endif
 
 %build
-%if %llvm
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config LLVM_BINPATH=%{llvm_binpath}
-%else
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config with_llvm=no
-%endif
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config
 
 %install
 %{__rm} -rf %{buildroot}
-%if %llvm
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
-%else
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot} with_llvm=no
-%endif
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install PG_CONFIG=%{pginstdir}/bin/pg_config DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -82,12 +68,16 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install PG_CONFIG=%{pginst
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 3.0.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Wed Aug 12 2026 Vonng <rh@vonng.com> - 3.0.0-1PIGSTY
 - Update to stable PGXN distribution 3.0.0
 - Ship the WAL-logged on-disk format; existing 2.x indexes require REINDEX

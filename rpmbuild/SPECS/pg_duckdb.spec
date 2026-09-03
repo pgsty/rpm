@@ -20,6 +20,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.1
 Release:	1PGSTY%{?dist}
@@ -27,7 +33,15 @@ Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT
 URL:		https://github.com/duckdb/pg_duckdb
 Source0:	%{sname}-%{version}.tar.gz
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 libcurl-devel
+Patch0:		pg_duckdb-1.1.1-install-order.patch
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	gcc gcc-c++ make cmake ninja-build python3 git
+BuildRequires:	libcurl-devel lz4-devel openssl-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -35,42 +49,27 @@ pg_duckdb is a Postgres extension that embeds DuckDB's columnar-vectorized analy
 We recommend using pg_duckdb to build high performance analytics and data-intensive applications.
 pg_duckdb was developed in collaboration with our partners, Hydra and MotherDuck.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
-%setup -q -n %{sname}-%{version}
+%autosetup -p1 -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} || /bin/true
+%set_build_flags
+%if 0%{?rhel} >= 9
+CFLAGS="$(printf '%s\n' "$CFLAGS" | sed -E 's/(^|[[:space:]])-flto(=[^[:space:]]*)?([[:space:]]|$)/ /g; s/(^|[[:space:]])-ffat-lto-objects([[:space:]]|$)/ /g')"
+CXXFLAGS="$(printf '%s\n' "$CXXFLAGS" | sed -E 's/(^|[[:space:]])-flto(=[^[:space:]]*)?([[:space:]]|$)/ /g; s/(^|[[:space:]])-ffat-lto-objects([[:space:]]|$)/ /g')"
+%endif
+PATH=%{pginstdir}/bin:$PATH CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
+  %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} || /bin/true
+%set_build_flags
+%if 0%{?rhel} >= 9
+CFLAGS="$(printf '%s\n' "$CFLAGS" | sed -E 's/(^|[[:space:]])-flto(=[^[:space:]]*)?([[:space:]]|$)/ /g; s/(^|[[:space:]])-ffat-lto-objects([[:space:]]|$)/ /g')"
+CXXFLAGS="$(printf '%s\n' "$CXXFLAGS" | sed -E 's/(^|[[:space:]])-flto(=[^[:space:]]*)?([[:space:]]|$)/ /g; s/(^|[[:space:]])-ffat-lto-objects([[:space:]]|$)/ /g')"
+%endif
+PATH=%{pginstdir}/bin:$PATH CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
+  %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -80,14 +79,21 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
-   %{pginstdir}/lib/bitcode/*
+%{pginstdir}/lib/bitcode/%{pname}.index.bc
+%{pginstdir}/lib/bitcode/%{pname}/
 %endif
 
-%exclude %{pginstdir}/lib/bitcode/*
-
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.1.1-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+- Declare the complete native and LLVM build dependency set
+- Propagate build failures and package the generated llvmjit payload
+- Preserve distribution debug and hardening flags while limiting DuckDB LTO
+- Order the bundled DuckDB install after the PGXS library directory exists
+
 * Sat Jul 11 2026 Vonng <rh@vonng.com> - 1.1.1-2PIGSTY
 - Disable global build-id links so PostgreSQL-major packages can coexist
 - Enforce the supported PostgreSQL 14 through 18 range

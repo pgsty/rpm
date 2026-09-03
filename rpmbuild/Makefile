@@ -652,6 +652,9 @@ cat_tools:
 pg_readme:
 	./build pg_readme 14 15 16 17 18
 
+pg_statviz:
+	./build pg_statviz 14 15 16 17 18
+
 pg_relation_sql:
 	./build pg_relation_sql 14 15 16 17 18
 

@@ -1,7 +1,6 @@
 %global pname storage_engine
 %global sname storage_engine
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global llvm_binpath /usr/bin
 
 %if 0%{?pgmajorversion} < 15
 %{error:storage_engine 2.x only supports PostgreSQL 15+}
@@ -15,6 +14,12 @@
  %endif
 %else
  %{!?llvm:%global llvm 1}
+%endif
+
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -32,6 +37,11 @@ BuildRequires:	libcurl-devel
 BuildRequires:	lz4-devel
 BuildRequires:	libzstd-devel
 
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -41,41 +51,14 @@ analytics and rowcompress for row-based batch-compressed storage. It adds
 vectorized execution, parallel scans, stripe-level pruning, and PostgreSQL
 15-19 compatibility while remaining installable as a standard extension.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
-PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 
 %files
@@ -85,12 +68,16 @@ rm -f %{buildroot}%{pginstdir}/include/server/citus_version.h
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*.sql
 %exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/%{pname}*
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.4.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Sun May 24 2026 Vonng <rh@vonng.com> - 2.4.0-1PIGSTY
 - Update storage_engine to upstream PGXN 2.4.0
 

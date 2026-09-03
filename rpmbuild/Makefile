@@ -53,7 +53,7 @@ rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_oidc_validator_rust pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform pgwasm
 rust10: pg_command_fw pg_trickle pggraph pgcontext pgrdf jsonschema
-rust11: pg_mentat
+rust11: pg_mentat pgs3
 time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
 
 
@@ -402,6 +402,9 @@ pg_local_cache:	# shared_preload_libraries
 
 pg_durable:		# rust pgrx 0.19.2, shared_preload_libraries
 	./build pg_durable 14 15 16 17 18
+
+pgs3:			# rust pgrx 0.19.2, shared_preload_libraries
+	./build pgs3 17 18
 
 provsql:
 	./build provsql 14 15 16 17 18
@@ -1331,7 +1334,7 @@ rmdbg:
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \
 	pg_sorted_heap age onesparse pggraph pgcontext pgzint pgrdf pgwasm pgmq pgmb ulak fsm_core rum pg_ai_query \
 	pg_monetdb pg_ilib pg_igraph pg_ttl_index pg_graphql pg_jsonschema jsonschema pg_mentat pg_turbovec index_advisor \
-	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_local_cache pg_durable provsql fbsql \
+	pg_plan_filter pg_variables imgsmlr pg_ivm pg_incremental pg_trickle pg_local_cache pg_durable pgs3 provsql fbsql \
 	pg_cardano inchi rdkit pg_tle plv8 plruby pljs plx plprql plpgsql_check pg_mockable pgsqlmock \
 	pg_prefix pg_semver pg_text_semver pgunit pgpdf pglite_fusion md5hash asn1oid \
 	pg_roaringbitmap pgfaceting pgsphere pg_country pg_xenophile pg_currency pgcollection \

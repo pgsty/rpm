@@ -12,6 +12,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.3.15
 Release:	1PGSTY%{?dist}
@@ -21,6 +27,11 @@ URL:		https://github.com/postgrespro/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -33,42 +44,15 @@ RUM solves two problems that GIN has:
 - Slow phrase search with GIN: RUM stores positions of lexemes in posting
   tree that enables phrase search support.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_mflags} install
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{buildroot} %{?_smp_mflags} install
 
 %files
 %doc README.md
@@ -76,12 +60,16 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%if %llvm
-%files llvmjit
-   %{pginstdir}/lib/bitcode/*
-%endif
 %exclude /usr/lib/.build-id/*
 
+%if %llvm
+   %{pginstdir}/lib/bitcode/*
+%endif
+
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.3.15-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Fri Jan 17 2026 Vonng <rh@vonng.com> - 1.3.15-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

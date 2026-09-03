@@ -1,7 +1,6 @@
 %global pname pgclone
 %global sname pgclone
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -11,6 +10,12 @@
  %endif
 %else
  %{!?llvm:%global llvm 1}
+%endif
+
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -24,52 +29,30 @@ Source0:	%{sname}-%{version}.tar.gz
 #           Supported: PostgreSQL 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pgclone is a PostgreSQL extension written in C that clones databases, schemas,
 tables, and functions between PostgreSQL instances directly from SQL.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
 cd %{_builddir}/%{sname}-%{version}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
 cd %{_builddir}/%{sname}-%{version}
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name}
 %{__mkdir_p} %{buildroot}%{_licensedir}/%{name}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 install -m 644 README.md CHANGELOG.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 
@@ -80,13 +63,17 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%if %llvm
-%files llvmjit
-%{pginstdir}/lib/bitcode/%{pname}*
-%endif
 %exclude /usr/lib/.build-id/*
 
+%if %llvm
+%{pginstdir}/lib/bitcode/%{pname}*
+%endif
+
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 4.4.2-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 4.4.2-1PIGSTY
 - Update to upstream PGXN 4.4.2
 

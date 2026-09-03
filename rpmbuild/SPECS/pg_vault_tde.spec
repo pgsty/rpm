@@ -1,7 +1,6 @@
 %global pname pg_vault_tde
 %global sname pg_vault_tde
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global llvm_binpath /usr/bin
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
 %{error:pg_vault_tde only supports PostgreSQL 17 through 18 in PGSTY builds}
@@ -12,6 +11,12 @@
 %endif
 
 %{!?llvm:%global llvm 1}
+
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.7.0
@@ -25,6 +30,11 @@ Patch0:         pg-vault-tde-1.7.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc make pkgconfig openssl-devel >= 3.0 libcurl-devel chrpath
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server openssl-libs >= 3.0 libcurl
 
 %description
@@ -33,32 +43,18 @@ index access methods. It supports HashiCorp Vault, OpenBao, local wallets, and
 PKCS#11 key providers. The module must be configured in
 shared_preload_libraries before CREATE EXTENSION pg_vault_tde.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %autosetup -p1 -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
   PG_CONFIG=%{pginstdir}/bin/pg_config \
-  LLVM_BINPATH=%{llvm_binpath} \
   CFLAGS="%{optflags} -fno-lto"
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} \
-  PG_CONFIG=%{pginstdir}/bin/pg_config \
-  LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildroot} \
+  PG_CONFIG=%{pginstdir}/bin/pg_config
 chrpath -d %{buildroot}%{pginstdir}/lib/%{pname}.so
 
 %files
@@ -73,11 +69,14 @@ chrpath -d %{buildroot}%{pginstdir}/lib/%{pname}.so
 %exclude /usr/lib/.build-id/*
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}*
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.7.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Fri Aug 07 2026 Vonng <rh@vonng.com> - 1.7.0-1PIGSTY
 - Initial RPM release for upstream PGXN 1.7.0
 - Package PostgreSQL 17 and 18 on EL9/EL10 with OpenSSL 3 and libcurl

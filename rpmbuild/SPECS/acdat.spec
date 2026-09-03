@@ -9,15 +9,18 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.1.0
+Version:        0.1.1
 Release:        1PGSTY%{?dist}
 Summary:        Compiled multi-pattern matching for PostgreSQL
-License:        PostgreSQL
-URL:            https://github.com/Vonng/ac
+License:        Apache-2.0
+URL:            https://github.com/pgsty/acdat
 Source0:        %{sname}-%{version}.tar.gz
 
 BuildRequires:  gcc make pgdg-srpm-macros >= 1.0.27
 BuildRequires:  postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:  clang llvm
+%endif
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -49,7 +52,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install PG_CONFIG=%{pginstdir}/bin/pg_conf
 
 %files
 %license LICENSE
-%doc README.md CHANGELOG.md BENCHMARK.md docs/usage.md
+%doc README.md docs/CHANGELOG.md docs/BENCHMARK.md docs/PERFORMANCE.md docs/USAGE.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
@@ -61,6 +64,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install PG_CONFIG=%{pginstdir}/bin/pg_conf
 %endif
 
 %changelog
+* Thu Sep 03 2026 Vonng <rh@vonng.com> - 0.1.1-1PGSTY
+- Update to the formal pgsty/acdat 0.1.1 release
+- Preserve the 0.1.0 to 0.1.1 extension upgrade path for PostgreSQL 14 through 18
+- Follow the upstream relicensing to Apache-2.0 and refreshed documentation layout
+
 * Sat Aug 22 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>
 - Build for PostgreSQL 14 through 18

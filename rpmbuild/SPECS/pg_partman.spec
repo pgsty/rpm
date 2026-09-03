@@ -16,6 +16,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	5.5.0
 Release:	1PGSTY%{?dist}
@@ -26,6 +32,11 @@ Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/pgpartman/pg_partman/archive/refs/tags/v5.5.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	python3
 Requires:	python3-psycopg2
@@ -39,42 +50,15 @@ managed steps. Optional retention policy can automatically drop partitions
 no longer needed. A background worker (BGW) process is included to automatically
 run partition maintenance without the need of an external scheduler.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_mflags} install
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{buildroot} %{?_smp_mflags} install
 
 # Fix ambiguous python shebang
 sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|g' %{buildroot}%{pginstdir}/bin/*.py
@@ -90,13 +74,17 @@ sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|g' %{buildroot}%{pginstdi
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*.sql
 %{pginstdir}/doc/extension/*.md
-%if %llvm
-%files llvmjit
-   %{pginstdir}/lib/bitcode/*
-%endif
 %exclude /usr/lib/.build-id/*
 
+%if %llvm
+   %{pginstdir}/lib/bitcode/*
+%endif
+
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 5.5.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Mon Jul 27 2026 Vonng <rh@vonng.com> - 5.5.0-1PIGSTY
 - Update to upstream PGXN 5.5.0
 - Require Python 3 and psycopg2 for the installed maintenance scripts

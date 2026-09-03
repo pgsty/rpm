@@ -57,6 +57,9 @@ Features:
 %setup -q -n %{sname}-%{version}
 
 %build
+%if 0%{?rhel} == 9
+%undefine _annotated_build
+%endif
 %set_build_flags
 export PATH=%{pginstdir}/bin:$PATH
 
@@ -98,6 +101,9 @@ cd build
 %exclude /usr/local/*
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.1.1-1PGSTY
+- Avoid system annobin plugin flags when using GCC Toolset 13 on EL9
+
 * Tue Jul 28 2026 Vonng <rh@vonng.com> - 0.1.1-2PIGSTY
 - Enforce the documented EL9 or newer toolchain requirement
 

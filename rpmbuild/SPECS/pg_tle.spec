@@ -12,6 +12,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.5.2
 Release:	1PGSTY%{?dist}
@@ -21,6 +27,11 @@ URL:		https://github.com/aws/pg_tle
 Source0:	pg_tle-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -29,44 +40,15 @@ extend and deploy new PostgreSQL functionality with lower administrative and tec
 Developers can use Trusted Language Extensions for PostgreSQL to create and install extensions on restricted filesystems
 and work with PostgreSQL internals through a SQL API.
 
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -74,12 +56,16 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/share/extension/%{sname}.control
 %{pginstdir}/share/extension/%{sname}*sql
 %exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.5.2-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Sun Oct 26 2025 Vonng <rh@vonng.com> - 1.5.2-1PIGSTY
 * Fri Sep 05 2025 Vonng <rh@vonng.com> - 1.5.1-2PIGSTY
 - pg18 rc1 support with 3c99c51086ae2d1ec7aeb0ecf186a1a29f465d2c

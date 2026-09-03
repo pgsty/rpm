@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_bestmatch
 %global sname pg_bestmatch
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -28,6 +27,8 @@ BM25 outperforms dense vector-based retrieval methods in many RAG benchmark task
 patch -p1 --forward -f < %{_specdir}/patches/pg-bestmatch-0.0.2.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

@@ -9,6 +9,7 @@ Summary:	Infinite calendar and recurring schedule extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/h4kbas/pgcalendar
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized source tarball from the upstream PGXN release archive
 #           Supported: PostgreSQL 12+
 

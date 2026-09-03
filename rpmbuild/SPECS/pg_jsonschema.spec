@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_jsonschema
 %global sname pg_jsonschema
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -27,6 +26,8 @@ pg_jsonschema is a PostgreSQL extension adding support for JSON schema validatio
 patch -p1 --forward -f < %{_specdir}/patches/pg-jsonschema-0.3.4.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

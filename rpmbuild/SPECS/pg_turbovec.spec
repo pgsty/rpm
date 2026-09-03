@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_turbovec
 %global sname pg_turbovec
 # Codeberg tag archives use the unversioned pg_turbovec/ root directory.
@@ -35,6 +34,8 @@ nearest-neighbor search with L2, inner-product, cosine, and L1 distances.
 %autosetup -n %{srcdir} -p1
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=stable

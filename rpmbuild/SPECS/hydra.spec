@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname columnar
 %global sname hydra
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -62,6 +61,7 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
+%set_build_flags
 cd columnar
 ./configure
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}

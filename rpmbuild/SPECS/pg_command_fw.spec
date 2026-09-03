@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_command_fw
 %global sname pg_command_fw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -32,6 +31,8 @@ tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
 patch -d %{_builddir}/%{sname}-%{version} -p1 --forward -f < %{_specdir}/patches/pg-command-fw-0.1.0.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

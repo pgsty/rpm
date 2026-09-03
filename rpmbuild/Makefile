@@ -1308,15 +1308,6 @@ rm-rpm:
 rm-srpm:
 	rm -rf  ~/rpmbuild/SRPMS/*
 
-rmdbg:
-	mkdir -p RPMS/el8.x86_64/tmp RPMS/el9.x86_64/tmp RPMS/el8.aarch64/tmp RPMS/el9.aarch64/tmp
-	mv RPMS/el8.x86_64/*debug* RPMS/el8.x86_64/tmp/
-	mv RPMS/el8.aarch64/*debug* RPMS/el8.aarch64/tmp/
-	mv RPMS/el9.x86_64/*debug* RPMS/el9.x86_64/tmp/
-	mv RPMS/el9.aarch64/*debug* RPMS/el9.aarch64/tmp/
-
-
-
 ###############################################################
 #                      .PHONY Targets                         #
 ###############################################################
@@ -1361,4 +1352,4 @@ rmdbg:
 	pgdog pgdog-install pg_adhoc pg_filedump openhalo openhalodb ivorysql ivorysql-contrib ivorysql-all agensgraph zlog polarstore polardb \
 	pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \
 	orioledb-16 orioledb-17 orioledb-18 orioledb-all cloudberry cloudberry-backup cloudberry-pxf \
-	ls-rpm ls-srpm rm-rpm rm-srpm rmdbg
+	ls-rpm ls-srpm rm-rpm rm-srpm

@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_lakehouse
 %global sname pg_lakehouse
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -23,6 +22,8 @@ Queries are pushed down to Apache DataFusion, which delivers excellent analytica
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo update
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{pname}
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 

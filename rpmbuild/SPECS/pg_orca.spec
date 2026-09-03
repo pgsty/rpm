@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_orca
 %global sname pg_orca
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -31,6 +30,7 @@ when ORCA cannot handle a query.
 %setup -q -n %{sname}-%{version}
 
 %build
+%set_build_flags
 cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DPG_CONFIG=%{pginstdir}/bin/pg_config

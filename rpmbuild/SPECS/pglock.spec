@@ -9,6 +9,7 @@ Summary:	Lightweight distributed lock service inside PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/fraruiz/pglock
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized source tarball from the upstream PGXN release archive
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

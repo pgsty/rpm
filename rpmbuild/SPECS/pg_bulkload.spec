@@ -62,9 +62,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
 %{__rm} -rf %{buildroot}
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} DESTDIR=%{buildroot} install
 
-# Strip .so files to produce -debug* packages properly on SLES.
-%{__strip} %{buildroot}%{pginstdir}/lib/*.so
-
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 

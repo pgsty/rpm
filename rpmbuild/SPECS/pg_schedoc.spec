@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname schedoc
 %global sname pg_schedoc
 %global pginstdir /usr/pgsql-%{pgmajorversion}

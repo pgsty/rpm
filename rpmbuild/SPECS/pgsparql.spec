@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname sparql
 %global sname pgsparql
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	SPARQL utilities for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/lacanoid/pgsparql
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

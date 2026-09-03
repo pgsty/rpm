@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_durable
 %global sname pg_durable
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -31,6 +30,8 @@ and requires loading pg_durable through shared_preload_libraries.
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

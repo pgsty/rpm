@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_render
 %global sname pg_render
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -27,6 +26,8 @@ Render engine extension for PostgreSQL.
 patch -p1 --forward -f < %{_specdir}/patches/pg-render-0.1.3.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

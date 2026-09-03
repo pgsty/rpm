@@ -1,6 +1,5 @@
 %define __jar_repack %{nil}
 %define _build_id_links none
-%global debug_package %{nil}
 
 Name:           cloudberry-pxf
 Version:        2.1.0

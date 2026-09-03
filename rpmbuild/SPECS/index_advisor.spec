@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname index_advisor
 %global sname index_advisor
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	PostgreSQL Index Advisor
 License:	PostgreSQL
 URL:		https://github.com/supabase/index_advisor
 Source0:	index_advisor-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

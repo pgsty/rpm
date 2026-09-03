@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_mentat
 %global sname pg_mentat
 %global srcdir %{sname}-%{version}
@@ -31,6 +30,8 @@ transaction processing through SQL functions.
 %autosetup -p1 -n %{srcdir}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

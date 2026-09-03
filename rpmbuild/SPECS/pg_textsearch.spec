@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_textsearch
 %global sname pg_textsearch
 %global pginstdir /usr/pgsql-%{pgmajorversion}

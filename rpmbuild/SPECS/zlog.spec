@@ -5,7 +5,6 @@ Summary:        High-performance C logging library
 License:        Apache-2.0
 URL:            https://github.com/HardySimpson/zlog
 Source0:        zlog-%{version}.tar.gz
-%define debug_package %{nil}
 
 BuildRequires:  gcc, make
 

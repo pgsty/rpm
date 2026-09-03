@@ -75,10 +75,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} DESTDIR=%{buil
 %{__install} -d -m 755 %{buildroot}%{pginstdir}/share/doc/extension
 %{__cp} README.%{sname} %{buildroot}%{pginstdir}/share/doc/extension/README-%{sname}.txt
 
-%ifarch ppc64 ppc64le
-strip %{buildroot}%{pginstdir}/lib/*.so
-%endif
-
 %post
 /sbin/ldconfig
 

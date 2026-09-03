@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global sname graphblas
 
 Name:           %{sname}
@@ -29,6 +28,7 @@ Headers, pkg-config metadata, and CMake package files for SuiteSparse:GraphBLAS.
 %setup -q -n GraphBLAS-%{version}
 
 %build
+%set_build_flags
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \

@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname mysqlcompat
 %global sname mysqlcompat
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	MySQL compatibility functions
 License:	unrestricted
 URL:		https://github.com/2ndQuadrant/mysqlcompat
 Source0:	mysqlcompat-%{version}.tar.gz
+BuildArch:	noarch
 #           https://github.com/michelp/mysqlcompat/archive/refs/heads/master.zip
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

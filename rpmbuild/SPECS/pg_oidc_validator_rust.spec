@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname oidc_validator
 %global sname pg_oidc_validator_rust
 %global commit b65bbbe288f84fab91d58b8304e8a526d1326af5
@@ -36,6 +35,8 @@ oauth_validator_libraries = 'oidc_validator' to load the module.
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/pg_oidc_validator_rust-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

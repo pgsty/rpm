@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_tiktoken
 %global sname pg_tiktoken
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -32,6 +31,8 @@ Postgres extension that does input tokenization using OpenAI's tiktoken.
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{source_version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

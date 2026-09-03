@@ -1,4 +1,3 @@
-%global debug_package %{nil}
 %global _build_id_links none
 
 Name:           cloudberry-backup

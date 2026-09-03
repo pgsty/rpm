@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname tzf
 %global sname pg_tzf
 %global srcdir pg-tzf-%{version}
@@ -31,6 +30,8 @@ Resolve IANA timezone names from longitude/latitude coordinates in PostgreSQL.
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

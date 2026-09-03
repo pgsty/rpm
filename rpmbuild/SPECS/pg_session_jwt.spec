@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_session_jwt
 %global sname pg_session_jwt
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -28,6 +27,8 @@ This JWT is then verified against a JWK (JSON Web Key) to ensure its authenticit
 patch -p1 --forward -f < %{_specdir}/patches/pg-session-jwt-0.5.0.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

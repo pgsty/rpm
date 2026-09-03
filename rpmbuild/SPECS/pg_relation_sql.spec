@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_relation_sql
 %global sname pg_relation_sql
 %global pginstdir /usr/pgsql-%{pgmajorversion}

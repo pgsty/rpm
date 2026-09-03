@@ -23,6 +23,16 @@ pig build pkg timescaledb
 pig build pkg pg_search
 ```
 
+## Debug packages
+
+Native builds keep compiler DWARF and generate the standard main,
+`-debuginfo`, and `-debugsource` RPMs by default. Rust extensions remain
+optimized release builds while setting Cargo's release debug level to `2` and
+leaving stripping to RPM. Pure SQL/data/script packages with a genuine
+`BuildArch: noarch` payload do not generate empty debug packages. Specs that
+invoke CMake, Meson, Autoconf, or compilers directly must import RPM build flags
+so the automatic split has real DWARF to package.
+
 
 ## Babelfish (EL10A, PG17)
 

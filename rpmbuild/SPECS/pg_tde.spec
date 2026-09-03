@@ -60,6 +60,7 @@ This packages provides JIT support for %{sname}
 %setup -q -n %{sname}-%{version}
 
 %build
+%set_build_flags
 PATH=%{pginstdir}/bin:$PATH ./configure
 PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
 

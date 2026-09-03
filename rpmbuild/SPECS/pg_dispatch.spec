@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_dispatch
 %global sname pg_dispatch
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	Asynchronous SQL dispatcher
 License:	PostgreSQL
 URL:		https://github.com/Snehil-Shah/pg_dispatch
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname table_version
 %global sname table_version
 %global pginstdir /usr/pgsql-%{pgmajorversion}

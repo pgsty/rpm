@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname etcd_fdw
 %global sname etcd_fdw
 %global srcdir %{sname}-%{version}
@@ -35,6 +34,8 @@ tar -C vendor/wrappers --strip-components=1 -xf %{SOURCE1}
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

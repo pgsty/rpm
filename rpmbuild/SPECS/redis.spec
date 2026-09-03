@@ -1,4 +1,3 @@
-%undefine _debugsource_packages
 %global redis_modules_abi 1
 %global redis_modules_dir %{_libdir}/redis/modules
 

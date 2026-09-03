@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname mimeo
 %global sname mimeo
 %global pginstdir /usr/pgsql-%{pgmajorversion}

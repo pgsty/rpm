@@ -9,6 +9,7 @@ Summary:	Semantic version domain and comparison operators for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/bigsmoke/pg_text_semver
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           https://github.com/bigsmoke/pg_text_semver/archive/refs/tags/v1.2.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

@@ -9,7 +9,6 @@
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 %global buildstage %{_builddir}/%{name}-%{version}-stage
 %global bbf_prefix_map -ffile-prefix-map=%{buildstage}=%{pginstdir} -ffile-prefix-map=%{_builddir}/%{sname}-%{pgmajorversion}-%{sourceversion}=.
-%define debug_package %{nil}
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{bbfversion}

@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_oidc_validator
 %global sname pg_oidc_validator
 %global pginstdir /usr/pgsql-%{pgmajorversion}

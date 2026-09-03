@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_tier
 %global sname pg_tier
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -23,6 +22,8 @@ Postgres Extension written in Rust, to enable data tiering to AWS S3
 %setup -q -n %{sname}-%{version}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 
 %install

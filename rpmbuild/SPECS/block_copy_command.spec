@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname block_copy_command
 %global sname block_copy_command
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -31,6 +30,8 @@ direction-specific rules, audit logging, and custom hints.
 patch -p1 --forward -f < %{_specdir}/patches/block-copy-command-0.1.5.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

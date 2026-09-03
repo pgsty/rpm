@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_fts
 %global sname pg_fts
 %global pginstdir /usr/pgsql-%{pgmajorversion}

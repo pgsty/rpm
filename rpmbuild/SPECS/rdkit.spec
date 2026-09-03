@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global sname rdkit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
@@ -80,6 +79,7 @@ patch -p1 --fuzz=0 < %{PATCH1}
 cp -f %{SOURCE1} Code/RDGeneral/enum.h
 
 %build
+%set_build_flags
 PATH=%{pginstdir}/bin:$PATH cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \

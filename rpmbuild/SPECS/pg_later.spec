@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_later
 %global sname pg_later
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -28,6 +27,8 @@ A postgres extension to execute queries asynchronously. Built on pgmq.
 patch -p1 --forward -f < %{_specdir}/patches/pg-later-0.4.0.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

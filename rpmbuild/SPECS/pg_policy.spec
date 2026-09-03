@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_policy
 %global sname pg_policy
 %global pginstdir /usr/pgsql-%{pgmajorversion}

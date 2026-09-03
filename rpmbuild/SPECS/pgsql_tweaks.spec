@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgsql_tweaks
 %global sname pgsql_tweaks
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -14,6 +13,7 @@ Summary:	PostgreSQL functions and views for daily work
 License:	PostgreSQL
 URL:		https://codeberg.org/pgsql_tweaks/pgsql_tweaks
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized from https://api.pgxn.org/dist/pgsql_tweaks/1.0.5/pgsql_tweaks-1.0.5.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

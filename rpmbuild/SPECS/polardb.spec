@@ -5,9 +5,7 @@
 %global polar_branch POLARDB_17_STABLE
 %global pgport 5432
 
-%define debug_package %{nil}
 %define _build_id_links none
-%define __os_install_post %{nil}
 %global _lto_cflags %{nil}
 
 Name:           %{sname}-%{pgmajorversion}

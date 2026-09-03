@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global sname lagraph
 
 Name:           %{sname}
@@ -33,6 +32,7 @@ Headers, pkg-config metadata, and CMake package files for LAGraph.
 %setup -q -n LAGraph-%{version}
 
 %build
+%set_build_flags
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \

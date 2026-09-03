@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname plv8
 %global sname plv8
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -69,15 +68,17 @@ patch -p1 --forward -f < %{_specdir}/patches/plv8-3.2.4.patch
 %endif
 
 %build
+%set_build_flags
 PATH=%{pginstdir}/bin:$PATH %{__make} clean
-PATH=%{pginstdir}/bin:$PATH %{__make}
+PATH=%{pginstdir}/bin:$PATH %{__make} OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS"
 
 %install
 %{__rm} -rf %{buildroot}
+%set_build_flags
 %if 0%{?rhel} >= 10
 export QA_RPATHS=3
 %endif
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS"
 
 %files
 %{pginstdir}/lib/%{pname}*.so

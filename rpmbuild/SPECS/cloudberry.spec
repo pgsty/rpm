@@ -24,11 +24,6 @@ Patch3:         cloudberry-2.1.0-el8-pax-storage-build-fixes.patch
 %define _build_id_links none
 # LTO trips fatal warnings in the bundled PAX C++ code; keep the kernel build non-LTO.
 %global _lto_cflags %{nil}
-# Disable debuginfo/debugsource subpackages for this monolithic upstream build.
-%global debug_package %{nil}
-# Skip generating debugsource package content.
-%define _debugsource_template %{nil}
-
 BuildRequires:  apr-devel bison bzip2-devel cmake curl flex gcc gcc-c++ krb5-devel libcurl-devel libevent-devel libicu-devel liburing-devel libuuid-devel libuv-devel libxml2-devel libyaml-devel libzstd-devel lz4-devel make openldap-devel openssl-devel pam-devel perl perl-devel perl-ExtUtils-Embed protobuf-devel >= 3.5.0 protobuf-compiler python3-Cython python3-devel python3-pip python3-setuptools python3-wheel readline-devel xerces-c-devel zlib-devel
 Requires:       apr bash bzip2 iproute iputils libcurl libevent libidn2 libstdc++ liburing libuuid libuv libxml2 libyaml libzstd lz4 openldap openssh openssh-clients openssh-server pam perl python3 readline rsync /sbin/ldconfig
 
@@ -61,6 +56,7 @@ cp -fp %{SOURCE4} gpMgmt/bin/pythonSrc/ext/
 sed -i 's|pip3 install --user wheel "cython<3.0.0"|pip3 install --user wheel $(PYLIB_SRC_EXT)/Cython-0.29.37.tar.gz|' gpMgmt/bin/Makefile
 
 %build
+%set_build_flags
 CFLAGS="${CFLAGS:-%optflags}"
 CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -Ev '^-ffast-math$|^-flto(=.*)?$|^-ffat-lto-objects$' | xargs -n 100`
 CFLAGS="$CFLAGS -Wno-error=date-time -Wno-error=stringop-overflow -Wno-error=maybe-uninitialized -Wno-error=array-bounds"
@@ -113,6 +109,14 @@ MAKELEVEL=0 %{__make} %{?_smp_mflags} -C contrib
 
 %install
 rm -rf %{buildroot}
+%set_build_flags
+# gpMgmt builds several Python extension modules during install. Keep their
+# DWARF while remapping the temporary buildroot path so check-buildroot passes.
+CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -Ev '^-ffast-math$|^-flto(=.*)?$|^-ffat-lto-objects$' | xargs -n 100`
+CXXFLAGS=`echo $CXXFLAGS | xargs -n 1 | grep -Ev '^-ffast-math$|^-flto(=.*)?$|^-ffat-lto-objects$' | xargs -n 100`
+CFLAGS="$CFLAGS -ffile-prefix-map=%{buildroot}=. -fdebug-prefix-map=%{buildroot}=."
+CXXFLAGS="$CXXFLAGS -ffile-prefix-map=%{buildroot}=. -fdebug-prefix-map=%{buildroot}=."
+export CFLAGS CXXFLAGS
 # Cloudberry carries private RPATHs and PAX keeps $ORIGIN after the prefix.
 export QA_RPATHS=11
 export PIP_DISABLE_PIP_VERSION_CHECK=1
@@ -121,10 +125,6 @@ export PIP_NO_INDEX=1
 install -dpm 0755 %{buildroot}%{cb_prefix}/share/postgresql/cdb_init.d
 %{__make} DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} install-world-bin
 %{__make} DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} -C contrib install
-# gpMgmt python extensions can retain buildroot include paths in DWARF;
-# strip debug info to pass check-buildroot while keeping runtime symbols.
-[ ! -d %{buildroot}%{cb_prefix}/lib/python ] || find %{buildroot}%{cb_prefix}/lib/python -type f -name '*.so' \
-  -exec %{__strip} --strip-debug {} + || true
 install -Dpm 0644 LICENSE %{buildroot}/usr/share/licenses/%{name}/LICENSE
 install -Dpm 0644 NOTICE %{buildroot}%{_docdir}/%{name}/NOTICE
 

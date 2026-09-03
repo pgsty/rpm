@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_clickhouse
 %global sname pg_clickhouse
 %global pginstdir /usr/pgsql-%{pgmajorversion}

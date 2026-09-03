@@ -9,6 +9,7 @@ Summary:	Query-based data integrity management and soft alerting for PostgreSQL
 License:	AGPL-3.0-or-later
 URL:		https://codeberg.org/kop/pg_isok
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized source tarball from the upstream PGXN release archive
 #           Supported: PostgreSQL 10+
 

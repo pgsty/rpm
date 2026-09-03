@@ -1,4 +1,3 @@
-%undefine _debugsource_packages
 %global source0_sha256 7d7232acd1b8a49b4e05d07a00b3ca8c801ae06ab633ca6a3423bc5f385ab7ee
 %global valkey_modules_abi 1
 %global valkey_modules_dir %{_libdir}/valkey/modules

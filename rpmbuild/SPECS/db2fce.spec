@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname db2fce
 %global sname db2fce
 %global pginstdir /usr/pgsql-%{pgmajorversion}

@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname data_historization
 %global sname data_historization
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	PL/pgSQL data historization for partitioned tables
 License:	PostgreSQL
 URL:		https://github.com/rodo/postgresql-data-historization
 Source0:	postgresql-data-historization-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

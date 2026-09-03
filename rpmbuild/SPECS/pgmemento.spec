@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgmemento
 %global sname pgmemento
 %global pginstdir /usr/pgsql-%{pgmajorversion}

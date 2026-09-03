@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname acl
 %global sname acl
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	DONT_FORGET_TO_REPLACE_SUMMARY_TEXT_HERE
 License:	PostgreSQL
 URL:		DONT_FORGET_TO_REPLACE_GITHUB_REPO_URL_HERE
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

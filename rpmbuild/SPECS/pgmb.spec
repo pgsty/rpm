@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgmb
 %global sname pgmb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	A simple PostgreSQL Message Broker system
 License:	PostgreSQL
 URL:		https://github.com/fraruiz/pgmb
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           https://github.com/fraruiz/pgmb/archive/refs/tags/release.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

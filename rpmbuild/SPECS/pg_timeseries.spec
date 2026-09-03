@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname timeseries
 %global sname pg_timeseries
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	Simple and focused time-series tables for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_timeseries
 Source0:    pg_timeseries-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized from https://api.pgxn.org/dist/timeseries/0.2.1/timeseries-0.2.1.zip
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion} pg_partman_%{pgmajorversion}

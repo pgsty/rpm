@@ -284,6 +284,8 @@ run_configure_build() {
 
   if [ -f "${configure_script}" ] && [ -f "${build_script}" ]; then
     chmod +x "${configure_script}" "${build_script}"
+    # ENABLE_DEBUG controls assertions/developer mode, not whether packaging
+    # retains and splits DWARF; debug artifacts are required below.
     su - gpadmin -c "cd ${src_dir} && SRC_DIR=${src_dir} ENABLE_DEBUG=false BUILD_DESTINATION=${build_destination} ${configure_script}"
     su - gpadmin -c "cd ${src_dir} && SRC_DIR=${src_dir} BUILD_DESTINATION=${build_destination} ${build_script}"
     return
@@ -381,6 +383,10 @@ EOF
     log "failed to locate generated .deb file"
     exit 1
   fi
+  if ! ls /work/artifacts/deb/cloudberry-dbgsym_"${CBDB_PKG_VERSION}"_*.ddeb >/dev/null 2>&1; then
+    log "failed to locate generated dbgsym .ddeb file"
+    exit 1
+  fi
 }
 
 build_rpm() {
@@ -406,6 +412,14 @@ build_rpm() {
 
   if ! ls /work/artifacts/rpm/cloudberry-"${PKG_VERSION}"-"${PKG_RELEASE}"*.rpm >/dev/null 2>&1; then
     log "failed to locate generated .rpm file"
+    exit 1
+  fi
+  if ! ls /work/artifacts/rpm/cloudberry-debuginfo-"${PKG_VERSION}"-"${PKG_RELEASE}"*.rpm >/dev/null 2>&1; then
+    log "failed to locate generated debuginfo RPM"
+    exit 1
+  fi
+  if ! ls /work/artifacts/rpm/cloudberry-debugsource-"${PKG_VERSION}"-"${PKG_RELEASE}"*.rpm >/dev/null 2>&1; then
+    log "failed to locate generated debugsource RPM"
     exit 1
   fi
 }

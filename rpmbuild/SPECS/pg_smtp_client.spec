@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_smtp_client
 %global sname pg_smtp_client
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -27,6 +26,8 @@ A Postgres extension to send emails using SMTP.
 patch -p1 --forward -f < %{_specdir}/patches/pg-smtp-client-0.2.1.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

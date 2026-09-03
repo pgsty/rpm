@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_upless
 %global sname pg_upless
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	PostgreSQL Extension to Detect Useless UPDATE
 License:	PostgreSQL
 URL:		https://github.com/rodo/pg_upless
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

@@ -30,6 +30,7 @@ Headers and development files for ANTLR4 C++ runtime 4.13.
 unzip -q %{SOURCE0}
 
 %build
+%set_build_flags
 cd antlr4-cpp-runtime-%{version}-source
 cmake -S . -B build \
   -DANTLR_BUILD_CPP_TESTS=OFF \

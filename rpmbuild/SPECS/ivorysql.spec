@@ -8,7 +8,6 @@
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 %global ivory_contrib ivorysql_ora ora_btree_gin ora_btree_gist
 
-%define debug_package %{nil}
 %define _build_id_links none
 
 Name:           %{sname}

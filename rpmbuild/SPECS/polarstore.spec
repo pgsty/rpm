@@ -1,6 +1,5 @@
 %global sdk_version 1.2.42
 %global pfs_commit d0c5dc6
-%define debug_package %{nil}
 
 Name:           polarstore
 Version:        %{sdk_version}
@@ -26,6 +25,7 @@ sed -i -e 's|-Werror|-Werror -Wno-array-bounds|g' CMakeLists.txt
 sed -i -e 's|calloc(sizeof(chnl_ctx_shm_t), 1)|calloc(1, sizeof(chnl_ctx_shm_t))|g' src/pfs_sdk/pfsd_chnl_shm.cc src/pfsd/pfsd_chnl_shm.cc
 
 %build
+%set_build_flags
 cmake -S . -B obj -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 cmake --build obj --target pfsd -j%{_smp_build_ncpus}
 

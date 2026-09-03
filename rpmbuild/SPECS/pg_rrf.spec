@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_rrf
 %global sname pg_rrf
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -31,6 +30,8 @@ patch -p1 --forward -f < %{_specdir}/patches/pg-rrf-0.0.3.patch
 find . -type f -name '._*' -delete
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

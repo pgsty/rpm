@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname typeid
 %global sname pg_typeid
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -31,6 +30,8 @@ unique identifiers to PostgreSQL, ideal for distributed systems and modern appli
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/typeid-postgres-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

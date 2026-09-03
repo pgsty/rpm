@@ -1,4 +1,3 @@
-%global debug_package %{nil}
 %global sname dbt2
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 

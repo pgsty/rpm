@@ -13,7 +13,6 @@
 %global pggatherversion 33
 %global pgbaseinstdir /usr/pgtde-%{pgmajorversion}
 
-%define debug_package %{nil}
 %define _build_id_links none
 
 # Private PostgreSQL ABI under a flavor prefix, not a system libpq provider.

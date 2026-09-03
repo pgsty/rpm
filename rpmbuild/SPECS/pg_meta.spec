@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname meta
 %global sname pg_meta
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	PostgreSQL Extension: More friendly system catalog for PostgreSQL
 License:	BSD-2-Clause
 URL:		https://github.com/aquameta/meta
 Source0:	meta-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

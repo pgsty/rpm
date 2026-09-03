@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pglinter
 %global sname pglinter
 %global srcdir pmpetit-pglinter-972c06d
@@ -30,6 +29,8 @@ PostgreSQL extension capabilities for database analysis and linting.
 patch -p1 --forward -f < %{_specdir}/patches/pglinter-2.0.0.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

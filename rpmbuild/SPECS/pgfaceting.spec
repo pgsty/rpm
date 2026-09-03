@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgfaceting
 %global sname pgfaceting
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	Fast faceting queries using inverted indexes and roaring bitmaps
 License:	BSD-3-Clause
 URL:		https://github.com/cybertec-postgresql/pgfaceting
 Source0:	pgfaceting-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server pg_roaringbitmap_%{pgmajorversion} >= 0.5

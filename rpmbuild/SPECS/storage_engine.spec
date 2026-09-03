@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname storage_engine
 %global sname storage_engine
 %global pginstdir /usr/pgsql-%{pgmajorversion}

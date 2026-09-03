@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_ai_query
 %global sname pg_ai_query
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -58,6 +57,7 @@ Features:
 %setup -q -n %{sname}-%{version}
 
 %build
+%set_build_flags
 export PATH=%{pginstdir}/bin:$PATH
 
 # Enable GCC Toolset 13 on EL9 for C++20 <format> support

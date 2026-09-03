@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname fsm_core
 %global sname fsm_core
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -14,6 +13,7 @@ Summary:	Finite state machine core SQL objects for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/nirajkashyap/fsm
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized from https://api.pgxn.org/dist/fsm_core/1.1.0/fsm_core-1.1.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

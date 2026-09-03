@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname qdgc
 %global sname qdgc
 %global pginstdir /usr/pgsql-%{pgmajorversion}

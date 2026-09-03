@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname wrappers
 %global sname wrappers
 %global srcdir wrappers-%{version}
@@ -28,6 +27,8 @@ and supports a growing set of FDWs for external services and data platforms.
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/%{pname}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

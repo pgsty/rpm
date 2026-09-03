@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_hashids
 %global sname pg_hashids
 %global pginstdir /usr/pgsql-%{pgmajorversion}

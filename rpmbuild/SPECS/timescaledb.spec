@@ -1,4 +1,3 @@
-%global debug_package %{nil}
 %global sname timescaledb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
@@ -30,6 +29,7 @@ grep -qx 'version = %{version}' version.config
 
 # Disable telemetry
 export PATH=%{pginstdir}/bin:$PATH
+%set_build_flags
 ./bootstrap -DSEND_TELEMETRY_DEFAULT=NO -DREGRESS_CHECKS=OFF
 
 %build

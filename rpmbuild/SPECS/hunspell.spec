@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global sname hunspell
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 

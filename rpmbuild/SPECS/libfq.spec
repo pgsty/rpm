@@ -28,6 +28,7 @@ This library is required by the firebird_fdw PostgreSQL foreign data wrapper.
 %setup -q -n %{pname}-%{version}
 
 %build
+%set_build_flags
 ./configure --prefix=%{_prefix} --with-ibase=/usr/include/firebird --libdir=%{_libdir}
 %{__make} %{?_smp_mflags}
 

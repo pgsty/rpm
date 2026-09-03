@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_trickle
 %global sname pg_trickle
 %global srcdir pg-trickle-%{version}
@@ -35,6 +34,8 @@ binary directory.
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=1.96.1

@@ -1,7 +1,3 @@
-%define debug_package %{nil}
-%undefine _debugsource_packages
-%undefine _debuginfo_subpackages
-
 %global pname postgresql
 %global sname postgresql
 %global pginstdir /usr/pgsql-16
@@ -21,6 +17,7 @@ Add /usr/pgsql-16/lib/libpgfeutils.a for extension building
 %setup -q -n %{pname}-%{version}
 
 %build
+%set_build_flags
 ./configure --without-readline --without-zlib
 make submake-generated-headers
 make -C src/fe_utils

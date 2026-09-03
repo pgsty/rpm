@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global sname pgdog
 %global cfgdir %{_sysconfdir}/pgdog
 
@@ -32,6 +31,8 @@ mkdir -p packaging/rpm
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export RUSTUP_TOOLCHAIN=1.96.1
 export PGDOG_GIT_HASH=5d81522
 export RUSTFLAGS="--cfg tokio_unstable"

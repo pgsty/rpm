@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_base58
 %global sname pg_base58
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -27,6 +26,8 @@ Base58 Encoder/Decoder Extension for PostgreSQL
 patch -p1 --forward -f < %{_specdir}/patches/pg-base58-0.0.1.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$PATH
 export PGRX_HOME=%{_builddir}/.pgrx-0191-pg%{pgmajorversion}

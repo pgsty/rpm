@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname omnigres
 %global sname omnigres
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -39,6 +38,7 @@ You can deploy a single database instance and it can host your entire applicatio
 %endif
 
 %build
+%set_build_flags
 %if 0%{?rhel} < 10
 source /opt/rh/gcc-toolset-15/enable
 %endif

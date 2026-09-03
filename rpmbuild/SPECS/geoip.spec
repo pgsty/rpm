@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname geoip
 %global sname geoip
 %global pginstdir /usr/pgsql-%{pgmajorversion}

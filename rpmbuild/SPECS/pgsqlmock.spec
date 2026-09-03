@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgsqlmock
 %global sname pgsqlmock
 %global pginstdir /usr/pgsql-%{pgmajorversion}

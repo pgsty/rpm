@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname vectorscale
 %global sname pgvectorscale
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -28,6 +27,8 @@ pgvectorscale builds on pgvector with higher performance embedding search and co
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}/pgvectorscale
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

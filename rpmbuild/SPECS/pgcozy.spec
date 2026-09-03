@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgcozy
 %global sname pgcozy
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	Snapshot and prewarm the PostgreSQL buffer cache
 License:	PostgreSQL
 URL:		https://github.com/vventirozos/pgcozy
 Source0:	pgcozy-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

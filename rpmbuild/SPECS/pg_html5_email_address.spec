@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_html5_email_address
 %global sname pg_html5_email_address
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	PostgreSQL email validation that is consistent with the HTML5 spec
 License:	PostgreSQL
 URL:		https://github.com/bigsmoke/pg_html5_email_address
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

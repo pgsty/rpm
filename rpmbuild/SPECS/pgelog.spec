@@ -9,6 +9,7 @@ Summary:	Extended PostgreSQL logging via pseudo-autonomous transactions
 License:	PostgreSQL
 URL:		https://github.com/anfiau/pgelog
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           official source tarball mirrored from the upstream GitHub tag archive
 #           Supported: PostgreSQL 11+
 

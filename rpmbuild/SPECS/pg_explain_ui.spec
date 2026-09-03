@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname explain_ui
 %global sname pg_explain_ui
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -27,6 +26,8 @@ This is a simple Postgres extension that allows you to easily jump into a visual
 patch -p1 --forward -f < %{_specdir}/patches/pg-explain-ui-0.0.2.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

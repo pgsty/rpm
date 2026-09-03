@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname shacrypt
 %global sname shacrypt
 %global pginstdir /usr/pgsql-%{pgmajorversion}

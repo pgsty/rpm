@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pagevis
 %global sname pagevis
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:    PostgreSQL data page visualisation
 License:	MIT
 URL:		https://github.com/hollobon/pagevis
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

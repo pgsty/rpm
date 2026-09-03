@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global _build_id_links none
 %global sname pg_strom
 %global pginstdir /usr/pgsql-%{pgmajorversion}

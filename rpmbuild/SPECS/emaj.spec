@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname emaj
 %global sname emaj
 %global rpmname e-maj

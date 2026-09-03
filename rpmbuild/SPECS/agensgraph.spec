@@ -5,7 +5,6 @@
 %global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 %global _lto_cflags %{nil}
-%define debug_package %{nil}
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        2.17.0

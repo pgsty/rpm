@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname aws_s3
 %global sname aws_s3
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	aws_s3 postgres extension to import/export data from/to s3
 License:	Apache-2.0
 URL:		https://github.com/chimpler/postgres-aws-s3
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

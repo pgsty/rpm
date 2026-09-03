@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgx_ulid
 %global sname pgx_ulid
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -29,6 +28,8 @@ and timestamp values.
 patch -p1 --forward -f < %{_specdir}/patches/pgx-ulid-0.2.3.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

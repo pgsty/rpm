@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgwasm
 %global sname pgwasm
 %global commit 535b53363f8208af139e757e508e66c46309ee29
@@ -34,6 +33,8 @@ default unless a database administrator enables them.
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

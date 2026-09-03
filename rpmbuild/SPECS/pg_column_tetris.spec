@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_column_tetris
 %global sname pg_column_tetris
 %global pginstdir /usr/pgsql-%{pgmajorversion}

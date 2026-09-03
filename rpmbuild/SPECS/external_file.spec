@@ -9,6 +9,7 @@ Summary:	Access external server-side files through PostgreSQL functions
 License:	PostgreSQL
 URL:		https://github.com/darold/external_file
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           https://github.com/darold/external_file/archive/refs/tags/v1.2.tar.gz
 
 BuildRequires:	pgdg-srpm-macros >= 1.0.27

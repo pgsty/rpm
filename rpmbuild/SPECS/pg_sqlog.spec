@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_sqlog
 %global sname pg_sqlog
 %global pginstdir /usr/pgsql-%{pgmajorversion}

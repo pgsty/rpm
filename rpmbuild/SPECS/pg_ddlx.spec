@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global sname ddlx
 %global pname pgddl
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	DDL eXtractor functions for PostgreSQL (ddlx)
 License:	PostgreSQL
 URL:		https://github.com/lacanoid/pgddl
 Source0:	%{pname}-%{version}.tar.gz
+BuildArch:	noarch
 #           https://github.com/michelp/ddlx/archive/refs/heads/master.zip
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

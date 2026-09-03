@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname ddl_historization
 %global sname ddl_historization
 %global pginstdir /usr/pgsql-%{pgmajorversion}

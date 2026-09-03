@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %define _build_id_links none
 
 %global commit 8f60b04da47ffefe0e52bda2440134b42874eb75
@@ -107,6 +106,10 @@ test "$(.protoc/bin/protoc --version)" = "libprotoc %{protoc_version}"
 
 %build
 cd %{_builddir}/%{name}-%{version}
+
+%set_build_flags
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 
 # Use EL's packaged Rust toolchain.  The upstream snapshot pins Rust 1.88.0;
 # newer compilers are supported and the actual versions are recorded in logs.

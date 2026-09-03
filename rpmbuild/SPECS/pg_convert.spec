@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname convert
 %global sname pg_convert
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -27,6 +26,8 @@ Convert is a Postgres extension providing common conversion functions, such as m
 patch -p1 --forward -f < %{_specdir}/patches/convert-0.1.0.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{pname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

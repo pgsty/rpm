@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname vchord
 %global sname vchord
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -28,6 +27,8 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 # EL8/EL9 system GCC is too old for AVX-512 FP16 intrinsics (requires GCC >= 12 or Clang >= 16)
 %if 0%{?rhel} >= 8 && 0%{?rhel} <= 9
 export CC=clang

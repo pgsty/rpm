@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_analytics
 %global sname pg_analytics
 %global pginstdir /usr/pgsql-%{pgmajorversion}

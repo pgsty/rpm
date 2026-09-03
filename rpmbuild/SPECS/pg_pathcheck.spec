@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_pathcheck
 %global sname pg_pathcheck
 %global pginstdir /usr/pgsql-%{pgmajorversion}

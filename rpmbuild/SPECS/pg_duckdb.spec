@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global _build_id_links none
 # libduckdb is identical across PostgreSQL majors.  Keep the ELF build-id note,
 # but suppress global symlinks that would collide across versioned packages.

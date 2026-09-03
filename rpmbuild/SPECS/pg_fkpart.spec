@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_fkpart
 %global sname pg_fkpart
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ License:    GPL-2.0-only
 Summary:	Table partitioning by foreign key for PostgreSQL
 URL:		https://github.com/lemoineat/%{sname}
 Source0:    %{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

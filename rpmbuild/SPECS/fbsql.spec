@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname fbsql
 %global sname fbsql
 %global pginstdir /usr/pgsql-%{pgmajorversion}

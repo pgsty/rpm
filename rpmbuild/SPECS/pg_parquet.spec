@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_parquet
 %global sname pg_parquet
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -29,6 +28,8 @@ pg_parquet is a PostgreSQL extension that allows you to read and write Parquet f
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 %if 0%{?rhel} >= 10
 export CFLAGS=$(echo "${CFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')
 export CXXFLAGS=$(echo "${CXXFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')

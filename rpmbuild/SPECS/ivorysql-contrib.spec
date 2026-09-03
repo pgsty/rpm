@@ -7,7 +7,6 @@
 # IvorySQL server ABI and must not become system-wide ELF providers.
 %global __provides_exclude_from ^%{pgbaseinstdir}/lib/postgresql/.*\\.so.*$
 
-%define debug_package %{nil}
 %define _build_id_links none
 
 Name:           %{sname}
@@ -68,6 +67,7 @@ plugin. Non-PostgreSQL runtime libraries remain normal RPM dependencies.
 %{__chmod} +x ivorysql-contrib-build.sh sfcgal-config-pkgconf
 
 %build
+%set_build_flags
 RPM_BUILD_NCPUS=%{_smp_build_ncpus} ./ivorysql-contrib-build.sh
 
 %install

@@ -55,6 +55,7 @@ This packages provides JIT support for %{sname}
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+%set_build_flags
 ./configure
 USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
 
@@ -76,7 +77,6 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} DESTDIR=%{buildroot} %{?_smp_m
 %endif
 %exclude /usr/lib/.build-id/*
 %exclude %{pginstdir}/doc/extension/README.md
-%exclude /usr/lib/debug/*
 
 
 %changelog

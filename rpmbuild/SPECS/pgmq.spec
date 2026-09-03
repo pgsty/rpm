@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgmq
 %global sname pgmq
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
 URL:		https://github.com/pgmq/pgmq
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized from https://api.pgxn.org/dist/pgmq/1.11.1/pgmq-1.11.1.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

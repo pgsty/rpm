@@ -4,8 +4,8 @@
 # File      :   build
 # Desc      :   build an extension (on el systems)
 # Ctime     :   2024-10-13
-# Mtime     :   2025-02-09
-# Usage     :   build [debug] <extension> <versions...>
+# Mtime     :   2026-09-03
+# Usage     :   build <extension> [debug|dbg] <versions...>
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
 #==============================================================#
@@ -18,7 +18,7 @@ SOURCES_DIR="${PROG_DIR}/SOURCES"
 #--------------------------------------------------------------#
 # Usage
 #--------------------------------------------------------------#
-# build [debug] <extension> <versions...>
+# build <extension> [debug|dbg] [versions...]
 # ./build pg_roaringbitmap         13 14 15 16 17 18
 # ./build pgjwt            debug   13 14 15 16 17 18
 
@@ -68,15 +68,18 @@ function stage_declared_patches() {
 EXTENSION_NAME=$1
 shift
 
-# Build rpmbuild args array - default is to disable debug packages
-declare -a BUILD_ARGS=()
-if [[ "$1" == "debug" || "$1" == "dbg" ]]; then
-    # Enable debug packages by not adding the disable macro
+# Debug packages are now the default. Keep the historical token as a no-op so
+# existing invocations such as `./build pgjwt debug 17` remain compatible.
+if [[ "${1:-}" == "debug" || "${1:-}" == "dbg" ]]; then
     shift
-else
-    # Disable debug packages (default behavior)
-    BUILD_ARGS+=(--define "debug_package %{nil}")
 fi
+
+# Cargo's optimized release profile omits DWARF by default. Preserve full
+# release-mode debug information for rpmbuild to split into debuginfo and
+# debugsource packages. Individual specs repeat these defaults so direct
+# `rpmbuild -ba` invocations have the same behavior.
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 
 # Detect OS version for EL10+ special handling
 OS_VERSION=$(rpm -E '%{rhel}' 2>/dev/null || echo "0")
@@ -146,8 +149,8 @@ for ver in $VERSIONS; do
     export PATH=/usr/bin:/usr/pgsql-${ver}/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;
 
     # Build command with proper argument expansion
-    log_hint "\$" rpmbuild "${BUILD_ARGS[@]}" --define "pgmajorversion ${ver}" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
-    rpmbuild "${BUILD_ARGS[@]}" --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
+    log_hint "\$" rpmbuild --define "pgmajorversion ${ver}" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
+    rpmbuild --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
     RC=$?
     if [ "${RC}" -ne 0 ]; then
         log_error "${EXTENSION_NAME} build failed for PG${ver}"

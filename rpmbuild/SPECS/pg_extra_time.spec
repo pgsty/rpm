@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_extra_time
 %global sname pg_extra_time
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -14,6 +13,7 @@ Summary:	Extra date-time functions and operators for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/bigsmoke/pg_extra_time
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           normalized from https://api.pgxn.org/dist/pg_extra_time/2.1.0/pg_extra_time-2.1.0.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27

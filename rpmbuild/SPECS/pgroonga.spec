@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgroonga
 %global sname pgroonga
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -45,6 +44,7 @@ This package provides a fast full-text search plugin for PostgreSQL based on Gro
 %setup -q -n pgroonga-%{version}
 
 %build
+%set_build_flags
 meson setup build \
   -Dinstall_to_postgresql=true \
   -Dmessage_pack=enabled \

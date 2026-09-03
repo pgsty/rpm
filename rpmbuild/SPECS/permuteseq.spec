@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname permuteseq
 %global sname permuteseq
 %global pginstdir /usr/pgsql-%{pgmajorversion}

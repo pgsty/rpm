@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global _build_id_links none
 %global sname citus

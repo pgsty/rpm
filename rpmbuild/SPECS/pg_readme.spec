@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_readme
 %global sname pg_readme
 %global pginstdir /usr/pgsql-%{pgmajorversion}

@@ -2,14 +2,17 @@
 # File      :   Makefile
 # Desc      :   pgsty/pgsql-rpm repo shortcuts
 # Ctime     :   2024-07-28
-# Mtime     :   2026-07-11
+# Mtime     :   2026-09-03
 # Path      :   Makefile
 # Author    :   Ruohang Feng (rh@vonng.com)
 # License   :   Apache-2.0
 #==============================================================#
 
+PIG_VERSION ?= v1.8.0
+ACTIVE_PG_VERSIONS := 18 17 16 15 14
+
 setup:
-	@echo "curl https://repo.pigsty.cc/pig | bash"
+	@echo "curl -fsSL https://repo.pigsty.cc/pig | bash -s $(PIG_VERSION)"
 	@echo "pig build spec"
 	@echo "pig build repo"
 	@echo "pig build tool"
@@ -80,7 +83,7 @@ src10a:
 ###############################################################
 yum-new: yum-clean yum-init
 yum-init:
-	mkdir -p yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64  meta
+	mkdir -p yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64  yum/meta
 	mkdir -p yum/el8.aarch64 yum/el9.aarch64 yum/el10.aarch64
 yum-clean:
 	rm -rf   yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64
@@ -105,22 +108,6 @@ yum9a:
 yum10a:
 	rsync -avc el10a:~/rpmbuild/RPMS/aarch64/ yum/el10.aarch64/
 
-
-###############################################################
-#                      Build Shortcuts                        #
-###############################################################
-pg_ttl_index:
-	for pg in 18 17 16 15 14 13; do \
-		ssh meta "cd ~/rpmbuild && rpmbuild --define 'pgmajorversion $$pg' -ba SPECS/pg_ttl_index.spec"; \
-	done
-pgfincore:
-	for pg in 18 17 16 15 14 13; do \
-		ssh meta "cd ~/rpmbuild && rpmbuild --define 'pgmajorversion $$pg' -ba SPECS/pgfincore.spec"; \
-	done
-etcd_fdw:
-	for pg in 18 17 16 15 14 13; do \
-		ssh meta "cd ~/rpmbuild && rpmbuild --define 'pgmajorversion $$pg' -ba SPECS/etcd_fdw.spec"; \
-	done
 
 ###############################################################
 #                         Terraform                           #

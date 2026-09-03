@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_cardano
 %global sname pg_cardano
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -29,6 +28,8 @@ The extension is designed to handle unforeseen errors gracefully, without causin
 patch -p1 --forward -f < %{_specdir}/patches/pg-cardano-1.2.0.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

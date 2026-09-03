@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_search
 %global sname pg_search
 %global srcdir paradedb-%{version}
@@ -39,6 +38,8 @@ before the extension can be created or used.
 patch --fuzz=0 --batch --forward -p1 < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=%{rust_toolchain}

@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_auditor
 %global sname pg_auditor
 %global pginstdir /usr/pgsql-%{pgmajorversion}

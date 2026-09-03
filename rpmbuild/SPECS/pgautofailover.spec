@@ -84,7 +84,6 @@ PG_CONFIG=%{pginstdir}/bin/pg_config %{__make} %{?_smp_mflags}
 PG_CONFIG=%{pginstdir}/bin/pg_config %make_install
 %{__mkdir} -p %{buildroot}%{pginstdir}/doc/extension
 %{__cp} README.md %{buildroot}%{pginstdir}/doc/extension/README-%{sname}.md
-%{__strip} %{buildroot}%{pginstdir}/lib/*.so
 
 %files
 %defattr(-,root,root,-)

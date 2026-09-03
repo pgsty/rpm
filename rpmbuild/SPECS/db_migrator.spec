@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname db_migrator
 %global sname db_migrator
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	migrating databases from other data sources to PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/cybertec-postgresql/db_migrator
 Source0:	db_migrator-RELEASE_1_0_0.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

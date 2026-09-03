@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_jieba
 %global sname pg_jieba
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -33,6 +32,7 @@ dictionaries, and query segmentation support.
 cp -p libjieba/LICENSE cppjieba-LICENSE
 
 %build
+%set_build_flags
 mkdir -p build
 cd build
 PATH=%{pginstdir}/bin:$PATH cmake .. \

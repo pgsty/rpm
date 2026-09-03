@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname cron_utils
 %global sname cron_utils
 %global pginstdir /usr/pgsql-%{pgmajorversion}

@@ -1,4 +1,3 @@
-%global debug_package %{nil}
 %global _build_id_links none
 %global pname pg_stat_ch
 %global sname pg_stat_ch
@@ -44,6 +43,7 @@ OpenTelemetry dependency stack for PostgreSQL %{pgmajorversion}.
 %autosetup -p1 -n %{srcdir}
 
 %build
+%set_build_flags
 VCPKG_ROOT="$HOME/.cache/pg_stat_ch/vcpkg-%{vcpkg_commit}"
 VCPKG_BINARY_CACHE="$HOME/.cache/pg_stat_ch/vcpkg-archives"
 if [ ! -d "$VCPKG_ROOT/.git" ]; then

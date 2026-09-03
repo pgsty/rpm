@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_graphql
 %global sname pg_graphql
 %global srcdir pg_graphql-%{version}
@@ -32,6 +31,8 @@ This enables any programming language that can connect to PostgreSQL to query th
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

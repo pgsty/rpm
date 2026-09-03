@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pdu
 %global sname pdu
 %global pduver 3.0.25.12

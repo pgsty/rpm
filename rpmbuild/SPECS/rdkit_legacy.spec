@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global sname rdkit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
@@ -56,6 +55,7 @@ The RDKit PostgreSQL cartridge for PostgreSQL %{pgmajorversion}.
 %patch -P 0 -p1
 
 %build
+%set_build_flags
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \

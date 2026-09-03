@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgsmcrypto
 %global sname pgsmcrypto
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -28,6 +27,8 @@ China National SM algorithm extension for PostgreSQL. SM2 / SM3 / SM4
 patch -p1 --forward -f < %{_specdir}/patches/pgsmcrypto-0.1.1.patch
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

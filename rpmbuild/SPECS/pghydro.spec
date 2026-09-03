@@ -9,6 +9,7 @@ Summary:	Drainage network analysis extensions for PostgreSQL and PostGIS
 License:	GPL-2.0-only
 URL:		https://github.com/pghydro/pghydro
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 #           repacked from upstream release https://github.com/pghydro/pghydro/releases/tag/v.6.6x
 
 BuildRequires:	pgdg-srpm-macros >= 1.0.27

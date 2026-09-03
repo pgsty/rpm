@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_drop_events
 %global sname pg_drop_events
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	PostgreSQL extension that logs transaction ids of drop table, drop colu
 License:	PostgreSQL
 URL:		https://github.com/bolajiwahab/pg_drop_events
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

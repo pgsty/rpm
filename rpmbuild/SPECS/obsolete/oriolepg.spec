@@ -1,5 +1,4 @@
 %global sname oriolepg
-%define debug_package %{nil}
 %define _build_id_links none
 %{!?pgmajorversion:%global pgmajorversion 18}
 %if 0%{?pgmajorversion} == 18

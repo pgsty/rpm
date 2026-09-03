@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global _build_id_links none
 %global pname pg_lake
 %global sname pg_lake
@@ -134,6 +133,7 @@ done
 
 %install
 rm -rf %{buildroot}
+%set_build_flags
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/include
 
 VCPKG_ROOT="$HOME/.cache/pg_lake/vcpkg-%{vcpkg_version}"

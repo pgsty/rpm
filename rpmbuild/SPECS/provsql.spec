@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global _build_id_links none
 %global pname provsql
 %global sname provsql

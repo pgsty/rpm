@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global _lto_cflags %{nil}
 %global private_prefix pgsodium_private_
 %global private_includedir /usr/include/pgsodium-libsodium

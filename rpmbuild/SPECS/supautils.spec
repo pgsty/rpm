@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname supautils
 %global sname supautils
 %global pginstdir /usr/pgsql-%{pgmajorversion}

@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pgml
 %global sname pgml
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -24,6 +23,8 @@ PostgresML is a machine learning extension for PostgreSQL that enables you to pe
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo update
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH cargo pgrx package -v
 
 %install

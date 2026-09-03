@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname parquet_s3_fdw
 %global sname parquet_s3_fdw
 %global pginstdir /usr/pgsql-%{pgmajorversion}

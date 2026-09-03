@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname postbis
 %global sname postbis
 %global commit ce454ebfbc27e0b6c8357ef6bfc8da1c4b2967c8

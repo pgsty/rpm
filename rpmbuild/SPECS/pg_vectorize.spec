@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname vectorize
 %global sname pg_vectorize
 %global srcdir %{sname}-%{version}
@@ -31,6 +30,8 @@ This allows you to do vector search and build LLM applications on existing data 
 patch -p1 --forward -f < %{PATCH0}
 
 %build
+export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
+export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 

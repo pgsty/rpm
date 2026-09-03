@@ -48,6 +48,7 @@ mobilitydb_datagen companion extension.
 %autosetup -p1 -n MobilityDB-%{version}
 
 %build
+%set_build_flags
 export PATH=%{pginstdir}/bin:$PATH
 # Release mode supplies -DNDEBUG, matching Debian's maintainer CPPFLAGS.
 # Use the same GEOS/PROJ ABI generation as the packaged PostGIS 3.6 build.

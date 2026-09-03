@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname pg_xenophile
 %global sname pg_xenophile
 %global pginstdir /usr/pgsql-%{pgmajorversion}
@@ -10,6 +9,7 @@ Summary:	More than the bare necessities for PostgreSQL i18n and l10n.
 License:	PostgreSQL
 URL:		https://github.com/bigsmoke/pg_xenophile
 Source0:	%{sname}-%{version}.tar.gz
+BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server

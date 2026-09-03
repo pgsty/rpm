@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %global pname cat_tools
 %global sname cat_tools
 %global pginstdir /usr/pgsql-%{pgmajorversion}

@@ -1,7 +1,6 @@
 %global pname pg_clickhouse
 %global sname pg_clickhouse
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global llvm_binpath /usr/bin
 
 %ifarch x86_64
  %if 0%{?rhel} && 0%{?rhel} == 9
@@ -19,6 +18,12 @@
 %else
  %{!?llvm:%global llvm 1}
 %endif
+%endif
+
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -41,6 +46,11 @@ BuildRequires:	libuuid-devel
 BuildRequires:	lz4-devel
 BuildRequires:	libzstd-devel
 
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	openssl libcurl libuuid lz4-libs libzstd
 
@@ -54,33 +64,6 @@ Features:
 - TPC-H Performance: Achieves substantial speedups on analytical workloads
 - No SQL Rewrites: Use standard PostgreSQL syntax for ClickHouse queries
 - Supports PostgreSQL 14-18 in Pigsty builds and ClickHouse v23+
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
 
 %prep
 %autosetup -p1 -n %{sname}-%{version}
@@ -96,19 +79,11 @@ sed -i '/^PG_CFLAGS =/a PG_CFLAGS += -fno-lto' Makefile
 %endif
 %build
 # Makefile uses the vendored clickhouse-c headers from the PGXN bundle
-%if %llvm
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
-%else
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} with_llvm=no
-%endif
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-%if %llvm
-PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
-%else
-PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} with_llvm=no
-%endif
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE.md
@@ -120,11 +95,14 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} with_llvm=no
 %exclude %{pginstdir}/doc/extension/tutorial.md
 
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/%{pname}*
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.10.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Wed Aug 12 2026 Vonng <rh@vonng.com> - 0.10.0-1PIGSTY
 - Update to upstream PGXN 0.10.0 with the recursive vendored C client
 - Replace the obsolete C++ build dependency with the upstream C toolchain

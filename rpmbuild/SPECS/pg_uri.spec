@@ -18,6 +18,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{rpmname}_%{pgmajorversion}
 Version:	1.20251029
 Release:	1PGSTY%{?dist}
@@ -27,6 +33,11 @@ URL:		https://github.com/petere/pguri
 Source0:	pguri-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 uriparser-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 Provides:	%{oldname} = %{version}-%{release}
 Provides:	%{oldname}%{?_isa} = %{version}-%{release}
@@ -44,58 +55,32 @@ The actual URI parsing is provided by the uriparser library, which supports URI 
 
 Note that this might not be the right data type to use if you want to store user-provided URI data, such as HTTP referrers, since they might contain arbitrary junk.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-Provides:	%{oldname}-llvmjit = %{version}-%{release}
-Provides:	%{oldname}-llvmjit%{?_isa} = %{version}-%{release}
-Obsoletes:	%{oldname}-llvmjit < %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n pguri-%{version}
 
 %build
-PG_CPPFLAGS=-Wno-int-conversion PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PG_CPPFLAGS=-Wno-int-conversion PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%if %llvm
-%files llvmjit
-   %{pginstdir}/lib/bitcode/*
-%endif
 %exclude /usr/lib/.build-id/*
 
+%if %llvm
+   %{pginstdir}/lib/bitcode/*
+%endif
+
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.20251029-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Thu Jul 30 2026 Vonng <rh@vonng.com> - 1.20251029-2PIGSTY
 - Align package name with PGDG and obsolete pg_uri_$v packages
 - Limit PGSTY builds to PostgreSQL 14 through 18

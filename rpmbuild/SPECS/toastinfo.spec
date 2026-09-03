@@ -1,7 +1,6 @@
 %global pname toastinfo
 %global sname toastinfo
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -11,6 +10,12 @@
  %endif
 %else
  %{!?llvm:%global llvm 1}
+%endif
+
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -23,6 +28,11 @@ Source0:	toastinfo-%{version}.tar.gz
 #           https://deb.debian.org/debian/pool/main/t/toastinfo/toastinfo_1.7.orig.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -36,57 +46,32 @@ toasted varlena, (un)compressed for varlena values up to 1GiB stored in TOAST ta
 compressed varlenas show the compression method (pglz, lz4) in PG14+
 The function pg_toastpointer returns a varlena's chunk_id oid in the corresponding TOAST table. It returns NULL on non-varlena input.
 
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%if %llvm
-%files llvmjit
-   %{pginstdir}/lib/bitcode/*
-%endif
 %exclude /usr/lib/.build-id/*
 
+%if %llvm
+   %{pginstdir}/lib/bitcode/*
+%endif
+
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.7-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Wed Jun 17 2026 Vonng <rh@vonng.com> - 1.7-1PIGSTY
 - https://deb.debian.org/debian/pool/main/t/toastinfo/toastinfo_1.7.orig.tar.gz
 * Sat Jun 06 2026 Vonng <rh@vonng.com> - 1.6-1PIGSTY

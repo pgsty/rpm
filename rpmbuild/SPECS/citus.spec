@@ -1,12 +1,17 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global _build_id_links none
 %global sname citus
-%global llvm_binpath /usr/bin
 
 %{!?llvm:%global llvm 1}
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
 %{error:citus 14.2.0 only supports PostgreSQL 16-18}
+%endif
+
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
 %endif
 
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
@@ -21,6 +26,11 @@ Source0:    %{sname}-%{version}.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel libxml2-devel
 BuildRequires:	libxslt-devel openssl-devel pam-devel readline-devel
 BuildRequires:	libcurl-devel pgdg-srpm-macros libzstd-devel krb5-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -44,23 +54,6 @@ Requires:	%{name}%{?_isa} = %{version}-%{release}
 %description devel
 This package includes development libraries for Citus.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for citus
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm17-devel clang17-devel
-Requires:	llvm17
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for citus
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
@@ -73,10 +66,10 @@ This packages provides JIT support for citus
 echo 'override CFLAGS += -fno-lto' >> Makefile.global
 %endif
 %endif
-make %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+make %{with_llvm_arg} %{?_smp_mflags}
 
 %install
-make install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+make %{with_llvm_arg} install DESTDIR=%{buildroot}
 # Install documentation with a better name:
 %{__mkdir} -p %{buildroot}%{pginstdir}/doc/extension
 %{__cp} README.md %{buildroot}%{pginstdir}/doc/extension/README-%{sname}.md
@@ -99,13 +92,7 @@ make install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 %{pginstdir}/share/extension/columnar-*.sql
 %{pginstdir}/share/extension/%{sname}_columnar.control
 
-%files devel
-%defattr(-,root,root,-)
-%{pginstdir}/include/server/citus_version.h
-%{pginstdir}/include/server/distributed/*.h
-
 %if %llvm
-%files llvmjit
     %{pginstdir}/lib/bitcode/%{sname}*.bc
     %{pginstdir}/lib/bitcode/%{sname}/*.bc
     %{pginstdir}/lib/bitcode/%{sname}/*/*.bc
@@ -114,7 +101,16 @@ make install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
     %{pginstdir}/lib/bitcode/%{sname}_wal2json/*
 %endif
 
+%files devel
+%defattr(-,root,root,-)
+%{pginstdir}/include/server/citus_version.h
+%{pginstdir}/include/server/distributed/*.h
+
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 14.2.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Fri Aug 07 2026 Vonng <rh@vonng.com> - 14.2.0-1PIGSTY
 - Update to upstream 14.2.0
 

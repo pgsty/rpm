@@ -18,6 +18,12 @@
 %{!?llvm:%global llvm 0}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.2
 Release:	1PGSTY%{?dist}
@@ -41,25 +47,17 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc gcc-c++ make cmake ninja-build patch pkgconf-pkg-config
 BuildRequires:	bison flex zlib-devel readline-devel libxml2-devel libxslt-devel
 BuildRequires:	openssl-devel libcurl-devel lz4-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pg_ducklake is a PostgreSQL extension for managed DuckLake tables, backed by
 DuckDB and Parquet files. It requires shared_preload_libraries = 'pg_ducklake'
 before CREATE EXTENSION.
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -98,23 +96,13 @@ set_target_properties(roaring::roaring-headers-cpp PROPERTIES
 EOF
 cp "$croaring_prefix/lib/cmake/roaring/roaringConfig.cmake" "$croaring_prefix/lib/cmake/roaring/roaring-config.cmake"
 
-%if %llvm
 CMAKE_PREFIX_PATH="$croaring_prefix" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
-	%{__make} ROARING_LIB_DIR="$croaring_prefix/lib" -j2
-%else
-CMAKE_PREFIX_PATH="$croaring_prefix" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
-	%{__make} ROARING_LIB_DIR="$croaring_prefix/lib" with_llvm=no -j2
-%endif
+	%{__make} %{with_llvm_arg} ROARING_LIB_DIR="$croaring_prefix/lib" -j2
 
 %install
 %{__rm} -rf %{buildroot}
-%if %llvm
 CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
-	%{__make} ROARING_LIB_DIR="$(pwd)/.croaring/lib" -j2 install DESTDIR=%{buildroot}
-%else
-CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
-	%{__make} ROARING_LIB_DIR="$(pwd)/.croaring/lib" with_llvm=no -j2 install DESTDIR=%{buildroot}
-%endif
+	%{__make} %{with_llvm_arg} ROARING_LIB_DIR="$(pwd)/.croaring/lib" -j2 install DESTDIR=%{buildroot}
 
 %files
 %doc README.md SOURCE_MANIFEST pg_ducklake/docs
@@ -122,14 +110,15 @@ CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pgi
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
+
 %if %llvm
-%exclude %{pginstdir}/lib/bitcode/*
-%files llvmjit
 %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.0.2-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Upgrade to pg_ducklake 1.0.2 with a checksummed complete source bundle
 - Retain CRoaring 4.7.1 after validating the 5.1.1 API and serialization
 - Build the PostgreSQL LLVM bitcode subpackage on supported EL9 builders

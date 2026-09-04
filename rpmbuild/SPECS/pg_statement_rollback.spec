@@ -7,6 +7,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.6
 Release:        2PGSTY%{?dist}
@@ -17,8 +23,13 @@ Source0:        %{sname}-%{version}.tar.gz
 #               https://github.com/HexaCluster/pg_statement_rollback/archive/refs/tags/v1.6.tar.gz
 Patch0:         pg_statement_rollback-1.6.patch
 
-BuildRequires:  clang gcc llvm make
+BuildRequires:	gcc make
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -26,28 +37,16 @@ pg_statement_rollback provides server-side automatic savepoints so a client
 can roll back only the failed statement and continue the current transaction.
 It is a loadable module and intentionally installs no CREATE EXTENSION objects.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides LLVM bitcode for %{sname}.
-%endif
-
 %prep
 %autosetup -p1 -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bin/pg_config \
     %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bin/pg_config \
     %{?_smp_mflags} install DESTDIR=%{buildroot}
 %{__mkdir} -p %{buildroot}%{pginstdir}/doc/extension
 %{__mv} %{buildroot}%{pginstdir}/doc/contrib/README.md \
@@ -60,13 +59,14 @@ PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config \
 %exclude /usr/lib/.build-id/*
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}.index.bc
 %{pginstdir}/lib/bitcode/%{pname}/
 %endif
 
 %changelog
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.6-2PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Backport upstream PR 8 resource-owner and memory-context fixes
 - Release the automatic savepoint before portal creation for SET TRANSACTION
 

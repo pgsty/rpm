@@ -8,6 +8,12 @@
 %{error:plruby 2.5.0 supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        2.5.0
 Release:        1PGSTY%{?dist}
@@ -33,6 +39,11 @@ BuildRequires:  (ruby-devel >= 3.3 with ruby-devel < 3.4)
 %endif
 %endif
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server
 Requires:       postgresql%{pgmajorversion}-contrib
 
@@ -41,19 +52,6 @@ PL/Ruby embeds the MRI Ruby interpreter as an untrusted PostgreSQL procedural
 language. The package also includes the jsonb, hstore, and ltree transform
 extensions shipped by upstream.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for PL/Ruby and its transform extensions.
-%endif
-
 %prep
 %autosetup -p1 -n %{sname}-%{version}
 
@@ -61,14 +59,14 @@ This package provides JIT support for PL/Ruby and its transform extensions.
 for component in . jsonb_plruby hstore_plruby ltree_plruby; do
     PATH=%{pginstdir}/bin:$PATH %{__make} -C "$component" clean \
         PG_CONFIG=%{pginstdir}/bin/pg_config RUBY=%{_bindir}/ruby
-    PATH=%{pginstdir}/bin:$PATH %{__make} -C "$component" %{?_smp_mflags} \
+    PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} -C "$component" %{?_smp_mflags} \
         PG_CONFIG=%{pginstdir}/bin/pg_config RUBY=%{_bindir}/ruby
 done
 
 %install
 %{__rm} -rf %{buildroot}
 for component in . jsonb_plruby hstore_plruby ltree_plruby; do
-    PATH=%{pginstdir}/bin:$PATH %{__make} -C "$component" %{?_smp_mflags} \
+    PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} -C "$component" %{?_smp_mflags} \
         PG_CONFIG=%{pginstdir}/bin/pg_config RUBY=%{_bindir}/ruby \
         install DESTDIR=%{buildroot}
 done
@@ -80,13 +78,17 @@ done
 %{pginstdir}/share/extension/*plruby*.control
 %{pginstdir}/share/extension/*plruby*--*.sql
 
-%if %llvm
-%files llvmjit
-%{pginstdir}/lib/bitcode/*plruby*
-%endif
 %exclude /usr/lib/.build-id/*
 
+%if %llvm
+%{pginstdir}/lib/bitcode/*plruby*
+%endif
+
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.5.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Sat Aug 08 2026 Vonng <rh@vonng.com> - 2.5.0-2PIGSTY
 - Pin the native Ruby 3 ABI selected on EL8, EL9, and EL10
 - Rely on the generated libruby SONAME dependency at runtime

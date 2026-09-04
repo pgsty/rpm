@@ -8,6 +8,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        5.0
 Release:        1PGSTY%{?dist}
@@ -19,6 +25,11 @@ Source0:        %{sname}-%{version}.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -26,29 +37,16 @@ pg_auth_mon records successful and failed PostgreSQL authentication attempts
 per role. The module must be added to shared_preload_libraries and PostgreSQL
 must be restarted before the extension is created.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides LLVM bitcode for %{sname}.
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bin/pg_config \
     %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bin/pg_config \
     install DESTDIR=%{buildroot}
 
 %files
@@ -60,12 +58,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} PG_CONFIG=%{pginstdir}/bin/pg_config \
 %exclude /usr/lib/.build-id/*
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}.index.bc
 %{pginstdir}/lib/bitcode/%{pname}/
 %endif
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 5.0-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Initial Pigsty RPM package for pg_auth_mon 5.0
 - Package extension version 1.1 and require shared preloading

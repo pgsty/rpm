@@ -3,6 +3,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.11
 Release:	1PGSTY%{?dist}
@@ -12,6 +18,11 @@ Source0:	prefix-%{version}.tar.gz
 
 URL:		https://github.com/dimitri/prefix
 BuildRequires:	postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 Obsoletes:	%{sname}%{pgmajorversion} < 1.2.9-2
@@ -20,32 +31,15 @@ Obsoletes:	%{sname}%{pgmajorversion} < 1.2.9-2
 The prefix project implements text prefix matches operator (prefix @> text)
 and provide a GiST opclass for indexing support of prefix searches.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for prefix
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm17-devel clang17-devel
-Requires:	llvm17
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for prefix
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %make_install DESTDIR=%{buildroot}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %make_install %{with_llvm_arg} DESTDIR=%{buildroot}
 # Rename docs to avoid conflict:
 %{__mv} %{buildroot}%{pginstdir}/doc/extension/README.md %{buildroot}%{pginstdir}/doc/extension/README-prefix.md
 %{__mv} %{buildroot}%{pginstdir}/doc/extension/TESTS.md %{buildroot}%{pginstdir}/doc/extension/TESTS-prefix.md
@@ -60,12 +54,15 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %make_install DESTDIR=%{buildroot}
 %{pginstdir}/share/extension/%{sname}*
 
 %if %llvm
-%files llvmjit
  %{pginstdir}/lib/bitcode/%{sname}*.bc
  %{pginstdir}/lib/bitcode/%{sname}/*.bc
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2.11-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Sat Apr 25 2026 Vonng <rh@vonng.com> - 1.2.11-1PIGSTY
 - Update to 1.2.11
 

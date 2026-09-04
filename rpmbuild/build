@@ -19,8 +19,8 @@ SOURCES_DIR="${PROG_DIR}/SOURCES"
 # Usage
 #--------------------------------------------------------------#
 # build <extension> [debug|dbg] [versions...]
-# ./build pg_roaringbitmap         13 14 15 16 17 18
-# ./build pgjwt            debug   13 14 15 16 17 18
+# ./build pg_roaringbitmap         14 15 16 17 18
+# ./build pgjwt            debug   14 15 16 17 18
 
 #--------------------------------------------------------------#
 # Log Util
@@ -42,21 +42,70 @@ function log_hint()  { printf "${__CB}%s${__CN}\n" "$*"; }
 function log_line()  { printf "${__CM}[%s] ===========================================${__CN}\n" "$*"; }
 
 function stage_declared_patches() {
-    [[ -e "${SOURCES_DIR}" ]] || return 0
+    if [[ ! -d "${SOURCES_DIR}" ]]; then
+        log_error "RPM SOURCES directory is missing: ${SOURCES_DIR}"
+        return 1
+    fi
 
-    awk -F: '/^Patch[0-9]*:/ {
-        sub(/^[ \t]+/, "", $2);
-        sub(/[ \t]+$/, "", $2);
-        print $2;
-    }' "${SPEC_FILE}" | while IFS= read -r patch_file; do
-        [[ -z "${patch_file}" ]] && continue
-        [[ "${patch_file}" == *'%'* ]] && continue
-        [[ "${patch_file}" = /* ]] && continue
-        local_patch="${SPEC_DIR}/patches/$(basename "${patch_file}")"
+    declare -A declared_patches=()
+    local ver preprocessed patch_list patch_file local_patch source_patch
+    for ver in ${VERSIONS}; do
+        if ! preprocessed=$(mktemp) || ! patch_list=$(mktemp); then
+            log_error "cannot create Patch manifest for ${EXTENSION_NAME} PG${ver}"
+            rm -f "${preprocessed:-}" "${patch_list:-}"
+            return 1
+        fi
+        if ! rpmspec -P \
+            --define "_topdir ${PROG_DIR}" \
+            --define "pgmajorversion ${ver}" "${SPEC_FILE}" >"${preprocessed}"; then
+            rm -f "${preprocessed}" "${patch_list}"
+            log_error "cannot expand declared patches for ${EXTENSION_NAME} PG${ver}"
+            return 1
+        fi
+        if ! awk '/^Patch[0-9]*[[:space:]]*:/ {
+            line=$0
+            sub(/^Patch[0-9]*[[:space:]]*:[[:space:]]*/, "", line)
+            print line
+        }' "${preprocessed}" >"${patch_list}"; then
+            rm -f "${preprocessed}" "${patch_list}"
+            log_error "cannot parse declared patches for ${EXTENSION_NAME} PG${ver}"
+            return 1
+        fi
+        while IFS= read -r patch_file; do
+            [[ -z "${patch_file}" || "${patch_file}" == "(none)" ]] && continue
+            declared_patches["${patch_file}"]=1
+        done <"${patch_list}"
+        rm -f "${preprocessed}" "${patch_list}"
+    done
+
+    for patch_file in "${!declared_patches[@]}"; do
+        if [[ "${patch_file}" == -* || ! "${patch_file}" =~ ^[A-Za-z0-9._+~-]+$ ]]; then
+            log_error "unsafe or unexpanded Patch path: ${patch_file}"
+            return 1
+        fi
+        local_patch="${SPEC_DIR}/patches/${patch_file}"
+        if [[ ! -f "${local_patch}" || ! -s "${local_patch}" || -L "${local_patch}" ]]; then
+            log_error "declared repository Patch is missing or empty: ${patch_file}"
+            return 1
+        fi
         source_patch="${SOURCES_DIR}/${patch_file}"
-        if [[ -f "${local_patch}" ]]; then
-            mkdir -p "$(dirname "${source_patch}")"
-            cp -f "${local_patch}" "${source_patch}"
+        if [[ -L "${source_patch}" ]]; then
+            log_error "refusing symlink Patch destination: ${source_patch}"
+            return 1
+        fi
+    done
+
+    for patch_file in "${!declared_patches[@]}"; do
+        local_patch="${SPEC_DIR}/patches/${patch_file}"
+        source_patch="${SOURCES_DIR}/${patch_file}"
+        if ! cp -f -- "${local_patch}" "${source_patch}"; then
+            log_error "cannot stage repository Patch: ${patch_file}"
+            return 1
+        fi
+        if [[ ! -f "${source_patch}" || ! -s "${source_patch}" ]] || \
+           ! cmp -s -- "${local_patch}" "${source_patch}"; then
+            log_error "staged Patch does not match repository input: ${patch_file}"
+            return 1
         fi
     done
 }
@@ -93,7 +142,7 @@ if [ $# -eq 0 ]; then
 else
 
     # Validate versions
-    VALID_VERSIONS="10 11 12 13 14 15 16 17 18 19 20"
+    VALID_VERSIONS="14 15 16 17 18"
     for arg in "$@"; do
         found=false
         for ver in ${VALID_VERSIONS}; do
@@ -123,7 +172,10 @@ else
 fi
 
 cat ${SPEC_FILE} | grep -E '^Version:|^Release:|^Summary:|^License:|^URL:|^Source0:'
-stage_declared_patches
+if ! stage_declared_patches; then
+    log_error "failed to stage declared patches for ${EXTENSION_NAME}"
+    exit 1
+fi
 
 
 #--------------------------------------------------------------#
@@ -149,8 +201,8 @@ for ver in $VERSIONS; do
     export PATH=/usr/bin:/usr/pgsql-${ver}/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;
 
     # Build command with proper argument expansion
-    log_hint "\$" rpmbuild --define "pgmajorversion ${ver}" -ba "~/rpmbuild/SPECS/${EXTENSION_NAME}.spec"
-    rpmbuild --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
+    log_hint "\$" rpmbuild --define "_topdir ${PROG_DIR}" --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
+    rpmbuild --define "_topdir ${PROG_DIR}" --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
     RC=$?
     if [ "${RC}" -ne 0 ]; then
         log_error "${EXTENSION_NAME} build failed for PG${ver}"

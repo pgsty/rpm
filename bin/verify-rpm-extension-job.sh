@@ -22,6 +22,9 @@ FORBIDDEN_RUNTIME_RE='(^|[[:space:]/])(llvm|clang)[[:alnum:]_.+-]*([[:space:](]|
 
 [[ -d "$OUTPUT_DIR" ]] || die "missing output directory: $OUTPUT_DIR"
 [[ -f "$SPEC" ]] || die "missing spec: $SPEC"
+SPEC_DIR=$(cd -P "$(dirname "$SPEC")" && pwd)
+[[ $(basename "$SPEC_DIR") == SPECS ]] || die "spec must be located under a SPECS directory: $SPEC"
+SPEC_TOPDIR=$(cd -P "$SPEC_DIR/.." && pwd)
 # The package template must contain a literal token.
 # shellcheck disable=SC2016
 [[ "$PACKAGE_TEMPLATE" == *'$v'* ]] || die 'package template must contain literal $v'
@@ -41,7 +44,7 @@ done
 TMP_ROOT=$(mktemp -d)
 trap 'rm -rf "$TMP_ROOT"' EXIT
 
-RPM_ARGS=(--target "$EXPECTED_ARCH" --define "pgmajorversion $PG")
+RPM_ARGS=(--target "$EXPECTED_ARCH" --define "_topdir $SPEC_TOPDIR" --define "pgmajorversion $PG")
 if [[ "$LLVM_MODE" == disabled ]]; then
     RPM_ARGS+=(--define 'llvm 0')
 fi

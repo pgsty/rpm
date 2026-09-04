@@ -54,7 +54,7 @@ if [ $# -eq 0 ]; then
     VERSIONS="16"
 else
     # Validate versions
-    VALID_VERSIONS="10 11 12 13 14 15 16 17 18 19"
+    VALID_VERSIONS="14 15 16 17 18"
     for arg in "$@"; do
         found=false
         for ver in ${VALID_VERSIONS}; do
@@ -98,6 +98,10 @@ fi
 #--------------------------------------------------------------#
 for ver in $VERSIONS; do
     log_info "install dependencies for ${EXTENSION_NAME} (PG${ver})"
-    log_hint "\$" sudo dnf builddep -y "${DNF_BUILDDEP_OPTS[@]}" --define \"pgmajorversion ${ver}\" "SPECS/${EXTENSION_NAME}.spec"
-    sudo dnf builddep -y "${DNF_BUILDDEP_OPTS[@]}" --define "pgmajorversion ${ver}" "${SPEC_FILE}"
+    log_hint "\$" sudo dnf builddep -y "${DNF_BUILDDEP_OPTS[@]}" --define \"_topdir ${PROG_DIR}\" --define \"pgmajorversion ${ver}\" "${SPEC_FILE}"
+    if ! sudo dnf builddep -y "${DNF_BUILDDEP_OPTS[@]}" \
+        --define "_topdir ${PROG_DIR}" --define "pgmajorversion ${ver}" "${SPEC_FILE}"; then
+        log_error "dependency installation failed for ${EXTENSION_NAME} PG${ver}"
+        exit 1
+    fi
 done

@@ -3,6 +3,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Summary:	PostgreSQL Query Performance Monitoring Tool
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.3.2
@@ -12,6 +18,11 @@ URL:		https://github.com/percona/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 Obsoletes:	%{sname}%{pgmajorversion} < 2.1.3-2
@@ -33,33 +44,16 @@ pg_stat_monitor stores statistics in configurable time-based units – buckets.
 This allows focusing on statistics generated for shorter time periods and
 makes query timing information such as max/min/mean time more accurate.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for pg_stat_monitor
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm17-devel clang17-devel
-Requires:	llvm17
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for pg_stat_monitor
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
 
-PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 # Install README
 %{__install} -d %{buildroot}%{pginstdir}/doc/extension/
@@ -77,12 +71,15 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR
 %{pginstdir}/share/extension/%{sname}.control
 
 %if %llvm
-%files llvmjit
  %{pginstdir}/lib/bitcode/%{sname}*.bc
  %{pginstdir}/lib/bitcode/%{sname}/*.bc
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.3.2-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Tue Aug 11 2026 Vonng <rh@vonng.com> - 2.3.2-1PIGSTY
 - Update to 2.3.2
 - https://github.com/percona/pg_stat_monitor/releases/tag/2.3.2

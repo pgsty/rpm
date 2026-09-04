@@ -15,6 +15,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Epoch:		1
 Version:	0.3
@@ -25,7 +31,12 @@ URL:		https://github.com/cybertec-postgresql/pg_crash
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pg_crash-0.3.patch
 
-BuildRequires:	gcc make postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 clang llvm
+BuildRequires:	gcc make postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -34,43 +45,16 @@ PostgreSQL preload module that periodically crashes database infrastructure by
 sending configured signals to database processes. It is intended for HA and
 failover testing.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1  %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1  %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -78,14 +62,16 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1  %{?_smp_mflags} install DESTDI
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
+%exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
-%exclude /usr/lib/.build-id/*
 
 %changelog
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1:0.3-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Upgrade to the official upstream 0.3 release
 - Preserve the historical empty extension catalog with a compatibility edge
 

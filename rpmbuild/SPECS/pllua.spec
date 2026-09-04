@@ -45,16 +45,6 @@ Requires:	%{name}%{?_isa} = %{version}-%{release}
 %description devel
 This package includes development libraries for PL/Lua.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for pllua
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	llvm >= 19.0
-
-%description llvmjit
-This package provides JIT support for pllua.
-%endif
-
 %prep
 %setup -q -n %{sname}-REL_%{plluangmajver}_%{plluangmidver}_%{plluangminver}
 %if 0%{?pgmajorversion} >= 18
@@ -95,12 +85,7 @@ LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
 %{pginstdir}/share/extension/hstore_%{sname}u-*.sql
 %{pginstdir}/share/extension/hstore_%{sname}u.control
 
-%files devel
-%dir %{pginstdir}/include/server/extension/%{sname}
-%{pginstdir}/include/server/extension/%{sname}/*
-
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{sname}*.bc
 %dir %{pginstdir}/lib/bitcode/%{sname}
 %{pginstdir}/lib/bitcode/%{sname}/*
@@ -109,9 +94,14 @@ LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
 %{pginstdir}/lib/bitcode/hstore_%{sname}/*
 %endif
 
+%files devel
+%dir %{pginstdir}/include/server/extension/%{sname}
+%{pginstdir}/include/server/extension/%{sname}/*
+
 %changelog
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.0.12-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 
 * Wed Jul 22 2026 Vonng <rh@vonng.com> - 2.0.12-7PIGSTY
 - Build and package hstore transforms

@@ -52,6 +52,7 @@ p50k_base, and p50k_edit.
 %autosetup -p1 -n relytcloud-%{sname}-fa2957b
 
 %build
+%set_build_flags
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} USE_PGXS=1 PG_CONFIG=%{pginstdir}/bin/pg_config
 
 %install
@@ -73,6 +74,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} USE_PGXS=
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
+- Preserve distribution build flags and DWARF debug information
 
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 1.1-1PIGSTY
 - Initial RPM release from upstream snapshot fa2957b

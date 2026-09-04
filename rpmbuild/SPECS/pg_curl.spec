@@ -21,6 +21,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.4.5
 Release:	3.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
@@ -36,11 +42,11 @@ BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel
 BuildRequires:	gcc
 %if %llvm
-BuildRequires:	clang >= 19.0
-BuildRequires:	llvm >= 19.0
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
 %endif
-Requires:	    postgresql%{pgmajorversion}-server
 
+Requires:	    postgresql%{pgmajorversion}-server
 
 %description
 PostgreSQL tool for transferring data with URL syntax, supporting DICT, FILE, FTP, FTPS, GOPHER, GOPHERS, HTTP, HTTPS, IMAP, IMAPS,
@@ -48,44 +54,17 @@ PostgreSQL tool for transferring data with URL syntax, supporting DICT, FILE, FT
 This package uses snapshot %{snapshot_commit} with its exact pg_whitelist
 gitlink filled from %{whitelist_commit}.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n %{sname}-%{source_version}
 cp pg_curl--2.4.sql pg_curl--2.4.1.sql
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 
 %files
@@ -95,14 +74,16 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
+%exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
-%exclude /usr/lib/.build-id/*
 
 %changelog
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.4.5-3.git20260815.f7a70f3PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Package the deterministic master-tag and pg_whitelist composite source
 - Add downstream extension version 2.4.1 with an in-place 2.4 upgrade edge
 - Preserve all previously published SQL scripts byte-for-byte

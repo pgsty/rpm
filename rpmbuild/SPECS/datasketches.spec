@@ -19,6 +19,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.7.0
 Release:	2PGSTY%{?dist}
@@ -34,6 +40,11 @@ Patch0:		datasketches-1.7.0-core-5.2.0.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc-c++
 BuildRequires:	boost-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -42,44 +53,16 @@ PostgreSQL. The extension includes CPC, HLL, Theta, Array-of-Doubles, KLL,
 REQ, quantiles, and frequent-strings sketches for fast approximate distinct
 counting, quantiles, histograms, and heavy-hitter analysis.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
-%{__rm} -rf %{_builddir}/%{buildsrc} %{_builddir}/%{corebuildsrc}
+%{__rm} -rf %{_builddir}/%{corebuildsrc}
+%setup -q -n %{buildsrc}
 cd %{_builddir}
-tar -xf %{SOURCE0}
 tar -xf %{SOURCE1}
 patch -d %{buildsrc} -p1 --fuzz=0 < %{PATCH0}
 
 %build
 cd %{_builddir}/%{buildsrc}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
   CORE=%{_builddir}/%{corebuildsrc} \
   BOOST=/usr/include
 
@@ -88,7 +71,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} \
 cd %{_builddir}/%{buildsrc}
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name}
 %{__mkdir_p} %{buildroot}%{_licensedir}/%{name}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} \
   CORE=%{_builddir}/%{corebuildsrc} \
   BOOST=/usr/include
 install -m 644 README.md NOTICE %{buildroot}%{_docdir}/%{name}/
@@ -105,17 +88,20 @@ install -m 644 %{_builddir}/%{corebuildsrc}/NOTICE %{buildroot}%{_docdir}/%{name
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
+%exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}*
 %endif
-%exclude /usr/lib/.build-id/*
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.7.0-2PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Rebuild the current PostgreSQL extension with DataSketches C++ core 5.2.0
 - Normalize the official Apache zip release into the shared deterministic tarball
 - Fix PGXS C++ LLVM builds by including cstdint explicitly
+- Restore automatic debuginfo and debugsource generation with %setup
 
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 1.7.0-1PIGSTY
 - Initial RPM release based on Apache DataSketches PostgreSQL 1.7.0

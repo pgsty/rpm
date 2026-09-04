@@ -1,0 +1,15 @@
+--- a/Makefile
++++ b/Makefile
+@@ -13,8 +13,10 @@
+ REGRESS = zhparser
+ 
+ SCWS_HOME ?= /usr/local
+-PG_CPPFLAGS = -I$(SCWS_HOME)/include/scws 
+-SHLIB_LINK = -lscws -L$(SCWS_HOME)/lib -Wl,-rpath -Wl,$(SCWS_HOME)/lib
++SCWS_INCLUDEDIR ?= $(SCWS_HOME)/include/scws
++SCWS_LIBDIR ?= $(SCWS_HOME)/lib
++PG_CPPFLAGS = -I$(SCWS_INCLUDEDIR)
++SHLIB_LINK = -lscws -L$(SCWS_LIBDIR)
+ 
+ PG_CONFIG ?= pg_config
+ PGXS := $(shell $(PG_CONFIG) --pgxs)

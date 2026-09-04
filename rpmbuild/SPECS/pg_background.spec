@@ -4,6 +4,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.3
 Release:	2PGSTY%{?dist}
@@ -16,9 +22,10 @@ Patch0:		pg_background-2.0.3.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 %if %llvm
-BuildRequires:	clang >= 19.0
-BuildRequires:	llvm >= 19.0
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
 %endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -26,28 +33,16 @@ pg_background executes SQL commands in PostgreSQL background worker processes.
 It supports asynchronous execution and autonomous transactions for long-running
 operations without blocking client sessions.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %license LICENSE
@@ -57,12 +52,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/share/extension/%{sname}--*.sql
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.0.3-2PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Add downstream extension version 2.0.3 and a 2.0 to 2.0.3 security upgrade edge
 - Preserve every previously published 2.0 install and upgrade script byte-for-byte
 - Declare the Clang and LLVM toolchain required by the llvmjit build

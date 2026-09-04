@@ -16,6 +16,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.116
 Release:	1PGSTY%{?dist}
@@ -25,9 +31,14 @@ URL:		https://github.com/documentdb/documentdb
 Source0:	%{sname}-%{version}-0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 pkgconf-pkg-config
-BuildRequires:	gcc gcc-c++ make cmake clang llvm libicu-devel krb5-devel
+BuildRequires:	gcc gcc-c++ make cmake libicu-devel krb5-devel
 %if %{pgmajorversion} == 15
 BuildRequires: systemtap-sdt-devel
+%endif
+
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
@@ -48,33 +59,6 @@ enabling seamless CRUD operations on BSON data types within a PostgreSQL framewo
 Beyond basic operations, DocumentDB empowers you to execute complex workloads,
 including full-text searches, geospatial queries, and vector embeddings on your dataset,
 delivering robust functionality and flexibility for diverse data management needs.
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
 
 %prep
 %setup -q -n %{pname}-%{version}-0
@@ -107,11 +91,11 @@ rm -f %{_builddir}/.documentdb-uvprobe.so
 # anonymous map to ld twice.  Keep the upstream map but pass it exactly once
 # through the documented link flags instead.
 DOCUMENTDB_LDFLAGS="$(%{pginstdir}/bin/pg_config --ldflags) $UNDEF_VERSION_FLAG -Wl,--version-script=%{_builddir}/documentdb-hide-linker-syms.map"
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LDFLAGS="$DOCUMENTDB_LDFLAGS"
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} LDFLAGS="$DOCUMENTDB_LDFLAGS"
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -119,14 +103,16 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/lib/pg_%{pname}*.so
 %{pginstdir}/share/extension/%{pname}*.control
 %{pginstdir}/share/extension/%{pname}*sql
+%exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
-%exclude /usr/lib/.build-id/*
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.116-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - switch to upstream documentdb v0.116-0
 - keep PG18 on the bundled documentdb_extended_rum implementation
 

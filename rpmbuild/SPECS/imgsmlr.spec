@@ -15,6 +15,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
 Release:	2.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
@@ -25,7 +31,12 @@ Source0:	%{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}.tar.gz
 Patch0:		imgsmlr-1.0.patch
 #           https://github.com/postgrespro/imgsmlr/archive/refs/heads/master.zip
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 clang llvm gd-devel
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 gd-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -34,58 +45,32 @@ The goal of ImgSmlr is not to provide most advanced state of art similar images 
 ImgSmlr was written as sample extension which illustrate how PostgreSQL
 extendability could cover such untypical tasks for RDBMS as similar images search.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
-
 %prep
 %setup -q -n %{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}
 %patch -P 0 -p1
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
+%exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
-%exclude /usr/lib/.build-id/*
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0-2.git20180223.c484a15PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Pin the clean upstream master snapshot c484a15
 - Preserve PostgreSQL 14-18 and varlena compatibility in the local patch
 - Declare clang and llvm for PGXS bitcode generation

@@ -3,6 +3,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	4.1
 Release:	1PGSTY%{?dist}
@@ -13,6 +19,11 @@ Source0:	%{sname}-%{version}.tar.gz
 #		https://github.com/EnterpriseDB/system_stats/archive/refs/tags/v4.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -21,27 +32,15 @@ process information to PostgreSQL for monitoring use cases. Access is
 restricted to superusers and the monitor_system_stats role created by the
 extension.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -53,11 +52,14 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %{pginstdir}/share/extension/uninstall_%{sname}.sql
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 4.1-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Tue Aug 11 2026 Vonng <rh@vonng.com> - 4.1-1PIGSTY
 - Update to 4.1
 - https://github.com/EnterpriseDB/system_stats/releases/tag/v4.1

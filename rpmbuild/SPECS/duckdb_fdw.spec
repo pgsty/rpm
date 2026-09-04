@@ -16,6 +16,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.1
 Release:	1.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
@@ -32,6 +38,11 @@ Patch2:		duckdb_fdw-2.0.1-tests.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libduckdb >= %{duckdb_version}
 BuildRequires:	patchelf
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	libduckdb >= %{duckdb_version}
 
@@ -41,34 +52,6 @@ This package is built from the duckdb_fdw main-branch snapshot %{snapshot_commit
 against the standalone DuckDB %{duckdb_version} C API and shared library.
 duckdb_fdw does not install a private copy of libduckdb.so into PostgreSQL's
 library directory.
-
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -80,13 +63,13 @@ patch -p1 --fuzz=0 < %{PATCH1}
 patch -p1 --fuzz=0 < %{PATCH2}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 patchelf --set-rpath %{_libdir} duckdb_fdw.so
 
 %install
 %{__rm} -rf %{buildroot}
 export QA_RPATHS=1
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -95,13 +78,15 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id/*
+
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.0.1-1.git20260529.9354241PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Upgrade to the duckdb_fdw 2.0.1 main snapshot at 9354241
 - Switch from the SQLite compatibility layer to the native DuckDB C API
 - Build and run against the standalone libduckdb 1.5.5 package

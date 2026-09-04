@@ -5,6 +5,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.8.6
 Release:	1PGSTY%{?dist}
@@ -17,6 +23,11 @@ Source0:	%{sname}-%{version}.tar.gz
 # https://github.com/pgvector/pgvector/pull/311
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -30,32 +41,15 @@ Store your vectors with the rest of your data. Supports:
   and Jaccard distance
 * any language with a Postgres client
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for pgvector
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm17-devel clang17-devel
-Requires:	llvm17
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm => 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for pgvector
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} OPTFLAGS="" LLVM_BINPATH=%{llvm_binpath}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} OPTFLAGS="" LLVM_BINPATH=%{llvm_binpath}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} OPTFLAGS="" LLVM_BINPATH=%{llvm_binpath}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} OPTFLAGS="" LLVM_BINPATH=%{llvm_binpath}
 
 %files
 %doc README.md
@@ -67,12 +61,15 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %{pginstdir}/include/server/extension/vector/*.h
 
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/%{pname}*.bc
    %{pginstdir}/lib/bitcode/%{pname}/src/*.bc
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.8.6-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Thu Jul 30 2026 Vonng <rh@vonng.com> - 0.8.6-1PIGSTY
 - Update to upstream PGXN 0.8.6
 - Disable upstream -march=native for portable builder artifacts

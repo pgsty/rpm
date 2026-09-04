@@ -3,6 +3,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Summary:	Postgres extension and service for automated failover and high-availability
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.2
@@ -37,6 +43,11 @@ BuildRequires:	libopenssl-3-devel
 Requires:	openssl-libs >= 1.1.1k
 BuildRequires:	openssl-devel
 %endif
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-contrib
 
 %description
@@ -50,27 +61,6 @@ data nodes and implements a failover state machine. On the PostgreSQL nodes,
 the pg_autoctl program runs alongside PostgreSQL and runs the necessary
 commands to configure synchronous streaming replication.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for pg_auto_failover
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} == 1500
-BuildRequires:	llvm17-devel clang17-devel
-Requires:	llvm17
-%endif
-%if 0%{?suse_version} == 1600
-BuildRequires:	llvm19-devel clang19-devel
-Requires:	llvm19
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for pg_auto_failover.
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 %if 0%{?pgmajorversion} >= 18
@@ -78,10 +68,10 @@ This package provides JIT support for pg_auto_failover.
 %endif
 
 %build
-PG_CONFIG=%{pginstdir}/bin/pg_config %{__make} %{?_smp_mflags}
+PG_CONFIG=%{pginstdir}/bin/pg_config %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
-PG_CONFIG=%{pginstdir}/bin/pg_config %make_install
+PG_CONFIG=%{pginstdir}/bin/pg_config %make_install %{with_llvm_arg}
 %{__mkdir} -p %{buildroot}%{pginstdir}/doc/extension
 %{__cp} README.md %{buildroot}%{pginstdir}/doc/extension/README-%{sname}.md
 
@@ -95,12 +85,15 @@ PG_CONFIG=%{pginstdir}/bin/pg_config %make_install
 %{pginstdir}/share/extension/pgautofailover.control
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/pgautofailover*.bc
 %{pginstdir}/lib/bitcode/pgautofailover/*.bc
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.2-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 2.2-5PIGSTY
 - Backport upstream PostgreSQL 18 compatibility fixes
 

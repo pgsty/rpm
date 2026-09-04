@@ -57,7 +57,7 @@ function stage_declared_patches() {
         fi
         if ! rpmspec -P \
             --define "_topdir ${PROG_DIR}" \
-            --define "pgmajorversion ${ver}" "${SPEC_FILE}" >"${preprocessed}"; then
+            --define "pgmajorversion ${ver}" "${RPM_MODE_ARGS[@]}" "${SPEC_FILE}" >"${preprocessed}"; then
             rm -f "${preprocessed}" "${patch_list}"
             log_error "cannot expand declared patches for ${EXTENSION_NAME} PG${ver}"
             return 1
@@ -116,6 +116,18 @@ function stage_declared_patches() {
 #--------------------------------------------------------------#
 EXTENSION_NAME=$1
 shift
+
+declare -a RPM_MODE_ARGS=()
+case "${1:-}" in
+    --llvm=0)
+        RPM_MODE_ARGS+=(--define "llvm 0")
+        shift
+        ;;
+    --llvm=*)
+        log_error "unsupported LLVM mode: ${1} (only --llvm=0 is accepted)"
+        exit 1
+        ;;
+esac
 
 # Debug packages are now the default. Keep the historical token as a no-op so
 # existing invocations such as `./build pgjwt debug 17` remain compatible.
@@ -201,8 +213,8 @@ for ver in $VERSIONS; do
     export PATH=/usr/bin:/usr/pgsql-${ver}/bin:/root/.cargo/bin:/pg/bin:/usr/share/Modules/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/home/vagrant/.cargo/bin;
 
     # Build command with proper argument expansion
-    log_hint "\$" rpmbuild --define "_topdir ${PROG_DIR}" --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
-    rpmbuild --define "_topdir ${PROG_DIR}" --define "pgmajorversion ${ver}" -ba "${SPEC_FILE}"
+    log_hint "\$" rpmbuild --define "_topdir ${PROG_DIR}" --define "pgmajorversion ${ver}" "${RPM_MODE_ARGS[@]}" -ba "${SPEC_FILE}"
+    rpmbuild --define "_topdir ${PROG_DIR}" --define "pgmajorversion ${ver}" "${RPM_MODE_ARGS[@]}" -ba "${SPEC_FILE}"
     RC=$?
     if [ "${RC}" -ne 0 ]; then
         log_error "${EXTENSION_NAME} build failed for PG${ver}"

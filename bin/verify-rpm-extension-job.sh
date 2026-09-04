@@ -87,6 +87,17 @@ for package in "${EXPECTED_PACKAGES[@]}"; do
     fi
 done
 [[ -n ${EXPECTED_SET[$MAIN_PACKAGE]+x} ]] || die "rpmspec lacks main package: $MAIN_PACKAGE"
+if [[ "$MAIN_PACKAGE" == "pg_bulkload_$PG" ]]; then
+    CLIENT_PACKAGE="$MAIN_PACKAGE-client"
+    CLIENT_DEBUG_PACKAGE="$CLIENT_PACKAGE-debuginfo"
+    [[ -n ${EXPECTED_SET[$CLIENT_PACKAGE]+x} ]] || die "pg_bulkload rpmspec lacks explicit client package: $CLIENT_PACKAGE"
+    if [[ -z ${EXPECTED_SET[$CLIENT_DEBUG_PACKAGE]+x} ]]; then
+        EXPECTED_PACKAGES+=("$CLIENT_DEBUG_PACKAGE")
+        EXPECTED_SET[$CLIENT_DEBUG_PACKAGE]=1
+        EXPECTED_EVR[$CLIENT_DEBUG_PACKAGE]=${EXPECTED_EVR[$CLIENT_PACKAGE]}
+        EXPECTED_PACKAGE_ARCH[$CLIENT_DEBUG_PACKAGE]=${EXPECTED_PACKAGE_ARCH[$CLIENT_PACKAGE]}
+    fi
+fi
 [[ -n ${EXPECTED_SET[$DEBUG_PACKAGE]+x} ]] || die "EL rpmspec lacks debuginfo package: $DEBUG_PACKAGE"
 [[ -n ${EXPECTED_SET[$DEBUGSOURCE_PACKAGE]+x} ]] || die "EL rpmspec lacks debugsource package: $DEBUGSOURCE_PACKAGE"
 

@@ -5,6 +5,7 @@
 Name:		libpgfeutils17
 Version:	17.10
 Release:	1PGSTY%{?dist}
+%undefine _debugsource_packages
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org

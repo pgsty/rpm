@@ -5,6 +5,7 @@
 Name:		libpgfeutils16
 Version:	16.14
 Release:	1PGSTY%{?dist}
+%undefine _debugsource_packages
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org

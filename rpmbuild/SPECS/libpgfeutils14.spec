@@ -5,6 +5,7 @@
 Name:		libpgfeutils14
 Version:	14.23
 Release:	1PGSTY%{?dist}
+%undefine _debugsource_packages
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org

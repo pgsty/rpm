@@ -17,20 +17,22 @@ SCWS (Simple Chinese Word Segmentation) is a high performance Chinese word segme
 %setup -q
 
 %build
-LDFLAGS="-Wl,--disable-new-dtags" ./configure
-make
+%set_build_flags
+LT_SYS_LIBRARY_PATH=%{_libdir} %configure --disable-static --sysconfdir=%{_sysconfdir}/scws
+%{__make} %{?_smp_mflags}
 
 %install
-make install DESTDIR=%{buildroot}
+%{__make} install DESTDIR=%{buildroot}
+%{__rm} -f %{buildroot}%{_libdir}/libscws.la
 
 %files
-/usr/local/bin/scws
-/usr/local/bin/scws-gen-dict
-/usr/local/lib/libscws.*
-/usr/local/include/scws/*
-/usr/local/etc/rules.ini
-/usr/local/etc/rules.utf8.ini
-/usr/local/etc/rules_cht.utf8.ini
+%{_bindir}/scws
+%{_bindir}/scws-gen-dict
+%{_libdir}/libscws.so*
+%{_includedir}/scws/*
+%{_sysconfdir}/scws/rules.ini
+%{_sysconfdir}/scws/rules.utf8.ini
+%{_sysconfdir}/scws/rules_cht.utf8.ini
 %exclude /usr/lib/.build-id/*
 
 %post
@@ -40,5 +42,8 @@ make install DESTDIR=%{buildroot}
 /sbin/ldconfig
 
 %changelog
+* Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.2.3-1PGSTY
+- Use standard RPM paths and remove the invalid /usr/local runtime search path
+
 * Wed Sep 13 2023 Vonng <rh@vonng.com> - 1.2.3
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

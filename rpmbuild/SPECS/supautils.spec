@@ -35,16 +35,6 @@ Supautils is an extension that secures a PostgreSQL cluster on a cloud environme
 It doesn't require creating database objects. It's a shared library that modifies PostgreSQL behavior through "hooks",
 not through tables or functions.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	llvm >= 19.0
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 
@@ -61,13 +51,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %exclude /usr/lib/.build-id/*
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}.index.bc
 %{pginstdir}/lib/bitcode/%{pname}/
 %endif
 
 %changelog
 * Thu Sep 03 2026 Vonng <rh@vonng.com> - 3.4.3-1PGSTY
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Update to upstream supautils 3.4.3
 - Align LLVM dependencies and package the complete PGXS bitcode payload
 

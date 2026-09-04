@@ -15,6 +15,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.4.1
 Release:	1PGSTY%{?dist}
@@ -24,52 +30,29 @@ URL:		https://github.com/EnterpriseDB/sslutils
 Source0:	sslutils-%{version}.tar.gz
 Patch0:		sslutils-1.4.1.patch
 
-BuildRequires:	clang gcc llvm make openssl-devel
+BuildRequires:	gcc make openssl-devel
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
 SSLUtils is a Postgres extension that provides SSL certicate generation
 functions to Postgres, for use by the Postgres Enterprise Manager server.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 %prep
 %setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} DESTDIR=%{buildroot} install
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} DESTDIR=%{buildroot} install
 
 # Install README-sslutils.txt
 %{__install} -d -m 755 %{buildroot}%{pginstdir}/share/doc/extension
@@ -91,13 +74,14 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} DESTDIR=%{buil
 %{pginstdir}/share/extension/sslutils.control
 
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/%{sname}*.bc
    %{pginstdir}/lib/bitcode/%{sname}/*.bc
 %endif
 
 %changelog
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.4.1-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Upgrade to upstream sslutils 1.4.1
 - Use the repository PostgreSQL license as the packaging license authority
 - Retire the obsolete PostgreSQL 18 OpenSSL compatibility patch

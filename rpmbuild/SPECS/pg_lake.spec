@@ -25,6 +25,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        3.4.4
 Release:        1PGSTY%{?dist}
@@ -51,6 +57,11 @@ BuildRequires:  zlib-ng-compat-devel
 %else
 BuildRequires:  zlib-devel
 %endif
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server
 Requires:       postgresql%{pgmajorversion}-contrib
 Suggests:       awscli2
@@ -65,19 +76,6 @@ and Avro libraries live in a pg_lake-private directory so that pg_duckdb can
 be installed for the same PostgreSQL major without a file collision. Before
 use, add pg_extension_base to shared_preload_libraries and start the versioned
 pgduck_server binary. Its first start may download the DuckDB spatial extension.
-
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  clang-devel >= 19.0 llvm-devel >= 19.0
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides LLVM bitcode for pg_lake's PostgreSQL modules.
-%endif
 
 %prep
 %autosetup -N -n %{sname}-%{version}
@@ -158,7 +156,7 @@ PG_LAKE_GIT_VERSION="v%{version}" \
 PG_LAKE_DELTA_SUPPORT=0 \
 PGCOMPAT_BUILD_CONFIG=Release \
 DUCKDB_BUILD_USE_CACHE=0 \
-%{__make} \
+%{__make} %{with_llvm_arg} \
     PG_CONFIG=%{pginstdir}/bin/pg_config \
     PG_LIBDIR=%{pginstdir}/lib \
     CPPFLAGS="$PG_CPPFLAGS $PG_LAKE_PREFIX_MAP" \
@@ -277,12 +275,13 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %{pginstdir}/share/extension/pg_lake--*.sql
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
 * Thu Sep 03 2026 Vonng <rh@vonng.com> - 3.4.4-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Update to the upstream pg_lake 3.4.4 bugfix release
 - Keep the pinned Avro, DuckDB, and duckdb-postgres source revisions unchanged
 

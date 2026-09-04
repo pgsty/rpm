@@ -25,9 +25,7 @@ DDL, utility commands, and dangerous built-in functions through configurable
 hooks.
 
 %prep
-%{__rm} -rf %{_builddir}/%{sname}-%{version}
-mkdir -p %{_builddir}/%{sname}-%{version}
-tar -C %{_builddir}/%{sname}-%{version} --strip-components=1 -xzf %{SOURCE0}
+%setup -q -n %{sname}-%{version}
 patch -d %{_builddir}/%{sname}-%{version} -p1 --forward -f < %{_specdir}/patches/pg-command-fw-0.1.0.patch
 
 %build
@@ -73,6 +71,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
+- Restore automatic debuginfo and debugsource generation with %setup
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.1.0-3PIGSTY
 - Migrate the direct-on-pristine source patch and locked dependency graph to pgrx 0.19.1
 - Add the previously absent Cargo.lock and verify cargo pgrx package does not rewrite it

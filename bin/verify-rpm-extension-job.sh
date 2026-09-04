@@ -200,8 +200,29 @@ for elf in "${MAIN_ELFS[@]}"; do
     mapfile -t build_ids < <(sed -n 's/.*Build ID:[[:space:]]*//p' "$notes")
     [[ ${#build_ids[@]} -eq 1 && ${build_ids[0]} =~ ^[0-9a-f]{40}$ ]] || die "invalid Build ID: $elf"
     build_id=${build_ids[0]}
-    debug_file="$TMP_ROOT/debug/usr/lib/debug/.build-id/${build_id:0:2}/${build_id:2}.debug"
+    debuglink_dump=$(mktemp "$TMP_ROOT/debuglink.XXXXXX")
+    debuglink=''
+    if readelf --string-dump=.gnu_debuglink "$elf" >"$debuglink_dump" 2>/dev/null; then
+        mapfile -t debuglink_values < <(sed -n 's/^[[:space:]]*\[[^]]*\][[:space:]]*//p' "$debuglink_dump")
+        debuglink=${debuglink_values[0]:-}
+    fi
+    if [[ -n "$debuglink" ]]; then
+        [[ "$debuglink" != */* && "$debuglink" != . && "$debuglink" != .. ]] || \
+            die "unsafe .gnu_debuglink: $elf -> $debuglink"
+        relative_elf=${elf#"$TMP_ROOT/main"}
+        [[ "$relative_elf" == /* ]] || die "cannot map main ELF path: $elf"
+        debug_file="$TMP_ROOT/debug/usr/lib/debug$(dirname "$relative_elf")/$debuglink"
+        [[ -f "$debug_file" && ! -L "$debug_file" && -s "$debug_file" ]] || \
+            die "missing matching debuglink file: $elf -> $debug_file"
+    else
+        debug_file="$TMP_ROOT/debug/usr/lib/debug/.build-id/${build_id:0:2}/${build_id:2}.debug"
+    fi
     [[ -s "$debug_file" ]] || die "missing matching debug file: $elf"
+    debug_notes=$(mktemp "$TMP_ROOT/debug-notes.XXXXXX")
+    readelf -n "$debug_file" >"$debug_notes"
+    mapfile -t debug_build_ids < <(sed -n 's/.*Build ID:[[:space:]]*//p' "$debug_notes")
+    [[ ${#debug_build_ids[@]} -eq 1 && ${debug_build_ids[0]} == "$build_id" ]] || \
+        die "debug file Build ID mismatch: $elf -> $debug_file"
     sections=$(mktemp "$TMP_ROOT/sections.XXXXXX")
     readelf -SW "$debug_file" >"$sections"
     grep -Fq .debug_info "$sections" || die "debug file lacks .debug_info: $debug_file"

@@ -6,6 +6,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Summary:	Procedural language interface between PostgreSQL and Lua
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{plluangmajver}.%{plluangmidver}.%{plluangminver}
@@ -19,6 +25,11 @@ URL:		https://github.com/%{sname}/%{sname}
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	lua-devel
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	postgresql%{pgmajorversion}-contrib
 Requires:	lua-libs
@@ -38,8 +49,7 @@ This package includes development libraries for PL/Lua.
 %package llvmjit
 Summary:	Just-in-time compilation support for pllua
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-BuildRequires:	llvm-devel >= 13.0 clang-devel >= 13.0
-Requires:	llvm >= 13.0
+Requires:	llvm >= 19.0
 
 %description llvmjit
 This package provides JIT support for pllua.
@@ -54,18 +64,18 @@ This package provides JIT support for pllua.
 %build
 export LUA_INCDIR="%{_includedir}"
 LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
-	PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags}
+	PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
 LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
-	PATH=%{pginstdir}/bin:$PATH %{__make} -C hstore USE_PGXS=1 %{?_smp_mflags}
+	PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} -C hstore USE_PGXS=1 %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
 export LUA_INCDIR="%{_includedir}"
 LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
-	PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 %{?_smp_mflags} \
+	PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags} \
 	install DESTDIR=%{buildroot}
 LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
-	PATH=%{pginstdir}/bin:$PATH %{__make} -C hstore USE_PGXS=1 %{?_smp_mflags} \
+	PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} -C hstore USE_PGXS=1 %{?_smp_mflags} \
 	install DESTDIR=%{buildroot}
 %{__mkdir} -p %{buildroot}%{pginstdir}/doc/extension/
 %{__cp} README.md %{buildroot}%{pginstdir}/doc/extension/README-%{sname}.md
@@ -100,6 +110,9 @@ LUALIB="-L%{libdir} -l lua" LUAC="%{_bindir}/luac" LUA="%{_bindir}/lua" \
 %endif
 
 %changelog
+* Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.0.12-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+
 * Wed Jul 22 2026 Vonng <rh@vonng.com> - 2.0.12-7PIGSTY
 - Build and package hstore transforms
 

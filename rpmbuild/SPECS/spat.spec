@@ -19,6 +19,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0a5
 Release:	1.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
@@ -29,6 +35,11 @@ Source0:	%{sname}-%{version}+git%{gitdate}.%{shortcommit}.tar.gz
 Patch0:		spat-0.1.0a5.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -36,43 +47,15 @@ spat is a Redis-like in-memory data structure server embedded in Postgres. Data 
 The data model is key-value. Keys are strings, but values can be strings, lists, sets, or hashes.
 This is stil in alpha and not production ready! Read notes on ACID below.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} && 0%{?rhel} == 7
-%ifarch aarch64
-Requires:	llvm-toolset-7.0-llvm >= 7.0.1
-%else
-Requires:	llvm5.0 >= 5.0
-%endif
-%endif
-%if 0%{?suse_version} >= 1315 && 0%{?suse_version} <= 1499
-BuildRequires:	llvm6-devel clang6-devel
-Requires:	llvm6
-%endif
-%if 0%{?suse_version} >= 1500
-BuildRequires:	llvm15-devel clang15-devel
-Requires:	llvm15
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:	llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This packages provides JIT support for %{sname}
-%endif
-
 %prep
 %autosetup -p1 -n %{sname}-%{commit}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -81,13 +64,15 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %{pginstdir}/include/server/extension/spat/spat.h
+
 %if %llvm
-%files llvmjit
    %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.1.0a5-1.git20250512.fccb581PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Update to upstream commit fccb581 (0.1.0a5)
 - Add downstream metadata-only 0.1.0a4 to 0.1.0a5 transition
 

@@ -52,8 +52,8 @@ patch -p1 --forward -f < %{_specdir}/patches/plv8-3.2.4-el10-build-fixes.patch
 
 %build
 %set_build_flags
-PATH=%{pginstdir}/bin:$PATH %{__make} clean
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS"
+PATH=%{pginstdir}/bin:$PATH %{__make} clean CC=/usr/bin/gcc CXX=/usr/bin/g++
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS"
 
 %install
 %{__rm} -rf %{buildroot}
@@ -61,7 +61,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} OPTFLAGS="-std=c++17 -fno
 %if 0%{?rhel} >= 10
 export QA_RPATHS=3
 %endif
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS"
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS"
 
 %files
 %{pginstdir}/lib/%{pname}*.so
@@ -77,6 +77,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 3.2.4-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
+- Keep the bundled CMake C and C++ compiler identities distinct
 
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 3.2.4-2PIGSTY
 - fix EL10 builds and runtime loading by patching v8-cmake, direct stack-scanner linkage, and QA_RPATHS handling

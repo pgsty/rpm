@@ -28,6 +28,7 @@ Source0:	hydra-%{version}.tar.gz
 #           https://github.com/hydradatabase/hydra/archive/refs/tags/v1.1.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	libcurl-devel lz4-devel libzstd-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
@@ -71,6 +72,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.1.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
+- Add the direct libcurl, LZ4, and Zstandard build dependencies
 
 * Sat Apr 27 2024 Vonng <rh@vonng.com> - 1.1.2
 * Sat Feb 17 2024 Vonng <rh@vonng.com> - 1.1.1

@@ -36,18 +36,6 @@ acdat compiles large exact-literal dictionaries into immutable Aho-Corasick
 Double-Array machines. It scans PostgreSQL text or bytea values once to test
 for matches, enumerate overlapping hits, or perform deterministic replacement.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %autosetup -n %{sname}-%{version}
 
@@ -66,7 +54,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install PG_CONFIG=%{pgins
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}.index.bc
 %{pginstdir}/lib/bitcode/%{pname}/
 %endif
@@ -74,6 +61,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install PG_CONFIG=%{pgins
 %changelog
 * Thu Sep 03 2026 Vonng <rh@vonng.com> - 0.1.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Update to the formal pgsty/acdat 0.1.1 release
 - Preserve the 0.1.0 to 0.1.1 extension upgrade path for PostgreSQL 14 through 18
 - Follow the upstream relicensing to Apache-2.0 and refreshed documentation layout

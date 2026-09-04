@@ -1,7 +1,6 @@
 %global pname pg_fts
 %global sname pg_fts
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global llvm_binpath /usr/bin
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
 %{error:pg_fts 1.5.3 only supports PostgreSQL 17 and 18}
@@ -17,6 +16,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.5.3
 Release:	1PGSTY%{?dist}
@@ -27,34 +32,27 @@ Source0:	%{sname}-%{version}.tar.gz
 #           https://codeberg.org/gregburd/pg_fts/archive/v1.5.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	gcc clang llvm
+BuildRequires:	gcc
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pg_fts provides BM25 and BM25F relevance ranking, a dedicated inverted-index
 access method, and boolean, phrase, NEAR, prefix, fuzzy, and regex queries.
 
-%if %llvm
-%package llvmjit
-Summary:	Just-in-time compilation support for %{sname}
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:	llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides JIT support for %{sname}.
-%endif
-
 %prep
 %setup -q -n %{sname}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroot} LLVM_BINPATH=%{llvm_binpath}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -65,12 +63,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/%{pname}*
 %endif
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.5.3-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Bump to 1.5.3
 - Use the official Codeberg archive root
 

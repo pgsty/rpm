@@ -8,6 +8,12 @@
 
 %{!?llvm:%global llvm 1}
 
+%if %llvm
+%global with_llvm_arg %{nil}
+%else
+%global with_llvm_arg with_llvm=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.0.6
 Release:        1PGSTY%{?dist}
@@ -19,34 +25,26 @@ Source0:        %{sname}-%{version}.tar.gz
 Patch0:         pg_readonly-1.0.6.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+%if %llvm
+BuildRequires:	llvm-devel >= 19.0
+BuildRequires:	clang-devel >= 19.0
+%endif
+
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
 pg_readonly provides a cluster-wide in-memory read-only switch and rejects
 write statements while the switch is enabled.
 
-%if %llvm
-%package llvmjit
-Summary:        Just-in-time compilation support for %{sname}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  llvm-devel >= 19.0 clang-devel >= 19.0
-Requires:       llvm >= 19.0
-%endif
-
-%description llvmjit
-This package provides LLVM bitcode for %{sname}.
-%endif
-
 %prep
 %autosetup -p1 -n %{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} \
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
     install DESTDIR=%{buildroot}
 
 %files
@@ -57,11 +55,12 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} \
 %exclude /usr/lib/.build-id/*
 
 %if %llvm
-%files llvmjit
 %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0.6-1PGSTY
+- Align LLVM dependencies and the PGXS enablement toggle with pgrpms
+- Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Initial Pigsty RPM package for pg_readonly 1.0.6
 - Add downstream metadata-only 1.0.5 to 1.0.6 transition

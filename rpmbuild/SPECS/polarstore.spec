@@ -3,7 +3,10 @@
 
 Name:           polarstore
 Version:        %{sdk_version}
-Release:        1PGSTY%{?dist}
+Release:        3PGSTY%{?dist}
+# Keep DWARF in the static archive for downstream PolarDB debug packages.
+%global __brp_strip_static_archive %{nil}
+%undefine _debugsource_packages
 Summary:        PolarStore PFSD SDK for PolarDB
 License:        Apache-2.0
 URL:            https://github.com/ApsaraDB/PolarDB-FileSystem
@@ -40,6 +43,9 @@ install -m 0644 lib/libpfsd.a %{buildroot}/usr/local/polarstore/pfsd/lib/
 /usr/local/polarstore/pfsd/lib/libpfsd.a
 
 %changelog
+* Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.2.42-3PGSTY
+- Preserve static PFSD SDK debug information for downstream consumers
+
 * Sun Aug 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.42-2PGSTY
 - Require zlog 1.2.18 or newer and use the PGSTY package release brand
 

@@ -3,15 +3,18 @@
 %global pginstdir /usr/pgsql-17
 
 Name:		libpgfeutils17
-Version:	17.10
+Version:	17.11
 Release:	1PGSTY%{?dist}
+# The payload is a static archive; keep its DWARF in the archive itself.
+%global __brp_strip_static_archive %{nil}
 %undefine _debugsource_packages
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org
 Source0:	%{sname}-%{version}.tar.gz
 
-BuildRequires:	bison, flex, perl-FindBin
+BuildRequires:	gcc, make, bison, flex, perl(FindBin)
+BuildRequires:	libicu-devel
 
 %description
 Add /usr/pgsql-17/lib/libpgfeutils.a for extension building
@@ -33,6 +36,11 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %{pginstdir}/lib/libpgfeutils.a
 
 %changelog
+* Sat Sep 05 2026 Vonng <rh@vonng.com> - 17.11-1PGSTY
+- Rebuild from PostgreSQL 17.11 and retain static archive debug information
+- Require the FindBin module without forcing a Perl module stream upgrade
+- Declare the ICU development dependency used by configure
+
 * Mon Jul 06 2026 Vonng <rh@vonng.com> - 17.10-1PIGSTY
 - Rebuild libpgfeutils from PostgreSQL 17.10 source
 

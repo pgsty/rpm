@@ -3,13 +3,17 @@
 %global pginstdir /usr/pgsql-14
 
 Name:		libpgfeutils14
-Version:	14.23
+Version:	14.24
 Release:	1PGSTY%{?dist}
+# The payload is a static archive; keep its DWARF in the archive itself.
+%global __brp_strip_static_archive %{nil}
 %undefine _debugsource_packages
 Summary:	PostgreSQL Front-End Utils Library
 License:	PostgreSQL
 URL:		https://www.postgresql.org
 Source0:	%{sname}-%{version}.tar.gz
+
+BuildRequires:	gcc, make, bison, flex, perl(FindBin)
 
 %description
 Add /usr/pgsql-14/lib/libpgfeutils.a for extension building
@@ -31,6 +35,10 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %{pginstdir}/lib/libpgfeutils.a
 
 %changelog
+* Sat Sep 05 2026 Vonng <rh@vonng.com> - 14.24-1PGSTY
+- Rebuild from PostgreSQL 14.24 and retain static archive debug information
+- Require the FindBin module without forcing a Perl module stream upgrade
+
 * Mon Jul 06 2026 Vonng <rh@vonng.com> - 14.23-1PIGSTY
 - Rebuild libpgfeutils from PostgreSQL 14.23 source
 

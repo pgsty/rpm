@@ -1156,7 +1156,7 @@ pg_failover_slots:
 db_migrator:
 	./build db_migrator 14 15 16 17 18
 
-libpgfeutils:	# require perl-FindBin
+libpgfeutils:	# require perl(FindBin)
 	./build libpgfeutils14 14
 	./build libpgfeutils15 15
 	./build libpgfeutils16 16

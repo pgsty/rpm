@@ -14,7 +14,6 @@ BuildArch:	noarch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	postgresql%{pgmajorversion}-contrib
-Requires:	python3-psycopg2
 
 %description
 Mimeo is an extension that provides specialized, per-table replication between PostgreSQL instances. It currently provides snapshot (whole table copy), incremental (based on an incrementing timestamp or id), and DML (inserts, updates and deletes).
@@ -40,7 +39,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %changelog
 * Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.5.1-2PGSTY
 - Package architecture-independent SQL and scripts as noarch
-- Require the psycopg2 module used by run_refresh.py
 
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.5.1
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

@@ -119,7 +119,7 @@ qdgc:
 geoip:
 	./build geoip 14 15 16 17 18
 
-pg_polyline:    # rust pgrx 0.19.1
+pg_polyline:    # rust pgrx 0.19.2
 	./build pg_polyline 14 15 16 17 18
 
 pg_eviltransform:	# rust pgrx 0.19.2

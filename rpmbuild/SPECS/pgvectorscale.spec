@@ -7,13 +7,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.9.0
+Version:	0.9.1
 Release:	1PGSTY%{?dist}
 Summary:	A complement to pgvector for high performance, cost efficient vector search on large workloads.
 License:	PostgreSQL
 URL:		https://github.com/timescale/pgvectorscale
 Source0:    pgvectorscale-%{version}.tar.gz
-Patch0:     pgvectorscale-0.9.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -24,7 +23,7 @@ pgvectorscale builds on pgvector with higher performance embedding search and co
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{PATCH0}
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -32,13 +31,13 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}/pgvectorscale
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=338893d63d5651d59494fae6f0068a854e06cb30a844a1411f8c4f4157820975
+LOCK_EXPECTED=a8d26a2e48dd483bf16187b63bb9f55aac0aaa9e3d670518ffed01be038f1eb0
 LOCK_BEFORE=$(sha256sum ../Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -72,6 +71,13 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.9.1-1PGSTY
+- Update to upstream 0.9.1 with DiskANN type and dimension validation
+- Build with pgrx 0.19.2 and locked dependencies for PostgreSQL 14 through 18
+
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.9.0-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.9.0-3PIGSTY
 - Build with cargo-pgrx 0.19.1 and a locked dependency graph
 - Keep AVX2/FMA optimization on x86_64 while allowing native aarch64 builds

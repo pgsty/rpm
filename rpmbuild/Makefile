@@ -147,7 +147,7 @@ pgvector:  # skip, handled by pgdg
 vchord:    # rust pgrx 0.19.2
 	./build vchord 14 15 16 17 18
 
-pgvectorscale:  # rust pgrx 0.19.1
+pgvectorscale:  # rust pgrx 0.19.2
 	./build pgvectorscale 14 15 16 17 18
 
 pg_turbovec:	# rust pgrx 0.19.2, Rust 1.96

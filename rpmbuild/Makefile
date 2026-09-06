@@ -238,7 +238,7 @@ acdat:
 pg_pinyin:			# rust pgrx 0.19.2
 	./build pg_pinyin 14 15 16 17 18
 
-pg_kazsearch:		# rust pgrx 0.19.1
+pg_kazsearch:		# rust pgrx 0.19.2
 	./build pg_kazsearch 16 17 18
 
 psql_bm25s:

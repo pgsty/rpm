@@ -368,7 +368,7 @@ pg_graphql:		# rust pgrx 0.19.2
 pg_jsonschema:	# rust pgrx 0.19.1
 	./build pg_jsonschema 14 15 16 17 18
 
-jsonschema:		# rust pgrx 0.19.1, distinct from pg_jsonschema
+jsonschema:		# rust pgrx 0.19.2, distinct from pg_jsonschema
 	./build jsonschema 14 15 16 17 18
 
 pg_mentat:		# rust pgrx 0.19.2 (upstream 0.17.0)

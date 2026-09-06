@@ -1,7 +1,6 @@
 %global pname pg_turbovec
 %global sname pg_turbovec
-# Codeberg tag archives use the unversioned pg_turbovec/ root directory.
-%global srcdir pg_turbovec
+%global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
@@ -9,17 +8,18 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.0.0
+Version:        2.2.2
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.0.0.tar.gz
-#               tag commit de35e27e4540a4ec7e7a2d24f60b5317a2091032
-Patch0:         pg-turbovec-2.0.0.patch
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.2.2.tar.gz
+#               tag commit dd5e2800e90de64bd942cece030b0eb973b1111f
+# Repacked with a versioned root and the pgrx 0.19.2 Cargo.lock.
 # Package installation is not the database migration: restart PostgreSQL,
-# ALTER EXTENSION to 2.0.0, then REINDEX every turbovec index (wire v7 -> v8).
+# then ALTER EXTENSION to 2.2.2. Upgrades from 1.x also require REINDEX
+# for wire v7 -> v8; upgrades from 2.x retain wire v8.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -31,7 +31,7 @@ method backed by the TurboQuant quantizer. It supports exact and approximate
 nearest-neighbor search with L2, inner-product, cosine, and L1 distances.
 
 %prep
-%autosetup -n %{srcdir} -p1
+%setup -q -n %{srcdir}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -85,6 +85,11 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 2.2.2-1PGSTY
+- Update to official tag 2.2.2 with the locked pgrx 0.19.2 dependency graph
+- Ship the SQL upgrade chain through 2.2.2 for PostgreSQL 14 through 18
+- Retain wire v8; upgrades from 2.x do not require REINDEX
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.0.0-1PGSTY
 - Update to upstream pg_turbovec 2.0.0 and pgrx 0.19.2 for PostgreSQL 14-18
 - Ship the complete 1.29.x upgrade chain and drop the obsolete OpenBLAS dependency

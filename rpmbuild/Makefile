@@ -217,7 +217,7 @@ pg_jieba:
 pg_bestmatch:		# rust pgrx 0.19.2
 	./build pg_bestmatch 14 15 16 17 18
 
-vchord_bm25:		# rust pgrx 0.19.1
+vchord_bm25:		# rust pgrx 0.19.2
 	./build vchord_bm25 14 15 16 17 18
 
 pg_tokenizer:		# rust pgrx 0.19.2

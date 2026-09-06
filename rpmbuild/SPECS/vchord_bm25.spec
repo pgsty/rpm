@@ -13,7 +13,6 @@ Summary:	Native BM25 Ranking Index in PostgreSQL
 License:	AGPL-3.0-only OR Elastic-2.0
 URL:		https://github.com/supervc-stack/VectorChord-bm25
 Source0:	VectorChord-bm25-%{version}.tar.gz
-Patch0:		vchord-bm25-0.3.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -28,7 +27,7 @@ The interface may change in the future.
 
 %prep
 %setup -q -n VectorChord-bm25-%{version}
-patch -p1 --forward -f < %{PATCH0}
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -36,13 +35,13 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/VectorChord-bm25-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=74ee41f8d8cf66ef6f990a39fa8ce5636f2cfaceadcfca6423894c0dd7e8ae9e
+LOCK_EXPECTED=200b1bb33fee9426e342722ba24f3145c272548c8be8758f2d3e10bce50edcfe
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -77,6 +76,9 @@ cp -a %{_builddir}/VectorChord-bm25-%{version}/target/release/%{pname}-pg%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.3.0-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.3.0-3PIGSTY
 - Build with cargo-pgrx 0.19.1 from a generated, locked dependency graph
 - Refresh the source patch and current upstream repository URL

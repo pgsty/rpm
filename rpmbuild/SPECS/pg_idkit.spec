@@ -23,7 +23,7 @@ uuidv6, uuidv7, nanoid, ksuid, ulid, timeflake, pushid, xid, cuid, cuid2
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg-idkit-0.4.0.patch
+# The source archive includes the pgrx 0.19.2 dependency update.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -32,7 +32,7 @@ cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=stable
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -63,6 +63,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.4.0-1PGSTY
+- Build the repacked source and locked dependencies with pgrx 0.19.2
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.4.0-3PIGSTY
 - Migrate the direct-on-pristine source patch and locked dependency graph to pgrx 0.19.1
 - Use the validated stable Rust 1.96 toolchain instead of downloading the upstream 1.90 pin

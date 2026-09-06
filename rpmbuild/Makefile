@@ -1015,7 +1015,7 @@ pg_oidc_validator_rust:	# rust pgrx 0.19.2, PostgreSQL 18 OAuth validator
 pg_oidc_validator:	# C++23, PostgreSQL 18 OAuth validator
 	./build pg_oidc_validator 18
 
-pg_anon:			# rust pgrx 0.19.1
+pg_anon:			# rust pgrx 0.19.2
 	./build pg_anon 14 15 16 17 18
 
 pgsmcrypto:			# rust pgrx 0.19.2

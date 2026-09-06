@@ -8,14 +8,13 @@
 %endif
 
 Name:		pg_anon_%{pgmajorversion}
-Version:	3.1.3
+Version:	3.2.2
 Release:	1PGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL
 License:	PostgreSQL
 URL:		https://gitlab.com/dalibo/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#           https://gitlab.com/dalibo/postgresql_anonymizer/-/archive/3.1.3/postgresql_anonymizer-3.1.3.tar.gz
-Patch0:		pg-anon-3.1.3.patch
+#           https://gitlab.com/dalibo/postgresql_anonymizer/-/archive/3.2.2/postgresql_anonymizer-3.2.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -27,7 +26,7 @@ PostgreSQL database.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{PATCH0}
+# The source archive includes the pgrx 0.19.2 dependency update.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -35,7 +34,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -73,6 +72,12 @@ cp -a %{_builddir}/%{srcdir}/data/fr_FR %{buildroot}%{pginstdir}/share/extension
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 3.2.2-1PGSTY
+- Update to upstream 3.2.2 with security fixes and locked pgrx 0.19.2
+
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 3.1.3-1PGSTY
+- Build the repacked source and locked dependencies with pgrx 0.19.2
+
 * Sat Jul 18 2026 Vonng <rh@vonng.com> - 3.1.3-2PIGSTY
 - Restore the flattened en_US fake-data CSV layout required by anon.init()
 

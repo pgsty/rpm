@@ -83,7 +83,7 @@ emaj:
 pg_task:
 	./build pg_task 14 15 16 17 18
 
-pg_later:       # rust pgrx 0.19.1
+pg_later:       # rust pgrx 0.19.2
 	./build pg_later 14 15 16 17 18
 
 pg_background:

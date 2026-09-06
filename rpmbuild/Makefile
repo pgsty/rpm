@@ -89,7 +89,7 @@ pg_later:       # rust pgrx 0.19.2
 pg_background:
 	./build pg_background 14 15 16 17 18
 
-pg_when:        # rust pgrx 0.19.1
+pg_when:        # rust pgrx 0.19.2
 	./build pg_when 14 15 16 17 18
 
 pg_stl:

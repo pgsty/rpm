@@ -13,7 +13,6 @@ Summary:	PostgreSQL tokenizer extension for full-text search
 License:	Apache-2.0
 URL:		https://github.com/tensorchord/%{sname}
 Source0:    %{sname}-%{version}.tar.gz
-Patch0:     pg-tokenizer-0.1.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -24,7 +23,7 @@ A PostgreSQL extension that provides tokenizers for full-text search.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{PATCH0}
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -32,13 +31,13 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=9887c659f7e7db0fd3b31f3bd6fbf3ae07931b973a88d2f3ac2b43a88459faec
+LOCK_EXPECTED=be4da993c058c27886ce2350aaf0ffe67be8aff81d49d7336bd42328fbbab7fb
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -68,6 +67,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.1-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.1.1-3PIGSTY
 - Build with cargo-pgrx 0.19.1 and a locked dependency graph
 - Preserve the PG14-PG18 feature trim and shared-preload linker flags

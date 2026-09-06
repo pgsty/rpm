@@ -26,7 +26,7 @@ PostgreSQL extension capabilities for database analysis and linting.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{_specdir}/patches/pglinter-2.0.0.patch
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -34,7 +34,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -65,6 +65,9 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 2.0.0-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 2.0.0-2PIGSTY
 - Build with cargo-pgrx 0.19.1 using the patched, locked dependency graph
 

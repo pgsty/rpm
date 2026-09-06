@@ -839,7 +839,7 @@ ddlx:			# fix pgdg 18 missing
 pglinter:
 	./build pglinter 14 15 16 17 18
 
-pgdd:			# rust pgrx 0.19.1
+pgdd:			# rust pgrx 0.19.2
 	./build pgdd 14 15 16 17 18
 
 pg_strict:		# rust pgrx 0.19.2

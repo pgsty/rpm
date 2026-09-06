@@ -26,7 +26,7 @@ functions for combining ranked ID lists directly in SQL.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg-rrf-0.0.3.patch
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 find . -type f -name '._*' -delete
 
 %build
@@ -35,7 +35,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -74,6 +74,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.0.3-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.0.3-3PIGSTY
 - Migrate the direct-on-pristine source patch and fixed dependency graph to pgrx 0.19.1
 - Build offline after locked fetch and reject Cargo.lock rewrites

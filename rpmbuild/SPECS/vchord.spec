@@ -13,7 +13,6 @@ Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Succes
 License:	AGPL-3.0-only OR Elastic-2.0
 URL:		https://github.com/supervc-stack/VectorChord
 Source0:	VectorChord-%{version}.tar.gz
-Patch0:		vchord-1.1.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -24,7 +23,7 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 
 %prep
 %setup -q -n VectorChord-%{version}
-patch -p1 --forward -f < %{PATCH0}
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -42,13 +41,13 @@ export LDFLAGS=$(echo "${LDFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*
 cd %{_builddir}/VectorChord-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=1807adb59a573e4135413be326dcc4e781811907fe5f29ca9517e4c27478ea93
+LOCK_EXPECTED=18fd398ba714316970f6b3bd5636b1f3431566c11ec5e9557b4cd787d9cfaa5a
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -85,6 +84,9 @@ cp -a %{_builddir}/VectorChord-%{version}/target/release/%{pname}-pg%{pgmajorver
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 1.1.1-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 1.1.1-3PIGSTY
 - Build with cargo-pgrx 0.19.1 from a locked, offline dependency graph
 - Refresh the source patch for pgrx 0.19.1 and the current upstream repository

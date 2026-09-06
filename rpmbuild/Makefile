@@ -1021,7 +1021,7 @@ pg_anon:			# rust pgrx 0.19.1
 pgsmcrypto:			# rust pgrx 0.19.1
 	./build pgsmcrypto 14 15 16 17 18
 
-pg_enigma:			# rust pgrx 0.19.1
+pg_enigma:			# rust pgrx 0.19.2
 	./build pg_enigma 14 15 16 17 18
 
 pg_auditor:

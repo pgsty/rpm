@@ -214,7 +214,7 @@ pg_cjk_parser:
 pg_jieba:
 	./build pg_jieba 14 15 16 17 18
 
-pg_bestmatch:		# rust pgrx 0.19.1
+pg_bestmatch:		# rust pgrx 0.19.2
 	./build pg_bestmatch 14 15 16 17 18
 
 vchord_bm25:		# rust pgrx 0.19.1

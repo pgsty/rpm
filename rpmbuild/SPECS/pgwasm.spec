@@ -16,7 +16,6 @@ URL:		https://github.com/jnicholls/pgwasm
 Source0:	%{sname}-%{version}.tar.gz
 # Source0 is the upstream main snapshot at commit 535b53363f8208af139e757e508e66c46309ee29:
 # https://github.com/jnicholls/pgwasm/archive/535b53363f8208af139e757e508e66c46309ee29.tar.gz
-Patch0:		pgwasm-0.1.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	binutils cargo clang rust rustfmt
@@ -30,7 +29,7 @@ default unless a database administrator enables them.
 
 %prep
 %setup -q -n %{sname}-%{commit}
-patch -p1 --forward -f < %{PATCH0}
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -38,7 +37,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -82,6 +81,9 @@ readelf -Ws target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversi
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Tue Jul 28 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Package upstream snapshot 535b5336 with Wasmtime 44
 - Migrate to cargo-pgrx/pgrx 0.19.1 and fix the ARM64 c_char comparison

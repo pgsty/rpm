@@ -324,7 +324,7 @@ pgzint:			# deferred: active EL repos do not provide Zint 2.14+
 pgrdf:			# rust pgrx 0.19.2
 	./build pgrdf 14 15 16 17 18
 
-pgwasm:		# rust pgrx 0.19.1, Wasmtime 44
+pgwasm:		# rust pgrx 0.19.2, Wasmtime 44
 	./build pgwasm 14 15 16 17 18
 
 pgmq:

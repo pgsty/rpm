@@ -16,7 +16,6 @@ URL:		https://github.com/UnAfraid/pg_oidc_validator_rust
 Source0:	%{sname}-%{version}.tar.gz
 # Source0 is the upstream master snapshot at commit b65bbbe288f84fab91d58b8304e8a526d1326af5:
 # https://github.com/UnAfraid/pg_oidc_validator_rust/archive/b65bbbe288f84fab91d58b8304e8a526d1326af5.tar.gz
-Patch0:		pg-oidc-validator-rust-0.1.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang-devel openssl-devel rust rustfmt
@@ -32,7 +31,7 @@ oauth_validator_libraries = 'oidc_validator' to load the module.
 
 %prep
 %setup -q -n pg_oidc_validator_rust-%{commit}
-patch -p1 --forward -f < %{PATCH0}
+# The source archive includes the pgrx 0.19.2 dependency update.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -40,7 +39,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/pg_oidc_validator_rust-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -71,6 +70,9 @@ readelf -Ws target/release/lib%{pname}.so | grep -q _PG_oauth_validator_module_i
 %{pginstdir}/lib/%{pname}.so
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.0-2PGSTY
+- Build the repacked source and locked dependencies with pgrx 0.19.2
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.1.0-2PGSTY
 - Align the RPM release with the Debian license metadata rebuild.
 

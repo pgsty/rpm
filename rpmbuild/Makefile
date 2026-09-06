@@ -447,7 +447,7 @@ pljs:
 plx:
 	./build plx 14 15 16 17 18
 
-plprql: 		# rust pgrx 0.19.1
+plprql: 		# rust pgrx 0.19.2
 	./build plprql 14 15 16 17 18
 
 plpgsql_check:

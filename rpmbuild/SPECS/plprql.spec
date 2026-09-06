@@ -27,7 +27,7 @@ PRQL introduces a pipeline concept (similar to Unix pipes) that transforms data 
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/plprql-18.0.1.patch
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -36,7 +36,7 @@ WORKSPACE_ROOT=%{_builddir}/%{sname}-%{version}
 cd "$WORKSPACE_ROOT"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -68,6 +68,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 18.0.1-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+
 * Mon Jul 20 2026 Vonng <rh@vonng.com> - 18.0.1-4PIGSTY
 - Coerce numeric table-return values to declared float4/float8 types before forming tuples
 

@@ -1068,7 +1068,7 @@ pgspider_ext:
 #mongo_fdw
 #hdfs_fdw
 
-wrappers:			# rust pgrx 0.19.1
+wrappers:			# rust pgrx 0.19.2
 	./build wrappers 14 15 16 17 18
 
 sqlite_fdw:

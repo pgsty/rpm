@@ -9,11 +9,11 @@ Release:	1PGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
-Source0:    wrappers-%{version}.tar.gz
+Source0:    wrappers-%{version}-pgrx0.19.2.tar.gz
 #           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.2.tar.gz
-Patch0:		wrappers-0.6.2.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	clang
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -24,7 +24,7 @@ and supports a growing set of FDWs for external services and data platforms.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{PATCH0}
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -32,7 +32,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/%{pname}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -64,6 +64,10 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.6.2-1PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+- Declare clang as a build dependency for pgrx bindgen
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.6.2-1PIGSTY
 - Update to upstream 0.6.2 and migrate both pgrx workspace crates to 0.19.1
 - Preserve the packaging error-report compatibility fix in the versioned patch

@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.2
+Version:	0.5.0
 Release:	1PGSTY%{?dist}
 Summary:	CDC-to-MQTT broker extension for PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/pgmqtt
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/RayElg/pgmqtt/archive/refs/tags/0.4.2.tar.gz
-Patch0:		pgmqtt-0.4.2.patch
+#           https://github.com/RayElg/pgmqtt/archive/refs/tags/0.5.0.tar.gz
+# Repacked with the PostgreSQL 14-18 manifest and pgrx 0.19.2 Cargo.lock.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -30,7 +30,6 @@ logical replication when it is deployed.
 %prep
 %setup -q -n %{srcdir}
 find . -type f -name '._*' -delete
-patch -p1 --forward -f < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -76,6 +75,10 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE.md %{buildroot}%{_licensedir}/%{na
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.5.0-1PGSTY
+- Update to upstream release and SQL extension version 0.5.0
+- Build PostgreSQL 14 through 18 from the locked pgrx 0.19.2 source archive
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.4.2-1PGSTY
 - Update the source package to upstream release 0.4.2
 - Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2

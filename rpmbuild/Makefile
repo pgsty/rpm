@@ -165,7 +165,7 @@ pg_rrf:			# rust pgrx 0.19.2
 smlar:          # break for pg18, fixed
 	./build smlar 14 15 16 17 18
 
-pg_summarize:	# rust pgrx 0.19.1 (forked)
+pg_summarize:	# rust pgrx 0.19.2 (forked)
 	./build pg_summarize 14 15 16 17 18
 
 pg_tiktoken:	# rust pgrx 0.19.2

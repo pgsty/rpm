@@ -19,13 +19,13 @@ BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-pg_summarize reflects a GraphQL schema from the existing SQL schema.
-The extension keeps schema translation and query resolution neatly contained on your database server.
-This enables any programming language that can connect to PostgreSQL to query the database via GraphQL with no additional servers, processes, or libraries.
+pg_summarize provides SQL functions for text summarization using the OpenAI API.
+The API key, model, and summarization prompt are configured through PostgreSQL
+settings.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg-summarize-0.0.1.patch
+# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -33,7 +33,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -64,6 +64,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.0.1-6PGSTY
+- Build with pgrx 0.19.2 from the updated source archive and locked dependencies
+- Correct the package description to describe text summarization
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.0.1-6PGSTY
 - Rebuild with corrected license metadata.
 

@@ -643,7 +643,7 @@ pg_byteamagic:
 external_file:
 	./build external_file 14 15 16 17 18
 
-pg_render:		# rust pgrx 0.19.1
+pg_render:		# rust pgrx 0.19.2
 	./build pg_render 14 15 16 17 18
 
 cat_tools:

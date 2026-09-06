@@ -23,7 +23,7 @@ Render engine extension for PostgreSQL.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg-render-0.1.3.patch
+# The source archive includes the pgrx 0.19.2 dependency update.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -31,7 +31,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.1
+PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -62,6 +62,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.3-1PGSTY
+- Build the repacked source and locked dependencies with pgrx 0.19.2
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.1.3-3PIGSTY
 - Migrate the direct-on-pristine source patch and fixed dependency graph to pgrx 0.19.1
 - Build offline after locked fetch and reject Cargo.lock rewrites

@@ -15,8 +15,10 @@
 
 %ifarch aarch64
 %global vcpkg_triplet arm64-linux-pic
+%global vcpkg_host_triplet arm64-linux-release
 %else
 %global vcpkg_triplet x64-linux-pic
+%global vcpkg_host_triplet x64-linux-release
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
@@ -58,6 +60,7 @@ if [ ! -x "$VCPKG_ROOT/vcpkg" ]; then
     (cd "$VCPKG_ROOT" && ./bootstrap-vcpkg.sh -disableMetrics)
 fi
 mkdir -p "$VCPKG_BINARY_CACHE"
+export VCPKG_MAX_CONCURRENCY="${VCPKG_MAX_CONCURRENCY:-4}"
 
 VCPKG_ROOT="$VCPKG_ROOT" \
 VCPKG_DISABLE_METRICS=1 \
@@ -65,6 +68,7 @@ VCPKG_DEFAULT_BINARY_CACHE="$VCPKG_BINARY_CACHE" \
 cmake -S . -B build -G Ninja \
   -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
   -DVCPKG_TARGET_TRIPLET=%{vcpkg_triplet} \
+  -DVCPKG_HOST_TRIPLET=%{vcpkg_host_triplet} \
   -DVCPKG_OVERLAY_TRIPLETS="$PWD/triplets" \
   -DPG_STAT_CH_PACKAGE_VERSION=%{version} \
   -DPG_CONFIG=%{pginstdir}/bin/pg_config \

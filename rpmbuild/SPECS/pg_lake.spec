@@ -4,6 +4,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global vcpkg_version 2025.10.17
 %global vcpkg_commit 74e6536215718009aae747d86d84b78376bf9e09
+# Override with --define 'pg_lake_build_jobs N' on builders with more memory.
+%{!?pg_lake_build_jobs:%global pg_lake_build_jobs 2}
 
 # DuckDB and Avro are intentionally identical across PostgreSQL majors.  RPM
 # build-id symlinks would therefore collide while pointing at different
@@ -45,8 +47,8 @@ Patch0:         pg_lake-3.4.4.patch
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
 BuildRequires:  autoconf automake binutils bison ca-certificates cmake curl
-BuildRequires:  diffutils file flex gcc gcc-c++ git jq libtool make sed
-BuildRequires:  ninja-build patch perl python3 unzip which zip
+BuildRequires:  diffutils file flex gcc gcc-c++ git jq libtool make sed ccache
+BuildRequires:  ninja-build patch patchelf perl python3 unzip which zip
 BuildRequires:  pkgconf-pkg-config
 BuildRequires:  jansson-devel krb5-devel libcurl-devel libselinux-devel
 BuildRequires:  libxml2-devel libxslt-devel lz4-devel libzstd-devel
@@ -103,8 +105,21 @@ done
 sed -i 's/\r$//' .rpm-licenses/duckdb-third_party-miniz-LICENSE
 
 %build
+%set_build_flags
+# vcpkg dependencies and the bundled DuckDB keep function and line-table DWARF
+# only (-g1).  PGXS modules ignore these environment variables and keep -g.
+export CFLAGS="$CFLAGS -g1" CXXFLAGS="$CXXFLAGS -g1"
 VCPKG_ROOT="$HOME/.cache/pg_lake/vcpkg-%{vcpkg_version}"
-VCPKG_BINARY_CACHE="$HOME/.cache/pg_lake/vcpkg-archives"
+# Key the vcpkg binary cache by the build flags so that a flag change never
+# reuses dependency archives built with different debug information.
+VCPKG_BINARY_CACHE="$HOME/.cache/pg_lake/vcpkg-archives-$(printf '%s\n' "$CFLAGS" "$CXXFLAGS" "$LDFLAGS" | sha256sum | cut -c1-12)"
+%ifarch aarch64
+VCPKG_RELEASE_ARCH=arm64
+%else
+VCPKG_RELEASE_ARCH=x64
+%endif
+VCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET:-${VCPKG_RELEASE_ARCH}-linux-release}"
+VCPKG_HOST_TRIPLET="${VCPKG_HOST_TRIPLET:-${VCPKG_RELEASE_ARCH}-linux-release}"
 if [ ! -d "$VCPKG_ROOT/.git" ]; then
     rm -rf "$VCPKG_ROOT"
     mkdir -p "$(dirname "$VCPKG_ROOT")"
@@ -120,8 +135,13 @@ fi
 mkdir -p "$VCPKG_BINARY_CACHE"
 (cd duckdb_pglake && \
     VCPKG_DISABLE_METRICS=1 \
+    VCPKG_MAX_CONCURRENCY="${VCPKG_MAX_CONCURRENCY:-2}" \
+    VCPKG_KEEP_ENV_VARS='CPPFLAGS;CFLAGS;CXXFLAGS;LDFLAGS' \
     VCPKG_DEFAULT_BINARY_CACHE="$VCPKG_BINARY_CACHE" \
-    "$VCPKG_ROOT/vcpkg" install)
+    "$VCPKG_ROOT/vcpkg" install \
+        --triplet "$VCPKG_TARGET_TRIPLET" \
+        --host-triplet "$VCPKG_HOST_TRIPLET" \
+        ${VCPKG_INSTALL_FLAGS:-})
 
 find duckdb_pglake/vcpkg_installed -path '*/share/*/copyright' -type f -print | LC_ALL=C sort | while IFS= read -r license; do
     component="$(basename "$(dirname "$license")")"
@@ -132,10 +152,20 @@ done
 %install
 rm -rf %{buildroot}
 %set_build_flags
+export CFLAGS="$CFLAGS -g1" CXXFLAGS="$CXXFLAGS -g1"
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/include
 
 VCPKG_ROOT="$HOME/.cache/pg_lake/vcpkg-%{vcpkg_version}"
-VCPKG_BINARY_CACHE="$HOME/.cache/pg_lake/vcpkg-archives"
+# Key the vcpkg binary cache by the build flags so that a flag change never
+# reuses dependency archives built with different debug information.
+VCPKG_BINARY_CACHE="$HOME/.cache/pg_lake/vcpkg-archives-$(printf '%s\n' "$CFLAGS" "$CXXFLAGS" "$LDFLAGS" | sha256sum | cut -c1-12)"
+%ifarch aarch64
+VCPKG_RELEASE_ARCH=arm64
+%else
+VCPKG_RELEASE_ARCH=x64
+%endif
+VCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET:-${VCPKG_RELEASE_ARCH}-linux-release}"
+VCPKG_HOST_TRIPLET="${VCPKG_HOST_TRIPLET:-${VCPKG_RELEASE_ARCH}-linux-release}"
 test -f "$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 test -d "$VCPKG_BINARY_CACHE"
 PG_CPPFLAGS="$(%{pginstdir}/bin/pg_config --cppflags)"
@@ -151,16 +181,24 @@ CPATH="%{buildroot}%{pginstdir}/include${CPATH:+:$CPATH}" \
 LIBRARY_PATH="%{buildroot}%{pginstdir}/lib${LIBRARY_PATH:+:$LIBRARY_PATH}" \
 VCPKG_TOOLCHAIN_PATH="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
 VCPKG_DISABLE_METRICS=1 \
+VCPKG_MAX_CONCURRENCY="${VCPKG_MAX_CONCURRENCY:-2}" \
+CMAKE_BUILD_PARALLEL_LEVEL=%{pg_lake_build_jobs} \
+VCPKG_TARGET_TRIPLET="$VCPKG_TARGET_TRIPLET" \
+VCPKG_HOST_TRIPLET="$VCPKG_HOST_TRIPLET" \
 VCPKG_DEFAULT_BINARY_CACHE="$VCPKG_BINARY_CACHE" \
+CCACHE_DIR="$HOME/.cache/pg_lake/ccache" \
+CCACHE_COMPILERCHECK=content \
+CCACHE_MAXSIZE=16G \
 PG_LAKE_GIT_VERSION="v%{version}" \
 PG_LAKE_DELTA_SUPPORT=0 \
 PGCOMPAT_BUILD_CONFIG=Release \
 DUCKDB_BUILD_USE_CACHE=0 \
-%{__make} %{with_llvm_arg} \
+%{__make} -j%{pg_lake_build_jobs} %{with_llvm_arg} \
+    NCORES=%{pg_lake_build_jobs} \
     PG_CONFIG=%{pginstdir}/bin/pg_config \
     PG_LIBDIR=%{pginstdir}/lib \
     CPPFLAGS="$PG_CPPFLAGS $PG_LAKE_PREFIX_MAP" \
-    EXT_RELEASE_FLAGS="-DBUILD_UNITTESTS=OFF -DBUILD_SHELL=OFF -DCMAKE_SKIP_BUILD_RPATH=ON" \
+    EXT_RELEASE_FLAGS="-DBUILD_UNITTESTS=OFF -DBUILD_SHELL=OFF -DCMAKE_SKIP_BUILD_RPATH=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET -DVCPKG_HOST_TRIPLET=$VCPKG_HOST_TRIPLET" \
     DESTDIR=%{buildroot} install
 
 # Headers are only an intermediate dependency for this build. The runtime
@@ -171,6 +209,20 @@ mv %{buildroot}%{pginstdir}/lib/libduckdb.so \
    %{buildroot}%{pginstdir}/lib/pg_lake/
 mv %{buildroot}%{pginstdir}/lib/libavro.so* \
    %{buildroot}%{pginstdir}/lib/pg_lake/
+
+# PGXS adds the versioned PostgreSQL library directory to RUNPATH.  It is a
+# normal loader path at runtime, but EL10 check-rpaths rejects it while the
+# package is staged.  Keep only the two relative paths required for the
+# private pg_lake runtimes and remove the redundant path from the other SOs.
+patchelf --set-rpath '$ORIGIN/../lib/pg_lake' \
+    %{buildroot}%{pginstdir}/bin/pgduck_server
+patchelf --set-rpath '$ORIGIN/pg_lake' \
+    %{buildroot}%{pginstdir}/lib/pg_lake_iceberg.so
+for module in \
+    pg_extension_base pg_extension_updater pg_map pg_lake_engine \
+    pg_lake_table pg_lake_copy pg_lake; do
+    patchelf --remove-rpath %{buildroot}%{pginstdir}/lib/$module.so
+done
 
 find duckdb_pglake/build -path '*/_deps/*_extension_fc-src/*' -type f \( -iname 'LICENSE*' -o -iname 'NOTICE*' \) -print | LC_ALL=C sort | while IFS= read -r license; do
     component="$(basename "$(dirname "$license")")"
@@ -197,17 +249,16 @@ elf_runpath() {
         's/.*Library runpath: \[\(.*\)\].*/\1/p;s/.*Library rpath: \[\(.*\)\].*/\1/p'
 }
 
-# PGDG deliberately enables a versioned PostgreSQL RUNPATH in PGXS. Preserve
-# that platform convention, while requiring the private runtimes to be found
-# first through a relative path and rejecting any build-tree leakage.
+# The staged binaries need only the private relative paths.  PostgreSQL itself
+# loads extension modules, so the other SOs require no explicit RUNPATH.
 server_runpath="$(elf_runpath "$server")"
 iceberg_runpath="$(elf_runpath "$iceberg")"
 case "$server_runpath" in
-    '$ORIGIN/../lib/pg_lake:%{pginstdir}/lib') ;;
+    '$ORIGIN/../lib/pg_lake') ;;
     *) echo "unexpected pgduck_server RUNPATH: $server_runpath" >&2; exit 1 ;;
 esac
 case "$iceberg_runpath" in
-    '$ORIGIN/pg_lake:%{pginstdir}/lib') ;;
+    '$ORIGIN/pg_lake') ;;
     *) echo "unexpected pg_lake_iceberg RUNPATH: $iceberg_runpath" >&2; exit 1 ;;
 esac
 
@@ -215,7 +266,7 @@ for module in \
     pg_extension_base pg_extension_updater pg_map pg_lake_engine \
     pg_lake_table pg_lake_copy pg_lake; do
     runpath="$(elf_runpath "%{buildroot}%{pginstdir}/lib/$module.so")"
-    test "$runpath" = '%{pginstdir}/lib' || {
+    test -z "$runpath" || {
         echo "unexpected $module RUNPATH: $runpath" >&2
         exit 1
     }
@@ -279,7 +330,18 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %endif
 
 %changelog
-* Thu Sep 03 2026 Vonng <rh@vonng.com> - 3.4.4-1PGSTY
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 3.4.4-1PGSTY
+- Remove redundant absolute PostgreSQL RUNPATHs while retaining private relative runtime paths
+- Propagate distribution debug and hardening flags into vcpkg dependencies
+- Bound vcpkg dependency parallelism to a two-job task default
+- Build only the release target and host vcpkg triplets
+- Allow the verified download cache to be enforced with vcpkg --no-downloads
+- Limit the outer extension build to two jobs as well
+- Pass that limit through the nested DuckDB install rebuild
+- Cache nested DuckDB compilation with full command and compiler-content keys
+- Keep PostgreSQL bridge, LLVM bitcode, private-runtime linking, and debug maps per major
+- Build vcpkg dependencies and the bundled DuckDB with line-table debug information only (-g1)
+- Key the vcpkg binary cache by the distribution build flags
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Update to the upstream pg_lake 3.4.4 bugfix release

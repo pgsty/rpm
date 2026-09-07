@@ -17,7 +17,7 @@
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
 Version:	14.2.0
-Release:	1PGSTY%{?dist}
+Release:	9PGSTY%{?dist}
 License:	AGPL-3.0-only
 URL:		https://github.com/citusdata/%{sname}
 Source0:    %{sname}-%{version}.tar.gz
@@ -107,7 +107,8 @@ make %{with_llvm_arg} install DESTDIR=%{buildroot}
 %{pginstdir}/include/server/distributed/*.h
 
 %changelog
-* Fri Sep 04 2026 Vonng <rh@vonng.com> - 14.2.0-1PGSTY
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 14.2.0-9PGSTY
+- Preserve the established Citus release revision for the production matrix
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
 

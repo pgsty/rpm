@@ -1,3 +1,6 @@
+# Static-only SDK: keep DWARF in the archive without empty debug subpackages.
+%global debug_package %{nil}
+%global __brp_strip_static_archive %{nil}
 %global _lto_cflags %{nil}
 %global private_prefix pgsodium_private_
 %global private_includedir /usr/include/pgsodium-libsodium
@@ -65,5 +68,6 @@ install -m 0644 .pgsodium-private/libsodium-pgsodium.a \
 %{private_libdir}/libsodium-pgsodium.a
 
 %changelog
-* Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.0.22-1PGSTY
+* Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.0.22-1PGSTY
 - Package a private symbol-prefixed PIC static libsodium for pgsodium
+- Preserve DWARF in the private static archive without empty debug packages

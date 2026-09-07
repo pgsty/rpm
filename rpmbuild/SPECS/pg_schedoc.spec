@@ -11,7 +11,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.2
-Release:	2.git%{source_date}.%{source_short}PGSTY%{?dist}
+Release:	1.git%{source_date}.%{source_short}PGSTY%{?dist}
 Summary:	Cross documentation between Django and DBT projects
 License:	GPL-3.0-only
 URL:		https://github.com/ZeroGachis/pg_schedoc
@@ -47,13 +47,11 @@ LC_ALL=C PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
-* Sat Sep 05 2026 Vonng <rh@vonng.com> - 0.0.2-2.git20260430.9f135c3PGSTY
-- Regenerate installation SQL with a deterministic exclusion-template order
-
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.2-1.git20260430.9f135c3PGSTY
 - Pin upstream develop snapshot 9f135c3
 - Add the audited 0.0.1 to 0.0.2 migration
 - Fix non-public same-schema calls and PostgreSQL 14 JSON validation
+- Regenerate installation SQL with a deterministic exclusion-template order
 
 * Fri Jan 10 2025 Vonng <rh@vonng.com> - 0.0.1-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

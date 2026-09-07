@@ -3,7 +3,7 @@
 
 Name:           polarstore
 Version:        %{sdk_version}
-Release:        3PGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 # Keep DWARF in the static archive for downstream PolarDB debug packages.
 %global __brp_strip_static_archive %{nil}
 %undefine _debugsource_packages
@@ -43,10 +43,8 @@ install -m 0644 lib/libpfsd.a %{buildroot}/usr/local/polarstore/pfsd/lib/
 /usr/local/polarstore/pfsd/lib/libpfsd.a
 
 %changelog
-* Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.2.42-3PGSTY
+* Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.2.42-1PGSTY
 - Preserve static PFSD SDK debug information for downstream consumers
-
-* Sun Aug 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.42-2PGSTY
 - Require zlog 1.2.18 or newer and use the PGSTY package release brand
 
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.42-1PIGSTY

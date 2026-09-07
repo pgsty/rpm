@@ -116,7 +116,7 @@ PATH=%{pginstdir}/bin:$PATH cmake -S . -B build \
   -DPostgreSQL_INCLUDE_DIR=%{pginstdir}/include \
   -DPostgreSQL_TYPE_INCLUDE_DIR=%{pginstdir}/include/server \
   -DPostgreSQL_LIBRARY=%{pginstdir}/lib/libpq.so
-cmake --build build --parallel 2
+cmake --build build --parallel "${CMAKE_BUILD_PARALLEL_LEVEL:-2}"
 
 %install
 %{__rm} -rf %{buildroot}

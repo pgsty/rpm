@@ -1,6 +1,10 @@
 %global pname pg_ducklake
 %global sname pg_ducklake
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+# DuckDB's nested Ninja build is substantially more memory-intensive than the
+# PGXS bridge. Keep its own concurrency below the outer RPM build parallelism.
+# Override with --define 'duckdb_core_jobs N' on builders with more memory.
+%{!?duckdb_core_jobs:%global duckdb_core_jobs 2}
 
 %if 0%{?rhel} && 0%{?rhel} < 9
 %{error:pg_ducklake 1.0.2 is currently supported on EL9 and later; EL8 GCC8 filesystem compatibility is not validated}
@@ -10,13 +14,7 @@
 %{error:pg_ducklake 1.0.2 only supports PostgreSQL 14 through 18}
 %endif
 
-%if 0%{?pgmajorversion} == 18
 %{!?llvm:%global llvm 1}
-%else
-# PG14-17 retain the existing main-package default until their LLVM matrix is
-# validated; maintainers can still opt in explicitly with --define 'llvm 1'.
-%{!?llvm:%global llvm 0}
-%endif
 
 %if %llvm
 %global with_llvm_arg %{nil}
@@ -44,7 +42,7 @@ Source1:	CRoaring-4.7.1-amalgamation.tar.gz
 Patch0:		pg_ducklake-1.0.2.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	gcc gcc-c++ make cmake ninja-build patch pkgconf-pkg-config
+BuildRequires:	gcc gcc-c++ make cmake ninja-build patch pkgconf-pkg-config ccache
 BuildRequires:	bison flex zlib-devel readline-devel libxml2-devel libxslt-devel
 BuildRequires:	openssl-devel libcurl-devel lz4-devel
 %if %llvm
@@ -71,6 +69,16 @@ cp pg_ducklake/third_party/duckdb-postgres/database-connector/LICENSE .rpm-licen
 cp pg_ducklake/third_party/duckdb-postgres/postgres/COPYRIGHT .rpm-licenses/postgresql-COPYRIGHT
 
 %build
+%set_build_flags
+# PGXS also feeds C/C++ flags to Clang when producing extension bitcode.
+# Keep generic LTO there, while bounding GCC's bundled DuckDB LTO workers.
+# The bundled DuckDB keeps function and line-table DWARF only (-g1); the PGXS
+# bridge keeps the full distribution -g so the debuginfo package stays tractable.
+pg_cflags="${CFLAGS//-flto=auto/-flto}"
+pg_cxxflags="${CXXFLAGS//-flto=auto/-flto}"
+duckdb_cflags="${CFLAGS//-flto=auto/-flto=1} -g1"
+duckdb_cxxflags="${CXXFLAGS//-flto=auto/-flto=1} -g1"
+duckdb_ldflags="${LDFLAGS//-flto=auto/-flto=1}"
 croaring_prefix="$(pwd)/.croaring"
 croaring_src="$(pwd)/CRoaring-4.7.1"
 mkdir -p "$croaring_prefix/include/roaring" "$croaring_prefix/lib/cmake/roaring" "$croaring_src/build"
@@ -97,12 +105,25 @@ EOF
 cp "$croaring_prefix/lib/cmake/roaring/roaringConfig.cmake" "$croaring_prefix/lib/cmake/roaring/roaring-config.cmake"
 
 CMAKE_PREFIX_PATH="$croaring_prefix" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
-	%{__make} %{with_llvm_arg} ROARING_LIB_DIR="$croaring_prefix/lib" -j2
+	CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
+	CCACHE_DIR="$HOME/.cache/pg_ducklake/ccache" CCACHE_COMPILERCHECK=content CCACHE_MAXSIZE=16G \
+	%{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} COMPILER_LAUNCHER=ccache ROARING_LIB_DIR="$croaring_prefix/lib" \
+	PG_CFLAGS="$pg_cflags" PG_CXXFLAGS="$pg_cxxflags" LDFLAGS="$duckdb_ldflags" \
+	DUCKDB_C_FLAGS="$duckdb_cflags" DUCKDB_CXX_FLAGS="$duckdb_cxxflags"
 
 %install
+%set_build_flags
+pg_cflags="${CFLAGS//-flto=auto/-flto}"
+pg_cxxflags="${CXXFLAGS//-flto=auto/-flto}"
+duckdb_cflags="${CFLAGS//-flto=auto/-flto=1} -g1"
+duckdb_cxxflags="${CXXFLAGS//-flto=auto/-flto=1} -g1"
+duckdb_ldflags="${LDFLAGS//-flto=auto/-flto=1}"
 %{__rm} -rf %{buildroot}
 CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
-	%{__make} %{with_llvm_arg} ROARING_LIB_DIR="$(pwd)/.croaring/lib" -j2 install DESTDIR=%{buildroot}
+	CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
+	%{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} ROARING_LIB_DIR="$(pwd)/.croaring/lib" install DESTDIR=%{buildroot} \
+	PG_CFLAGS="$pg_cflags" PG_CXXFLAGS="$pg_cxxflags" LDFLAGS="$duckdb_ldflags" \
+	DUCKDB_C_FLAGS="$duckdb_cflags" DUCKDB_CXX_FLAGS="$duckdb_cxxflags"
 
 %files
 %doc README.md SOURCE_MANIFEST pg_ducklake/docs
@@ -119,9 +140,18 @@ CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pgi
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.0.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
+- Keep LLVM and PGXS bitcode enabled by default on every supported PG major
 - Upgrade to pg_ducklake 1.0.2 with a checksummed complete source bundle
 - Retain CRoaring 4.7.1 after validating the 5.1.1 API and serialization
-- Build the PostgreSQL LLVM bitcode subpackage on supported EL9 builders
+- Build PostgreSQL LLVM bitcode into the main package on supported EL9 builders
+- Limit the nested DuckDB Ninja build to two memory-safe jobs
+- Pass distribution debug flags into the nested DuckDB CMake build
+- Cache nested DuckDB compilation using full command and compiler-content keys
+- Ignore only PostgreSQL's unrelated package-build debug map in that cache key
+- Keep Clang bitcode on generic LTO and each bundled GCC link to one worker
+- Build the bundled DuckDB core with line-table debug information only (-g1)
+- Feed distribution flags to the PGXS bridge through PG_CFLAGS and PG_CXXFLAGS
+- Merge the DuckDB flag plumbing into pg_ducklake-1.0.2.patch
 
 * Sat Jul 11 2026 Vonng <rh@vonng.com> - 1.0.0-2PIGSTY
 - Mark the current package as EL9+ pending EL8 GCC8 filesystem support

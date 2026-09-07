@@ -1,6 +1,7 @@
 %global pname pg_mooncake
 %global sname pg_mooncake
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global cargo_target_dir %{_topdir}/.cache/%{sname}/target
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
 %{error:pg_mooncake only supports PostgreSQL 14 through 18}
@@ -18,7 +19,7 @@ Patch0:     pg-mooncake-0.2.0.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
-Requires:   pg_duckdb_%{pgmajorversion} >= 1.1.0
+Requires:   pg_duckdb_%{pgmajorversion} >= 1.1.1
 
 %description
 pg_mooncake is a PostgreSQL extension that adds native columnstore tables with DuckDB execution.
@@ -32,6 +33,7 @@ patch -p1 --forward -f < %{PATCH0}
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
+export CARGO_TARGET_DIR=%{cargo_target_dir}
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
@@ -60,9 +62,9 @@ fi
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/*.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/*.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/*.sql     %{buildroot}%{pginstdir}/share/extension/
+cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/*.so                  %{buildroot}%{pginstdir}/lib/
+cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/*.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/*.sql     %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/*.so
@@ -71,6 +73,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
+- Require the matching pg_duckdb 1.1.1 provider package at runtime
+- Reuse the platform-local Cargo target tree across PostgreSQL majors
+
 * Fri Jul 17 2026 Vonng <rh@vonng.com> - 0.2.0-3PIGSTY
 - Build with cargo-pgrx 0.19.1 and a locked dependency graph
 - Preserve the unpublished 0.2.0 source snapshot and bgworker packaging feature

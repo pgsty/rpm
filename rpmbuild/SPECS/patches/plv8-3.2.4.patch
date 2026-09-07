@@ -1,6 +1,6 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -13,6 +13,7 @@ MODULE_big = plv8-$(PLV8_VERSION)
+@@ -14,11 +14,13 @@
  EXTENSION = plv8
  PLV8_DATA = plv8.control plv8--$(PLV8_VERSION).sql
  
@@ -8,16 +8,13 @@
  ifeq ($(OS),Windows_NT)
  	# noop for now
  else
-@@ -20,14 +21,21 @@ else
  	SHLIB_LINK += -Ldeps/v8-cmake/build
  	UNAME_S := $(shell uname -s)
 +	UNAME_M := $(shell uname -m)
  	ifeq ($(UNAME_S),Darwin)
  		CCFLAGS += -stdlib=libc++
  		SHLIB_LINK += -stdlib=libc++ -std=c++17 -lc++
- 		NUMPROC := $(shell sysctl hw.ncpu | awk '{print $$2}')
- 		PATCH_V8 := patches/v8-cmake/macos-build.patch
- 	endif
+@@ -28,6 +30,12 @@
  	ifeq ($(UNAME_S),Linux)
  		SHLIB_LINK += -lrt -std=c++17
  		NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
@@ -30,7 +27,7 @@
  	endif
  endif
  
-@@ -35,6 +42,10 @@ ifeq ($(NUMPROC),0)
+@@ -35,6 +43,10 @@
  	NUMPROC = 1
  endif
  
@@ -41,29 +38,24 @@
  SHLIB_LINK += -Ldeps/v8-cmake/build
  
  all: v8 $(OBJS)
-@@ -46,7 +57,7 @@ deps/v8-cmake/README.md:
+@@ -46,8 +58,12 @@
+ 	@git submodule update --init --recursive
  	$(foreach patch,$(PATCH_V8),cd deps/v8-cmake && patch -p1 <../../$(patch);)
  
++# C++ flags for the bundled V8 CMake build: the plv8 flags without -fno-rtti.
++# Packagers may override this, e.g. to reduce V8 debug information.
++V8_CXXFLAGS ?= $(filter-out -fno-rtti,$(OPTFLAGS))
++
  deps/v8-cmake/build/libv8_libbase.a: deps/v8-cmake/README.md
 -	@cd deps/v8-cmake && mkdir -p build && cd build && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -Denable-fPIC=ON -DCMAKE_BUILD_TYPE=Release ../ && make -j $(NUMPROC)
-+	@cd deps/v8-cmake && mkdir -p build && cd build && cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -Denable-fPIC=ON -DCMAKE_BUILD_TYPE=Release ../ && make -j $(NUMPROC) v8_libbase v8_base_without_compiler v8_compiler v8_snapshot v8_inspector v8_libplatform v8_libsampler v8_torque_generated
++	@cd deps/v8-cmake && mkdir -p build && cd build && cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS="$(V8_CXXFLAGS)" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -Denable-fPIC=ON -DCMAKE_BUILD_TYPE=Release ../ && make -j $(NUMPROC) v8_libbase v8_base_without_compiler v8_compiler v8_snapshot v8_inspector v8_libplatform v8_libsampler v8_torque_generated
  
  v8: deps/v8-cmake/build/libv8_libbase.a
  
---- a/deps/v8-cmake/v8/src/heap/cppgc/stats-collector.h
-+++ b/deps/v8-cmake/v8/src/heap/cppgc/stats-collector.h
-@@ -8,6 +8,7 @@
- #include <stddef.h>
- #include <stdint.h>
- 
-+#include <algorithm>
- #include <atomic>
- #include <vector>
- 
 --- a/deps/v8-cmake/CMakeLists.txt
 +++ b/deps/v8-cmake/CMakeLists.txt
-@@ -1024,6 +1024,13 @@ add_executable(mksnapshot
-  v8/src/snapshot/snapshot-empty.cc
+@@ -1026,6 +1026,13 @@
+   v8/src/snapshot/snapshot-empty.cc
  )
  
 +if (NOT WIN32)
@@ -76,3 +68,13 @@
  target_compile_definitions(mksnapshot PRIVATE $<${is-msvc}:_HAS_EXCEPTIONS=0>)
  target_compile_options(mksnapshot PRIVATE ${disable-exceptions})
  target_include_directories(mksnapshot PRIVATE ${PROJECT_SOURCE_DIR}/v8)
+--- a/deps/v8-cmake/v8/src/heap/cppgc/stats-collector.h
++++ b/deps/v8-cmake/v8/src/heap/cppgc/stats-collector.h
+@@ -8,6 +8,7 @@
+ #include <stddef.h>
+ #include <stdint.h>
+ 
++#include <algorithm>
+ #include <atomic>
+ #include <vector>
+ 

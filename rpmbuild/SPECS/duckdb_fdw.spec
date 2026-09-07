@@ -4,7 +4,8 @@
 %global snapshot_date 20260529
 %global snapshot_commit 9354241029df691b695f15428082b7c5cd81e2c7
 %global snapshot_short 9354241
-%global duckdb_version 1.5.5
+%global pg_duckdb_version 1.1.1
+%global duckdb_version 1.4.3
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -29,14 +30,12 @@ Summary:	DuckDB foreign data wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/alitrack/%{sname}
 Source0:	%{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}.tar.gz
-Source1:	duckdb-%{duckdb_version}-headers.tar.gz
+Source1:	pg_duckdb-%{pg_duckdb_version}.tar.gz
 # Source0 is a repacked main-branch snapshot from commit %{snapshot_commit}
 Patch0:		duckdb_fdw-2.0.1.patch
-Patch1:		duckdb_fdw-2.0.1-types.patch
-Patch2:		duckdb_fdw-2.0.1-tests.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	libduckdb >= %{duckdb_version}
+BuildRequires:	pg_duckdb_%{pgmajorversion} >= %{pg_duckdb_version}
 BuildRequires:	patchelf
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -44,32 +43,38 @@ BuildRequires:	clang-devel >= 19.0
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
-Requires:	libduckdb >= %{duckdb_version}
+Requires:	pg_duckdb_%{pgmajorversion} >= %{pg_duckdb_version}
 
 %description
 DuckDB Foreign Data Wrapper for PostgreSQL.
 This package is built from the duckdb_fdw main-branch snapshot %{snapshot_commit}
-against the standalone DuckDB %{duckdb_version} C API and shared library.
-duckdb_fdw does not install a private copy of libduckdb.so into PostgreSQL's
-library directory.
+against the DuckDB %{duckdb_version} C API and libduckdb.so shipped by
+pg_duckdb %{pg_duckdb_version}. Both extensions use the same per-PostgreSQL-
+major runtime, and duckdb_fdw does not install a second copy.
 
 %prep
 %setup -q -n %{sname}-%{version}
 
-tar -C . --strip-components=1 -xf %{SOURCE1}
+mkdir -p duckdb-headers
+tar -C duckdb-headers --strip-components=5 -xf %{SOURCE1} \
+	pg_duckdb-%{pg_duckdb_version}/third_party/duckdb/src/include/duckdb.h \
+	pg_duckdb-%{pg_duckdb_version}/third_party/duckdb/src/include/duckdb.hpp \
+	pg_duckdb-%{pg_duckdb_version}/third_party/duckdb/src/include/duckdb
+test -f duckdb-headers/duckdb.h
+test -f duckdb-headers/duckdb.hpp
 
 patch -p1 --fuzz=0 < %{PATCH0}
-patch -p1 --fuzz=0 < %{PATCH1}
-patch -p1 --fuzz=0 < %{PATCH2}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
-patchelf --set-rpath %{_libdir} duckdb_fdw.so
+test -f %{pginstdir}/lib/libduckdb.so
+ln -sfn %{pginstdir}/lib/libduckdb.so libduckdb.so
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} PG_CPPFLAGS="-I$(pwd)/duckdb-headers"
+patchelf --set-rpath '$ORIGIN' duckdb_fdw.so
 
 %install
 %{__rm} -rf %{buildroot}
-export QA_RPATHS=1
-USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
+ln -sfn %{pginstdir}/lib/libduckdb.so libduckdb.so
+USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} PG_CPPFLAGS="-I$(pwd)/duckdb-headers" install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -88,15 +93,18 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Upgrade to the duckdb_fdw 2.0.1 main snapshot at 9354241
+- Consolidate the packaging fixes into a single duckdb_fdw-2.0.1.patch
 - Switch from the SQLite compatibility layer to the native DuckDB C API
-- Build and run against the standalone libduckdb 1.5.5 package
+- Build against DuckDB 1.4.3 headers from pg_duckdb 1.1.1
+- Reuse the DuckDB 1.4.3 runtime shipped by pg_duckdb 1.1.1 per PG major
+- Resolve libduckdb.so from the extension directory with an $ORIGIN RUNPATH
 - Preserve and repair the upstream 1.4.1 to 2.0.1 extension migration chain
 - Stop installing a private libduckdb.so into PostgreSQL's library directory
-- Replace the PostgreSQL-library RPATH with the system libdir runtime
 - Preserve legacy servers without user mappings and harden error cleanup
 - Keep scalar aggregate results in native DuckDB types for safe conversion
 - Align regression expectations with the current insert-only FDW callback policy
-- Ship PostgreSQL bitcode in the llvmjit subpackage instead of an empty RPM
+- Initialize projected virtual slots before PG17 materializes aggregate rows
+- Allow peer-loaded pg_duckdb when both extensions resolve the same libduckdb
 
 * Mon Apr 13 2026 Vonng <rh@vonng.com> - 1.4.3
 - Drop the x86_64 legacy libstdc++ ABI override to match pg_duckdb libduckdb.so

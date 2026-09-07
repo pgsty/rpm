@@ -23,7 +23,11 @@ BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc, gcc-c++, make, readline-devel, zlib-devel >= 1.0.4
 BuildRequires:  libuuid-devel, libxml2-devel, libxslt-devel, libicu-devel
 BuildRequires:  openssl-devel, pam-devel, krb5-devel, openldap-devel
+%if 0%{?rhel} == 8
+BuildRequires:  perl-interpreter, perl-ExtUtils-Embed, perl(FindBin), perl(Opcode)
+%else
 BuildRequires:  perl-interpreter, perl-ExtUtils-Embed, perl-FindBin, perl-Opcode
+%endif
 BuildRequires:  python3-devel, tcl-devel, lz4-devel, libzstd-devel, libunwind-devel
 BuildRequires:  clang, llvm-devel, file, binutils
 BuildRequires:  polarstore >= 1.2.42
@@ -55,7 +59,11 @@ export CLANG="${CLANG:-$(command -v clang)}"
 export LLVM_CONFIG="${LLVM_CONFIG:-$(command -v llvm-config)}"
 unset CFLAGS CXXFLAGS LDFLAGS
 
-POLAR_PACKAGE_PREFIX=%{pgbaseinstdir} DESTDIR=%{buildroot} ./build.sh \
+stage_root=%{_builddir}/%{name}-%{version}-stage
+rm -rf "$stage_root"
+mkdir -p "$stage_root"
+
+POLAR_PACKAGE_PREFIX=%{pgbaseinstdir} DESTDIR="$stage_root" ./build.sh \
   --ec="--with-deploy-mode=opensource --with-pfsd" \
   --port=%{pgport} \
   --debug=off \
@@ -64,14 +72,15 @@ POLAR_PACKAGE_PREFIX=%{pgbaseinstdir} DESTDIR=%{buildroot} ./build.sh \
 
 polar_install_dependency()
 {
-  target_dir=${1}
+  stage_root=${1}
+  target_dir=${2}
 
-  cd %{buildroot}${target_dir}/lib/
+  cd "${stage_root}${target_dir}/lib/"
   ln -sf ../lib ./lib
 
-  cd %{buildroot}
-  binfiles=$(find %{buildroot}${target_dir}/bin)
-  libfiles=$(find %{buildroot}${target_dir}/lib)
+  cd "$stage_root"
+  binfiles=$(find "${stage_root}${target_dir}/bin")
+  libfiles=$(find "${stage_root}${target_dir}/lib")
   filelist=${binfiles}$'\n'${libfiles}
   exelist=$(echo "$filelist" | xargs -r file | grep -E -v ":.* (commands|script)" | grep ":.*executable" | cut -d: -f1)
   liblist=$(echo "$filelist" | xargs -r file | grep ":.*shared object" | cut -d: -f1)
@@ -79,7 +88,7 @@ polar_install_dependency()
   cp /dev/null mytmpfilelist
   cp /dev/null mytmpfilelist2
   eval PERL_PATH=$(cd /usr/lib64/perl[5-9]/CORE/ 2>/dev/null && pwd || true)
-  export LD_LIBRARY_PATH=%{buildroot}${target_dir}/lib:$PERL_PATH:${LD_LIBRARY_PATH-}:/usr/lib64:/usr/lib
+  export LD_LIBRARY_PATH="${stage_root}${target_dir}/lib:$PERL_PATH:${LD_LIBRARY_PATH-}:/usr/lib64:/usr/lib"
 
   for f in $liblist $exelist; do
     ldd "$f" | awk '/=>/ {
@@ -103,7 +112,7 @@ polar_install_dependency()
   while read -r line; do
     [ -n "$line" ] || continue
     base=$(basename "$line")
-    dirpath=%{buildroot}${target_dir}/lib
+    dirpath="${stage_root}${target_dir}/lib"
     filepath=$dirpath/$base
 
     objdump -p "$line" | awk 'BEGIN { START=0; LIBNAME=""; }
@@ -135,7 +144,16 @@ polar_install_dependency()
   rm -f mytmpfilelist mytmpfilelist2 objdumpfile
 }
 
-polar_install_dependency %{pgbaseinstdir}
+polar_install_dependency "$stage_root" %{pgbaseinstdir}
+
+%install
+mkdir -p %{buildroot}
+cp -a "%{_builddir}/%{name}-%{version}-stage/." %{buildroot}/
+for script in vacuum_maintenance.py check_unique_constraint.py dump_partition.py; do
+  sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/python3|' \
+    "%{buildroot}%{pgbaseinstdir}/bin/${script}"
+  grep -q '^#!/usr/bin/python3$' "%{buildroot}%{pgbaseinstdir}/bin/${script}"
+done
 
 %files
 %doc README.md README_zh.md HISTORY NOTICE
@@ -153,6 +171,11 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Sat Sep 05 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11.1.0-1PGSTY
+- Stage the install payload for standard RPM debug post-processing
+- Normalize packaged Python helper shebangs for RPM BRP validation
+- Use installed Perl capabilities on EL8 without switching module streams
+
 * Mon Aug 31 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11.1.0-1PGSTY
 - Update PolarDB PostgreSQL 17 kernel to v17.11.1.0 (ff510dfc)
 - Use the shared DEB/RPM package-prefix and relative-RPATH source patch

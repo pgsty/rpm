@@ -49,7 +49,8 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
 %files
 %defattr(644,root,root,755)
 %license LICENSE
-%{pginstdir}/bin/*
+%attr(0755,root,root) %{pginstdir}/bin/pgactive_dump
+%attr(0755,root,root) %{pginstdir}/bin/pgactive_init_copy
 %{pginstdir}/lib/%{sname}.so
 %{pginstdir}/share/extension/%{sname}*.sql
 %{pginstdir}/share/extension/%{sname}.control

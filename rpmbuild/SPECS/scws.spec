@@ -18,7 +18,8 @@ SCWS (Simple Chinese Word Segmentation) is a high performance Chinese word segme
 
 %build
 %set_build_flags
-LT_SYS_LIBRARY_PATH=%{_libdir} %configure --disable-static --sysconfdir=%{_sysconfdir}/scws
+export LT_SYS_LIBRARY_PATH=%{_libdir}
+%configure --disable-static --sysconfdir=%{_sysconfdir}/scws
 %{__make} %{?_smp_mflags}
 
 %install
@@ -43,7 +44,7 @@ LT_SYS_LIBRARY_PATH=%{_libdir} %configure --disable-static --sysconfdir=%{_sysco
 
 %changelog
 * Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.2.3-1PGSTY
-- Use standard RPM paths and remove the invalid /usr/local runtime search path
+- Use standard RPM paths and export the system library path to avoid invalid RPATHs
 
 * Wed Sep 13 2023 Vonng <rh@vonng.com> - 1.2.3
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

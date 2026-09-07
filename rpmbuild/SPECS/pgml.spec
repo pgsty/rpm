@@ -11,9 +11,9 @@ Summary:	PostgresML is a complete MLOps platform in a PostgreSQL extension. Buil
 License:	MIT
 URL:		https://github.com/postgresml/postgresml
 Source0:    pgml-%{version}.tar.gz
-Patch0:     pgml-2.10.0-build-id-sha1.patch
-Patch1:     pgml-2.10.0-lightgbm-cstdint.patch
-Patch2:     pgml-2.10.0-cold-cache.patch
+Patch0:     pgml-2.10.0.patch
+# Applied to the locked lightgbm-rs checkout inside the Cargo git cache.
+Patch1:     pgml-2.10.0-lightgbm.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang-devel openblas-devel
@@ -31,9 +31,17 @@ PostgresML is a machine learning extension for PostgreSQL that enables you to pe
 %prep
 %setup -q -n %{pname}-%{version}
 %patch -P 0 -p1
-%patch -P 2 -p1
 
 %build
+%set_build_flags
+case " $CXXFLAGS " in
+	*" -g "*) : ;;
+	*) echo "distribution CXXFLAGS must contain -g: $CXXFLAGS" >&2; exit 1 ;;
+esac
+case " $CXXFLAGS " in
+	*" -O"*) : ;;
+	*) echo "distribution CXXFLAGS must retain optimization: $CXXFLAGS" >&2; exit 1 ;;
+esac
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export PATH=%{pginstdir}/bin:~/.cargo/bin:$PATH
@@ -84,20 +92,32 @@ if [ "$(git -c safe.directory="$SUBMODULE" -C "$SUBMODULE" rev-parse HEAD)" != "
 	echo "LightGBM submodule revision mismatch" >&2
 	exit 1
 fi
-JSON11_HASH=$(sha256sum "$JSON11" | awk '{print $1}')
-case "$JSON11_HASH" in
-	50721d4783935d481779f137c5459668c872ec02826193333d1ac1b2122770b2)
-		patch --fuzz=0 --batch --forward -d "$CHECKOUT/lightgbm-sys" -p1 < %{PATCH1}
-		;;
-	326748d9e9b14ed90638bd95cff58435d51a5008ea350aa86796dca4d5cc5ba2)
-		:
-		;;
-	*)
-		echo "unexpected LightGBM json11.cpp sha256: $JSON11_HASH" >&2
-		exit 1
-		;;
-esac
+BUILD_RS="$CHECKOUT/lightgbm-sys/build.rs"
+# Restore the locked checkout to its pristine files before patching so that a
+# builder which applied an older patch layout still ends up in one known state.
+git -c safe.directory="$CHECKOUT" -C "$CHECKOUT" checkout -- lightgbm-sys/build.rs
+git -c safe.directory="$SUBMODULE" -C "$SUBMODULE" checkout -- src/io/json11.cpp
+test "$(sha256sum "$JSON11" | awk '{print $1}')" = "50721d4783935d481779f137c5459668c872ec02826193333d1ac1b2122770b2"
+test "$(sha256sum "$BUILD_RS" | awk '{print $1}')" = "c2e2a0a7ef566c82422086e32a30c698c4ffeb86ec22e7a3656ce9eee24c6d46"
+patch --fuzz=0 --batch -d "$CHECKOUT/lightgbm-sys" -p1 < %{PATCH1}
 test "$(sha256sum "$JSON11" | awk '{print $1}')" = "326748d9e9b14ed90638bd95cff58435d51a5008ea350aa86796dca4d5cc5ba2"
+test "$(sha256sum "$BUILD_RS" | awk '{print $1}')" = "29a19b32d598d10c70bd6785878c4b5862b1dfa266442b448d40d241832de675"
+CARGO_NET_OFFLINE=true cargo clean -p lightgbm-sys
+TARGET_DIR=${CARGO_TARGET_DIR:-target}
+for PROFILE in release debug; do
+	if [ -d "$TARGET_DIR/$PROFILE/build" ]; then
+		find "$TARGET_DIR/$PROFILE/build" -mindepth 1 -maxdepth 1 -type d -name 'lightgbm-sys-*' -exec rm -rf {} +
+		test -z "$(find "$TARGET_DIR/$PROFILE/build" -mindepth 1 -maxdepth 1 -type d -name 'lightgbm-sys-*' -print -quit)"
+	fi
+	if [ -d "$TARGET_DIR/$PROFILE/.fingerprint" ]; then
+		find "$TARGET_DIR/$PROFILE/.fingerprint" -mindepth 1 -maxdepth 1 -type d -name 'lightgbm-sys-*' -exec rm -rf {} +
+		test -z "$(find "$TARGET_DIR/$PROFILE/.fingerprint" -mindepth 1 -maxdepth 1 -type d -name 'lightgbm-sys-*' -print -quit)"
+	fi
+	if [ -d "$TARGET_DIR/$PROFILE/deps" ]; then
+		find "$TARGET_DIR/$PROFILE/deps" -mindepth 1 -maxdepth 1 -type f \( -name 'liblightgbm_sys-*' -o -name 'lightgbm_sys-*' \) -delete
+		test -z "$(find "$TARGET_DIR/$PROFILE/deps" -mindepth 1 -maxdepth 1 -type f \( -name 'liblightgbm_sys-*' -o -name 'lightgbm_sys-*' \) -print -quit)"
+	fi
+done
 
 CARGO_NET_OFFLINE=true cargo pgrx package -v
 sha256sum Cargo.lock > .pgml-cargo-lock.after
@@ -122,6 +142,8 @@ cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 - Bind pyo3 to Python 3.11 on EL8/EL9 and Python 3.12 on EL10
 - Use a SHA1 GNU build ID that RPM and Debian debug tooling can split
 - Backport LightGBM's GCC 15 cstdint include fix with locked source guards
+- Preserve distribution C++ flags so statically linked LightGBM retains DWARF
+- Consolidate the source and LightGBM patches into pgml-2.10.0.patch and pgml-2.10.0-lightgbm.patch
 - Fix cold-cache project mapping and model hyperparameter restoration
 
 * Tue Jan 21 2025 Vonng <rh@vonng.com> - 2.10.0

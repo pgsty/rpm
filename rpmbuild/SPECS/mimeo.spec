@@ -4,7 +4,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.5.1
-Release:	2PGSTY%{?dist}
+Release:	1PGSTY%{?dist}
 Summary:	Extension for specialized, per-table replication between PostgreSQL instances
 License:	PostgreSQL
 URL:		https://github.com/omniti-labs/mimeo
@@ -37,7 +37,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/doc/extension/*.md
 
 %changelog
-* Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.5.1-2PGSTY
+* Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.5.1-1PGSTY
 - Package architecture-independent SQL and scripts as noarch
 
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 1.5.1

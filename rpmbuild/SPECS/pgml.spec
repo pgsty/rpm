@@ -126,9 +126,10 @@ cmp .pgml-cargo-lock.before .pgml-cargo-lock.after
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+TARGET_DIR=${CARGO_TARGET_DIR:-%{_builddir}/%{pname}-%{version}/target}
+cp -a "$TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so"                  %{buildroot}%{pginstdir}/lib/
+cp -a "$TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -145,6 +146,7 @@ cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 - Preserve distribution C++ flags so statically linked LightGBM retains DWARF
 - Consolidate the source and LightGBM patches into pgml-2.10.0.patch and pgml-2.10.0-lightgbm.patch
 - Fix cold-cache project mapping and model hyperparameter restoration
+- Restore CatBoost feature counts after pickle deserialization
 
 * Tue Jan 21 2025 Vonng <rh@vonng.com> - 2.10.0
 * Mon Jul 29 2024 Vonng <rh@vonng.com> - 2.9.3

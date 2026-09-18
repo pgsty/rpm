@@ -24,11 +24,18 @@ Cloudberry.
 
 %prep
 %setup -q -n apache-cloudberry-backup-%{version}
+%if 0%{?rhel} == 8
+# EL8's binutils/debugedit cannot decode Go's compressed DWARF sections.
+sed -i "s/--ldflags '/--ldflags '-compressdwarf=false /g" Makefile
+sed -i 's/-ldflags "/-ldflags "-compressdwarf=false /g' Makefile
+%endif
 
 %build
 export GOPATH=%{_builddir}/go
-export GOPROXY=https://proxy.golang.org,direct
-export GOTOOLCHAIN=auto
+export GOPROXY=${GOPROXY:-https://goproxy.cn,direct}
+export GOTOOLCHAIN=go1.25.0
+# EL debugedit cannot yet read Go's DWARF 5 directory strings. Keep full DWARF 4.
+export GOEXPERIMENT=nodwarf5
 export SOURCE_DATE_EPOCH=1786614056
 export PATH=${GOPATH}/bin:/usr/local/go/bin:$PATH
 make depend
@@ -56,6 +63,11 @@ install -Dpm 0644 NOTICE %{buildroot}%{_docdir}/%{name}/NOTICE
 %doc %{_docdir}/%{name}/NOTICE
 
 %changelog
+* Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1.git20260813.6d61e7ePGSTY
+- Use a reachable Go module proxy while respecting builder overrides
+- Generate DWARF 4 with Go 1.25.0 for EL debugsource compatibility
+- Leave Go DWARF sections uncompressed for EL8 binutils and debugedit
+
 * Mon Aug 31 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1.git20260813.6d61e7ePGSTY
 - Update to Apache Cloudberry Backup 2.2.0 main snapshot
 - Package gpbackman and gpbackup_exporter

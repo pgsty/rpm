@@ -217,7 +217,12 @@ build_system_stats() {
 }
 
 build_vector() {
-  build_pgxs "${WORK_DIR}/pgvector-0.8.4"
+  local directory="${WORK_DIR}/pgvector-0.8.4"
+  # Upstream defaults to -march=native. Production packages must also run
+  # on other CPUs of the same architecture, including machines without AVX-512.
+  make -C "${directory}" -j"${JOBS}" PG_CONFIG="${PG_CONFIG}" USE_PGXS=1 OPTFLAGS=""
+  make -C "${directory}" PG_CONFIG="${PG_CONFIG}" USE_PGXS=1 OPTFLAGS="" \
+    DESTDIR="${STAGE_DIR}" install
 }
 
 build_wal2json() {

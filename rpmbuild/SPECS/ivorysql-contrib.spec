@@ -35,6 +35,7 @@ BuildRequires:  perl-version = 6:0.99.24-1.el8
 %else
 BuildRequires:  perl-interpreter
 BuildRequires:  perl(version)
+BuildRequires:  perl(FindBin)
 %endif
 BuildRequires:  clang llvm-devel
 BuildRequires:  SFCGAL-devel geos314-devel
@@ -90,6 +91,12 @@ grep -Eq "^default_version[[:space:]]*=[[:space:]]*'?2[.]8'?" \
 %{pgbaseinstdir}
 
 %changelog
+* Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 5.4-1PGSTY
+- Build pgvector with portable CPU flags instead of the build host instruction set
+
+* Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 5.4-1PGSTY
+- Require the split FindBin module for the AGE keyword generator on EL9 and EL10
+
 * Mon Jul 20 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.4-2PIGSTY
 - Build all 23 upstream projects from source on each target OS and architecture
 - Require the IvorySQL 5.x ABI range instead of one exact kernel release

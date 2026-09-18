@@ -224,6 +224,27 @@ for module in \
     patchelf --remove-rpath %{buildroot}%{pginstdir}/lib/$module.so
 done
 
+# DuckDB's generated parser retains #line paths rooted at the CMake build
+# directory.  Upstream removes that transient source alias before RPM's
+# find-debuginfo pass, which otherwise leaves 46 parser sources out of the
+# debugsource package.  Recreate the alias from this release's vendored
+# libpg_query sources.  grammar_out.cpp is the exact pre-postprocessing form
+# of the shipped src_backend_parser_gram.cpp: upstream's generator performs
+# one deterministic yynerrs replacement after moving the generated file.
+pg_query_source=duckdb_pglake/duckdb/third_party/libpg_query
+pg_query_debug_alias=duckdb_pglake/build/release/third_party/libpg_query/third_party/libpg_query
+mkdir -p "$pg_query_debug_alias"
+cp -a "$pg_query_source/grammar" "$pg_query_debug_alias/"
+cp -a "$pg_query_source/scan.l" \
+      "$pg_query_source/src_backend_parser_scan.cpp" \
+      "$pg_query_debug_alias/"
+parser="$pg_query_source/src_backend_parser_gram.cpp"
+generated="$pg_query_debug_alias/grammar/grammar_out.cpp"
+test "$(grep -Fo 'yynerrs = 0; (void)yynerrs;' "$parser" | wc -l)" -eq 1
+sed 's/yynerrs = 0; (void)yynerrs;/yynerrs = 0;/' "$parser" > "$generated"
+test "$(grep -Fo 'yynerrs = 0; (void)yynerrs;' "$generated" | wc -l)" -eq 0
+sed 's/yynerrs = 0;/yynerrs = 0; (void)yynerrs;/' "$generated" | cmp - "$parser"
+
 find duckdb_pglake/build -path '*/_deps/*_extension_fc-src/*' -type f \( -iname 'LICENSE*' -o -iname 'NOTICE*' \) -print | LC_ALL=C sort | while IFS= read -r license; do
     component="$(basename "$(dirname "$license")")"
     cp "$license" ".rpm-licenses/$component-$(basename "$license")"

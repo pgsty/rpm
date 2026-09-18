@@ -15,6 +15,7 @@ License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize
 Source0:	pg_vectorize-%{version}.tar.gz
 Patch0:		pg-vectorize-0.27.0.patch
+Patch1:		pg-vectorize-0.27.0-chunk-table-fix.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -27,7 +28,8 @@ This allows you to do vector search and build LLM applications on existing data 
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --forward -f < %{PATCH0}
+patch --batch --fuzz=0 -p1 < %{PATCH0}
+patch --batch --fuzz=0 -p1 < %{PATCH1}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -61,9 +63,10 @@ fi
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{srcdir}/extension/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+PACKAGE_TARGET="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/extension/target}"
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so"                  %{buildroot}%{pginstdir}/lib/
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/"%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so

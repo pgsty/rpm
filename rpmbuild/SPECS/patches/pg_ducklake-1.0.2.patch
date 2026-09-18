@@ -56,7 +56,7 @@
  	mkdir -p $(DUCKDB_BUILD_DIR)/bundle
 --- a/pg_ducklake/Makefile
 +++ b/pg_ducklake/Makefile
-@@ -20,11 +20,12 @@
+@@ -20,11 +20,13 @@
  DUCKLAKE_DIR := $(CURDIR)/third_party/ducklake
  DUCKLAKE_PATCHES := $(sort $(wildcard $(CURDIR)/third_party/ducklake-*.patch))
  DUCKLAKE_STAMP := $(DUCKLAKE_DIR)/.patched
@@ -66,7 +66,8 @@
  
  override PG_CPPFLAGS += -Iinclude $(PGDDB_INCLUDE) $(PGDDB_DUCKDB_INCLUDE) $(DUCKLAKE_INCLUDE) -isystem $(INCLUDEDIR_SERVER)
  override PG_CXXFLAGS += -std=c++17 -Wno-register
-+override BITCODE_CXXFLAGS += -std=c++17 -Wno-register
++override BITCODE_CFLAGS += $(PG_CFLAGS)
++override BITCODE_CXXFLAGS += $(PG_CXXFLAGS)
  
  DUCKLAKE_EXT_LIB := $(DUCKDB_BUILD_DIR)/extension/ducklake/libducklake_extension.a
  

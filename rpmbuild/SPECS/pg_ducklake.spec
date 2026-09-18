@@ -111,6 +111,35 @@ CMAKE_PREFIX_PATH="$croaring_prefix" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pgi
 	PG_CFLAGS="$pg_cflags" PG_CXXFLAGS="$pg_cxxflags" LDFLAGS="$duckdb_ldflags" \
 	DUCKDB_C_FLAGS="$duckdb_cflags" DUCKDB_CXX_FLAGS="$duckdb_cxxflags"
 
+# DuckDB's checked-in Bison/Flex output uses relative #line paths.  GCC resolves
+# those paths against the CMake build directory, while the authoritative inputs
+# remain under duckdb/third_party/libpg_query.  Materialize only that source
+# subtree at the recorded location so RPM debugedit can copy the real sources.
+mapfile -t duckdb_release_dirs < <(find duckdb/build -mindepth 1 -maxdepth 1 -type d -name 'release-*' -print)
+test "${#duckdb_release_dirs[@]}" -eq 1
+debug_pgquery_dir="${duckdb_release_dirs[0]}/third_party/libpg_query"
+mkdir -p "$debug_pgquery_dir"
+cp -a duckdb/third_party/libpg_query/grammar "$debug_pgquery_dir/"
+cp -a duckdb/third_party/libpg_query/scan.l "$debug_pgquery_dir/"
+cp -a duckdb/third_party/libpg_query/src_backend_parser_scan.cpp "$debug_pgquery_dir/"
+
+# Bison creates grammar_out.hpp beside grammar_out.cpp.  The generator then
+# renames it byte-for-byte into the checked-in parser include tree.
+cp -a duckdb/third_party/libpg_query/include/parser/gram.hpp \
+	"$debug_pgquery_dir/grammar/grammar_out.hpp"
+
+# generate_grammar.py renames grammar_out.cpp to src_backend_parser_gram.cpp,
+# then replaces an include and the yynerrs assignment.  In the bundled 1.0.2
+# parser both include spellings are absent, so that replacement is a no-op;
+# only the single yynerrs edit must be reversed to reproduce the pre-rename
+# Bison output referenced by its own DWARF line table.
+parser_gram=duckdb/third_party/libpg_query/src_backend_parser_gram.cpp
+test "$(grep -Fc '#include "grammar_out.hpp"' "$parser_gram")" -eq 0
+test "$(grep -Fc '#include "include/parser/gram.hpp"' "$parser_gram")" -eq 0
+test "$(grep -Fc 'yynerrs = 0; (void)yynerrs;' "$parser_gram")" -eq 1
+sed 's/yynerrs = 0; (void)yynerrs;/yynerrs = 0;/' "$parser_gram" > "$debug_pgquery_dir/grammar/grammar_out.cpp"
+test -s "$debug_pgquery_dir/grammar/grammar_out.cpp"
+
 %install
 %set_build_flags
 pg_cflags="${CFLAGS//-flto=auto/-flto}"

@@ -51,9 +51,9 @@ patch -p1 --forward -f < %{_specdir}/patches/plv8-3.2.4.patch
 %build
 %set_build_flags
 PATH=%{pginstdir}/bin:$PATH %{__make} clean CC=/usr/bin/gcc CXX=/usr/bin/g++
-# The bundled V8 keeps function and line-table DWARF only (-g1); plv8's own
-# objects keep the full distribution -g so the debuginfo package stays tractable.
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS -g1"
+# Preserve the distribution debug flags in both the bundled V8 engine and
+# plv8's own objects so the split debuginfo package contains full DWARF.
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} NUMPROC=%{_smp_build_ncpus} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS"
 
 %install
 %{__rm} -rf %{buildroot}
@@ -61,7 +61,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} CC=/usr/bin/gcc CXX=/usr/
 %if 0%{?rhel} >= 10
 export QA_RPATHS=3
 %endif
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS -g1"
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} NUMPROC=%{_smp_build_ncpus} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS"
 
 %files
 %{pginstdir}/lib/%{pname}*.so
@@ -79,8 +79,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Keep the bundled CMake C and C++ compiler identities distinct
 - Consolidate the build fixes into a single plv8-3.2.4.patch for every EL release
-- Preserve RPM debug flags in bundled V8 C++ objects
-- Build the bundled V8 engine with line-table debug information only (-g1)
+- Preserve full RPM debug flags in bundled V8 and wrapper C++ objects
 - Link the architecture stack scanner into mksnapshot and the final module
 - Build only the bundled V8 libraries required by the extension
 

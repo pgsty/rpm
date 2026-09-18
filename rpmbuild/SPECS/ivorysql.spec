@@ -17,6 +17,7 @@ Summary:        IvorySQL %{ivoryversion} PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/IvorySQL/IvorySQL
 Source0:        ivorysql-%{ivoryversion}.tar.gz
+Patch0:         ivorysql-5.4-sequence-parser-mode.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -31,6 +32,7 @@ BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin, perl-interpreter
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
 %else
 BuildRequires:  perl-interpreter < 4:5.30
+BuildRequires:  perl-devel, perl(ExtUtils::Embed), perl(ExtUtils::MakeMaker)
 %endif
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, liburing, numactl-libs, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2, tzdata
 Requires:       krb5-libs, openldap, pam, readline, zlib
@@ -45,6 +47,7 @@ runtime, development headers, PGXS files, and bundled contrib extensions under
 %prep
 %setup -q -c -T
 tar --strip-components=1 -xzf %{SOURCE0}
+%patch -P 0 -p1
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"
@@ -123,6 +126,12 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 5.4-1PGSTY
+- Restrict Oracle sequence syntax to the Oracle parser mode
+
+* Wed Sep 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.4-1PGSTY
+- Install embedded Perl build dependencies from the existing EL8 module stream
+
 * Sun Jul 05 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.4-1PIGSTY
 - Add IvorySQL 5.4 PostgreSQL 18 kernel package
 - Build a single complete package under /usr/ivory-18 with PGDG-like options

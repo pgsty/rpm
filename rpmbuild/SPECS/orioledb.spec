@@ -2,40 +2,41 @@
 %define _build_id_links none
 %{!?pgmajorversion:%global pgmajorversion 18}
 %if 0%{?pgmajorversion} == 18
-%global orioledb_patchset 1
-%global upstream_pgver 18.4
+%global orioledb_patchset 2
+%global upstream_pgver 18.6
 %else
 %if 0%{?pgmajorversion} == 17
-%global orioledb_patchset 20
-%global upstream_pgver 17.9
+%global orioledb_patchset 21
+%global upstream_pgver 17.11
 %else
 %if 0%{?pgmajorversion} == 16
-%global orioledb_patchset 47
-%global upstream_pgver 16.13
+%global orioledb_patchset 48
+%global upstream_pgver 16.15
 %else
-%{error:orioledb beta16 packaging supports PostgreSQL 16, 17, and 18 only}
+%{error:orioledb beta17 packaging supports PostgreSQL 16, 17, and 18 only}
 %endif
 %endif
 %endif
 %global pgbaseinstdir	/usr/oriole-%{pgmajorversion}
-%global orioledb_beta beta16
+%global orioledb_beta beta17
 %global srcdir postgres-patches%{pgmajorversion}_%{orioledb_patchset}
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 
 Name:		%{sname}-%{pgmajorversion}
-Version:	1.8~beta16
+Version:	1.9~beta17
 Release:	1PGSTY%{?dist}
 Summary:	OrioleDB PostgreSQL kernel with bundled storage engine extension
 License:	PostgreSQL AND Apache-2.0
 URL:		https://github.com/orioledb/orioledb
 Source0:	%{srcdir}.tar.gz
 Source1:	%{sname}-%{orioledb_beta}.tar.gz
-Patch0:		orioledb-1.8~beta16.patch
+Patch0:		orioledb-1.9~beta17.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35, chrpath
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
+BuildRequires:  clang-devel >= 19.0, llvm-devel >= 19.0
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel, libcurl-devel
@@ -73,9 +74,10 @@ mv "$orioledb_src" contrib/orioledb
 sed -ri 's/^([[:space:]]*)vacuumlo$/\1orioledb\t\\\n\1vacuumlo/' contrib/Makefile
 
 %build
+%set_build_flags
 CFLAGS="${CFLAGS:-%optflags}"
 CFLAGS=`echo $CFLAGS|xargs -n 1|grep -v ffast-math|xargs -n 100`
-LDFLAGS="-Wl,--as-needed"; export LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,--as-needed"; export LDFLAGS
 export CFLAGS
 
 ./configure --enable-rpath \
@@ -94,7 +96,7 @@ export CFLAGS
 --with-libxml \
 --with-libxslt \
 --with-icu \
---without-llvm \
+--with-llvm \
 --with-python \
 --with-tcl \
 --with-openssl \
@@ -118,7 +120,8 @@ MAKELEVEL=0 %{__make} %{?_smp_mflags} world-bin
 %{__rm} -rf %{buildroot}
 %{__make} DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} install-world-bin
 for library in %{buildroot}%{pgbaseinstdir}/lib/postgresql/*plpython3*.so; do
-  [ -e "$library" ] && chrpath -d "$library" || :
+  [ -e "$library" ] || continue
+  chrpath -d "$library"
 done
 
 %files
@@ -136,6 +139,10 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 1.9~beta17-1PGSTY
+- Update to OrioleDB beta17 with PostgreSQL 16.15, 17.11, and 18.6 patchsets
+- Preserve package build flags and enable LLVM for the bundled kernel
+
 * Thu Aug 13 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.8~beta16-1PGSTY
 - Encode beta16 in Version and normalize Release
 

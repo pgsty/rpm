@@ -8,7 +8,8 @@
 %global __provides_exclude_from ^%{pginstdir}/lib/.*\\.so.*$
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 %global buildstage %{_builddir}/%{name}-%{version}-stage
-%global bbf_prefix_map -ffile-prefix-map=%{buildstage}=%{pginstdir} -ffile-prefix-map=%{_builddir}/%{sname}-%{pgmajorversion}-%{sourceversion}=.
+# Rewrite __FILE__ strings while retaining paths for RPM debugsource extraction.
+%global bbf_prefix_map -fmacro-prefix-map=%{buildstage}=%{pginstdir} -fmacro-prefix-map=%{_builddir}/%{sname}-%{pgmajorversion}-%{sourceversion}=.
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{bbfversion}
@@ -23,7 +24,7 @@ BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm, clang
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
-BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
+BuildRequires:  perl, perl-ExtUtils-Embed, perl(FindBin)
 BuildRequires:  antlr4-runtime413-devel >= 4.13.2
 BuildRequires:  bison, flex, cmake
 %if 0%{?rhel} >= 10
@@ -59,6 +60,7 @@ sed -i -e 's/Oid[[:space:]]*function_id;/Oid			function_id = InvalidOid;/' \
 
 %build
 cd buildsrc
+%set_build_flags
 CFLAGS="${CFLAGS:-%optflags} %{bbf_prefix_map}"
 CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -v ffast-math | xargs -n 100`
 %if 0%{?pgmajorversion} >= 18
@@ -70,7 +72,7 @@ if printf 'int main(void) { return 0; }' | \
 fi
 %endif
 CXXFLAGS="${CXXFLAGS:-%optflags} %{bbf_prefix_map}"
-LDFLAGS="-Wl,--as-needed"; export LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,--as-needed"; export LDFLAGS
 export CFLAGS CXXFLAGS
 
 ./configure --enable-rpath \
@@ -250,6 +252,11 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 5.7.0-1PGSTY
+- Preserve DWARF source paths for complete RPM debugsource packages
+- Apply standard RPM compiler and linker flags
+- Request the FindBin capability without switching EL8 Perl module streams
+
 * Tue Sep 01 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 5.7.0-1PGSTY
 - Update PG17 to Babelfish 5.7.0 on its PostgreSQL 17.10 source base
 - Add the PG18 Babelfish 6.2.0 on its PostgreSQL 18.4 source base

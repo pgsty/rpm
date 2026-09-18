@@ -53,6 +53,8 @@ BuildRequires:  perl perl-ExtUtils-Embed
 # PGDG repositories; the private PostgreSQL ABI itself remains self-contained.
 BuildRequires:  autoconf automake libtool gmp-devel pcre2-devel
 %if 0%{?rhel} == 8
+BuildRequires:  gcc-toolset-13-gcc-c++
+BuildRequires:  gcc-toolset-13-gcc-plugin-annobin
 # Match Percona's PostGIS 3.5 SRPM dependency set on EL8.
 BuildRequires:  geos311-devel proj95-devel gdal38-devel libgeotiff-devel
 %else
@@ -107,10 +109,23 @@ patch -p1 --fuzz=0 < %{PATCH0}
 %{__chmod} 0755 .pgtde-sfcgal-config
 
 %build
+%if 0%{?rhel} == 8
+source /opt/rh/gcc-toolset-13/enable
+export CC=/opt/rh/gcc-toolset-13/root/usr/bin/gcc
+export CXX=/opt/rh/gcc-toolset-13/root/usr/bin/g++
+%endif
+%set_build_flags
+%if 0%{?rhel} == 8
+# EL8's system annobin spec names the GCC 8 plugin. Use Toolset 13's own plugin.
+annobin_plugin="$("$CC" -print-file-name=plugin)/gts-gcc-annobin.so"
+test -f "$annobin_plugin"
+CFLAGS="${CFLAGS//-specs=\/usr\/lib\/rpm\/redhat\/redhat-annobin-cc1/-fplugin=$annobin_plugin}"
+CXXFLAGS="${CXXFLAGS//-specs=\/usr\/lib\/rpm\/redhat\/redhat-annobin-cc1/-fplugin=$annobin_plugin}"
+%endif
 CFLAGS="${CFLAGS:-%optflags}"
 CFLAGS=`echo "$CFLAGS" | xargs -n 1 | grep -v ffast-math | xargs -n 100`
-LDFLAGS="-Wl,--as-needed"
-export CFLAGS LDFLAGS
+LDFLAGS="${LDFLAGS:-} -Wl,--as-needed"
+export CFLAGS CXXFLAGS LDFLAGS
 
 ./configure --enable-rpath \
 --prefix=%{pgbaseinstdir} \
@@ -356,6 +371,11 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Wed Sep 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.6-1PGSTY
+- Use GCC Toolset 13 for libkmip's C++20 requirements on EL8
+- Preserve distribution C++ flags and debug information in the KMIP client
+- Use the matching Toolset 13 annobin plugin while retaining hardening flags
+
 * Mon Aug 31 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.6-1PGSTY
 - Update Percona Server for PostgreSQL to 18.6.1
 - Update pg_tde to 2.2.2 and pgvector to 0.8.6

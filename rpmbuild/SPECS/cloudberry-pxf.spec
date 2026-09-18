@@ -43,6 +43,9 @@ connectors for external data systems together with the PXF service and CLI.
 
 %prep
 %setup -q -n apache-cloudberry-pxf-%{version}
+%if 0%{?rhel} == 8
+sed -i 's/LDFLAGS := -ldflags "/LDFLAGS := -ldflags "-compressdwarf=false /' cli/Makefile
+%endif
 %patch -P 0 -p1
 %if 0%{?rhel} >= 10
 %patch -P 1 -p1
@@ -71,7 +74,10 @@ export JAVA_HOME=%{pxf_java_home}
 export PG_CONFIG=${GPHOME}/bin/pg_config
 export GOPATH=%{_builddir}/go
 export GOBIN=${GOPATH}/bin
-export GOPROXY=https://goproxy.cn,direct
+export GOPROXY="${GOPROXY:-https://goproxy.cn,direct}"
+# EL debugedit needs the DWARF 4 format supported by Go 1.25.
+export GOTOOLCHAIN=go1.25.0
+export GOEXPERIMENT=nodwarf5
 export PATH=${GPHOME}/bin:${JAVA_HOME}/bin:${GOBIN}:/usr/local/go/bin:$PATH
 
 make -C external-table stage
@@ -118,11 +124,21 @@ if id "gpadmin" &>/dev/null; then
 fi
 
 %files
-%exclude %{pxf_prefix}/conf/pxf-application.properties
-%exclude %{pxf_prefix}/conf/pxf-env.sh
-%exclude %{pxf_prefix}/conf/pxf-log4j2.xml
-%exclude %{pxf_prefix}/conf/pxf-profiles.xml
-%{pxf_prefix}
+%dir %{pxf_prefix}
+%{pxf_prefix}/application
+%{pxf_prefix}/bin
+%{pxf_prefix}/commit.sha
+%dir %{pxf_prefix}/conf
+%{pxf_prefix}/fdw
+%{pxf_prefix}/gpextable
+%{pxf_prefix}/keytabs
+%{pxf_prefix}/lib
+%{pxf_prefix}/logs
+%{pxf_prefix}/run
+%{pxf_prefix}/servers
+%{pxf_prefix}/share
+%{pxf_prefix}/templates
+%{pxf_prefix}/version
 %license /usr/share/licenses/%{name}/LICENSE
 %doc %{_docdir}/%{name}/NOTICE
 
@@ -132,6 +148,14 @@ fi
 %config(noreplace) %{pxf_prefix}/conf/pxf-profiles.xml
 
 %changelog
+* Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
+- Include all four PXF configuration templates as protected configuration files
+
+* Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
+- Keep Go CLI debug information compatible with EL debugedit
+- Respect the builder Go module proxy override
+- Leave Go DWARF sections uncompressed for EL8 binutils and debugedit
+
 * Tue Jul 07 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-3PIGSTY
 - Move PXF to /usr/cloudberry-pxf and build against /usr/cloudberry
 - Replace relocatable scriptlets with fixed private-prefix paths

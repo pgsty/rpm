@@ -60,7 +60,7 @@ if [ ! -x "$VCPKG_ROOT/vcpkg" ]; then
     (cd "$VCPKG_ROOT" && ./bootstrap-vcpkg.sh -disableMetrics)
 fi
 mkdir -p "$VCPKG_BINARY_CACHE"
-export VCPKG_MAX_CONCURRENCY="${VCPKG_MAX_CONCURRENCY:-4}"
+export VCPKG_MAX_CONCURRENCY="${VCPKG_MAX_CONCURRENCY:-2}"
 
 VCPKG_ROOT="$VCPKG_ROOT" \
 VCPKG_DISABLE_METRICS=1 \

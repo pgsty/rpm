@@ -12,6 +12,7 @@ Summary:	MySQL wire protocol support for PostgreSQL
 License:	GPL-3.0-only
 URL:		https://github.com/HaloTech-Co-Ltd/openHalo
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:         openhalodb-1.0-mysql-disconnect-gss.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, krb5-devel
@@ -37,6 +38,7 @@ but provides much more better performance than MySQL!
 %prep
 %setup -q -n %{sname}-%{version}
 patch -p1 --forward -f < %{_specdir}/patches/%{sname}-%{version}.patch
+%patch -P 0 -p1
 
 %build
 CFLAGS="${CFLAGS:-%optflags}"
@@ -142,6 +144,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 1.0-1PGSTY
+- Guard absent GSS state when an ordinary MySQL connection closes
+
 * Mon Jul 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.0-2PIGSTY
 - Promote openhalodb to the formal 1.0 release
 - Align GSSAPI support and strip non-private RUNPATH entries

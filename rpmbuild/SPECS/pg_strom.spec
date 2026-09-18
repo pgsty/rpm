@@ -28,6 +28,8 @@ ExclusiveArch:  x86_64
 BuildRequires:  gcc make patch binutils
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
+BuildRequires:  llvm-devel >= 19.0
+BuildRequires:  clang-devel >= 19.0
 BuildRequires:  cuda-nvcc-13-1 >= %{cuda_version}
 BuildRequires:  cuda-cuobjdump-13-1 >= %{cuda_version}
 BuildRequires:  cuda-cudart-devel-13-1 >= %{cuda_version}

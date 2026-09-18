@@ -16,22 +16,23 @@
  GPUINFO_SOURCE := $(STROM_BUILD_ROOT)/utils/gpuinfo.c
  GPUINFO_DEPEND := $(GPUINFO_SOURCE)
 -GPUINFO_CFLAGS = $(PGSTROM_FLAGS) -I $(CUDA_IPATH) -L $(CUDA_LPATH) \
-+GPUINFO_CFLAGS = $(PGSTROM_FLAGS) -I $(CUDA_IPATH) \
++GPUINFO_CFLAGS = $(CFLAGS) $(PGSTROM_FLAGS) -I $(CUDA_IPATH) \
 +                 -L $(CUDA_LPATH) -L $(CUDA_LPATH)/stubs \
                   -I $(STROM_BUILD_ROOT)/src \
 -                 -I $(STROM_BUILD_ROOT)/utils \
 -                 $(shell $(PG_CONFIG) --ldflags)
-+                 -I $(STROM_BUILD_ROOT)/utils
++                 -I $(STROM_BUILD_ROOT)/utils $(LDFLAGS)
  
  SSBM_DBGEN = $(STROM_BUILD_ROOT)/utils/dbgen-ssbm
  __SSBM_DBGEN_SOURCE = bcd2.c  build.c load_stub.c print.c text.c \
 @@ -79,8 +79,7 @@
  SSBM_DBGEN_DISTS_DSS = $(STROM_BUILD_ROOT)/utils/ssbm/dists.dss.h
- SSBM_DBGEN_CFLAGS = -DDBNAME=\"dss\" -DLINUX -DDB2 -DSSBM -DTANDEM \
+-SSBM_DBGEN_CFLAGS = -DDBNAME=\"dss\" -DLINUX -DDB2 -DSSBM -DTANDEM \
++SSBM_DBGEN_CFLAGS = $(CFLAGS) -DDBNAME=\"dss\" -DLINUX -DDB2 -DSSBM -DTANDEM \
                      -DSTATIC_DISTS=1 \
 -                    -O2 -g -I. -I$(STROM_BUILD_ROOT)/utils/ssbm \
 -                    $(shell $(PG_CONFIG) --ldflags)
-+                    -O2 -g -I. -I$(STROM_BUILD_ROOT)/utils/ssbm
++                    -I. -I$(STROM_BUILD_ROOT)/utils/ssbm $(LDFLAGS)
  __SSBM_SQL_FILES = ssbm-11.sql ssbm-12.sql ssbm-13.sql \
                     ssbm-21.sql ssbm-22.sql ssbm-23.sql \
                     ssbm-31.sql ssbm-32.sql ssbm-33.sql ssbm-34.sql \
@@ -134,3 +135,15 @@
  					 CU_CTX_SCHED_AUTO,
  					 cuda_device);
  	if (rc != CUDA_SUCCESS)
+--- a/utils/ssbm/bm_utils.c
++++ b/utils/ssbm/bm_utils.c
+@@ -433,7 +433,8 @@ tbl_open(int tbl, char *mode)
+     if (S_ISFIFO(fstats.st_mode))
+         {
+         retcode =
+-            open(fullpath, ((*mode == 'r')?O_RDONLY:O_WRONLY)|O_CREAT);
++            open(fullpath, ((*mode == 'r')?O_RDONLY:O_WRONLY)|O_CREAT,
++                 0644);
+         f = fdopen(retcode, mode);
+         }
+     else{

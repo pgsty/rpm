@@ -13,6 +13,7 @@ Summary:	pg_idkit is a Postgres extension for generating many popular types of i
 License:	Apache-2.0
 URL:		https://github.com/Vonng/pg_idkit
 Source0:    pg_idkit-%{version}.tar.gz
+Patch0:     pg-idkit-0.4.0-nanoid-fix.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
@@ -23,6 +24,7 @@ uuidv6, uuidv7, nanoid, ksuid, ulid, timeflake, pushid, xid, cuid, cuid2
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch --batch --fuzz=0 -p1 < %{PATCH0}
 # The source archive includes the pgrx 0.19.2 dependency update.
 
 %build
@@ -52,9 +54,10 @@ fi
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+PACKAGE_TARGET="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{version}/target}"
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so"                  %{buildroot}%{pginstdir}/lib/
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/"%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so

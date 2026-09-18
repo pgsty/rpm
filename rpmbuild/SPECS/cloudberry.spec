@@ -14,6 +14,9 @@ Patch0:         cloudberry-2.1.0-env-symlink.patch
 Patch1:         cloudberry-2.1.0-initdb-cdb-initd-errno.patch
 Patch2:         cloudberry-2.1.0-el10-build-fixes.patch
 Patch3:         cloudberry-2.1.0-el8-pax-storage-build-fixes.patch
+Patch4:         cloudberry-2.1.0-regress-build-flags.patch
+Patch5:         cloudberry-2.1.0-gpmgmt-offline-python.patch
+Patch6:         cloudberry-2.1.0-python313-runtime.patch
 %global cb_prefix /usr/cloudberry
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{cb_prefix}/lib(64)?/.*\\.so.*$
@@ -25,7 +28,7 @@ Patch3:         cloudberry-2.1.0-el8-pax-storage-build-fixes.patch
 # LTO trips fatal warnings in the bundled PAX C++ code; keep the kernel build non-LTO.
 %global _lto_cflags %{nil}
 BuildRequires:  apr-devel bison bzip2-devel cmake curl flex gcc gcc-c++ krb5-devel libcurl-devel libevent-devel libicu-devel liburing-devel libuuid-devel libuv-devel libxml2-devel libyaml-devel libzstd-devel lz4-devel make openldap-devel openssl-devel pam-devel perl perl-devel perl-ExtUtils-Embed protobuf-devel >= 3.5.0 protobuf-compiler python3-Cython python3-devel python3-pip python3-setuptools python3-wheel readline-devel xerces-c-devel zlib-devel
-Requires:       apr bash bzip2 iproute iputils libcurl libevent libidn2 libstdc++ liburing libuuid libuv libxml2 libyaml libzstd lz4 openldap openssh openssh-clients openssh-server pam perl python3 readline rsync /sbin/ldconfig
+Requires:       apr bash bzip2 iproute iputils less libcurl libevent libidn2 libstdc++ liburing libuuid libuv libxml2 libyaml libzstd lz4 openldap openssh openssh-clients openssh-server pam perl python3 readline rsync /sbin/ldconfig
 
 %if 0%{?rhel} <= 8
 Requires:       keyutils
@@ -41,6 +44,9 @@ data warehouse developed from PostgreSQL and Greenplum.
 %setup -q -n apache-cloudberry-2.1.0-incubating
 %patch -P 0 -p1
 %patch -P 1 -p1
+%patch -P 4 -p1
+%patch -P 5 -p1
+%patch -P 6 -p1
 %if 0%{?rhel} >= 10
 %patch -P 2 -p1
 %endif
@@ -53,7 +59,6 @@ cp -fp %{SOURCE1} gpMgmt/bin/pythonSrc/ext/
 cp -fp %{SOURCE2} gpMgmt/bin/pythonSrc/ext/
 cp -fp %{SOURCE3} gpMgmt/bin/pythonSrc/ext/
 cp -fp %{SOURCE4} gpMgmt/bin/pythonSrc/ext/
-sed -i 's|pip3 install --user wheel "cython<3.0.0"|pip3 install --user wheel $(PYLIB_SRC_EXT)/Cython-0.29.37.tar.gz|' gpMgmt/bin/Makefile
 
 %build
 %set_build_flags
@@ -62,9 +67,12 @@ CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -Ev '^-ffast-math$|^-flto(=.*)?$|^-ffat
 CFLAGS="$CFLAGS -Wno-error=date-time -Wno-error=stringop-overflow -Wno-error=maybe-uninitialized -Wno-error=array-bounds"
 CXXFLAGS="${CXXFLAGS:-%optflags}"
 CXXFLAGS=`echo $CXXFLAGS | xargs -n 1 | grep -Ev '^-ffast-math$|^-flto(=.*)?$|^-ffat-lto-objects$' | xargs -n 100`
-CXXFLAGS="$CXXFLAGS -Wno-error=date-time -Wno-error=stringop-overflow -Wno-error=maybe-uninitialized -Wno-error=array-bounds -Wno-error=pessimizing-move -Wno-error=suggest-attribute=format -Wno-error=overloaded-virtual"
+CXXFLAGS="$CXXFLAGS -Wno-error=date-time -Wno-error=stringop-overflow -Wno-error=maybe-uninitialized -Wno-error=array-bounds -Wno-error=suggest-attribute=format -Wno-error=overloaded-virtual"
+%if 0%{?rhel} >= 9
+CXXFLAGS="$CXXFLAGS -Wno-error=pessimizing-move"
+%endif
 PG_CXXFLAGS="${PG_CXXFLAGS:-} -Wno-error=overloaded-virtual"
-LDFLAGS="-Wl,--as-needed"; export LDFLAGS
+LDFLAGS="${LDFLAGS:-} -Wl,--as-needed"; export LDFLAGS
 export CFLAGS CXXFLAGS PG_CXXFLAGS
 
 ./configure \
@@ -125,6 +133,10 @@ export PIP_NO_INDEX=1
 install -dpm 0755 %{buildroot}%{cb_prefix}/share/postgresql/cdb_init.d
 %{__make} DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} install-world-bin
 %{__make} DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} -C contrib install
+# world-bin deliberately omits gpMgmt; install the cluster management stack
+# and its pinned private Python modules after the kernel is staged.
+%{__make} -C gpMgmt all
+%{__make} -j1 -C gpMgmt DESTDIR=%{buildroot} install
 install -Dpm 0644 LICENSE %{buildroot}/usr/share/licenses/%{name}/LICENSE
 install -Dpm 0644 NOTICE %{buildroot}%{_docdir}/%{name}/NOTICE
 
@@ -166,6 +178,18 @@ fi
 /sbin/ldconfig
 
 %changelog
+* Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
+- Use shlex quoting for Python 3.13 and require the gpMgmt pager
+
+* Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
+- Package the cluster management tools and private Python runtime modules
+- Build the pinned Python sources offline and retain their compiler flags
+
+* Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
+- Preserve compiler flags and DWARF in regression helper programs
+- Retain distribution linker flags alongside the private-prefix build
+- Limit the pessimizing-move warning override to EL9 and newer compilers
+
 * Tue Jul 07 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-3PIGSTY
 - Move the RPM payload to /usr/cloudberry to match the DEB package
 - Standardize private-prefix CFLAGS, LDFLAGS, RPATH, and ABI filtering

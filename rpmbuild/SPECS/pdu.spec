@@ -13,7 +13,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{pduver}
-Release:	2.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
+Release:	1.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
 Summary:	PostgreSQL data recovery and extraction utility
 License:	Apache-2.0 AND PostgreSQL
 URL:		https://github.com/wublabdubdub/PDU-PostgreSQLDataUnloader
@@ -33,19 +33,19 @@ under %{pginstdir}/bin/pdu. The binary is version-bound to the PostgreSQL major
 version encoded at build time and must match the target PGDATA version.
 
 %prep
-rm -rf %{buildsrc}
-mkdir -p %{buildsrc}
-tar -xf %{SOURCE0} --strip-components=1 -C %{buildsrc}
-patch -d %{buildsrc} -p1 --fuzz=0 < %{PATCH0}
-cp -f %{_specdir}/LICENSE-PostgreSQL %{buildsrc}/LICENSE-PostgreSQL
+%setup -q -T -c -n %{buildsrc}
+tar -xf %{SOURCE0} --strip-components=1
+patch -p1 --fuzz=0 < %{PATCH0}
+cp -f %{_specdir}/LICENSE-PostgreSQL LICENSE-PostgreSQL
 
 %build
-cd %{buildsrc}
+%set_build_flags
 sed -ri 's/^#define PG_VERSION_NUM .*/#define PG_VERSION_NUM %{pgmajorversion}/' basic.h
-%{__make} CC="%{__cc}"
+%{__make} CC="%{__cc}" \
+    CFLAGS="$CFLAGS -std=c99 -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wno-missing-field-initializers -Wno-unused-variable -Wno-unused-function -Wno-unused-but-set-variable -Wno-format-truncation" \
+    LDFLAGS="$LDFLAGS -lm -lz -ldl -llz4 -lpthread"
 
 %install
-cd %{buildsrc}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/bin
 mkdir -p %{buildroot}%{pginstdir}/share/%{sname}
@@ -53,13 +53,17 @@ install -pm 0755 pdu %{buildroot}%{pginstdir}/bin/pdu
 install -pm 0644 pdu.ini %{buildroot}%{pginstdir}/share/%{sname}/pdu.ini.example
 
 %files
-%license %{buildsrc}/LICENSE %{buildsrc}/LICENSE-PostgreSQL
-%doc %{buildsrc}/README.md %{buildsrc}/NOTICE
+%license LICENSE LICENSE-PostgreSQL
+%doc README.md NOTICE
 %{pginstdir}/bin/pdu
 %dir %{pginstdir}/share/%{sname}
 %{pginstdir}/share/%{sname}/pdu.ini.example
 
 %changelog
+* Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 3.0.25.12-1.git20260822.345422fPGSTY
+- Use the first binary revision for the unpublished source snapshot
+- Use RPM build flags and setup metadata to generate full debug packages
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 3.0.25.12-2.git20260822.345422fPGSTY
 - Update to upstream main snapshot 345422f without changing PDUVERSION
 - Include recovery, boundary-check, and legacy metadata terminator fixes

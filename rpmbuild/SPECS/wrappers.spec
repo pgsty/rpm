@@ -11,6 +11,8 @@ License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
 Source0:    wrappers-%{version}-pgrx0.19.2.tar.gz
 #           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.2.tar.gz
+Patch0:     wrappers-0.6.2-ethnum-1.5.3.patch
+Patch1:     wrappers-0.6.2-pgrx0.19.2-s3vec.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang
@@ -25,8 +27,11 @@ and supports a growing set of FDWs for external services and data platforms.
 %prep
 %setup -q -n %{srcdir}
 # Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
+patch --batch --fuzz=0 -p1 < %{PATCH0}
+patch --batch --fuzz=0 -p1 < %{PATCH1}
 
 %build
+%set_build_flags
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/%{pname}
@@ -44,7 +49,7 @@ LOCK_FILE=../Cargo.lock
 LOCK_SHA256=$(sha256sum "$LOCK_FILE" | awk '{print $1}')
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
+CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion},all_fdws --pg-config %{pginstdir}/bin/pg_config
 test "$LOCK_SHA256" = "$(sha256sum "$LOCK_FILE" | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
 	exit 1
@@ -53,9 +58,10 @@ test "$LOCK_SHA256" = "$(sha256sum "$LOCK_FILE" | awk '{print $1}')" || {
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}-%{version}.so       %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+PACKAGE_TARGET="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}-%{version}.so"       %{buildroot}%{pginstdir}/lib/
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
+cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/"%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}-%{version}.so

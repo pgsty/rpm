@@ -24,7 +24,7 @@ BuildRequires:	python3-devel
 %global omnigres_python /usr/bin/python3
 %endif
 %if 0%{?rhel} < 10
-BuildRequires:	gcc-toolset-15-gcc gcc-toolset-15-gcc-c++
+BuildRequires:	gcc-toolset-15-gcc gcc-toolset-15-gcc-c++ gcc-toolset-15-gcc-plugin-annobin
 %endif
 Requires:	postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-contrib postgresql%{pgmajorversion}-plpython3 python3-pip
 
@@ -41,12 +41,17 @@ You can deploy a single database instance and it can host your entire applicatio
 
 %build
 %set_build_flags
+BUILD_JOBS="${CMAKE_BUILD_PARALLEL_LEVEL:-%{_smp_build_ncpus}}"
+CFLAGS="${CFLAGS//-flto=auto/-flto=$BUILD_JOBS}"
+CXXFLAGS="${CXXFLAGS//-flto=auto/-flto=$BUILD_JOBS}"
+LDFLAGS="${LDFLAGS//-flto=auto/-flto=$BUILD_JOBS}"
+export CFLAGS CXXFLAGS LDFLAGS
 %if 0%{?rhel} < 10
 source /opt/rh/gcc-toolset-15/enable
 %endif
 cmake -S . -B pg%{pgmajorversion} -DCMAKE_BUILD_TYPE=Release -DOPENSSL_CONFIGURED=1 -DPython3_EXECUTABLE=%{omnigres_python} -DPG_CONFIG=/usr/pgsql-%{pgmajorversion}/bin/pg_config
-cmake --build pg%{pgmajorversion} --parallel --target inja
-cmake --build pg%{pgmajorversion} --parallel --target package_extensions
+cmake --build pg%{pgmajorversion} --parallel "$BUILD_JOBS" --target inja
+cmake --build pg%{pgmajorversion} --parallel "$BUILD_JOBS" --target package_extensions
 
 %install
 rm -rf %{buildroot}

@@ -29,6 +29,12 @@ catalog state to make migrations faster and easier to operate.
 
 %prep
 %autosetup -p1 -n %{sname}-%{version}
+%if 0%{?rhel} == 8
+%ifarch aarch64
+# Pass PIE to the compiler driver so EL8 selects the position-independent CRT.
+sed -i 's/-fpie -Wl,-pie/-fpie -pie/' src/bin/pgcopydb/Makefile
+%endif
+%endif
 
 %build
 %{__make} -C src/bin/pgcopydb \
@@ -52,6 +58,9 @@ src/bin/pgcopydb/pgcopydb --version | grep -F 'pgcopydb version %{version}'
 %{pginstdir}/bin/%{sname}
 
 %changelog
+* Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 0.18-1PGSTY
+- Select the PIE startup objects when linking on EL8 aarch64
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.18-1PGSTY
 - Initial Pigsty RPM package for pgcopydb 0.18
 - Package one binary per supported PostgreSQL major to keep client tools aligned

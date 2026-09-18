@@ -14,6 +14,7 @@ Summary:	WebAssembly component runtime for PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/jnicholls/pgwasm
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		pgwasm-0.1.0-runtime-defaults-fix.patch
 # Source0 is the upstream main snapshot at commit 535b53363f8208af139e757e508e66c46309ee29:
 # https://github.com/jnicholls/pgwasm/archive/535b53363f8208af139e757e508e66c46309ee29.tar.gz
 
@@ -29,6 +30,7 @@ default unless a database administrator enables them.
 
 %prep
 %setup -q -n %{sname}-%{commit}
+patch --batch --fuzz=0 -p1 < %{PATCH0}
 # Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
 
 %build
@@ -60,17 +62,19 @@ if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
 fi
 
 %check
-readelf -Ws target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so | grep -q _PG_init
+PACKAGE_TARGET="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{commit}/target}"
+readelf -Ws "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so" | grep -q _PG_init
 
 %install
 %{__rm} -rf %{buildroot}
 %{__install} -d %{buildroot}%{pginstdir}/lib
 %{__install} -d %{buildroot}%{pginstdir}/share/extension
-%{__install} -m 0755 target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so \
+PACKAGE_TARGET="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{commit}/target}"
+%{__install} -m 0755 "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so" \
 	%{buildroot}%{pginstdir}/lib/%{pname}.so
-%{__install} -m 0644 target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control \
+%{__install} -m 0644 "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control" \
 	%{buildroot}%{pginstdir}/share/extension/%{pname}.control
-%{__install} -m 0644 target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql \
+%{__install} -m 0644 "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/"%{pname}*.sql \
 	%{buildroot}%{pginstdir}/share/extension/
 
 %files

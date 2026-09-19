@@ -10,7 +10,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.25.6
+Version:	0.25.9
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 # Exact per-crate expressions are installed as third-party/LICENSE-EXPRESSIONS.txt.
@@ -18,9 +18,8 @@ Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	(AGPL-3.0-or-later) AND 0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND CDLA-Permissive-2.0 AND ISC AND MIT AND MIT-0 AND MPL-2.0 AND Unicode-3.0 AND Unlicense AND Zlib AND zlib-acknowledgement
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_search/0.25.6/pg_search-0.25.6.zip
 Source1:	pg_search_collect_third_party_licenses.py
-Patch0:		pg-search-0.25.6.patch
+Patch0:		pg-search-0.25.9.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel pkgconfig python3
@@ -92,6 +91,9 @@ cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.25.9-1PGSTY
+- Update to 0.25.9
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.25.6-1PGSTY
 - Update to upstream PGXN 0.25.6
 - Build the fixed Cargo graph with Rust 1.97.1 and cargo-pgrx 0.19.2

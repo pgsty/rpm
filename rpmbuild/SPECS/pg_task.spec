@@ -21,6 +21,7 @@ License:	MIT
 URL:		https://github.com/RekGRpth/pg_task
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/pg_task/3.0.0/pg_task-3.0.0.zip
+Patch0:		pg_task-3.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -39,7 +40,7 @@ install a CREATE EXTENSION control file.
 %prep
 %setup -q -n %{sname}-%{version}
 chmod 0755 postgres.sh exec.sh latch.sh
-patch -p1 --forward --batch --fuzz=0 < %{_specdir}/patches/%{sname}-%{version}.patch
+patch -p1 --forward --batch --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} %{with_llvm_arg}
@@ -59,6 +60,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %changelog
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 3.0.0-1PGSTY
 - Update to 3.0.0
+- Include the PGXS compatibility patch in the source RPM
 
 * Fri Jun 12 2026 Vonng <rh@vonng.com> - 2.1.29-1PIGSTY
 - Build postgres.c with pcre2grep in EL builders

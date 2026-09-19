@@ -64,6 +64,7 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/"%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
+%license LICENSE
 %{pginstdir}/lib/%{pname}-%{version}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
@@ -72,6 +73,7 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 %changelog
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.6.3-1PGSTY
 - Update to 0.6.3
+- Include the upstream license in the binary package
 
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.6.2-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies

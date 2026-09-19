@@ -23,13 +23,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.10.4
+Version:	2.10.10
 Release:	1PGSTY%{?dist}
 Summary:	Additional tools for PL/pgSQL function validation
 License:	MIT
 URL:		https://github.com/okbob/plpgsql_check
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/plpgsql_check/2.10.4/plpgsql_check-2.10.4.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -67,6 +66,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.10.10-1PGSTY
+- Update to 2.10.10
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.10.4-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

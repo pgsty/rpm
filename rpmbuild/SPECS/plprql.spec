@@ -62,6 +62,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
+%license LICENSE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
@@ -70,6 +71,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %changelog
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 18.0.2-1PGSTY
 - Update to 18.0.2
+- Include the upstream license in the binary package
 
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 18.0.1-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies

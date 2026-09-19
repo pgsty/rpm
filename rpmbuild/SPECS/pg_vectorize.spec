@@ -8,14 +8,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.27.0
+Version:	0.27.1
 Release:	1PGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize
 Source0:	pg_vectorize-%{version}.tar.gz
-Patch0:		pg-vectorize-0.27.0.patch
-Patch1:		pg-vectorize-0.27.0-chunk-table-fix.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -28,8 +26,6 @@ This allows you to do vector search and build LLM applications on existing data 
 
 %prep
 %setup -q -n %{srcdir}
-patch --batch --fuzz=0 -p1 < %{PATCH0}
-patch --batch --fuzz=0 -p1 < %{PATCH1}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -75,6 +71,9 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.27.1-1PGSTY
+- Update to 0.27.1
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.27.0-1PGSTY
 - Update the source package to upstream release 0.27.0
 - Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2

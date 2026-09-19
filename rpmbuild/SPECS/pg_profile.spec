@@ -2,12 +2,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_profile 4.15 supports PostgreSQL 14 through 18 in Pigsty}
+%{error:pg_profile 4.16 supports PostgreSQL 14 through 18 in Pigsty}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        4.15
-Release:        1PGSTY%{?dist}
+Version:        4.16
+Release:	1PGSTY%{?dist}
 Summary:        PostgreSQL historic workload reports
 License:        PostgreSQL
 URL:            https://github.com/zubkov-andrei/pg_profile
@@ -41,6 +41,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 \
 %{pginstdir}/share/extension/%{sname}--*.sql
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 4.16-1PGSTY
+- Update to 4.16
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 4.15-1PGSTY
 - Initial Pigsty RPM package for signed upstream pg_profile 4.15
 - Preserve the released 4.11 to 4.14 and 4.14 to 4.15 extension SQL chain

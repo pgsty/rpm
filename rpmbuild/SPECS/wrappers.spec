@@ -4,15 +4,14 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.2
+Version:	0.6.3
 Release:	1PGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
-Source0:    wrappers-%{version}-pgrx0.19.2.tar.gz
-#           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.2.tar.gz
-Patch0:     wrappers-0.6.2-ethnum-1.5.3.patch
-Patch1:     wrappers-0.6.2-pgrx0.19.2-s3vec.patch
+Source0:    wrappers-%{version}.tar.gz
+Patch0:     wrappers-0.6.3.patch
+#           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang
@@ -26,14 +25,15 @@ and supports a growing set of FDWs for external services and data platforms.
 
 %prep
 %setup -q -n %{srcdir}
-# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
+# Upstream supplies pgrx 0.19.2 and ethnum 1.5.3; retain the SQL ordering fix.
 patch --batch --fuzz=0 -p1 < %{PATCH0}
-patch --batch --fuzz=0 -p1 < %{PATCH1}
 
 %build
 %set_build_flags
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
+# Fat LTO over all FDWs exceeds the pilot builder's memory budget.
+export CARGO_PROFILE_RELEASE_LTO="${CARGO_PROFILE_RELEASE_LTO:-thin}"
 cd %{_builddir}/%{srcdir}/%{pname}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
@@ -70,6 +70,9 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.6.3-1PGSTY
+- Update to 0.6.3
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.6.2-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies
 - Declare clang as a build dependency for pgrx bindgen

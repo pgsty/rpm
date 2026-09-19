@@ -62,6 +62,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 - Update to 3.0.0
 - Include the PGXS compatibility patch in the source RPM
 - Use portable curl flags and bounded downloads with the EL8 curl client
+- Keep downloaded PostgreSQL source within the target major version
 
 * Fri Jun 12 2026 Vonng <rh@vonng.com> - 2.1.29-1PIGSTY
 - Build postgres.c with pcre2grep in EL builders

@@ -1,7 +1,7 @@
 %global sname ivorysql-18
 %global pgmajorversion 18
-%global pgversion 18.4
-%global ivoryversion 5.4
+%global pgversion 18.6
+%global ivoryversion 5.6
 %global pgbaseinstdir /usr/ivory-18
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
@@ -17,7 +17,7 @@ Summary:        IvorySQL %{ivoryversion} PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/IvorySQL/IvorySQL
 Source0:        ivorysql-%{ivoryversion}.tar.gz
-Patch0:         ivorysql-5.4-sequence-parser-mode.patch
+Patch0:         ivorysql-5.6-sequence-parser-mode.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -50,9 +50,10 @@ tar --strip-components=1 -xzf %{SOURCE0}
 %patch -P 0 -p1
 
 %build
+%set_build_flags
 CFLAGS="${CFLAGS:-%optflags}"
 CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -v ffast-math | xargs -n 100`
-LDFLAGS="-Wl,--as-needed"; export LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,--as-needed"; export LDFLAGS
 export CFLAGS
 
 ./configure --enable-rpath \
@@ -126,6 +127,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Sat Sep 19 2026 Ruohang Feng <rh@vonng.com> - 5.6-1PGSTY
+- Update to IvorySQL 5.6 based on PostgreSQL 18.6
+
 * Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 5.4-1PGSTY
 - Restrict Oracle sequence syntax to the Oracle parser mode
 

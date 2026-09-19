@@ -19,14 +19,12 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.7.0
-Release:        1PGSTY%{?dist}
+Version:        1.7.1
+Release:	1PGSTY%{?dist}
 Summary:        Transparent Data Encryption for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/labmiriade/pg_vault_tde
 Source0:        %{sname}-%{version}.tar.gz
-#               normalized from https://api.pgxn.org/dist/pg_vault_tde/1.7.0/pg_vault_tde-1.7.0.zip
-Patch0:         pg-vault-tde-1.7.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc make pkgconfig openssl-devel >= 3.0 libcurl-devel chrpath
@@ -44,7 +42,7 @@ PKCS#11 key providers. The module must be configured in
 shared_preload_libraries before CREATE EXTENSION pg_vault_tde.
 
 %prep
-%autosetup -p1 -n %{sname}-%{version}
+%setup -q -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
@@ -73,6 +71,9 @@ chrpath -d %{buildroot}%{pginstdir}/lib/%{pname}.so
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 1.7.1-1PGSTY
+- Update to 1.7.1
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.7.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

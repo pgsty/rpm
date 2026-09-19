@@ -1357,3 +1357,8 @@ rm-srpm:
 	pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \
 	orioledb-16 orioledb-17 orioledb-18 orioledb-all cloudberry cloudberry-backup cloudberry-pxf \
 	ls-rpm ls-srpm rm-rpm rm-srpm
+
+# Extensions added from the September 2026 discovery batch.
+
+pg_circuit:
+	./build pg_circuit 16 17 18

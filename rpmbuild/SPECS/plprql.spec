@@ -7,7 +7,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	18.0.1
+Version:	18.0.2
 Release:	1PGSTY%{?dist}
 Summary:	Use PRQL in PostgreSQL
 License:	Apache-2.0
@@ -27,7 +27,7 @@ PRQL introduces a pipeline concept (similar to Unix pipes) that transforms data 
 
 %prep
 %setup -q -n %{sname}-%{version}
-# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
+# Official upstream release includes pgrx 0.19.2 and its lockfile.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -68,6 +68,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 18.0.2-1PGSTY
+- Update to 18.0.2
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 18.0.1-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies
 

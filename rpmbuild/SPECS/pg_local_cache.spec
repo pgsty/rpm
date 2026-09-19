@@ -23,14 +23,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.1
+Version:	2.0.4
 Release:	1PGSTY%{?dist}
 Summary:	Transaction-aware cache for PostgreSQL primary-key reads
 License:	MIT
 URL:		https://github.com/profundium/pg_local_cache
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_local_cache-2.0.1.patch
-#           official v2.0.1 source archive
+Patch0:		pg_local_cache-2.0.4.patch
+#           official v2.0.4 source archive
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -71,6 +71,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.0.4-1PGSTY
+- Update to 2.0.4
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 2.0.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

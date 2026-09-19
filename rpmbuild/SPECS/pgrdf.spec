@@ -8,15 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.34
+Version:	0.6.36
 Release:	1PGSTY%{?dist}
 Summary:	RDF, SPARQL, SHACL, and OWL reasoning for PostgreSQL
 License:	MIT
 URL:		https://github.com/styk-tv/pgRDF
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.34.tar.gz
-#           tag commit 1b82842dcb60b74c060b0344310b47d1c84a8e8d
-Patch0:		pgrdf-0.6.34.patch
+#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.36.tar.gz
+Patch0:		pgrdf-0.6.36.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt git
@@ -76,6 +75,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.6.36-1PGSTY
+- Update to 0.6.36
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.6.34-1PGSTY
 - Update to upstream 0.6.34 with pgrx 0.19.2 for PostgreSQL 14-18
 - Pin the reasonable fork commit and preserve the locked dependency graph

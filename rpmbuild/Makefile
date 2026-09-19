@@ -1362,3 +1362,6 @@ rm-srpm:
 
 pg_circuit:
 	./build pg_circuit 16 17 18
+
+macavity:
+	./build macavity 16 17 18

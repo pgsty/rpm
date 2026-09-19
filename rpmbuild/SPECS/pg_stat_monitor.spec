@@ -11,7 +11,7 @@
 
 Summary:	PostgreSQL Query Performance Monitoring Tool
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.3.2
+Version:	2.4.0
 Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/percona/%{sname}
@@ -72,10 +72,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 
 %if %llvm
  %{pginstdir}/lib/bitcode/%{sname}*.bc
- %{pginstdir}/lib/bitcode/%{sname}/*.bc
+ %{pginstdir}/lib/bitcode/%{sname}/
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.4.0-1PGSTY
+- Update to 2.4.0
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.3.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

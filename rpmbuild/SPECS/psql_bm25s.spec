@@ -23,13 +23,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.4.13
+Version:	0.4.14
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension for BM25-family lexical retrieval
 License:	Apache-2.0
 URL:		https://github.com/Intelligent-Internet/psql_bm25s
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/Intelligent-Internet/psql_bm25s/releases/tag/v0.4.13
+#           https://github.com/Intelligent-Internet/psql_bm25s/releases/tag/v0.4.14
 #           Supported upstream CI/release matrix: PostgreSQL 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -48,7 +48,7 @@ tokenization helpers, mutable-workload index maintenance, and SQL query
 interfaces.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n II-42-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bin/pg_config %{?_smp_mflags}
@@ -70,6 +70,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bi
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.4.14-1PGSTY
+- Update to 0.4.14
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.4.13-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

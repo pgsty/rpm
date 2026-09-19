@@ -19,6 +19,7 @@ Summary:        Runtime protection against dangerous PostgreSQL statements
 License:        Apache-2.0
 URL:            https://github.com/PG-Circuit/pg-circuit
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:         pg_circuit-0.1.0-pg18.patch
 # Official release tarball; the archive has no enclosing directory.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -37,6 +38,7 @@ Community reports runtime pressure but does not automatically change modes.
 
 %prep
 %setup -q -c -n pg_circuit-0.1.0
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} DOCS=
@@ -58,3 +60,4 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %changelog
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Package upstream 0.1.0 for PostgreSQL 16 through 18
+- Adapt timestamp includes and WAL counters for PostgreSQL 18

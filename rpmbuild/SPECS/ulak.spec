@@ -24,14 +24,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.3
+Version:	0.2.0
 Release:	1PGSTY%{?dist}
 Summary:	Transactional outbox extension with background-worker delivery
 License:	Apache-2.0
 URL:		https://github.com/zeybek/ulak
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		ulak-0.0.3.patch
-#           https://github.com/zeybek/ulak/archive/refs/tags/v0.0.3.tar.gz
+Patch0:		ulak-0.2.0.patch
+#           https://github.com/zeybek/ulak/archive/refs/tags/v0.2.0.tar.gz
 #           Built with HTTP, Kafka, MQTT, Redis, and AMQP dispatchers on EL9; upstream NATS support is left disabled because cnats packages are unavailable in the builder repos
 
 BuildRequires:	gcc
@@ -86,6 +86,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} ENABLE_KAFKA=1 ENABLE_MQT
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
+- Update to 0.2.0
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.0.3-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

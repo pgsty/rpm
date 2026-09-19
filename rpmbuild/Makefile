@@ -1374,3 +1374,6 @@ pg_grammar_guard:
 
 jev:
 	./build jev 14 15 16 17
+
+kafgres:
+	./build kafgres 16

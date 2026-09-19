@@ -2,15 +2,7 @@
 %global sname biscuit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%ifarch x86_64
-%if 0%{?rhel} && 0%{?rhel} == 9
-%{!?llvm:%global llvm 0}
-%else
 %{!?llvm:%global llvm 1}
-%endif
-%else
-%{!?llvm:%global llvm 1}
-%endif
 
 %if %llvm
 %global with_llvm_arg %{nil}
@@ -75,6 +67,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install P
 %changelog
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 3.1.0-1PGSTY
 - Update to 3.1.0
+- Enable LLVM by default on EL9 x86_64 after validating PostgreSQL 16-18
 
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 3.0.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms

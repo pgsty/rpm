@@ -19,14 +19,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.0.0
+Version:	3.1.0
 Release:	1PGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
 Source0:	Biscuit-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/biscuit/3.0.0/biscuit-3.0.0.zip
-Patch0:		biscuit-3.0.0.patch
+Patch0:		biscuit-3.1.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -74,6 +73,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install P
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 3.1.0-1PGSTY
+- Update to 3.1.0
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 3.0.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

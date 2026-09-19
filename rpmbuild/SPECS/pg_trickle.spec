@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.92.0
+Version:	0.107.0
 Release:	1PGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/trickle-labs/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg-trickle-0.92.0.patch
-#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.92.0
+Patch0:		pg-trickle-0.107.0.patch
+#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.107.0
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
@@ -38,7 +38,7 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_TOOLCHAIN=1.96.1
+export RUSTUP_TOOLCHAIN=1.98.0
 
 PGRX_VERSION=0.19.2
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
@@ -85,6 +85,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.107.0-1PGSTY
+- Update to 0.107.0
+
 * Thu Sep 03 2026 Vonng <rh@vonng.com> - 0.92.0-1PGSTY
 - Update to the signed upstream v0.92.0 tag archive
 - Keep PostgreSQL 18 on cargo-pgrx and pgrx 0.19.2 with a locked dependency graph

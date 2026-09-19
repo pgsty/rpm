@@ -23,7 +23,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.116
+Version:	0.117
 Release:	1PGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
@@ -66,9 +66,15 @@ delivering robust functionality and flexibility for diverse data management need
 # Match upstream RPM packaging: the OSS package excludes the internal,
 # distributed-only extension.
 sed -i '/internal\/pg_documentdb_distributed/d' Makefile
+# EL10 aarch64's brp check rejects the upstream absolute self-RPATH.  Keep the
+# required sibling-library lookup relative to each installed module.  The
+# make-to-shell expansion and EL10 brp behavior of this form are preflighted,
+# but the resulting DocumentDB RPM still requires a fresh build and runtime QA.
+sed -i 's|-Wl,-rpath=$(shell $(PG_CONFIG) --pkglibdir)|-Wl,-rpath='"'"'$$ORIGIN'"'"',--enable-new-dtags|g' \
+  Makefile.cflags pg_documentdb_extended_rum/core/Makefile
 
 %build
-# Match the upstream 0.116 RPM packaging: keep linker-generated ELF boundary
+# Match the upstream 0.117 RPM packaging: keep linker-generated ELF boundary
 # symbols out of the two bundled RUM libraries without changing upstream code.
 cat > %{_builddir}/documentdb-hide-linker-syms.map <<'EOF'
 {
@@ -90,12 +96,27 @@ rm -f %{_builddir}/.documentdb-uvprobe.so
 # PostgreSQL 15 expands COPT into both CFLAGS and LDFLAGS, which sends the
 # anonymous map to ld twice.  Keep the upstream map but pass it exactly once
 # through the documented link flags instead.
-DOCUMENTDB_LDFLAGS="$(%{pginstdir}/bin/pg_config --ldflags) $UNDEF_VERSION_FLAG -Wl,--version-script=%{_builddir}/documentdb-hide-linker-syms.map"
+# PostgreSQL's module lookup does not apply to the ELF loader's transitive
+# DT_NEEDED lookup.  Strip the absolute pg_config RUNPATH here only because the
+# module Makefiles above now provide a relative sibling lookup.  The current
+# EL10 aarch64 candidate predates that change and is not suitable for release.
+PG_LDFLAGS="$(%{pginstdir}/bin/pg_config --ldflags)"
+PG_LDFLAGS="$(printf '%s\n' "$PG_LDFLAGS" | sed -E "s@-Wl,-rpath,'/usr/pgsql-[0-9]+/lib',--enable-new-dtags@@g")"
+DOCUMENTDB_LDFLAGS="$PG_LDFLAGS $UNDEF_VERSION_FLAG -Wl,--version-script=%{_builddir}/documentdb-hide-linker-syms.map"
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} LDFLAGS="$DOCUMENTDB_LDFLAGS"
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PG_LDFLAGS="$(%{pginstdir}/bin/pg_config --ldflags)"
+PG_LDFLAGS="$(printf '%s\n' "$PG_LDFLAGS" | sed -E "s@-Wl,-rpath,'/usr/pgsql-[0-9]+/lib',--enable-new-dtags@@g")"
+UNDEF_VERSION_FLAG=""
+if echo 'int _documentdb_uvprobe;' | gcc -shared -fPIC -x c - \
+    -o %{_builddir}/.documentdb-uvprobe.so -Wl,--undefined-version 2>/dev/null; then
+    UNDEF_VERSION_FLAG="-Wl,--undefined-version"
+fi
+rm -f %{_builddir}/.documentdb-uvprobe.so
+DOCUMENTDB_LDFLAGS="$PG_LDFLAGS $UNDEF_VERSION_FLAG -Wl,--version-script=%{_builddir}/documentdb-hide-linker-syms.map"
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} LDFLAGS="$DOCUMENTDB_LDFLAGS"
 
 %files
 %doc README.md
@@ -110,6 +131,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.117-1PGSTY
+- Update to 0.117
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.116-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

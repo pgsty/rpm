@@ -2,13 +2,13 @@
 set -euo pipefail
 
 if [[ $# -ne 2 ]]; then
-  echo 'usage: documentdb.sh documentdb-0.116-0.tar.gz intelrdfpmath-applied-2.0u3-1.tar.gz' >&2
+  echo 'usage: documentdb.sh documentdb-0.117-0.tar.gz intelrdfpmath-applied-2.0u3-1.tar.gz' >&2
   exit 2
 fi
 
 TARBALL=$1
 INTEL_TARBALL=$2
-EXPECTED_TARBALL=documentdb-0.116-0.tar.gz
+EXPECTED_TARBALL=documentdb-0.117-0.tar.gz
 EXPECTED_INTEL_TARBALL=intelrdfpmath-applied-2.0u3-1.tar.gz
 EXPECTED_INTEL_SIZE=5805822
 EXPECTED_INTEL_SHA256=3212a37262ce55c9f0bf16103f6a5df0e4ce9e9eea3c2a7866c39097227e5e56
@@ -20,6 +20,9 @@ PCRE2_SOURCE=${PCRE2_SOURCE:-}
 UNCRUSTIFY_SOURCE=${UNCRUSTIFY_SOURCE:-}
 CITUS_TOOLS_SOURCE=${CITUS_TOOLS_SOURCE:-}
 DOCUMENTDB_BUILD_JOBS=${DOCUMENTDB_BUILD_JOBS:-2}
+DOCUMENTDB_SETUP_ROOT=${DOCUMENTDB_SETUP_ROOT:-${TMPDIR:-/tmp}}
+SETUP_DIR="${DOCUMENTDB_SETUP_ROOT}/install_setup"
+EXTRACT_DIR="${DOCUMENTDB_SETUP_ROOT}/documentdb"
 
 if [[ $TARBALL != "$EXPECTED_TARBALL" || $INTEL_TARBALL != "$EXPECTED_INTEL_TARBALL" ]]; then
   echo "unexpected DocumentDB source inputs: $TARBALL $INTEL_TARBALL" >&2
@@ -80,11 +83,11 @@ tar -tf "$INTELRDFPMATH_SOURCE" > "$intel_tar_manifest"
 grep -Fx './LIBRARY/makefile' "$intel_tar_manifest" >/dev/null
 grep -Fx './LIBRARY/src/bid_functions.h' "$intel_tar_manifest" >/dev/null
 
-echo "extract documentdb scripts to /tmp/install_setup"
-rm -rf /tmp/documentdb /tmp/install_setup; mkdir -p /tmp/documentdb;
-tar -xf "${SOURCE}" -C /tmp/documentdb --strip-component=1
-cp -r /tmp/documentdb/scripts /tmp/install_setup
-cd /tmp/install_setup
+echo "extract documentdb scripts to ${SETUP_DIR}"
+rm -rf "$EXTRACT_DIR" "$SETUP_DIR"; mkdir -p "$EXTRACT_DIR";
+tar -xf "${SOURCE}" -C "$EXTRACT_DIR" --strip-component=1
+cp -r "$EXTRACT_DIR/scripts" "$SETUP_DIR"
+cd "$SETUP_DIR"
 patch --batch --fuzz=0 -p0 < "$SCRIPT_DIR/documentdb-intelrdfpmath-offline.patch"
 
 for dependency_source in "$LIBBSON_SOURCE" "$PCRE2_SOURCE" "$UNCRUSTIFY_SOURCE" "$CITUS_TOOLS_SOURCE"; do
@@ -104,10 +107,10 @@ sed -i "/^mkdir build$/i\\sed -i 's/f\\\\.i/f.m_i/g' src/enum_flags.h" install_c
 
 echo "install documentdb dependencies"
 export CLEANUP_SETUP=1
-export INSTALL_DEPENDENCIES_ROOT=/tmp/install_setup
+export INSTALL_DEPENDENCIES_ROOT="$SETUP_DIR"
 export MAKE_PROGRAM=cmake
 export INTELRDFPMATH_SOURCE DOCUMENTDB_BUILD_JOBS
-./install_setup_libbson.sh
-./install_setup_pcre2.sh
-./install_setup_intel_decimal_math_lib.sh
-./install_citus_indent.sh
+bash ./install_setup_libbson.sh
+bash ./install_setup_pcre2.sh
+bash ./install_setup_intel_decimal_math_lib.sh
+bash ./install_citus_indent.sh

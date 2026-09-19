@@ -19,7 +19,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4
+Version:	1.5
 Release:	1PGSTY%{?dist}
 Summary:	foreign-data wrapper for Postgres log file access
 License:	Apache-2.0
@@ -40,7 +40,7 @@ It basically provides SQL interface to create foreign tables for each PostgreSQL
 contents can be read and analyzed. Only superusers are allowed to create this extension.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n postgresql-logfdw-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
@@ -63,6 +63,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} USE_PGXS=
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 1.5-1PGSTY
+- Update to 1.5
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.4-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

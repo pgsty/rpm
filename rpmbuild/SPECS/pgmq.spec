@@ -3,14 +3,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.12.0
+Version:	1.13.0
 Release:	1PGSTY%{?dist}
 Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
 URL:		https://github.com/pgmq/pgmq
 Source0:	%{sname}-%{version}.tar.gz
 BuildArch:	noarch
-#           normalized from https://api.pgxn.org/dist/pgmq/1.11.1/pgmq-1.11.1.zip
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -38,6 +37,9 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 1.13.0-1PGSTY
+- Update to 1.13.0
+
 * Sun Jul 19 2026 Vonng <rh@vonng.com> - 1.12.0-1PIGSTY
 - Update to upstream PGXN 1.12.0
 

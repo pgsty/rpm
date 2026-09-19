@@ -1365,3 +1365,6 @@ pg_circuit:
 
 macavity:
 	./build macavity 16 17 18
+
+pg_living_assertions:
+	./build pg_living_assertions 14 15 16 17 18

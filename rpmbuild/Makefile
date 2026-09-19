@@ -1371,3 +1371,6 @@ pg_living_assertions:
 
 pg_grammar_guard:
 	./build pg_grammar_guard 14 15 16 17 18
+
+jev:
+	./build jev 14 15 16 17

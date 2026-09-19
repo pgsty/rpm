@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pg_fts 1.5.3 only supports PostgreSQL 17 and 18}
+%{error:pg_fts 1.8.3 only supports PostgreSQL 17 and 18}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -23,13 +23,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.3
+Version:	1.8.3
 Release:	1PGSTY%{?dist}
 Summary:	Full-text search with BM25 ranking for PostgreSQL
 License:	PostgreSQL AND MIT
 URL:		https://codeberg.org/gregburd/pg_fts
 Source0:	%{sname}-%{version}.tar.gz
-#           https://codeberg.org/gregburd/pg_fts/archive/v1.5.3.tar.gz
+#           https://codeberg.org/gregburd/pg_fts/archive/v1.8.3.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -56,17 +56,19 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 
 %files
 %license LICENSE
-%doc README.md CHANGELOG.md CAPABILITIES.md ROADMAP.md doc/MIGRATING_FROM_PG_TEXTSEARCH.md
+%doc README.md CHANGELOG.md ROADMAP.md doc/MIGRATING_FROM_PG_TEXTSEARCH.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
-%exclude /usr/lib/.build-id/*
 
 %if %llvm
 %{pginstdir}/lib/bitcode/%{pname}*
 %endif
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 1.8.3-1PGSTY
+- Update to 1.8.3
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.5.3-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

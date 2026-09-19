@@ -50,6 +50,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} USE_PGXS=1 install DESTDIR=%{buildroot}
 
 %files
+%license LICENSE NOTICE
 %doc README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -65,6 +66,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} USE_PGXS=
 %changelog
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 1.5-1PGSTY
 - Update to 1.5
+- Include the upstream license and notice in the binary package
 
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.4-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms

@@ -7,13 +7,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.7
+Version:	0.2.8
 Release:	1PGSTY%{?dist}
 Summary:	Durable SQL functions for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/microsoft/pg_durable
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg-durable-0.2.7.patch
+Patch0:		pg-durable-0.2.8.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
@@ -71,6 +71,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.txt %{buildroot}%{_licen
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.2.8-1PGSTY
+- Update to 0.2.8
+
 * Thu Sep 03 2026 Vonng <rh@vonng.com> - 0.2.7-1PGSTY
 - Update to the official upstream pg_durable 0.2.7 source release
 - Keep PostgreSQL 14 through 18 on cargo-pgrx and pgrx 0.19.2

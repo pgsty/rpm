@@ -24,7 +24,7 @@ Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pg_task-3.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	gcc
+BuildRequires:	gcc curl
 BuildRequires:	pcre2-tools
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -61,6 +61,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 3.0.0-1PGSTY
 - Update to 3.0.0
 - Include the PGXS compatibility patch in the source RPM
+- Use portable curl flags and bounded downloads with the EL8 curl client
 
 * Fri Jun 12 2026 Vonng <rh@vonng.com> - 2.1.29-1PIGSTY
 - Build postgres.c with pcre2grep in EL builders

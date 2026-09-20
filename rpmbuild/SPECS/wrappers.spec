@@ -15,6 +15,9 @@ Patch0:     wrappers-0.6.3.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang
+%if 0%{?rhel} == 8
+BuildRequires:	file
+%endif
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -63,6 +66,19 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
 cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/"%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
+%if 0%{?rhel} == 8
+# EL8 file defaults to 32768 ELF sections; all_fdws exceeds that limit.
+# Let find-debuginfo recognize the unstripped library without removing notes
+# or DWARF. The file 5.33 section limit is a uint16_t, so 65536 wraps to zero.
+mkdir -p %{_builddir}/%{srcdir}/.rpm-tools
+cat > %{_builddir}/%{srcdir}/.rpm-tools/file <<'EOF'
+#!/bin/sh
+exec /usr/bin/file -P elf_shnum=65535 "$@"
+EOF
+chmod 755 %{_builddir}/%{srcdir}/.rpm-tools/file
+export PATH=%{_builddir}/%{srcdir}/.rpm-tools:$PATH
+%endif
+
 %files
 %license LICENSE
 %{pginstdir}/lib/%{pname}-%{version}.so
@@ -71,6 +87,9 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Sep 20 2026 Vonng <rh@vonng.com> - 0.6.3-1PGSTY
+- Raise the EL8 file section limit so complete debug packages are extracted
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.6.3-1PGSTY
 - Update to 0.6.3
 - Include the upstream license in the binary package

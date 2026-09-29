@@ -6,13 +6,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.4.2
+Version:        0.5.1
 Release:        1PGSTY%{?dist}
 Summary:        Executable SQL assertions with recorded verification history
 License:        PostgreSQL
 URL:            https://github.com/Manuelreyesbravo/pg_living_assertions
 Source0:        %{sname}-%{version}.tar.gz
-# PGXN ZIP normalized with GNU tar; see the corresponding DEB README.
+# Upstream tag source: https://codeload.github.com/Manuelreyesbravo/pg_living_assertions/tar.gz/refs/tags/v0.5.1
 BuildArch:      noarch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -21,11 +21,10 @@ Requires:       postgresql%{pgmajorversion}-server
 %description
 pg_living_assertions stores SQL checks, their results, verification times
 and assertion replacement history. Checks run on demand in a read-only
-STABLE context. This is not a per-write SQL ASSERTION constraint.
-The distribution version is 0.4.2; the SQL extension version is 0.4.1.
+subtransaction that is always rolled back. This is not a per-write SQL ASSERTION constraint.
 
 %prep
-%setup -q -n pg_living_assertions-0.4.2
+%setup -q -n pg_living_assertions-0.5.1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} DOCS=
@@ -40,6 +39,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} DOCS=
 %{pginstdir}/share/extension/%{sname}--*.sql
 
 %changelog
+* Tue Sep 29 2026 Vonng <rh@vonng.com> - 0.5.1-1PGSTY
+- Update to upstream 0.5.1
+- Describe the read-only subtransaction checks and retain upgrade scripts
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.4.2-1PGSTY
 - Package upstream 0.4.2 for PostgreSQL 14 through 18
 - Retain upstream SQL extension version 0.4.1 and all upgrade scripts

@@ -8,16 +8,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.0
+Version:	1.2.1
 Release:	1PGSTY%{?dist}
 Summary:	Graph database capabilities for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/evokoa/pggraph
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://github.com/Evokoa/pgGraph/releases/download/v1.2.0/pgGraph-1.2.0.zip
-#           tag commit 0c853efc9b9b4123d450ee89e4eea398c8d6c101
+#           normalized from the official GitHub v1.2.1 tag archive
 #           SQL extension payload is named graph.
-Patch0:		pggraph-1.2.0.patch
+Patch0:		pggraph-1.2.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -81,6 +80,10 @@ install -m 644 %{_builddir}/%{srcdir}/NOTICE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Sep 29 2026 Vonng <rh@vonng.com> - 1.2.1-1PGSTY
+- Update to upstream 1.2.1 with pgrx pinned to 0.19.2
+- Preserve the locked dependency graph and debug package payload
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
 - Update to upstream 1.2.0 and ship the 1.0 to 1.2 migration chain
 - Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2

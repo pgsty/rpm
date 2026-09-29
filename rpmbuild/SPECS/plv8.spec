@@ -2,6 +2,10 @@
 %global sname plv8
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:plv8 only supports PostgreSQL 14 through 18 in PGSTY builds}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -19,13 +23,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.2.4
+Version:	3.2.5
 Release:	1PGSTY%{?dist}
 Summary:	V8 Engine Javascript Procedural Language add-on for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/plv8/plv8
 Source0:    plv8-%{version}.tar.gz
-#           https://github.com/plv8/plv8/archive/refs/tags/v3.2.4.tar.gz
+Patch0:     plv8-3.2.5.patch
+#           https://github.com/plv8/plv8/archive/refs/tags/v3.2.5.tar.gz
+#           includes v8-cmake at gitlink 90d6634d820af06f14c642a9ef3a7bfa7ab4667a
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc-c++
@@ -46,14 +52,14 @@ PLV8 is a trusted Javascript language extension for PostgreSQL. It can be used f
 # engine, build only the V8 libraries plv8 links, link the architecture
 # stack-scanner helper into mksnapshot and the module, and add the <algorithm>
 # include that GCC 14+ requires.
-patch -p1 --forward -f < %{_specdir}/patches/plv8-3.2.4.patch
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 %set_build_flags
-PATH=%{pginstdir}/bin:$PATH %{__make} clean CC=/usr/bin/gcc CXX=/usr/bin/g++
+PATH=%{pginstdir}/bin:$PATH %{__make} clean CXX=/usr/bin/g++
 # Preserve the distribution debug flags in both the bundled V8 engine and
 # plv8's own objects so the split debuginfo package contains full DWARF.
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} NUMPROC=%{_smp_build_ncpus} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS"
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} NUMPROC=%{_smp_build_ncpus} CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS"
 
 %install
 %{__rm} -rf %{buildroot}
@@ -61,7 +67,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} NUMPROC=%{_smp_build_ncpu
 %if 0%{?rhel} >= 10
 export QA_RPATHS=3
 %endif
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} NUMPROC=%{_smp_build_ncpus} CC=/usr/bin/gcc CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS"
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} NUMPROC=%{_smp_build_ncpus} CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS"
 
 %files
 %{pginstdir}/lib/%{pname}*.so
@@ -74,6 +80,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Tue Sep 29 2026 Vonng <rh@vonng.com> - 3.2.5-1PGSTY
+- Update to upstream 3.2.5 with the pinned, verified V8 source bundle
+- Rebase V8 build fixes and include the patch in the SRPM
+- Order LLVM compilation after generated configuration headers
+- Let PGXS use the C++ linker while V8 CMake keeps separate C/C++ compilers
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 3.2.4-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

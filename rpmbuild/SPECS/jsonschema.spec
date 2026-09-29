@@ -7,13 +7,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.9
+Version:	0.1.10
 Release:	1PGSTY%{?dist}
 Summary:	JSON Schema validation functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/theory/pg-jsonschema-boon
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/jsonschema/0.1.9/jsonschema-0.1.9.zip
+Patch0:		jsonschema-0.1.10.patch
+#           normalized from the official v0.1.10 GitHub tag archive
 #           This is distinct from Supabase pg_jsonschema.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -27,7 +28,7 @@ extension.
 
 %prep
 %setup -q -n %{sname}-%{version}
-# The source archive includes the pgrx 0.19.2 dependency update.
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -71,6 +72,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licens
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Sep 29 2026 Vonng <rh@vonng.com> - 0.1.10-1PGSTY
+- Update to upstream 0.1.10 and pin pgrx to 0.19.2
+- Apply the shared compatibility patch to pristine upstream sources
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.9-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

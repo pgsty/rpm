@@ -19,7 +19,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.19
+Version:	1.20
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Extension Whitelisting
 License:	PostgreSQL
@@ -61,6 +61,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Tue Sep 29 2026 Vonng <rh@vonng.com> - 1.20-1PGSTY
+- Update to 1.20 with custom-script validation and database-owner restrictions
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.19-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

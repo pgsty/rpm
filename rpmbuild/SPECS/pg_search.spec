@@ -2,7 +2,7 @@
 %global sname pg_search
 %global srcdir paradedb-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global rust_toolchain 1.97.1
+%global rust_toolchain stable
 %global pgrx_version 0.19.2
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
@@ -10,7 +10,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.25.9
+Version:	0.25.10
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 # Exact per-crate expressions are installed as third-party/LICENSE-EXPRESSIONS.txt.
@@ -19,7 +19,7 @@ License:	(AGPL-3.0-or-later) AND 0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-e
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
 Source1:	pg_search_collect_third_party_licenses.py
-Patch0:		pg-search-0.25.9.patch
+Patch0:		pg-search-0.25.10.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel pkgconfig python3
@@ -91,6 +91,10 @@ cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Sep 29 2026 Vonng <rh@vonng.com> - 0.25.10-1PGSTY
+- Update to upstream 0.25.10 with pgrx pinned to 0.19.2
+- Preserve the locked dependency graph and debug package payload
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.25.9-1PGSTY
 - Update to 0.25.9
 

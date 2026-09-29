@@ -23,13 +23,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.7.0
+Version:	3.0.0
 Release:	1PGSTY%{?dist}
 Summary:	RDF triplestore foreign data wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/rdf_fdw
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/rdf_fdw/2.7.0/rdf_fdw-2.7.0.zip
+Patch0:		rdf_fdw-3.0.0.patch
+#           normalized from https://github.com/jimjonesbr/rdf_fdw/archive/refs/tags/v3.0.tar.gz
 #           Supported: PostgreSQL 9.5+
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -46,10 +47,12 @@ Requires:	postgresql%{pgmajorversion}-server
 %description
 rdf_fdw is a PostgreSQL foreign data wrapper for RDF triplestores exposed
 through SPARQL endpoints.
+Upgrading from 2.x requires following the upstream migration instructions
+for rdfnode indexes and dependent objects before ALTER EXTENSION UPDATE.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/rdf_fdw-2.7.0.patch
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -78,6 +81,10 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %endif
 
 %changelog
+* Tue Sep 29 2026 Vonng <rh@vonng.com> - 3.0.0-1PGSTY
+- Update to upstream 3.0 and preserve the EL8 libcurl compatibility fix
+- Record the rdfnode migration requirements for upgrades from 2.x
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.7.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

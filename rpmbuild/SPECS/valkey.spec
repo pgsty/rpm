@@ -6,7 +6,7 @@
 
 Name:           valkey
 Version:        9.1.1
-Release:        1PGSTY%{?dist}
+Release:        5PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
 URL:            https://valkey.io/
@@ -292,6 +292,9 @@ exit 0
 %{_rpmmacrodir}/macros.valkey
 
 %changelog
+* Thu Oct 01 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-5PGSTY
+- Advance the revision beyond the published 9.1.1-4PIGSTY packages.
+
 * Thu Aug 06 2026 Ruohang Feng <rh@vonng.com> - 9.1.1-4PIGSTY
 - Leave the running server alone during upgrades instead of restarting it.
 - Stop owning a ghost /var/run/valkey. The unit declares RuntimeDirectory, and

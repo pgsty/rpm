@@ -56,6 +56,11 @@ patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 %set_build_flags
+%if 0%{?rhel} >= 10
+# V8 type-puns Node** and BasicBlock** in its scheduler. Match Chromium's
+# aliasing contract under EL10's GCC 14 LTO to keep mksnapshot from crashing.
+export CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"
+%endif
 PATH=%{pginstdir}/bin:$PATH %{__make} clean CXX=/usr/bin/g++
 # Preserve the distribution debug flags in both the bundled V8 engine and
 # plv8's own objects so the split debuginfo package contains full DWARF.
@@ -65,6 +70,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} NUMPROC=%{_smp_build_ncpu
 %{__rm} -rf %{buildroot}
 %set_build_flags
 %if 0%{?rhel} >= 10
+export CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"
 export QA_RPATHS=3
 %endif
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot} NUMPROC=%{_smp_build_ncpus} CXX=/usr/bin/g++ OPTFLAGS="-std=c++17 -fno-rtti $CXXFLAGS" V8_CXXFLAGS="$CXXFLAGS"
@@ -80,6 +86,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Sep 30 2026 Vonng <rh@vonng.com> - 3.2.5-1PGSTY
+- Preserve V8 aliasing semantics with GCC 14 LTO on EL10
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 3.2.5-1PGSTY
 - Update to upstream 3.2.5 with the pinned, verified V8 source bundle
 - Rebase V8 build fixes and include the patch in the SRPM

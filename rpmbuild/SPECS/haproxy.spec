@@ -104,7 +104,8 @@ fi
 
 %{__install} -d -m 0755 %{buildroot}%{_bindir}
 %{__install} -p -m 0755 admin/halog/halog %{buildroot}%{_bindir}/halog
-%{__install} -p -m 0755 admin/iprange/iprange %{buildroot}%{_bindir}/iprange
+# The unrelated iprange package owns /usr/bin/iprange.
+%{__install} -p -m 0755 admin/iprange/iprange %{buildroot}%{_bindir}/haproxy-iprange
 %{__install} -p -m 0755 admin/iprange/ip6range %{buildroot}%{_bindir}/ip6range
 %{__install} -p -D -m 0644 haproxy-utils/halog.1 %{buildroot}%{_mandir}/man1/halog.1
 %{__install} -p -D -m 0644 doc/lua-api/_build/man/%{name}-lua.1 \
@@ -192,7 +193,7 @@ fi
 %{_sbindir}/%{name}-reload
 %{_sbindir}/%{name}-dump-certs
 %{_bindir}/halog
-%{_bindir}/iprange
+%{_bindir}/haproxy-iprange
 %{_bindir}/ip6range
 %{_mandir}/man1/%{name}.1*
 %{_mandir}/man1/%{name}-lua.1*
@@ -204,6 +205,8 @@ fi
 %changelog
 * Mon Aug 31 2026 Ruohang Feng <rh@vonng.com> - 3.4.4-1PGSTY
 - Update to HAProxy 3.4.4.
+- Install the IPv4 range helper as haproxy-iprange to avoid colliding with
+  the unrelated iprange package.
 - Regenerate the versioned shared utilities archive deterministically; the
   upstream systemd template and downstream integration files are unchanged.
 - Share the versioned source patch with DEB packaging so embedded build flags

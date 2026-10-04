@@ -71,6 +71,21 @@
           "size": 19
         }
       ]
+    },
+    {
+      "package": "librttopo",
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/librttopo-1.1.0-43PGDG.rhel9.8.src.rpm",
+      "srpm_sha256": "bf61313a906a4db93d7a9ca992245f43394cfa4bddea0005c2ac049f9e487801",
+      "files": [
+        {
+          "name": "librttopo-1.1.0.tar.gz",
+          "sha256": "60b49acb493c1ab545116fb0b0d223ee115166874902ad8165eb39e9fd98eaa9",
+          "size": 301270,
+          "archive_roots": [
+            "librttopo"
+          ]
+        }
+      ]
     }
   ],
   "el8_additional_inputs": [

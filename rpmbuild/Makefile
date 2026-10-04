@@ -124,6 +124,9 @@ sfcgal:
 libgeotiff17:
 	./build libgeotiff17 18
 
+librttopo:
+	./build librttopo 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

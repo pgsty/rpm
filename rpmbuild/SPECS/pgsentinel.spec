@@ -11,7 +11,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.0
+Version:	1.5.1
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension providing Active session history
 License:	PostgreSQL
@@ -58,6 +58,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
    %{pginstdir}/lib/bitcode/*
 %endif
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.5.1-1PGSTY
+- Update to 1.5.1.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.5.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

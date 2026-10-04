@@ -8,13 +8,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.5.0
+Version:	0.5.1
 Release:	1PGSTY%{?dist}
 Summary:	CDC-to-MQTT broker extension for PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/pgmqtt
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/RayElg/pgmqtt/archive/refs/tags/0.5.0.tar.gz
+#           https://github.com/RayElg/pgmqtt/archive/refs/tags/0.5.1.tar.gz
 # Repacked with the PostgreSQL 14-18 manifest and pgrx 0.19.2 Cargo.lock.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -75,6 +75,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE.md %{buildroot}%{_licensedir}/%{na
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.5.1-1PGSTY
+- Update to 0.5.1.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.5.0-1PGSTY
 - Update to upstream release and SQL extension version 0.5.0
 - Build PostgreSQL 14 through 18 from the locked pgrx 0.19.2 source archive

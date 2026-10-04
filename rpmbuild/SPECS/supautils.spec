@@ -5,7 +5,7 @@
 %{!?llvm:%global llvm 1}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:supautils 3.4.3 supports PostgreSQL 14 through 18 in PGSTY builds}
+%{error:supautils 3.4.4 supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
 %if %llvm
@@ -15,13 +15,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.4.3
+Version:	3.4.4
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0 AND PostgreSQL AND LicenseRef-Public-Domain
 URL:		https://github.com/supabase/supautils
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/supabase/supautils/archive/refs/tags/v3.4.3.tar.gz
+#           https://github.com/supabase/supautils/archive/refs/tags/v3.4.4.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -56,6 +56,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 3.4.4-1PGSTY
+- Update to 3.4.4.
+
 * Thu Sep 03 2026 Vonng <rh@vonng.com> - 3.4.3-1PGSTY
 - Merge extension bitcode into the main package and retire the llvmjit subpackage
 - Update to upstream supautils 3.4.3

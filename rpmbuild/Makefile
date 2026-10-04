@@ -1418,7 +1418,8 @@ kafgres:
 
 .PHONY: vgram pg_money edtf_postgres libx509pq \
         pg_statvfs pg_json_diff pgtelemetry pgexporter_ext \
-        plphp istore is_jsonb_valid pg_rusage
+        plphp istore is_jsonb_valid pg_rusage \
+        pg_lexo
 
 vgram:
 	./build vgram 14 15 16 17 18
@@ -1455,3 +1456,6 @@ is_jsonb_valid:
 
 pg_rusage:
 	./build pg_rusage 14 15 16 17 18
+
+pg_lexo:
+	./build pg_lexo 16 17 18

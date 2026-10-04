@@ -16,6 +16,26 @@
           ]
         }
       ]
+    },
+    {
+      "package": "proj98",
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/proj98-9.8.1-1PGDG.rhel9.8.src.rpm",
+      "srpm_sha256": "e3ae1425ea09030134f6e03c97be50b6e171fb937dc20ea723a27affebff6875",
+      "files": [
+        {
+          "name": "proj-9.8.1.tar.gz",
+          "sha256": "af5b731c145c1d13c4e3b4eeb7d167e94e845e440f71e3496b4ed8dae0291960",
+          "size": 5981846,
+          "archive_roots": [
+            "proj-9.8.1"
+          ]
+        },
+        {
+          "name": "proj98-pgdg-libs.conf",
+          "sha256": "2dc462d52efc4f514cf1e1f6f1f3feff8ab9e0f27d1e3f280d8c9453eba124fd",
+          "size": 19
+        }
+      ]
     }
   ],
   "el8_additional_inputs": [

@@ -115,6 +115,9 @@ proj96:
 cgal54:
 	./build cgal54 18
 
+proj98:
+	./build proj98 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

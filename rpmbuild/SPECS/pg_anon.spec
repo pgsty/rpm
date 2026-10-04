@@ -8,13 +8,14 @@
 %endif
 
 Name:		pg_anon_%{pgmajorversion}
-Version:	3.2.2
+Version:	3.2.3
 Release:	1PGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL
 License:	PostgreSQL
 URL:		https://gitlab.com/dalibo/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#           https://gitlab.com/dalibo/postgresql_anonymizer/-/archive/3.2.2/postgresql_anonymizer-3.2.2.tar.gz
+#           https://gitlab.com/dalibo/postgresql_anonymizer/-/archive/3.2.3/postgresql_anonymizer-3.2.3.tar.gz
+# Repacked with pgrx 0.19.2; SOURCE_MANIFEST records the manifest and lock changes.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -72,6 +73,9 @@ cp -a %{_builddir}/%{srcdir}/data/fr_FR %{buildroot}%{pginstdir}/share/extension
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 3.2.3-1PGSTY
+- Update to 3.2.3.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 3.2.2-1PGSTY
 - Update to upstream 3.2.2 with security fixes and locked pgrx 0.19.2
 

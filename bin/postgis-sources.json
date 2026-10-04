@@ -18,6 +18,36 @@
       ]
     },
     {
+      "package": "gdal313",
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/gdal313-3.13.3-1PGDG.rhel9.8.src.rpm",
+      "srpm_sha256": "4ebe440da1e5889708c672a0dda212f4c9badffe7981f51da5c7e7505d2f5f3c",
+      "files": [
+        {
+          "name": "PROVENANCE.TXT-fedora",
+          "sha256": "f2ae00db0605d41731fc06550cce3d814ac772760e236278e6751e7a6239a229",
+          "size": 1257
+        },
+        {
+          "name": "gdal-3.13.3-fedora.tar.xz",
+          "sha256": "5a003a023def166785526abd8f1413ff3651801425282123c92cfba983d05e74",
+          "size": 10735768,
+          "archive_roots": [
+            "gdal-3.13.3-fedora"
+          ]
+        },
+        {
+          "name": "gdal-cleaner.sh",
+          "sha256": "3b55a9d48b4334ee7788d14eafdb297d01a2b8034cff7bb10e6cc42c816b4b20",
+          "size": 878
+        },
+        {
+          "name": "gdal313-pgdg-libs.conf",
+          "sha256": "0fd4b5242a630cf8f045ab21b55e8b6a6a72fdb767f5526c5c891ebb6aca6ff6",
+          "size": 18
+        }
+      ]
+    },
+    {
       "package": "geos314",
       "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/geos314-3.14.1-3PGDG.rhel9.8.src.rpm",
       "srpm_sha256": "cb0a93341c483bb034e27fc9db8924817fbe283f7d11857d3a23d27c7b62d344",

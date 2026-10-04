@@ -15,7 +15,7 @@ URL:            https://github.com/vyruss/pg_statviz
 Source0:        %{pname}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:  make postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -41,5 +41,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} PG_CONFIG=%{p
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Sat Oct 03 2026 Vonng <rh@vonng.com> - 1.2.1-1PGSTY
+- Declare make as an explicit PGXS installation build dependency
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2.1-1PGSTY
 - Add the extension-only pg_statviz 1.2.1 PGDG gap package for PostgreSQL 14-18

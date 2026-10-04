@@ -109,6 +109,9 @@ cron_utils:
 geos314:
 	./build geos314 18
 
+proj96:
+	./build proj96 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

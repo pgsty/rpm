@@ -18,5 +18,20 @@
       ]
     }
   ],
-  "el8_additional_inputs": []
+  "el8_additional_inputs": [
+    {
+      "name": "proj-9.6.2.tar.gz",
+      "sha256": "53d0cafaee3bb2390264a38668ed31d90787de05e71378ad7a8f35bb34c575d1",
+      "size": 6394614,
+      "from_srpm": "proj96-9.6.2-1PGDG.rhel8.src.rpm",
+      "srpm_member": "proj-9.6.2.tar.gz"
+    },
+    {
+      "name": "proj96-pgdg-libs.conf",
+      "sha256": "869e2f2fd9f330bade77e7067748de1736132f3cba52694178a8cffaa40bbc1e",
+      "size": 19,
+      "from_srpm": "proj96-9.6.2-1PGDG.rhel8.src.rpm",
+      "srpm_member": "proj96-pgdg-libs.conf"
+    }
+  ]
 }

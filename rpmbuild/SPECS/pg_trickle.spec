@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.108.0
+Version:	0.108.1
 Release:	1PGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/trickle-labs/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg-trickle-0.108.0.patch
-#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.108.0
+Patch0:		pg-trickle-0.108.1.patch
+#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.108.1
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
@@ -85,6 +85,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.108.1-1PGSTY
+- Update to 0.108.1.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 0.108.0-1PGSTY
 - Update to upstream 0.108.0 with pgrx pinned to 0.19.2.
 - Preserve the locked dependency graph, upgrade safeguards and pg_trickle_dump.

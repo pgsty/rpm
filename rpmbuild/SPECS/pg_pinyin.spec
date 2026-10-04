@@ -7,14 +7,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.6
+Version:	0.0.8
 Release:	1PGSTY%{?dist}
 Summary:	Pinyin romanization and search helpers for PostgreSQL
 License:	MIT
 URL:		https://github.com/aiyou178/pg_pinyin
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/aiyou178/pg_pinyin/archive/refs/tags/v0.0.6.tar.gz
-Patch0:		pg-pinyin-0.0.6.patch
+#           https://github.com/aiyou178/pg_pinyin/archive/refs/tags/v0.0.8.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -25,7 +24,6 @@ Pinyin romanization and search helpers for PostgreSQL.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -33,7 +31,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -67,6 +65,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.0.8-1PGSTY
+- Update to 0.0.8.
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.6-1PGSTY
 - Update to upstream v0.0.6 with native pgrx 0.19.2 and PostgreSQL 14-18 support
 - Keep the locked dependency graph and declare the pgrx 0.19.2 Rust 1.96 MSRV

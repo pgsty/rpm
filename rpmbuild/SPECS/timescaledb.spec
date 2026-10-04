@@ -2,12 +2,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:timescaledb 2.30.1 only supports PostgreSQL 16 through 18}
+%{error:timescaledb 2.30.2 only supports PostgreSQL 16 through 18}
 %endif
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.30.1
+Version:	2.30.2
 Release:	1PGSTY%{?dist}
 License:	Apache-2.0 AND LicenseRef-Timescale AND PostgreSQL
 Source0:	%{sname}-%{version}.tar.gz
@@ -57,6 +57,9 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 2.30.2-1PGSTY
+- Update to 2.30.2.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.30.1-1PGSTY
 - Update to 2.30.1
 

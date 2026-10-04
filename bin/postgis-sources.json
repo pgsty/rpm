@@ -32,6 +32,13 @@
       "size": 19,
       "from_srpm": "proj96-9.6.2-1PGDG.rhel8.src.rpm",
       "srpm_member": "proj96-pgdg-libs.conf"
+    },
+    {
+      "name": "CGAL-5.4.2.tar.xz",
+      "sha256": "aa38c0bca2bfda666365038850219298c26c9cd32cededf8953aeb47531e181c",
+      "size": 24104052,
+      "from_srpm": "CGAL-5.4.2-1.rhel8.src.rpm",
+      "srpm_member": "CGAL-5.4.2.tar.xz"
     }
   ]
 }

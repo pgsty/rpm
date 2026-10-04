@@ -112,6 +112,9 @@ geos314:
 proj96:
 	./build proj96 18
 
+cgal54:
+	./build cgal54 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

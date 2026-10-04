@@ -10,13 +10,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.15
+Version:	1.16
 Release:	1PGSTY%{?dist}
 Summary:	Incremental View Maintenance extension for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/sraoss/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#		https://api.github.com/repos/sraoss/pg_ivm/tarball/v1.15
+#		https://github.com/sraoss/pg_ivm/archive/refs/tags/v1.16.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 %if %llvm
@@ -33,7 +33,7 @@ For correct maintenance, add pg_ivm to shared_preload_libraries or
 session_preload_libraries.
 
 %prep
-%setup -q -n sraoss-%{sname}-377a37d
+%setup -q -n %{sname}-%{version}
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -55,6 +55,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags
 %endif
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.16-1PGSTY
+- Update to 1.16.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.15-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

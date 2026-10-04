@@ -8,17 +8,16 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.2.2
+Version:        2.10.3
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.2.2.tar.gz
-#               tag commit dd5e2800e90de64bd942cece030b0eb973b1111f
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.10.3.tar.gz
 # Repacked with a versioned root and the pgrx 0.19.2 Cargo.lock.
 # Package installation is not the database migration: restart PostgreSQL,
-# then ALTER EXTENSION to 2.2.2. Upgrades from 1.x also require REINDEX
+# then ALTER EXTENSION to 2.10.3. Upgrades from 1.x also require REINDEX
 # for wire v7 -> v8; upgrades from 2.x retain wire v8.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -85,6 +84,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 2.10.3-1PGSTY
+- Update to 2.10.3.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 2.2.2-1PGSTY
 - Update to official tag 2.2.2 with the locked pgrx 0.19.2 dependency graph
 - Ship the SQL upgrade chain through 2.2.2 for PostgreSQL 14 through 18

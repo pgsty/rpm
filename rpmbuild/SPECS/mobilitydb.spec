@@ -6,7 +6,7 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.3.0
+Version:        1.3.1
 Release:        1PGSTY%{?dist}
 Summary:        Geospatial trajectory data management and analysis platform
 # MobilityDB is PostgreSQL-licensed; the shared library embeds GPL-2.0-or-later
@@ -14,10 +14,10 @@ Summary:        Geospatial trajectory data management and analysis platform
 License:        PostgreSQL AND GPL-2.0-or-later
 URL:            https://mobilitydb.com/
 Source0:        %{sname}-%{version}.tar.gz
-# https://apt.postgresql.org/pub/repos/apt/pool/main/m/mobilitydb/mobilitydb_1.3.0.orig.tar.gz
+# https://github.com/MobilityDB/MobilityDB/archive/refs/tags/v1.3.1.tar.gz
 
-# PGDG/Debian mobilitydb 1.3.0-2 patches, combined in their original order.
-Patch0:         mobilitydb-1.3.0.patch
+# Rebased PGDG/Debian mobilitydb 1.3.0-2 patches, in their original order.
+Patch0:         mobilitydb-1.3.1.patch
 
 # Debian limits builds to 64-bit little-endian architectures. These are the two
 # such architectures in the PGSTY RPM matrix.
@@ -79,5 +79,8 @@ DESTDIR=%{buildroot} cmake --install build
 %{pginstdir}/share/extension/mobilitydb_datagen--*.sql
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.3.1-1PGSTY
+- Update to 1.3.1.
+
 * Sat Jul 11 2026 Vonng <rh@vonng.com> - 1.3.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

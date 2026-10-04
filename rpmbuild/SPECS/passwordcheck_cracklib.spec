@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:passwordcheck_cracklib 3.2.0 supports PostgreSQL 14 through 18 in PGSTY builds}
+%{error:passwordcheck_cracklib 3.2.1 supports PostgreSQL 14 through 18 in PGSTY builds}
 %endif
 
 %{!?llvm:%global llvm 1}
@@ -15,13 +15,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        3.2.0
+Version:        3.2.1
 Release:        1PGSTY%{?dist}
 Summary:        PostgreSQL password checks backed by CrackLib
 License:        LGPL-2.1-only
 URL:            https://github.com/devrimgunduz/passwordcheck_cracklib
 Source0:        %{sname}-%{version}.tar.gz
-#               https://github.com/devrimgunduz/passwordcheck_cracklib/archive/refs/tags/3.2.0.tar.gz
+#               https://github.com/devrimgunduz/passwordcheck_cracklib/archive/refs/tags/3.2.1.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  cracklib-devel
@@ -63,6 +63,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} \
 %endif
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 3.2.1-1PGSTY
+- Update to 3.2.1.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 3.2.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

@@ -136,6 +136,30 @@
       "size": 24104052,
       "from_srpm": "CGAL-5.4.2-1.rhel8.src.rpm",
       "srpm_member": "CGAL-5.4.2.tar.xz"
+    },
+    {
+      "name": "ogdi-4.1.1.tar.gz",
+      "sha256": "5a78836dc4e2513df0e2742dca1b131fa87ed86ea60f3bc6371fd5c4ee289b4e",
+      "size": 843784,
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-8-x86_64/ogdi41-4.1.1-1PGDG.rhel8.src.rpm",
+      "srpm_sha256": "ff0064824d54aedd501b398e7708037beead4e58349ed7fa8936c6700c70db92",
+      "original_member": "ogdi-4.1.1.tar.gz"
+    },
+    {
+      "name": "ogdi.pdf",
+      "sha256": "fbfcfaf7aebd713051c2a9ab500a273e9a11c882e0f1b4bf3ea8a5525cf7f2a9",
+      "size": 1344962,
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-8-x86_64/ogdi41-4.1.1-1PGDG.rhel8.src.rpm",
+      "srpm_sha256": "ff0064824d54aedd501b398e7708037beead4e58349ed7fa8936c6700c70db92",
+      "original_member": "ogdi.pdf"
+    },
+    {
+      "name": "ogdi41-pgdg-libs.conf",
+      "sha256": "19a2be7c477f8a20cd90db08498a346465c0f35b5cd8ab948be513fe69e365a7",
+      "size": 17,
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-8-x86_64/ogdi41-4.1.1-1PGDG.rhel8.src.rpm",
+      "srpm_sha256": "ff0064824d54aedd501b398e7708037beead4e58349ed7fa8936c6700c70db92",
+      "original_member": "ogdi41-pgdg-libs.conf"
     }
   ]
 }

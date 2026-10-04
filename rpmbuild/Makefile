@@ -130,6 +130,9 @@ libspatialite50:
 librttopo:
 	./build librttopo 18
 
+ogdi41:
+	./build ogdi41 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

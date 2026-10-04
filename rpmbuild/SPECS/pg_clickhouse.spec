@@ -27,15 +27,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.10.0
+Version:	0.11.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_clickhouse-0.10.0.patch
-#           normalized from https://api.pgxn.org/dist/pg_clickhouse/0.10.0/pg_clickhouse-0.10.0.zip
-#           vendor/pg-clickhouse-c and clickhouse-c are included in the PGXN source bundle
+Patch0:		pg_clickhouse-0.11.0.patch
+#           https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.11.0
+#           Repacked from the release tag with its recursive submodules.
+#           SOURCE_MANIFEST records the pinned pg-clickhouse-c and clickhouse-c revisions.
 #           Supported: PostgreSQL 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -99,6 +100,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.11.0-1PGSTY
+- Update to 0.11.0.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.10.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

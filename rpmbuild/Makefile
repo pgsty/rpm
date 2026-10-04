@@ -1417,7 +1417,8 @@ kafgres:
 # New extension batch: shared pinned sources, PG14-18 where supported.
 
 .PHONY: vgram pg_money edtf_postgres libx509pq \
-        pg_statvfs pg_json_diff pgtelemetry pgexporter_ext
+        pg_statvfs pg_json_diff pgtelemetry pgexporter_ext \
+        plphp
 
 vgram:
 	./build vgram 14 15 16 17 18
@@ -1442,3 +1443,6 @@ pgtelemetry:
 
 pgexporter_ext:
 	./build pgexporter_ext 14 15 16 17 18
+
+plphp:
+	./build plphp 14 15 16 17 18

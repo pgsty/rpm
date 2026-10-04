@@ -3,6 +3,21 @@
   "description": "PGDG SRPM inputs for PGSTY PostGIS. Archive bytes are preserved, including PGDG-cleaned GDAL sources. EL8 uses its PGDG compatibility branches; OS and EPEL dependencies are supplied by the builder.",
   "packages": [
     {
+      "package": "SFCGAL",
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/SFCGAL-2.2.0-6PGDG.rhel9.8.src.rpm",
+      "srpm_sha256": "1d859f87994e658839677881cf63753d0e753127588f529e7447f5f736fde650",
+      "files": [
+        {
+          "name": "SFCGAL-v2.2.0.tar.gz",
+          "sha256": "bb6bb77ddb58523d8c229764de23699f99c1a7011d873419afd2a67df85602a2",
+          "size": 2974247,
+          "archive_roots": [
+            "SFCGAL-v2.2.0"
+          ]
+        }
+      ]
+    },
+    {
       "package": "geos314",
       "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/geos314-3.14.1-3PGDG.rhel9.8.src.rpm",
       "srpm_sha256": "cb0a93341c483bb034e27fc9db8924817fbe283f7d11857d3a23d27c7b62d344",
@@ -52,6 +67,13 @@
       "size": 19,
       "from_srpm": "proj96-9.6.2-1PGDG.rhel8.src.rpm",
       "srpm_member": "proj96-pgdg-libs.conf"
+    },
+    {
+      "name": "SFCGAL-v1.4.1.tar.gz",
+      "sha256": "1800c8a26241588f11cddcf433049e9b9aea902e923414d2ecef33a3295626c3",
+      "size": 2422791,
+      "from_srpm": "SFCGAL-1.4.1-13.rhel8.src.rpm",
+      "srpm_member": "SFCGAL-v1.4.1.tar.gz"
     },
     {
       "name": "CGAL-5.4.2.tar.xz",

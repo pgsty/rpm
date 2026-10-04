@@ -118,6 +118,9 @@ cgal54:
 proj98:
 	./build proj98 18
 
+sfcgal:
+	./build sfcgal 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

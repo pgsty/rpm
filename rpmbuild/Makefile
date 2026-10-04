@@ -1419,7 +1419,7 @@ kafgres:
 .PHONY: vgram pg_money edtf_postgres libx509pq \
         pg_statvfs pg_json_diff pgtelemetry pgexporter_ext \
         plphp istore is_jsonb_valid pg_rusage \
-        pg_lexo addressing_dictionary pg_statkit
+        pg_lexo addressing_dictionary pg_statkit colnames
 
 vgram:
 	./build vgram 14 15 16 17 18
@@ -1465,3 +1465,6 @@ addressing_dictionary:
 
 pg_statkit:
 	./build pg_statkit 14 15 16 17
+
+colnames:
+	./build colnames 14 15 16 17 18

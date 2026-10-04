@@ -2,6 +2,8 @@ bb6bb77ddb58523d8c229764de23699f99c1a7011d873419afd2a67df85602a2  SFCGAL-v2.2.0.
 3c20919cda9a505db07b5216baa980bacdaa0702da715b43f176fb07eff7e716  geos-3.14.1.tar.bz2
 c598d04fdf2ba25c4352844dafa81dde3f7fd968daa7ad131228cd91e9d3dc47  libgeotiff-1.7.4.tar.gz
 ea75dec9ad45362f01dfc775b3fab23486d5cf7ee746425729cce5dc8204bee0  libgeotiff17-pgdg-libs.conf
+43be2dd349daffe016dd1400c5d11285828c22fea35ca5109f21f3ed50605080  libspatialite-5.1.0.tar.gz
+84621e77812eca73edfe5bf16194a43aa3fe85cb43e9dcc6bf0aab411902c276  libspatialite50-pgdg-libs.conf
 af5b731c145c1d13c4e3b4eeb7d167e94e845e440f71e3496b4ed8dae0291960  proj-9.8.1.tar.gz
 2dc462d52efc4f514cf1e1f6f1f3feff8ab9e0f27d1e3f280d8c9453eba124fd  proj98-pgdg-libs.conf
 60b49acb493c1ab545116fb0b0d223ee115166874902ad8165eb39e9fd98eaa9  librttopo-1.1.0.tar.gz

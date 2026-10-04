@@ -124,6 +124,9 @@ sfcgal:
 libgeotiff17:
 	./build libgeotiff17 18
 
+libspatialite50:
+	./build libspatialite50 18
+
 librttopo:
 	./build librttopo 18
 

@@ -6,9 +6,9 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.2.0
+Version:        0.2.1
 Release:        1PGSTY%{?dist}
-Summary:        Natural-language row predicates using the TypeSafe API
+Summary:        Natural-language row predicates using a Jev-compatible API
 License:        PostgreSQL
 URL:            https://github.com/realZachi/pg-jev
 Source0:        %{sname}-%{version}.tar.gz
@@ -21,12 +21,12 @@ Requires:       postgresql%{pgmajorversion}-plpython3
 
 %description
 jev filters, ranks and classifies PostgreSQL rows through a remote
-TypeSafe model API. It requires plpython3u and an API key; row contents
-are sent to the configured external service. This package contains SQL
+Jev-compatible model API. It requires plpython3u; the TypeSafe provider
+also requires an API key. Row contents are sent to the configured service. This package contains SQL
 and embedded Python code only, with no native shared library.
 
 %prep
-%setup -q -n jev-0.2.0
+%setup -q -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} DOCS=
@@ -41,5 +41,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} DOCS=
 %{pginstdir}/share/extension/%{sname}--*.sql
 
 %changelog
+* Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.2.1-1PGSTY
+- Update to upstream 0.2.1.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
 - Package upstream 0.2.0 for PostgreSQL 14 through 17

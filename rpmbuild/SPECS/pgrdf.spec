@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.36
+Version:	0.6.39
 Release:	1PGSTY%{?dist}
 Summary:	RDF, SPARQL, SHACL, and OWL reasoning for PostgreSQL
 License:	MIT
 URL:		https://github.com/styk-tv/pgRDF
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.36.tar.gz
-Patch0:		pgrdf-0.6.36.patch
+#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.39.tar.gz
+Patch0:		pgrdf-0.6.39.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt git
@@ -36,8 +36,9 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -49,7 +50,7 @@ CARGO_NET_GIT_FETCH_WITH_CLI=true CARGO_HTTP_TIMEOUT=600 CARGO_NET_RETRY=10 carg
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true CARGO_HTTP_TIMEOUT=600 CARGO_NET_RETRY=10 cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
+EXT_DIR="$CARGO_TARGET_DIR/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension"
 cp -f sql/%{pname}--*--*.sql "$EXT_DIR/"
 test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during package" >&2
@@ -60,9 +61,10 @@ test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
 install -m 644 %{_builddir}/%{srcdir}/README.pgxn.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}/
 
@@ -75,6 +77,10 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.6.39-1PGSTY
+- Update to upstream 0.6.39.
+- Build with pgrx and cargo-pgrx 0.19.3; retain a locked dependency graph.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.6.36-1PGSTY
 - Update to 0.6.36
 

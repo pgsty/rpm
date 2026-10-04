@@ -19,7 +19,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.5
+Version:	3.6
 Release:	1PGSTY%{?dist}
 Summary:	The session_variable Postgres database extension provides a way to create and maintain session scoped variables and constants, more or less like Oracle's global variables.
 License:	GPL-3.0-only
@@ -62,6 +62,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 3.6-1PGSTY
+- Update to 3.6.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 3.5-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

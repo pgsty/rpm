@@ -1418,7 +1418,7 @@ kafgres:
 
 .PHONY: vgram pg_money edtf_postgres libx509pq \
         pg_statvfs pg_json_diff pgtelemetry pgexporter_ext \
-        plphp istore
+        plphp istore is_jsonb_valid
 
 vgram:
 	./build vgram 14 15 16 17 18
@@ -1449,3 +1449,6 @@ plphp:
 
 istore:
 	./build istore 14 15 16 17 18
+
+is_jsonb_valid:
+	./build is_jsonb_valid 14 15 16 17 18

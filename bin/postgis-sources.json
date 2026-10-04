@@ -1,0 +1,22 @@
+{
+  "baseline_date": "2026-10-04",
+  "description": "PGDG SRPM inputs for PGSTY PostGIS. Archive bytes are preserved, including PGDG-cleaned GDAL sources. EL8 uses its PGDG compatibility branches; OS and EPEL dependencies are supplied by the builder.",
+  "packages": [
+    {
+      "package": "geos314",
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/geos314-3.14.1-3PGDG.rhel9.8.src.rpm",
+      "srpm_sha256": "cb0a93341c483bb034e27fc9db8924817fbe283f7d11857d3a23d27c7b62d344",
+      "files": [
+        {
+          "name": "geos-3.14.1.tar.bz2",
+          "sha256": "3c20919cda9a505db07b5216baa980bacdaa0702da715b43f176fb07eff7e716",
+          "size": 7013834,
+          "archive_roots": [
+            "geos-3.14.1"
+          ]
+        }
+      ]
+    }
+  ],
+  "el8_additional_inputs": []
+}

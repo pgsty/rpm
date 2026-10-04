@@ -104,6 +104,11 @@ cron_utils:
 ###############################################################
 
 # postgis
+
+# PGDG-compatible GIS libraries are independent of the PostgreSQL major.
+geos314:
+	./build geos314 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

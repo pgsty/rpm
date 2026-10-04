@@ -1413,3 +1413,10 @@ jev:
 
 kafgres:
 	./build kafgres 16
+
+# New extension batch: shared pinned sources, PG14-18 where supported.
+
+.PHONY: vgram
+
+vgram:
+	./build vgram 14 15 16 17 18

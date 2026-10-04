@@ -110,6 +110,34 @@
   ],
   "el8_additional_inputs": [
     {
+      "name": "gdal-3.8.5-fedora.tar.xz",
+      "sha256": "b9b918fd6ec7db93fd7bee04c53af3964b57e3d9333319cdd374900f6f96baca",
+      "size": 9415132,
+      "from_srpm": "gdal38-3.8.5-8PGDG.rhel8.src.rpm",
+      "srpm_member": "gdal-3.8.5-fedora.tar.xz"
+    },
+    {
+      "name": "gdal38-PROVENANCE.TXT-fedora",
+      "sha256": "f2ae00db0605d41731fc06550cce3d814ac772760e236278e6751e7a6239a229",
+      "size": 1257,
+      "from_srpm": "gdal38-3.8.5-8PGDG.rhel8.src.rpm",
+      "srpm_member": "PROVENANCE.TXT-fedora"
+    },
+    {
+      "name": "gdal38-cleaner.sh",
+      "sha256": "abffc6764969fddcd98cf560ade0a4b4bdb75af2ef3d060c86d64af2f7755a85",
+      "size": 858,
+      "from_srpm": "gdal38-3.8.5-8PGDG.rhel8.src.rpm",
+      "srpm_member": "gdal-cleaner.sh"
+    },
+    {
+      "name": "gdal38-pgdg-libs.conf",
+      "sha256": "36f6dabb6626ea96e7b044b137b9d9cca914ccd56f16acb13db222a8aecbf996",
+      "size": 17,
+      "from_srpm": "gdal38-3.8.5-8PGDG.rhel8.src.rpm",
+      "srpm_member": "gdal38-pgdg-libs.conf"
+    },
+    {
       "name": "proj-9.6.2.tar.gz",
       "sha256": "53d0cafaee3bb2390264a38668ed31d90787de05e71378ad7a8f35bb34c575d1",
       "size": 6394614,

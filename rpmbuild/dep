@@ -103,6 +103,14 @@ RHEL_MAJOR=$(rpm -E '%{?rhel}' 2>/dev/null || echo "")
 declare -a DNF_BUILDDEP_OPTS=()
 if [[ "${RHEL_MAJOR}" == "8" ]]; then
     DNF_BUILDDEP_OPTS+=(--nobest)
+    # EPEL's Arrow needs utf8proc-devel from this EL8 module stream.
+    if [[ "${EXTENSION_NAME}" == "gdal38" ]]; then
+        log_info "enable the EL8 module providing utf8proc-devel for Arrow"
+        if ! sudo dnf module enable -y subversion-devel:1.10; then
+            log_error "failed to enable the utf8proc-devel provider module"
+            exit 1
+        fi
+    fi
 fi
 
 #--------------------------------------------------------------#

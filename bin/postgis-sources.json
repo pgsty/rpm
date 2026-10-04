@@ -33,6 +33,26 @@
       ]
     },
     {
+      "package": "libgeotiff17",
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/libgeotiff17-1.7.4-5PGDG.rhel9.8.src.rpm",
+      "srpm_sha256": "10b5d875aeac2920e9fbe148de44bb60fc30d5d01b97595a32aaea6b611192ea",
+      "files": [
+        {
+          "name": "libgeotiff-1.7.4.tar.gz",
+          "sha256": "c598d04fdf2ba25c4352844dafa81dde3f7fd968daa7ad131228cd91e9d3dc47",
+          "size": 549848,
+          "archive_roots": [
+            "libgeotiff-1.7.4"
+          ]
+        },
+        {
+          "name": "libgeotiff17-pgdg-libs.conf",
+          "sha256": "ea75dec9ad45362f01dfc775b3fab23486d5cf7ee746425729cce5dc8204bee0",
+          "size": 23
+        }
+      ]
+    },
+    {
       "package": "proj98",
       "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/proj98-9.8.1-1PGDG.rhel9.8.src.rpm",
       "srpm_sha256": "e3ae1425ea09030134f6e03c97be50b6e171fb937dc20ea723a27affebff6875",

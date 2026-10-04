@@ -121,6 +121,9 @@ proj98:
 sfcgal:
 	./build sfcgal 18
 
+libgeotiff17:
+	./build libgeotiff17 18
+
 # pgroutine
 # pointcloud
 h3-pg:         # EL8 x86_64 gap only

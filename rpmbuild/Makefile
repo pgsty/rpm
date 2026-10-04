@@ -1416,7 +1416,10 @@ kafgres:
 
 # New extension batch: shared pinned sources, PG14-18 where supported.
 
-.PHONY: vgram
+.PHONY: vgram pg_money
 
 vgram:
 	./build vgram 14 15 16 17 18
+
+pg_money:
+	./build pg_money 14 15 16 17 18

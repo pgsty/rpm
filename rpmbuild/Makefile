@@ -103,7 +103,8 @@ cron_utils:
 #                       Category: GIS                         #
 ###############################################################
 
-# postgis
+postgis:
+	./build postgis 14 15 16 17 18
 
 # PGDG-compatible GIS libraries are independent of the PostgreSQL major.
 geos314:

@@ -224,7 +224,7 @@ pgmnemo:
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
-pg_search:      # rust pgrx 0.19.2, Rust 1.97.1, OpenBLAS
+pg_search:      # rust pgrx 0.19.3, OpenBLAS
 	install -D -m 0644 SPECS/pg_search_collect_third_party_licenses.py SOURCES/pg_search_collect_third_party_licenses.py
 	./build pg_search 15 16 17 18
 

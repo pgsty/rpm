@@ -3,23 +3,23 @@
 %global srcdir paradedb-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global rust_toolchain stable
-%global pgrx_version 0.19.2
+%global pgrx_version 0.19.3
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
 %{error:pg_search only supports PostgreSQL 15 through 18 in PGSTY builds}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.25.11
+Version:	0.26.0
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 # Exact per-crate expressions are installed as third-party/LICENSE-EXPRESSIONS.txt.
 # This aggregate enumerates every atomic license family in the resolved package closure.
-License:	(AGPL-3.0-or-later) AND 0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND CDLA-Permissive-2.0 AND ISC AND MIT AND MIT-0 AND MPL-2.0 AND Unicode-3.0 AND Unlicense AND Zlib AND zlib-acknowledgement
+License:	(AGPL-3.0-or-later) AND 0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND CDLA-Permissive-2.0 AND ISC AND MIT AND MPL-2.0 AND Unicode-3.0 AND Unlicense AND Zlib AND zlib-acknowledgement
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
 Source1:	pg_search_collect_third_party_licenses.py
-Patch0:		pg-search-0.25.11.patch
+Patch0:		pg-search-0.26.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel pkgconfig python3
@@ -91,6 +91,10 @@ cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.26.0-1PGSTY
+- Update to upstream 0.26.0.
+- Build with pgrx and cargo-pgrx 0.19.3; retain a locked dependency graph.
+
 * Thu Oct 01 2026 Vonng <rh@vonng.com> - 0.25.11-1PGSTY
 - Update to upstream 0.25.11 with pgrx pinned to 0.19.2
 - Preserve the locked dependency graph and complete debug packages

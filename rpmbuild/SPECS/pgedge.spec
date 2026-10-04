@@ -17,7 +17,7 @@
 %endif
 %endif
 %endif
-%global spockversion 5.0.11
+%global spockversion 5.0.12
 %global lolorversion 1.2.2
 %global snowflakeversion 2.6.0
 %global pgbaseinstdir /usr/pgedge-%{pgmajorversion}
@@ -27,7 +27,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        pgEdge PostgreSQL kernel with bundled replication extensions
 License:        PostgreSQL
 URL:            https://github.com/pgEdge
@@ -35,7 +35,7 @@ Source0:        postgresql-%{pgversion}.tar.gz
 Source1:        spock-%{spockversion}.tar.gz
 Source2:        lolor-%{lolorversion}.tar.gz
 Source3:        snowflake-%{snowflakeversion}.tar.gz
-Patch0:         pgedge-spock-5.0.11-pg17-pg18.patch
+Patch0:         pgedge-spock-5.0.12-pg17-pg18.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -241,6 +241,10 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 18.6-2PGSTY
+- Bundle Spock 5.0.12 and rebase its PostgreSQL 17/18 patchset.
+- Bump the package release so existing pgEdge cores receive the bundle update.
+
 * Mon Aug 31 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.6-1PGSTY
 - Update PostgreSQL cores to 15.19, 16.15, 17.11, and 18.6
 - Bundle Spock 5.0.11 and Snowflake 2.6.0; retain LOLOR 1.2.2

@@ -19,12 +19,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.7.1
+Version:        1.7.2
 Release:	1PGSTY%{?dist}
 Summary:        Transparent Data Encryption for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/labmiriade/pg_vault_tde
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:         pg-vault-tde-1.7.2-debug.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc make pkgconfig openssl-devel >= 3.0 libcurl-devel chrpath
@@ -43,6 +44,7 @@ shared_preload_libraries before CREATE EXTENSION pg_vault_tde.
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch --fuzz=0 --batch --forward -p1 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
@@ -71,6 +73,10 @@ chrpath -d %{buildroot}%{pginstdir}/lib/%{pname}.so
 %endif
 
 %changelog
+* Sun Oct 04 2026 Vonng <rh@vonng.com> - 1.7.2-1PGSTY
+- Update to upstream 1.7.2.
+- Preserve compiler debug flags for all three standalone backup tools.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 1.7.1-1PGSTY
 - Update to 1.7.1
 

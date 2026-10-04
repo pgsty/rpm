@@ -8,14 +8,14 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.10.1
+Version:        1.10.3
 Release:        1PGSTY%{?dist}
 Summary:        Datomic-compatible Datalog query engine for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/mentat
 Source0:        %{sname}-%{version}.tar.gz
-#               https://api.pgxn.org/dist/pg_mentat/1.10.1/pg_mentat-1.10.1.zip
-Patch0:         pg-mentat-1.10.1.patch
+#               https://api.pgxn.org/dist/pg_mentat/1.10.3/pg_mentat-1.10.3.zip
+Patch0:         pg-mentat-1.10.3.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -34,8 +34,9 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -58,7 +59,8 @@ test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
-PKGDIR=%{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
+PKGDIR="$TARGET_DIR/release/%{pname}-pg%{pgmajorversion}"
 install -m 644 crates/pg/pg_mentat/sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extension/
 cp -a "$PKGDIR%{pginstdir}/lib/%{pname}.so" %{buildroot}%{pginstdir}/lib/
 cp -a "$PKGDIR%{pginstdir}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
@@ -75,6 +77,10 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Oct 04 2026 Vonng <rh@vonng.com> - 1.10.3-1PGSTY
+- Update to upstream 1.10.3.
+- Build with pgrx and cargo-pgrx 0.19.3; retain a locked dependency graph.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 1.10.1-1PGSTY
 - Update to upstream 1.10.1 and the new Mentat workspace layout.
 - Pin pgrx to 0.19.2 and remove the obsolete pgrx_embed binary.

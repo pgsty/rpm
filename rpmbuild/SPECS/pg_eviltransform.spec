@@ -7,13 +7,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.5
+Version:	0.0.7
 Release:	1PGSTY%{?dist}
 Summary:	Coordinate transformation extension for PostgreSQL/PostGIS
 License:	MIT
 URL:		https://github.com/aiyou178/pg_eviltransform
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/aiyou178/pg_eviltransform/archive/refs/tags/v0.0.5.tar.gz
+#           https://github.com/aiyou178/pg_eviltransform/archive/refs/tags/v0.0.7.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -33,7 +33,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -67,6 +67,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.0.7-1PGSTY
+- Update to 0.0.7.
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.5-1PGSTY
 - Update to upstream v0.0.5 with native pgrx 0.19.2 and PostgreSQL 14-18 support
 - Build reproducibly with cargo-pgrx 0.19.2 and the committed Cargo.lock

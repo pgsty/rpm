@@ -1418,7 +1418,7 @@ kafgres:
 
 .PHONY: vgram pg_money edtf_postgres libx509pq \
         pg_statvfs pg_json_diff pgtelemetry pgexporter_ext \
-        plphp
+        plphp istore
 
 vgram:
 	./build vgram 14 15 16 17 18
@@ -1446,3 +1446,6 @@ pgexporter_ext:
 
 plphp:
 	./build plphp 14 15 16 17 18
+
+istore:
+	./build istore 14 15 16 17 18

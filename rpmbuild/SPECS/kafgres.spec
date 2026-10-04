@@ -4,17 +4,17 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} != 16
-%{error:kafgres 0.1.0 supports PostgreSQL 16}
+%{error:PGSTY builds kafgres 0.3.0 for PostgreSQL 16}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0
+Version:	0.3.0
 Release:	1PGSTY%{?dist}
 Summary:        Kafka protocol broker embedded in PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/kafgres
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/RayElg/kafgres/archive/refs/tags/0.1.0.tar.gz
+#           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.0.tar.gz
 # Build the unmodified upstream release with its committed Cargo.lock.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -75,6 +75,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
+- Update to 0.3.0.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Package upstream 0.1.0 with the original pgrx 0.16.1 lockfile
 - Retain full Rust DWARF for debuginfo and debugsource packages

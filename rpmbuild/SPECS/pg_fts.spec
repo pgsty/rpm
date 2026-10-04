@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pg_fts 1.8.5 only supports PostgreSQL 17 and 18}
+%{error:pg_fts 1.9.0 only supports PostgreSQL 17 and 18}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -23,13 +23,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.8.5
+Version:	1.9.0
 Release:	1PGSTY%{?dist}
 Summary:	Full-text search with BM25 ranking for PostgreSQL
 License:	PostgreSQL AND MIT
 URL:		https://codeberg.org/gregburd/pg_fts
 Source0:	%{sname}-%{version}.tar.gz
-#           https://codeberg.org/gregburd/pg_fts/archive/v1.8.5.tar.gz
+#           https://github.com/gburd/pg_fts/archive/refs/tags/v1.9.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -45,7 +45,7 @@ pg_fts provides BM25 and BM25F relevance ranking, a dedicated inverted-index
 access method, and boolean, phrase, NEAR, prefix, fuzzy, and regex queries.
 
 %prep
-%setup -q -n %{sname}
+%setup -q -n %{sname}-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -66,6 +66,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.9.0-1PGSTY
+- Update to 1.9.0.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 1.8.5-1PGSTY
 - Update to upstream 1.8.5
 

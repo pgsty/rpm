@@ -17,6 +17,7 @@ Source0:        pg_lexo-0.6.1.tar.gz
 # Source: https://codeload.github.com/Blad3Mak3r/pg_lexo/tar.gz/v0.6.1
 # SHA256: a9a7e21538f20199d4cdfb7168c8eb51761464bac38c5b73aa77c8e4c57f65a3
 Source1:        pg_lexo-0.6.1-Cargo.lock
+Patch0:         pg_lexo-0.6.1-ordering.patch
 # Upstream release v0.6.1 retains Cargo/extension version 0.6.0.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -28,6 +29,7 @@ Lexicographic position keys for PostgreSQL.
 
 %prep
 %setup -q -n pg_lexo-0.6.1
+%patch -P 0 -p1
 cp %{SOURCE1} Cargo.lock
 
 %build
@@ -58,4 +60,5 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 
 %changelog
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.6.1-1PGSTY
+- Fix lexo_next and preserve native ordering in lexo_rebalance
 - Initial RPM package with pinned dependencies and native debug packages

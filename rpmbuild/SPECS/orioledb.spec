@@ -2,37 +2,37 @@
 %define _build_id_links none
 %{!?pgmajorversion:%global pgmajorversion 18}
 %if 0%{?pgmajorversion} == 18
-%global orioledb_patchset 2
+%global orioledb_patchset 3
 %global upstream_pgver 18.6
 %else
 %if 0%{?pgmajorversion} == 17
-%global orioledb_patchset 21
+%global orioledb_patchset 22
 %global upstream_pgver 17.11
 %else
 %if 0%{?pgmajorversion} == 16
-%global orioledb_patchset 48
+%global orioledb_patchset 49
 %global upstream_pgver 16.15
 %else
-%{error:orioledb beta17 packaging supports PostgreSQL 16, 17, and 18 only}
+%{error:orioledb beta19 packaging supports PostgreSQL 16, 17, and 18 only}
 %endif
 %endif
 %endif
 %global pgbaseinstdir	/usr/oriole-%{pgmajorversion}
-%global orioledb_beta beta17
+%global orioledb_beta beta19
 %global srcdir postgres-patches%{pgmajorversion}_%{orioledb_patchset}
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 
 Name:		%{sname}-%{pgmajorversion}
-Version:	1.9~beta17
+Version:	1.10~beta19
 Release:	1PGSTY%{?dist}
 Summary:	OrioleDB PostgreSQL kernel with bundled storage engine extension
 License:	PostgreSQL AND Apache-2.0
 URL:		https://github.com/orioledb/orioledb
 Source0:	%{srcdir}.tar.gz
 Source1:	%{sname}-%{orioledb_beta}.tar.gz
-Patch0:		orioledb-1.9~beta17.patch
+Patch0:		oriolepg-postgresql-branding.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35, chrpath
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -139,6 +139,10 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Tue Oct 06 2026 Ruohang Feng <rh@vonng.com> - 1.10~beta19-1PGSTY
+- Update to OrioleDB beta19 and PostgreSQL 16/17/18 patchsets 49/22/3
+- Bundle extension SQL version 1.10 and retain LLVM and debug packages
+
 * Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 1.9~beta17-1PGSTY
 - Update to OrioleDB beta17 with PostgreSQL 16.15, 17.11, and 18.6 patchsets
 - Preserve package build flags and enable LLVM for the bundled kernel

@@ -9,7 +9,7 @@
 %global pgrepackversion 1.5.3
 %global pgauditversion 18.0
 %global setuserversion 4.2.0
-%global pgstatmonitorversion 2.3.2
+%global pgstatmonitorversion 2.4.0
 %global pggatherversion 33
 %global pgbaseinstdir /usr/pgtde-%{pgmajorversion}
 
@@ -34,11 +34,12 @@ Source5:        percona-wal2json-%{wal2jsonversion}.tar.gz
 Source6:        percona-pg_repack-%{pgrepackversion}.tar.gz
 Source7:        percona-pgaudit-%{pgauditversion}.tar.gz
 Source8:        percona-pgaudit%{pgmajorversion}_set_user-%{setuserversion}.tar.gz
-Source9:        percona-pg-stat-monitor%{pgmajorversion}-%{pgstatmonitorversion}.tar.gz
+Source9:        pg_stat_monitor-%{pgstatmonitorversion}.tar.gz
 Source10:       percona-pg_gather-%{pggatherversion}.tar.gz
 Source11:       pgtde-sfcgal-config
-Source12:       pgtde.sources.sha256
+Source12:       pgtde-18.6.sources.sha256
 Patch0:         pg_repack-1.5.3.patch
+Patch1:         pgtde-18.6.patch
 
 ExclusiveArch:  aarch64 x86_64
 
@@ -49,6 +50,7 @@ BuildRequires:  pam-devel krb5-devel python3-devel tcl-devel systemtap-sdt-devel
 BuildRequires:  openssl-devel systemd-devel libcurl-devel liburing-devel json-c-devel
 BuildRequires:  cmake meson ninja-build pkgconf-pkg-config
 BuildRequires:  perl perl-ExtUtils-Embed
+BuildRequires:  llvm-devel >= 19.0, clang-devel >= 19.0
 # PostGIS dependencies. Pigsty builders resolve these from the OS, EPEL, and
 # PGDG repositories; the private PostgreSQL ABI itself remains self-contained.
 BuildRequires:  autoconf automake libtool gmp-devel pcre2-devel
@@ -95,12 +97,13 @@ and pg_gather. pg_tde is intentionally part of the main %{name} package.
 %{__tar} -xzf %{SOURCE6}
 %{__mv} percona-pg_repack-%{pgrepackversion} .pg_repack-src
 patch -p1 --fuzz=0 < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH1}
 %{__tar} -xzf %{SOURCE7}
 %{__mv} percona-pgaudit-%{pgauditversion} .pgaudit-src
 %{__tar} -xzf %{SOURCE8}
 %{__mv} percona-pgaudit%{pgmajorversion}_set_user-%{setuserversion} .set_user-src
 %{__tar} -xzf %{SOURCE9}
-%{__mv} percona-pg-stat-monitor%{pgmajorversion}-%{pgstatmonitorversion} .pg_stat_monitor-src
+%{__mv} pg_stat_monitor-%{pgstatmonitorversion} .pg_stat_monitor-src
 %{__tar} -xzf %{SOURCE10}
 %{__mv} percona-pg_gather-%{pggatherversion} .pg_gather-src
 %{__cp} -p %{SOURCE2} .pgtde-pg-config
@@ -144,7 +147,7 @@ export CFLAGS CXXFLAGS LDFLAGS
 --with-icu \
 --with-gssapi \
 --with-liburing \
---without-llvm \
+--with-llvm \
 --with-python \
 --with-perl \
 --with-tcl \
@@ -157,6 +160,12 @@ export CFLAGS CXXFLAGS LDFLAGS
 --with-includes=/usr/include \
 --enable-nls \
 --enable-dtrace
+
+%if 0%{?rhel} == 8
+# PostGIS also passes compiler flags through PG_CPPFLAGS. The GCC annobin
+# plugin must stay on native builds but cannot be loaded by Clang for bitcode.
+sed -i '/^COMPILE\.c.*\.bc =/s/$(CPPFLAGS)/$(filter-out -fplugin=%%,$(CPPFLAGS))/' src/Makefile.global
+%endif
 
 cd src/backend
 MAKELEVEL=0 %{__make} submake-generated-headers
@@ -177,7 +186,7 @@ export PGTDE_CONTRIB_STAGE="$(pwd)/.pgtde-contrib-stage"
 PGTDE_PG_CONFIG_MODE=stage meson setup .pgtde-build .pg_tde-src \
   --buildtype=release \
   -Dpg_config="$(pwd)/.pgtde-pg-config"
-meson compile -C .pgtde-build
+meson compile -C .pgtde-build -j %{_smp_build_ncpus}
 meson install -C .pgtde-build
 
 %{__install} -D -m 0644 \
@@ -188,8 +197,8 @@ find "$PGTDE_STAGE%{pgbaseinstdir}" -type f \
   \( -name 'pg_tde*' -o -name 'pg_tde.so' \) -perm /111 -print0 | \
   xargs -0 -r -n 1 chrpath --replace %{pgbaseinstdir}/lib 2>/dev/null || :
 
-# Build Percona's tested PG18 extension set from the Source0 archives carried
-# by its 18.6 source RPMs. The wrapper resolves compile inputs inside the
+# Build Percona's PG18 extension set, including its pg_stat_monitor 2.4 update.
+# The wrapper resolves compile inputs inside the
 # staged kernel while retaining final installation directories for DESTDIR.
 export PGTDE_BUILD_PG_CONFIG="$(pwd)/.pgtde-pg-config"
 export CPPFLAGS="-I$PGTDE_STAGE%{pgbaseinstdir}/include/server -I$PGTDE_STAGE%{pgbaseinstdir}/include ${CPPFLAGS:-}"
@@ -371,6 +380,12 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Tue Oct 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.6-1PGSTY
+- Update bundled pg_stat_monitor to 2.4.0
+- Enable LLVM and retain core and extension bitcode in the existing packages
+- Link the system LLVM shared library and fix bundled pg_repack version parsing
+- Keep the EL8 GCC annobin plugin out of Clang bitcode compilation
+
 * Wed Sep 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.6-1PGSTY
 - Use GCC Toolset 13 for libkmip's C++20 requirements on EL8
 - Preserve distribution C++ flags and debug information in the KMIP client

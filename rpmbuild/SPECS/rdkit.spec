@@ -1,29 +1,35 @@
 %global sname rdkit
+%global upstream_version 2026_09_1
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+# Each PG cartridge must remain debuggable with the final shared runtime RPM.
+# Cross-file DWZ would give every PG build a different file under the same NVR.
+%global _find_debuginfo_dwz_opts %{nil}
 
-%if 0%{?rhel} && 0%{?rhel} < 9
-%{error:rdkit 2026.03.6 is currently packaged only for EL9 and later}
+%if 0%{?rhel} < 9
+%error RDKit 2026.09 requires the system Boost 1.75 or later; retain the existing EL8 packages
 %endif
 
 Name:           %{sname}
-Version:        202603.6
+Version:        202609.1
 Release:        1PGSTY%{?dist}
 Summary:        RDKit runtime libraries and PostgreSQL cartridge with InChI enabled
 License:        BSD-3-Clause
 URL:            https://github.com/rdkit/rdkit
-Source0:        rdkit_%{version}.orig.tar.xz
-# reproducibly recompressed from the official Release_2026_03_6 tag archive
+Source0:        rdkit-Release_%{upstream_version}.tar.gz
 Source1:        better-enums-0.11.3-enum.h
 # mirrored from the upstream better-enums 0.11.3 header used by RDKit
-Patch0:         rdkit-202603.6.patch
+Source2:        RingDecomposerLib-1.1.3_rdkit.tar.gz
+Patch0:         rdkit-202609.1-offline.patch
 Patch1:         rdkit-202603.6-extension-upgrade.patch
+Patch2:         rdkit-202609.1-boost175.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
 BuildRequires:  bison
-BuildRequires:  boost-devel
+BuildRequires:  boost-devel >= 1.75.0
 BuildRequires:  boost-numpy3
 BuildRequires:  boost-python3
+BuildRequires:  ccache
 BuildRequires:  cairo-devel
 BuildRequires:  cmake
 BuildRequires:  eigen3-devel
@@ -33,8 +39,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  inchi-devel >= 1.07.5
 BuildRequires:  make
 BuildRequires:  patchelf
-BuildRequires:  python3-devel
-BuildRequires:  python3-numpy
+BuildRequires:  python3-devel python3-numpy
 BuildRequires:  sqlite-devel
 BuildRequires:  zlib-devel
 
@@ -43,12 +48,17 @@ Requires:       inchi%{?_isa} >= 1.07.5
 %description
 RDKit is an open source cheminformatics toolkit. This package ships the shared
 libraries and data files needed by the PostgreSQL RDKit cartridge, built with
-system InChI support enabled on EL9 and later.
+system Boost and InChI support enabled on EL9 and later.
 
 %package devel
 Summary:        Development files for RDKit
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       inchi-devel >= 1.07.5
+Requires:       boost-devel >= 1.75.0
+Requires:       boost-numpy3
+Requires:       boost-python3
+Requires:       eigen3-devel
+Requires:       python3-devel
 
 %description devel
 Headers, shared library symlinks, and CMake metadata for building software
@@ -73,15 +83,22 @@ The RDKit PostgreSQL cartridge adds molecule types, fingerprints, substructure
 search, and InChI / InChIKey functions to PostgreSQL %{pgmajorversion}.
 
 %prep
-%setup -q -n rdkit-Release_2026_03_6
+%setup -q -n rdkit-Release_%{upstream_version}
 patch -p1 --fuzz=0 < %{PATCH0}
 patch -p1 --fuzz=0 < %{PATCH1}
+%if 0%{?rhel} == 9
+patch -p1 --fuzz=0 < %{PATCH2}
+%endif
 cp -f %{SOURCE1} Code/RDGeneral/enum.h
+tar -xzf %{SOURCE2} -C External/RingFamilies
+mv External/RingFamilies/RingDecomposerLib-1.1.3_rdkit External/RingFamilies/RingDecomposerLib
 
 %build
 %set_build_flags
 PATH=%{pginstdir}/bin:$PATH cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \
   -DCMAKE_SKIP_RPATH=ON \
   -DLIB_SUFFIX=64 \
@@ -99,7 +116,6 @@ PATH=%{pginstdir}/bin:$PATH cmake -S . -B build \
   -DRDK_BUILD_AVALON_SUPPORT=OFF \
   -DRDK_BUILD_MOLINTERCHANGE_SUPPORT=ON \
   -DRDK_OPTIMIZE_POPCNT=OFF \
-  -DRDK_USE_URF=OFF \
   -DRDK_BUILD_COORDGEN_SUPPORT=OFF \
   -DRDK_BUILD_MAEPARSER_SUPPORT=OFF \
   -DRDK_BUILD_CAIRO_SUPPORT=ON \
@@ -107,7 +123,7 @@ PATH=%{pginstdir}/bin:$PATH cmake -S . -B build \
   -DRDK_BUILD_PUBCHEMSHAPE_SUPPORT=OFF \
   -DRDK_BUILD_XYZ2MOL_SUPPORT=OFF \
   -DRDK_INSTALL_COMIC_FONTS=OFF \
-  -DBoost_NO_BOOST_CMAKE=TRUE \
+  -DBoost_USE_STATIC_LIBS=OFF \
   -DPython_EXECUTABLE=%{__python3} \
   -DINCHI_INCLUDE_DIR=%{_includedir}/inchi \
   -DINCHI_LIBRARY=%{_libdir}/libinchi.so \
@@ -132,6 +148,7 @@ patchelf --remove-rpath %{buildroot}%{pginstdir}/lib/rdkit.so
 /sbin/ldconfig
 
 %files
+%license license.txt External/RingFamilies/RingDecomposerLib/LICENSE
 %doc README.md
 %doc ReleaseNotes.md
 %{_libdir}/libRDKit*.so.1*
@@ -152,6 +169,15 @@ patchelf --remove-rpath %{buildroot}%{pginstdir}/lib/rdkit.so
 %{pginstdir}/share/extension/rdkit--*.sql
 
 %changelog
+* Mon Oct 05 2026 Vonng <rh@vonng.com> - 202609.1-1PGSTY
+- Update RDKit runtime, development files, Python bindings, and cartridge to 2026.09.1
+- Vendor the required RingDecomposerLib 1.1.3_rdkit source for offline builds
+- Use distribution Boost libraries on EL9 and EL10 without a bundled Boost runtime
+- Adapt Boost.JSON and Z-matrix containers to the EL9 Boost 1.75 baseline
+- Retain the existing EL8 packages instead of replacing system Boost
+- Resolve system Boost and Python versions in installed CMake metadata
+- Keep self-contained DWARF across cartridges sharing the same runtime package
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 202603.6-1PGSTY
 - Update RDKit runtime, development files, Python bindings, and cartridge to 2026.03.6
 - Enable the EL9 Boost 1.75 baseline and retain the InChI 1.07.5 dependency floor

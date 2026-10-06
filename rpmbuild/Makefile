@@ -455,10 +455,6 @@ inchi:
 	./build inchi 18
 
 rdkit:
-	@if [ "$$(rpm -E '%{rhel}')" -lt 9 ]; then \
-		echo "rdkit 202603.6 is excluded from EL8; refusing the legacy recipe" >&2; \
-		exit 1; \
-	fi
 	./build rdkit 14 15 16 17 18
 
 # omnigres

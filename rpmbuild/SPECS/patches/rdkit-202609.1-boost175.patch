@@ -1,0 +1,79 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,7 +134,7 @@
+   endif()
+ endif()
+ 
+-set(RDK_BOOST_VERSION "1.81.0")
++set(RDK_BOOST_VERSION "1.75.0")
+ 
+ if(NOT MSVC AND RDK_OPTIMIZE_POPCNT)
+   if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(ppc64|powerpc64)")
+--- a/Code/GraphMol/MolInterchange/Parser.cpp
++++ b/Code/GraphMol/MolInterchange/Parser.cpp
+@@ -200,12 +200,13 @@
+ template <typename T>
+ void parseProperties(T &obj, const bj::value &propsVal) {
+   for (const auto &propVal : propsVal.as_object()) {
++    const std::string key(propVal.key().data(), propVal.key().size());
+     if (propVal.value().is_int64()) {
+-      obj.setProp(propVal.key(), static_cast<int>(propVal.value().as_int64()));
++      obj.setProp(key, static_cast<int>(propVal.value().as_int64()));
+     } else if (propVal.value().is_double()) {
+-      obj.setProp(propVal.key(), propVal.value().as_double());
++      obj.setProp(key, propVal.value().as_double());
+     } else if (propVal.value().is_string()) {
+-      obj.setProp(propVal.key(), propVal.value().as_string().data());
++      obj.setProp(key, propVal.value().as_string().data());
+     }
+   }
+ }
+--- a/Code/GraphMol/SynthonSpaceSearch/SearchResults.h
++++ b/Code/GraphMol/SynthonSpaceSearch/SearchResults.h
+@@ -13,7 +13,6 @@
+ 
+ #include <unordered_map>
+ #include <functional>
+-#include <boost/unordered/unordered_flat_set.hpp>
+ #include <RDGeneral/export.h>
+ #include <GraphMol/ROMol.h>
+ 
+--- a/Code/GraphMol/SynthonSpaceSearch/SynthonSpaceSearcher.cpp
++++ b/Code/GraphMol/SynthonSpaceSearch/SynthonSpaceSearcher.cpp
+@@ -14,7 +14,6 @@
+ #include <thread>
+ #include <boost/algorithm/string.hpp>
+ #include <boost/random/discrete_distribution.hpp>
+-#include <boost/unordered/unordered_flat_set.hpp>
+ 
+ #include <GraphMol/Chirality.h>
+ #include <GraphMol/MolOps.h>
+--- a/Code/GraphMol/DistGeomHelpers/ZMatrixBuilder.h
++++ b/Code/GraphMol/DistGeomHelpers/ZMatrixBuilder.h
+@@ -13,15 +13,26 @@
+ #define RD_Z_MATRIX_BUILDER_H
+ 
+ #include <DistGeom/ZMatrix.h>
++#include <boost/version.hpp>
++#if BOOST_VERSION >= 108100
+ #include <boost/unordered/unordered_flat_map.hpp>
++#else
++#include <unordered_map>
++#endif
+ 
+ namespace RDKit {
+ class ROMol;
+ namespace DGeomHelpers {
+ 
++#if BOOST_VERSION >= 108100
+ using TorsionInfo =
+     boost::unordered_flat_map<std::size_t, DistGeom::TorsionCandidates>;
+ using BondAngleInfo = boost::unordered_flat_map<std::size_t, double>;
++#else
++using TorsionInfo =
++    std::unordered_map<std::size_t, DistGeom::TorsionCandidates>;
++using BondAngleInfo = std::unordered_map<std::size_t, double>;
++#endif
+ using BondLengthInfo = std::vector<double>;
+ 
+ //! A struct to store internal coordinates by unified ids through the ids from

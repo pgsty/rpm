@@ -1,6 +1,6 @@
 %global sname babelfish
 %{!?pgmajorversion:%global pgmajorversion 17}
-%{!?pgversion:%global pgversion 17.10}
+%{!?pgversion:%global pgversion 17.11}
 %{!?bbfversion:%global bbfversion 5.7.0}
 %global sourceversion %{pgversion}-%{bbfversion}
 %global pginstdir /usr/babelfish-%{pgmajorversion}
@@ -20,7 +20,8 @@ URL:            https://github.com/babelfish-for-postgresql
 Source0:        %{sname}-%{pgmajorversion}-%{sourceversion}.tar.gz
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
-BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm, clang-devel, llvm-devel
+BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4, clang, llvm
+BuildRequires:  clang-devel >= 19.0, llvm-devel >= 19.0
 BuildRequires:  libselinux-devel >= 2.0.93, libxml2-devel, libxslt-devel, libuuid-devel
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
@@ -55,6 +56,9 @@ cp -a postgresql_modified_for_babelfish/. buildsrc/
 for ext in babelfishpg_money babelfishpg_common babelfishpg_tsql babelfishpg_tds; do
   cp -a babelfish_extensions/contrib/$ext buildsrc/contrib/
 done
+# Keep ANTLR off PGXS's bitcode list and out of CMake's inherited LDFLAGS.
+sed -i 's|^OBJS += antlr/libantlr_tsql.a$|SHLIB_LINK += antlr/libantlr_tsql.a\nSHLIB_PREREQS += antlr/libantlr_tsql.a|' \
+  buildsrc/contrib/babelfishpg_tsql/Makefile
 sed -i -e 's/Oid[[:space:]]*function_id;/Oid			function_id = InvalidOid;/' \
   buildsrc/contrib/babelfishpg_tsql/src/procedures.c
 
@@ -64,7 +68,7 @@ cd buildsrc
 CFLAGS="${CFLAGS:-%optflags} %{bbf_prefix_map}"
 CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -v ffast-math | xargs -n 100`
 %if 0%{?pgmajorversion} >= 18
-CFLAGS="$CFLAGS -DHAVE_OPENSSL_INIT_SSL -DHAVE_BIO_METH_NEW"
+CPPFLAGS="${CPPFLAGS:-} -DHAVE_OPENSSL_INIT_SSL -DHAVE_BIO_METH_NEW"
 if printf 'int main(void) { return 0; }' | \
    %{__cc} -x c -Wno-error=missing-variable-declarations -c -o /dev/null - \
    >/dev/null 2>&1; then
@@ -73,7 +77,7 @@ fi
 %endif
 CXXFLAGS="${CXXFLAGS:-%optflags} %{bbf_prefix_map}"
 LDFLAGS="$LDFLAGS -Wl,--as-needed"; export LDFLAGS
-export CFLAGS CXXFLAGS
+export CFLAGS CXXFLAGS CPPFLAGS
 
 ./configure --enable-rpath \
 --prefix=%{pginstdir} \
@@ -90,7 +94,7 @@ export CFLAGS CXXFLAGS
 --with-libxml \
 --with-libxslt \
 --with-icu \
---without-llvm \
+--with-llvm \
 --with-python \
 --with-tcl \
 --with-openssl \
@@ -196,19 +200,23 @@ if [ -f contrib/babelfishpg_tds/src/backend/fault_injection/fault_injection_test
      contrib/babelfishpg_tds/src/backend/fault_injection/fault_injection_tests.c.disabled
 fi
 
-%{__make} -C contrib/babelfishpg_money %{?_smp_mflags} with_llvm=no
-%{__make} -C contrib/babelfishpg_common %{?_smp_mflags} with_llvm=no
-%{__make} -C contrib/babelfishpg_tds %{?_smp_mflags} with_llvm=no
-%{__make} -C contrib/babelfishpg_tsql antlr/libantlr_tsql.a cmake=/usr/bin/cmake with_llvm=no
+%{__make} -C contrib/babelfishpg_money %{?_smp_mflags}
+%{__make} -C contrib/babelfishpg_common %{?_smp_mflags}
+%{__make} -C contrib/babelfishpg_tds %{?_smp_mflags}
+%{__make} -C contrib/babelfishpg_tsql antlr/libantlr_tsql.a cmake=/usr/bin/cmake
 if [ ! -d contrib/babelfishpg_tsql/antlr/antlr4cpp_generated_src/TSqlLexer ]; then
   mkdir -p contrib/babelfishpg_tsql/antlr/antlr4cpp_generated_src
   cp -a contrib/babelfishpg_tsql/antlr/CMakeFiles/antlr_tsql.dir/antlr4cpp_generated_src/TSqlLexer \
         contrib/babelfishpg_tsql/antlr/CMakeFiles/antlr_tsql.dir/antlr4cpp_generated_src/TSqlParser \
         contrib/babelfishpg_tsql/antlr/antlr4cpp_generated_src/
 fi
-%{__make} -C contrib/babelfishpg_tsql cmake=/usr/bin/cmake with_llvm=no
+%{__make} -C contrib/babelfishpg_tsql cmake=/usr/bin/cmake
 
 %install
+%if 0%{?rhel} >= 10
+# Keep the private libpq RUNPATH and the standard libdir used by PL/Python.
+export QA_RPATHS=0x0003
+%endif
 %{__rm} -rf %{buildroot}
 cd buildsrc
 MAKELEVEL=0 %{__make} DESTDIR=%{buildroot} VERBOSE=1 %{?_smp_mflags} install-world-bin
@@ -222,13 +230,13 @@ export ANTLR4_RUNTIME_INCLUDE_DIR=%{_includedir}/antlr4-runtime
 export ANTLR4_RUNTIME_LIB_DIR=%{_libdir}
 export cmake=/usr/bin/cmake
 
-%{__make} -C contrib/babelfishpg_money install with_llvm=no DESTDIR=%{buildroot} \
+%{__make} -C contrib/babelfishpg_money install DESTDIR=%{buildroot} \
   pkglibdir=%{pginstdir}/lib/postgresql datadir=%{pginstdir}/share/postgresql
-%{__make} -C contrib/babelfishpg_common install with_llvm=no DESTDIR=%{buildroot} \
+%{__make} -C contrib/babelfishpg_common install DESTDIR=%{buildroot} \
   pkglibdir=%{pginstdir}/lib/postgresql datadir=%{pginstdir}/share/postgresql
-%{__make} -C contrib/babelfishpg_tsql install with_llvm=no DESTDIR=%{buildroot} \
+%{__make} -C contrib/babelfishpg_tsql install DESTDIR=%{buildroot} \
   pkglibdir=%{pginstdir}/lib/postgresql datadir=%{pginstdir}/share/postgresql
-%{__make} -C contrib/babelfishpg_tds install with_llvm=no DESTDIR=%{buildroot} \
+%{__make} -C contrib/babelfishpg_tds install DESTDIR=%{buildroot} \
   pkglibdir=%{pginstdir}/lib/postgresql datadir=%{pginstdir}/share/postgresql
 
 %files
@@ -252,6 +260,11 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Oct 06 2026 Ruohang Feng <rh@vonng.com> - 5.7.0-1PGSTY
+- Refresh Babelfish 5.7.0 and 6.2.0 on PostgreSQL 17.11 and 18.6
+- Build the kernel and bundled extensions with LLVM support
+- Pass PG18 OpenSSL macros to C and bitcode builds and link ANTLR separately
+
 * Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 5.7.0-1PGSTY
 - Preserve DWARF source paths for complete RPM debugsource packages
 - Apply standard RPM compiler and linker flags

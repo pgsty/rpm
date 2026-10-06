@@ -10,18 +10,18 @@ set -euo pipefail
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC_DIR="$(cd "${BIN_DIR}/../src" && pwd)"
 
-PG_VERSION="${1:-17.7}"
-BBF_VERSION="${2:-5.4.0}"
-PG_REF="${3:-BABEL_5_4_STABLE__PG_17_7}"
-EXT_REF="${4:-BABEL_5_4_STABLE}"
+PG_VERSION="${1:-17.11}"
+BBF_VERSION="${2:-5.7.0}"
+PG_REF="${3:-BABEL_5_7_STABLE__PG_17_11}"
+EXT_REF="${4:-BABEL_5_7_STABLE}"
 ANTLR_VERSION="${5:-4.13.2}"
 PG_MAJOR="${PG_VERSION%%.*}"
 
 PG_DIR_PREFIX="postgresql_modified_for_babelfish"
 EXT_DIR_PREFIX="babelfish_extensions"
 PACKAGE_NAME="babelfish-${PG_MAJOR}-${PG_VERSION}-${BBF_VERSION}"
-PG_TARBALL_URL="https://codeload.github.com/babelfish-for-postgresql/postgresql_modified_for_babelfish/tar.gz/refs/heads/${PG_REF}"
-EXT_TARBALL_URL="https://codeload.github.com/babelfish-for-postgresql/babelfish_extensions/tar.gz/refs/heads/${EXT_REF}"
+PG_TARBALL_URL="https://codeload.github.com/babelfish-for-postgresql/postgresql_modified_for_babelfish/tar.gz/${PG_REF}"
+EXT_TARBALL_URL="https://codeload.github.com/babelfish-for-postgresql/babelfish_extensions/tar.gz/${EXT_REF}"
 ANTLR_ZIP="antlr4-cpp-runtime-${ANTLR_VERSION}-source.zip"
 ANTLR_URL="https://www.antlr.org/download/${ANTLR_ZIP}"
 
@@ -31,6 +31,15 @@ if command -v gtar >/dev/null 2>&1; then
   TAR_BIN="gtar"
 else
   TAR_BIN="tar"
+fi
+if ! "${TAR_BIN}" --version | grep -q 'GNU tar'; then
+  echo '[FAIL] GNU tar is required for source archives' >&2
+  exit 1
+fi
+export COPYFILE_DISABLE=1
+if [[ -e "${SRC_DIR}/${PACKAGE_NAME}.tar.gz" ]]; then
+  echo "[FAIL] source archive already exists: ${SRC_DIR}/${PACKAGE_NAME}.tar.gz" >&2
+  exit 1
 fi
 
 TMP_DIR="$(mktemp -d)"
@@ -59,7 +68,7 @@ echo "[INFO] pg version: ${PG_VERSION}"
 echo "[INFO] babelfish version: ${BBF_VERSION}"
 echo "[INFO] antlr version: ${ANTLR_VERSION}"
 if [[ -n "${PROXY_URL}" ]]; then
-  echo "[INFO] proxy: ${PROXY_URL}"
+  echo "[INFO] using configured proxy"
 else
   echo "[WARN] no proxy configured; download may be slow" >&2
 fi
@@ -96,7 +105,11 @@ download_archive() {
 echo "[INFO] downloading upstream archives..."
 download_archive "${PG_TARBALL_URL}" "${TMP_DIR}/pg.tar.gz"
 download_archive "${EXT_TARBALL_URL}" "${TMP_DIR}/ext.tar.gz"
-download_archive "${ANTLR_URL}" "${TMP_DIR}/${ANTLR_ZIP}"
+if [[ -f "${SRC_DIR}/${ANTLR_ZIP}" ]]; then
+  cp "${SRC_DIR}/${ANTLR_ZIP}" "${TMP_DIR}/${ANTLR_ZIP}"
+else
+  download_archive "${ANTLR_URL}" "${TMP_DIR}/${ANTLR_ZIP}"
+fi
 
 ${TAR_BIN} -xzf "${TMP_DIR}/pg.tar.gz" -C "${TMP_DIR}"
 ${TAR_BIN} -xzf "${TMP_DIR}/ext.tar.gz" -C "${TMP_DIR}"
@@ -108,8 +121,13 @@ if [[ -z "${PG_DIR}" || -z "${EXT_DIR}" ]]; then
   exit 1
 fi
 
-PACKAGE_ROOT="${SRC_DIR}/${PACKAGE_NAME}"
-rm -rf "${PACKAGE_ROOT}" "${SRC_DIR}/${PACKAGE_NAME}.tar.gz"
+ACTUAL_PG_VERSION="$(sed -n 's/^AC_INIT(\[PostgreSQL\], \[\([^]]*\)\].*/\1/p' "${PG_DIR}/configure.ac")"
+if [[ "${ACTUAL_PG_VERSION}" != "${PG_VERSION}" ]]; then
+  echo "[FAIL] source PostgreSQL version ${ACTUAL_PG_VERSION} differs from requested ${PG_VERSION}" >&2
+  exit 1
+fi
+
+PACKAGE_ROOT="${TMP_DIR}/${PACKAGE_NAME}"
 mkdir -p "${PACKAGE_ROOT}/postgresql_modified_for_babelfish" \
          "${PACKAGE_ROOT}/babelfish_extensions" \
          "${PACKAGE_ROOT}/third_party"
@@ -117,7 +135,11 @@ mkdir -p "${PACKAGE_ROOT}/postgresql_modified_for_babelfish" \
 cp -a "${PG_DIR}/." "${PACKAGE_ROOT}/postgresql_modified_for_babelfish/"
 cp -a "${EXT_DIR}/." "${PACKAGE_ROOT}/babelfish_extensions/"
 cp -f "${TMP_DIR}/${ANTLR_ZIP}" "${PACKAGE_ROOT}/third_party/${ANTLR_ZIP}"
-cp -f "${TMP_DIR}/${ANTLR_ZIP}" "${SRC_DIR}/${ANTLR_ZIP}"
+if [[ -e "${SRC_DIR}/${ANTLR_ZIP}" ]]; then
+  cmp "${TMP_DIR}/${ANTLR_ZIP}" "${SRC_DIR}/${ANTLR_ZIP}"
+else
+  cp "${TMP_DIR}/${ANTLR_ZIP}" "${SRC_DIR}/${ANTLR_ZIP}"
+fi
 
 for ext in babelfishpg_money babelfishpg_common babelfishpg_tsql babelfishpg_tds; do
   rm -rf "${PACKAGE_ROOT}/postgresql_modified_for_babelfish/contrib/${ext}"
@@ -162,9 +184,9 @@ grep -n 'Babelfish \$PG_VERSION on \$host' "${PACKAGE_ROOT}/postgresql_modified_
 grep -n 'PG_CPPFLAGS += -I\$(ANTLR4_RUNTIME_INCLUDE_DIR)' "${PACKAGE_ROOT}/babelfish_extensions/contrib/babelfishpg_tsql/Makefile"
 grep -n 'fault_injection/fault_injection_tests.c' "${PACKAGE_ROOT}/babelfish_extensions/contrib/babelfishpg_tds/Makefile"
 
-find "${PACKAGE_ROOT}" -type f -name '._*' -delete
-COPYFILE_DISABLE=1 ${TAR_BIN} -czf "${SRC_DIR}/${PACKAGE_NAME}.tar.gz" -C "${SRC_DIR}" "${PACKAGE_NAME}"
-rm -rf "${PACKAGE_ROOT}"
+${TAR_BIN} --no-xattrs --no-acls --exclude='.git' --exclude='.DS_Store' --exclude='._*' \
+  -czf "${TMP_DIR}/${PACKAGE_NAME}.tar.gz" -C "${TMP_DIR}" "${PACKAGE_NAME}"
+cp -n "${TMP_DIR}/${PACKAGE_NAME}.tar.gz" "${SRC_DIR}/${PACKAGE_NAME}.tar.gz"
 
 echo "[ OK ] created ${SRC_DIR}/${PACKAGE_NAME}.tar.gz"
 echo "[ OK ] created ${SRC_DIR}/${ANTLR_ZIP}"

@@ -1309,9 +1309,9 @@ antlr4:
 
 babelfish: babelfish-17
 babelfish-18:
-	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 18" --define "pgversion 18.4" --define "bbfversion 6.2.0"
+	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 18" --define "pgversion 18.6" --define "bbfversion 6.2.0"
 babelfish-17:
-	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 17" --define "pgversion 17.10" --define "bbfversion 5.7.0"
+	QA_RPATHS=3 rpmbuild -ba SPECS/babelfish.spec --define "pgmajorversion 17" --define "pgversion 17.11" --define "bbfversion 5.7.0"
 
 orioledb: orioledb-18
 orioledb-18:

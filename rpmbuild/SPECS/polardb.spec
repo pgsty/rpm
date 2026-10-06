@@ -29,7 +29,7 @@ BuildRequires:  perl-interpreter, perl-ExtUtils-Embed, perl(FindBin), perl(Opcod
 BuildRequires:  perl-interpreter, perl-ExtUtils-Embed, perl-FindBin, perl-Opcode
 %endif
 BuildRequires:  python3-devel, tcl-devel, lz4-devel, libzstd-devel, libunwind-devel
-BuildRequires:  clang, llvm-devel, file, binutils
+BuildRequires:  clang-devel >= 19.0, llvm-devel >= 19.0, file, binutils
 BuildRequires:  polarstore >= 1.2.42
 Requires:       tzdata
 Requires(pre):  shadow-utils
@@ -52,12 +52,12 @@ mv build.sh.new build.sh
 chmod +x build.sh
 
 %build
+%set_build_flags
 export COPT="-Wno-error ${COPT-}"
 export CC=gcc CXX=g++
 export NM=gcc-nm AR=gcc-ar RANLIB=gcc-ranlib
 export CLANG="${CLANG:-$(command -v clang)}"
 export LLVM_CONFIG="${LLVM_CONFIG:-$(command -v llvm-config)}"
-unset CFLAGS CXXFLAGS LDFLAGS
 
 stage_root=%{_builddir}/%{name}-%{version}-stage
 rm -rf "$stage_root"
@@ -171,6 +171,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Oct 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11.1.0-1PGSTY
+- Preserve distribution build flags and debug information in optimized builds
+
 * Sat Sep 05 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11.1.0-1PGSTY
 - Stage the install payload for standard RPM debug post-processing
 - Normalize packaged Python helper shebangs for RPM BRP validation

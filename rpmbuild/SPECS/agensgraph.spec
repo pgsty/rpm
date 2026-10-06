@@ -1,5 +1,6 @@
 %global sname agensgraph
-%global pgmajorversion 17
+%global pgmajorversion 18
+%{!?llvm:%global llvm 1}
 %global pgbaseinstdir /usr/agens-%{pgmajorversion}
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
@@ -7,7 +8,7 @@
 %global _lto_cflags %{nil}
 
 Name:           %{sname}-%{pgmajorversion}
-Version:        2.17.0
+Version:        2.18.4.0
 Release:        1PGSTY%{?dist}
 Summary:        AgensGraph kernel (PG%{pgmajorversion} fork)
 License:        PostgreSQL
@@ -20,15 +21,20 @@ BuildRequires:  krb5-devel, libselinux-devel >= 2.0.93, libxml2-devel, libxslt-d
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
 BuildRequires:  bison >= 2.3, flex >= 2.5.35, readline-devel, pam-devel
+%if %llvm
+BuildRequires:  llvm-devel >= 19.0, clang-devel >= 19.0
+%endif
 %if 0%{?rhel} >= 10
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin, perl-interpreter
 Requires:       systemd, lz4-libs, libzstd >= 1.5.1, /sbin/ldconfig, libicu, openssl-libs >= 3.0.0, libxml2, tzdata
-%elif 0%{?rhel} == 9
+%else
+%if 0%{?rhel} == 9
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2, tzdata
 %else
 BuildRequires:  /usr/bin/perl
 Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, openssl-libs >= 1.1.1k, libxml2, tzdata
+%endif
 %endif
 Requires(pre):  shadow-utils
 Provides:       agensgraph = %{version}-%{release}
@@ -41,10 +47,7 @@ This package installs PostgreSQL binaries and libraries under %{pgbaseinstdir}.
 %setup -q -n %{sname}-%{version}
 
 %build
-CFLAGS="${CFLAGS:-%optflags}"
-CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -v ffast-math | xargs -n 100`
-LDFLAGS="-Wl,--as-needed"; export LDFLAGS
-export CFLAGS
+%set_build_flags
 
 ./configure --enable-rpath \
 --prefix=%{pgbaseinstdir} \
@@ -55,6 +58,11 @@ export CFLAGS
 --docdir=%{pgbaseinstdir}/doc \
 --htmldir=%{pgbaseinstdir}/doc/html \
 --with-system-tzdata=/usr/share/zoneinfo \
+%if %llvm
+--with-llvm \
+%else
+--without-llvm \
+%endif
 --with-lz4 \
 --with-zstd \
 --with-uuid=e2fs \
@@ -107,6 +115,11 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Oct 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 2.18.4.0-1PGSTY
+- Update to the stable AgensGraph 2.18.4.0 tag based on PostgreSQL 18.4
+- Install the PostgreSQL 18 kernel under /usr/agens-18
+- Enable LLVM JIT by default and preserve distribution build and debug flags
+
 * Sun Jul 05 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 2.17.0-1PIGSTY
 - Bump AgensGraph kernel package to 2.17.0 based on PostgreSQL 17.10
 - Use upstream tag source archive and install under /usr/agens-17

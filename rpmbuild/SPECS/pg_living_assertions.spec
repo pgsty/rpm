@@ -6,13 +6,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.5.1
+Version:        0.5.10
 Release:        1PGSTY%{?dist}
 Summary:        Executable SQL assertions with recorded verification history
-License:        PostgreSQL
+License:        Apache-2.0
 URL:            https://github.com/Manuelreyesbravo/pg_living_assertions
 Source0:        %{sname}-%{version}.tar.gz
-# Upstream tag source: https://codeload.github.com/Manuelreyesbravo/pg_living_assertions/tar.gz/refs/tags/v0.5.1
+# Upstream tag source: https://codeload.github.com/Manuelreyesbravo/pg_living_assertions/tar.gz/refs/tags/v0.5.10
 BuildArch:      noarch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -24,10 +24,10 @@ and assertion replacement history. Checks run on demand in a read-only
 subtransaction that is always rolled back. This is not a per-write SQL ASSERTION constraint.
 
 %prep
-%setup -q -n pg_living_assertions-0.5.1
+%setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} DOCS=
+PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} all DOCS=
 
 %install
 PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} DOCS=
@@ -39,6 +39,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} DOCS=
 %{pginstdir}/share/extension/%{sname}--*.sql
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 0.5.10-1PGSTY
+- Update to upstream 0.5.10 and its Apache-2.0 license.
+- Retain the complete SQL upgrade chain and architecture-independent payload.
+- Select the PGXS all target instead of the upstream test-cluster default.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 0.5.1-1PGSTY
 - Update to upstream 0.5.1
 - Describe the read-only subtransaction checks and retain upgrade scripts

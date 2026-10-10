@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pg_fts 1.9.0 only supports PostgreSQL 17 and 18}
+%{error:pg_fts only supports PostgreSQL 17 and 18}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -23,13 +23,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.9.0
+Version:	1.12.0
 Release:	1PGSTY%{?dist}
 Summary:	Full-text search with BM25 ranking for PostgreSQL
 License:	PostgreSQL AND MIT
 URL:		https://codeberg.org/gregburd/pg_fts
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/gburd/pg_fts/archive/refs/tags/v1.9.0.tar.gz
+#           https://codeberg.org/gregburd/pg_fts/archive/v1.12.0.tar.gz
+# Repacked with GNU tar to use a versioned archive root.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -66,6 +67,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 1.12.0-1PGSTY
+- Update to upstream 1.12.0 and retain the complete SQL upgrade chain.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.9.0-1PGSTY
 - Update to 1.9.0.
 

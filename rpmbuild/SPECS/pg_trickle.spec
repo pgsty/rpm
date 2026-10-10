@@ -69,14 +69,12 @@ install -m 755 %{_builddir}/%{srcdir}/target/release/pg_trickle_dump %{buildroot
 install -m 644 %{_builddir}/%{srcdir}/README.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 %{_builddir}/%{srcdir}/INSTALL.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 %{_builddir}/%{srcdir}/CHANGELOG.md %{buildroot}%{_docdir}/%{name}/
-install -m 644 %{_builddir}/%{srcdir}/PACKAGING-UPGRADE.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}/
 
 %files
 %doc %{_docdir}/%{name}/README.md
 %doc %{_docdir}/%{name}/INSTALL.md
 %doc %{_docdir}/%{name}/CHANGELOG.md
-%doc %{_docdir}/%{name}/PACKAGING-UPGRADE.md
 %license %{_licensedir}/%{name}/LICENSE
 %{pginstdir}/bin/pg_trickle_dump
 %{pginstdir}/lib/%{pname}.so
@@ -89,8 +87,7 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 - Update to upstream 0.108.3 and rebase the locked pgrx 0.19.3 packaging patch.
 - Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
 - Declare git for the locked Verus and synstructure source dependencies.
-- Preserve upgrade safeguards, full-refresh reinitialization and pg_trickle_dump.
-- Document the upstream identity collision for projections that omit source keys.
+- Ship upstream SQL and pg_trickle_dump without downstream migration changes.
 
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.108.1-1PGSTY
 - Update to 0.108.1.

@@ -430,7 +430,7 @@ pg_ivm:
 pg_incremental:
 	./build pg_incremental 16 17 18
 
-pg_trickle:		# rust pgrx 0.19.3, PG18 only; breaking V2 DAG recreation
+pg_trickle:		# rust pgrx 0.19.3, PG18 only
 	./build pg_trickle 18
 
 pg_local_cache:	# shared_preload_libraries

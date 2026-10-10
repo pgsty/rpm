@@ -8,16 +8,17 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.10.3
+Version:        2.12.0
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.10.3.tar.gz
-# Repacked with a versioned root and the pgrx 0.19.2 Cargo.lock.
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.12.0.tar.gz
+# Repacked with GNU tar to use a versioned archive root.
+Patch0:         pg-turbovec-2.12.0.patch
 # Package installation is not the database migration: restart PostgreSQL,
-# then ALTER EXTENSION to 2.10.3. Upgrades from 1.x also require REINDEX
+# then ALTER EXTENSION to 2.12.0. Upgrades from 1.x also require REINDEX
 # for wire v7 -> v8; upgrades from 2.x retain wire v8.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -31,6 +32,7 @@ nearest-neighbor search with L2, inner-product, cosine, and L1 distances.
 
 %prep
 %setup -q -n %{srcdir}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -39,7 +41,7 @@ cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=stable
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -84,6 +86,11 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 2.12.0-1PGSTY
+- Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
+- Update to upstream 2.12.0 and align the locked pgrx graph with cargo-pgrx 0.19.3.
+- Keep PostgreSQL 14 through 18 targets and the complete SQL upgrade chain.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 2.10.3-1PGSTY
 - Update to 2.10.3.
 

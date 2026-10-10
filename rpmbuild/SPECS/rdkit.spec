@@ -11,7 +11,7 @@
 
 Name:           %{sname}
 Version:        202609.1
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        RDKit runtime libraries and PostgreSQL cartridge with InChI enabled
 License:        BSD-3-Clause
 URL:            https://github.com/rdkit/rdkit
@@ -20,7 +20,6 @@ Source1:        better-enums-0.11.3-enum.h
 # mirrored from the upstream better-enums 0.11.3 header used by RDKit
 Source2:        RingDecomposerLib-1.1.3_rdkit.tar.gz
 Patch0:         rdkit-202609.1-offline.patch
-Patch1:         rdkit-202603.6-extension-upgrade.patch
 Patch2:         rdkit-202609.1-boost175.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
@@ -85,7 +84,6 @@ search, and InChI / InChIKey functions to PostgreSQL %{pgmajorversion}.
 %prep
 %setup -q -n rdkit-Release_%{upstream_version}
 patch -p1 --fuzz=0 < %{PATCH0}
-patch -p1 --fuzz=0 < %{PATCH1}
 %if 0%{?rhel} == 9
 patch -p1 --fuzz=0 < %{PATCH2}
 %endif
@@ -169,6 +167,9 @@ patchelf --remove-rpath %{buildroot}%{pginstdir}/lib/rdkit.so
 %{pginstdir}/share/extension/rdkit--*.sql
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 202609.1-2PGSTY
+- Ship the upstream extension update SQL without downstream migration repairs.
+
 * Mon Oct 05 2026 Vonng <rh@vonng.com> - 202609.1-1PGSTY
 - Update RDKit runtime, development files, Python bindings, and cartridge to 2026.09.1
 - Vendor the required RingDecomposerLib 1.1.3_rdkit source for offline builds

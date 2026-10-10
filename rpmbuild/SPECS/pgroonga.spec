@@ -13,7 +13,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	4.0.9
+Version:	4.1.0
 Release:	1PGSTY%{?dist}
 Summary:	Fast full-text search plugin for PostgreSQL based on Groonga
 Group:		Applications/Text
@@ -81,6 +81,10 @@ EOF
 %{pginstdir}/lib/*.so
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 4.1.0-1PGSTY
+- Update pgroonga and pgroonga_database to upstream 4.1.0.
+- Retain the Meson build and the supported Groonga 15.1 ABI baseline.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 4.0.9-1PGSTY
 - Update to 4.0.9.
 

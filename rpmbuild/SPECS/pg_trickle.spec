@@ -8,17 +8,17 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.108.1
+Version:	0.108.3
 Release:	1PGSTY%{?dist}
 Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/trickle-labs/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg-trickle-0.108.1.patch
-#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.108.1
+Patch0:		pg-trickle-0.108.3.patch
+#           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.108.3
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
+BuildRequires:	cargo clang git rust rustfmt openssl-devel pkgconfig
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -38,9 +38,9 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_TOOLCHAIN=1.98.0
+export RUSTUP_TOOLCHAIN=stable
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -85,6 +85,13 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 0.108.3-1PGSTY
+- Update to upstream 0.108.3 and rebase the locked pgrx 0.19.3 packaging patch.
+- Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
+- Declare git for the locked Verus and synstructure source dependencies.
+- Preserve upgrade safeguards, full-refresh reinitialization and pg_trickle_dump.
+- Document the upstream identity collision for projections that omit source keys.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.108.1-1PGSTY
 - Update to 0.108.1.
 

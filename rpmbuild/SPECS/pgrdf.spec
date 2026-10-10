@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.39
+Version:	0.6.40
 Release:	1PGSTY%{?dist}
 Summary:	RDF, SPARQL, SHACL, and OWL reasoning for PostgreSQL
 License:	MIT
 URL:		https://github.com/styk-tv/pgRDF
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.39.tar.gz
-Patch0:		pgrdf-0.6.39.patch
+#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.40.tar.gz
+Patch0:		pgrdf-0.6.40.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt git
@@ -77,6 +77,11 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 0.6.40-1PGSTY
+- Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
+- Update to upstream 0.6.40 with its graph-id sequence ownership repair.
+- Retain the catalog-neutral 0.6.20 to 0.6.22 upgrade bridge.
+
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.6.39-1PGSTY
 - Update to upstream 0.6.39.
 - Build with pgrx and cargo-pgrx 0.19.3; retain a locked dependency graph.

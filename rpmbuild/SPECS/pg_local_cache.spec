@@ -23,16 +23,17 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.4
+Version:	3.1.0
 Release:	1PGSTY%{?dist}
 Summary:	Transaction-aware cache for PostgreSQL primary-key reads
 License:	MIT
 URL:		https://github.com/profundium/pg_local_cache
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_local_cache-2.0.4.patch
-#           official v2.0.4 source archive
+Patch0:		pg_local_cache-3.1.0.patch
+#           official v3.1.0 release tarball
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	openssl-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
@@ -41,14 +42,14 @@ BuildRequires:	clang-devel >= 19.0
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-pg_local_cache keeps bounded whole-row entries in PostgreSQL shared memory and
-accelerates supported primary-key reads while preserving PostgreSQL as the
-source of truth. It targets one configured database and one writable primary.
-The module must be added to shared_preload_libraries and PostgreSQL restarted
-before its cache workers and SQL fast path can be used.
+pg_local_cache keeps bounded whole-row entries in PostgreSQL shared memory.
+Rows are served over authenticated RESP (Redis protocol) by a background
+worker; there is no SQL read fast path. It targets one configured database
+and one writable primary. The module must be added to shared_preload_libraries
+and PostgreSQL restarted before its cache workers can be used.
 
 %prep
-%setup -q -n %{sname}-%{version}-source
+%setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
@@ -71,6 +72,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Fri Oct 09 2026 Maxim Bronnikov <bronnikovmr@gmail.com> - 3.1.0-1PGSTY
+- Update to 3.1.0 (RESP-only API, native TLS; requires openssl)
+- Drop the retained 1.x get API on upgrade from 2.x; 3.x has no SQL read path
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.0.4-1PGSTY
 - Update to 2.0.4
 

@@ -10,7 +10,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.26.0
+Version:	0.26.1
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 # Exact per-crate expressions are installed as third-party/LICENSE-EXPRESSIONS.txt.
@@ -19,10 +19,10 @@ License:	(AGPL-3.0-or-later) AND 0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-e
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
 Source1:	pg_search_collect_third_party_licenses.py
-Patch0:		pg-search-0.26.0.patch
+# Upstream 0.26.1 already pins pgrx 0.19.3 in its manifests and Cargo.lock.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel pkgconfig python3
+BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel libicu-devel pkgconfig python3
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion}
 
 %description
@@ -34,7 +34,6 @@ before the extension can be created or used.
 
 %prep
 %setup -q -n %{srcdir}
-patch --fuzz=0 --batch --forward -p1 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -91,6 +90,13 @@ cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 0.26.1-1PGSTY
+- Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
+- Update to upstream 0.26.1 with its native pgrx 0.19.3 dependency graph.
+- Drop the superseded pgrx compatibility patch and preserve third-party licenses.
+- Declare the ICU development dependency used by the upstream source build.
+- Refresh the reviewed Tantivy and DataFusion license source revisions.
+
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.26.0-1PGSTY
 - Update to upstream 0.26.0.
 - Build with pgrx and cargo-pgrx 0.19.3; retain a locked dependency graph.

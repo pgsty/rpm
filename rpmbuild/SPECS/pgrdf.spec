@@ -15,7 +15,6 @@ License:	MIT
 URL:		https://github.com/styk-tv/pgRDF
 Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.40.tar.gz
-Patch0:		pgrdf-0.6.40.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt git
@@ -29,7 +28,6 @@ pgrdf through shared_preload_libraries before starting PostgreSQL.
 
 %prep
 %setup -q -n %{srcdir}
-patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -80,7 +78,7 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 * Sat Oct 10 2026 Vonng <rh@vonng.com> - 0.6.40-1PGSTY
 - Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
 - Update to upstream 0.6.40 with its graph-id sequence ownership repair.
-- Retain the catalog-neutral 0.6.20 to 0.6.22 upgrade bridge.
+- Package upstream SQL without a downstream historical upgrade bridge.
 
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.6.39-1PGSTY
 - Update to upstream 0.6.39.

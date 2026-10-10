@@ -29,7 +29,6 @@ Summary:	Transaction-aware cache for PostgreSQL primary-key reads
 License:	MIT
 URL:		https://github.com/profundium/pg_local_cache
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_local_cache-3.1.0.patch
 #           official v3.1.0 release tarball
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -50,7 +49,6 @@ and PostgreSQL restarted before its cache workers can be used.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -74,7 +72,6 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %changelog
 * Fri Oct 09 2026 Maxim Bronnikov <bronnikovmr@gmail.com> - 3.1.0-1PGSTY
 - Update to 3.1.0 (RESP-only API, native TLS; requires openssl)
-- Drop the retained 1.x get API on upgrade from 2.x; 3.x has no SQL read path
 
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.0.4-1PGSTY
 - Update to 2.0.4

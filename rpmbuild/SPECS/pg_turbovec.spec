@@ -17,9 +17,6 @@ Source0:        %{sname}-%{version}.tar.gz
 #               https://codeberg.org/gregburd/pg_turbovec/archive/v2.12.0.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
 Patch0:         pg-turbovec-2.12.0.patch
-# Package installation is not the database migration: restart PostgreSQL,
-# then ALTER EXTENSION to 2.12.0. Upgrades from 1.x also require REINDEX
-# for wire v7 -> v8; upgrades from 2.x retain wire v8.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt

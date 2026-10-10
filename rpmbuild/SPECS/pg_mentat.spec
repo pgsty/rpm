@@ -8,14 +8,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.10.3
+Version:        1.11.1
 Release:        1PGSTY%{?dist}
 Summary:        Datomic-compatible Datalog query engine for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/mentat
 Source0:        %{sname}-%{version}.tar.gz
-#               https://api.pgxn.org/dist/pg_mentat/1.10.3/pg_mentat-1.10.3.zip
-Patch0:         pg-mentat-1.10.3.patch
+#               https://codeberg.org/gregburd/mentat/archive/v1.11.1.tar.gz
+# Repacked with GNU tar to use a versioned archive root.
+Patch0:         pg-mentat-1.11.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -77,6 +78,11 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 1.11.1-1PGSTY
+- Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
+- Update to upstream 1.11.1 and rebase the pgrx 0.19.3 compatibility patch.
+- Preserve the locked dependency graph and PostgreSQL 14 through 18 targets.
+
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 1.10.3-1PGSTY
 - Update to upstream 1.10.3.
 - Build with pgrx and cargo-pgrx 0.19.3; retain a locked dependency graph.

@@ -12,12 +12,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.4
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Execute SQL commands in PostgreSQL background worker processes
 License:	PostgreSQL
 URL:		https://github.com/vibhorkum/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_background-2.0.4.patch
 #		https://github.com/vibhorkum/pg_background/archive/refs/tags/v2.0.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
@@ -35,7 +34,6 @@ operations without blocking client sessions.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} LLVM_BINPATH=%{llvm_binpath}
@@ -56,6 +54,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 2.0.4-2PGSTY
+- Package the upstream control and SQL files without downstream extension versions.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 2.0.4-1PGSTY
 - Update to 2.0.4.
 

@@ -19,7 +19,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.2
+Version:	1.5.3
 Release:	1PGSTY%{?dist}
 Summary:	Trusted Language Extensions for PostgreSQL
 License:	Apache-2.0
@@ -27,6 +27,7 @@ URL:		https://github.com/aws/pg_tle
 Source0:	pg_tle-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	flex
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
@@ -51,6 +52,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
+%license LICENSE
 %doc README.md
 %{pginstdir}/lib/%{sname}.so
 %{pginstdir}/share/extension/%{sname}.control
@@ -62,6 +64,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Oct 10 2026 Vonng <rh@vonng.com> - 1.5.3-1PGSTY
+- Update to 1.5.3
+- Declare the scanner build dependency and include the upstream license
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.5.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

@@ -10,7 +10,7 @@
 
 Summary:	A semantic version data type for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.41.0
+Version:	0.42.0
 Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 Source0:	pg-semver-%{version}.tar.gz
@@ -49,11 +49,15 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
 %{pginstdir}/share/extension/%{sname}.control
 
 %if %llvm
-   %{pginstdir}/lib/bitcode/src/%{sname}*.bc
-   %{pginstdir}/lib/bitcode/src/%{sname}/src/*.bc
+%{pginstdir}/lib/bitcode/%{sname}.index.bc
+%{pginstdir}/lib/bitcode/%{sname}/src/*.bc
 %endif
 
 %changelog
+* Sun Oct 11 2026 Vonng <rh@vonng.com> - 0.42.0-1PGSTY
+- Update to 0.42.0
+- Align the bitcode file list with the upstream module layout
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.41.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

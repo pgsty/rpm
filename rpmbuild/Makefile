@@ -186,6 +186,9 @@ vchord:    # rust pgrx 0.19.2
 pgvectorscale:  # rust pgrx 0.19.2
 	./build pgvectorscale 14 15 16 17 18
 
+pg_vectorsearch:  # upstream alpha, PostgreSQL 18 only
+	./build pg_vectorsearch 18
+
 pg_turbovec:	# rust pgrx 0.19.3, Rust 1.96+
 	./build pg_turbovec 14 15 16 17 18
 
@@ -1354,7 +1357,7 @@ rm-srpm:
 	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
-	vchord pgvectorscale pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
+	vchord pgvectorscale pg_vectorsearch pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
 	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_jieba pg_bestmatch vchord_bm25 \
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts acdat pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	citus hydra pg_duckdb \

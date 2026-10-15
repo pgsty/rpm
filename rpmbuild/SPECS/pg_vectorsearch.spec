@@ -21,10 +21,23 @@ License:        PostgreSQL
 URL:            https://github.com/timescale/pg_vectorsearch
 Source0:        https://github.com/timescale/pg_vectorsearch/releases/download/v%{version}/%{sname}-%{version}.tar.gz
 Patch0:         pg_vectorsearch-0.1.0-rpath.patch
+Patch1:         pg_vectorsearch-0.1.0-clang15-atomics.patch
+Patch2:         pg_vectorsearch-0.1.0-llvm15-ifunc.patch
 
+%if 0%{?rhel} == 8
+# EL8 ships GCC 8 and Meson 0.58. Use a supported compiler and a pinned,
+# build-only Meson source; neither tool enters the extension payload.
+Source1:        https://github.com/mesonbuild/meson/releases/download/0.63.3/meson-0.63.3.tar.gz
+BuildRequires:  gcc-toolset-13-gcc
+BuildRequires:  gcc-toolset-13-gcc-plugin-annobin
+BuildRequires:  python3.11
+%global pgvs_meson /usr/bin/python3.11 meson-0.63.3/meson.py
+%else
 BuildRequires:  gcc >= 11
-BuildRequires:  make
 BuildRequires:  meson >= 0.61
+%global pgvs_meson meson
+%endif
+BuildRequires:  make
 BuildRequires:  ninja-build
 BuildRequires:  python3
 BuildRequires:  pkgconfig(openblas)
@@ -42,16 +55,25 @@ It can also index existing pgvector vector/halfvec columns without requiring
 pgvector for standalone use. This upstream alpha release is for evaluation.
 
 %prep
+%if 0%{?rhel} == 8
+%setup -q -n %{sname}-%{version} -a 1
+%else
 %setup -q -n %{sname}-%{version}
+%endif
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
 %set_build_flags
-meson setup builddir --buildtype=release -Dstrip=false \
+%if 0%{?rhel} == 8
+source /opt/rh/gcc-toolset-13/enable
+%endif
+%{pgvs_meson} setup builddir --buildtype=release -Dstrip=false \
     -Dpostgresql=enabled -Dpg_config=%{pginstdir}/bin/pg_config \
     -Dnative=false -Dsimd=full -Dblas=enabled \
     -Dtools=disabled -Dhdf5=disabled -Dfaiss=false
-meson compile -C builddir -j %{_smp_build_ncpus}
+%{pgvs_meson} compile -C builddir -j %{_smp_build_ncpus}
 
 # Upstream Meson does not emit PostgreSQL JIT bitcode. Reuse PGXS's Clang
 # rules and thin-link installer for exactly the sources in the native module.
@@ -82,6 +104,11 @@ PG_CPPFLAGS += $(shell pkg-config --cflags openblas)
 PG_CONFIG ?= pg_config
 PGXS := $(shell $(PG_CONFIG) --pgxs)
 include $(PGXS)
+# LLVM 15 cannot thin-link x86 target_clones IFUNC summaries.
+# Keep all modules and native SIMD; only JIT bitcode uses the generic clones.
+ifeq ($(shell $(CLANG) -dumpversion | cut -d. -f1),15)
+BITCODE_CFLAGS += -DVS_DISABLE_TARGET_CLONES
+endif
 .PHONY: bitcode install-bitcode
 ifeq ($(with_llvm),yes)
 bitcode: $(OBJS:.o=.bc)
@@ -97,7 +124,7 @@ PY
     PG_CONFIG=%{pginstdir}/bin/pg_config LLVM_BINPATH=/usr/bin %{with_llvm_arg}
 
 %install
-DESTDIR=%{buildroot} meson install -C builddir --no-rebuild
+DESTDIR=%{buildroot} %{pgvs_meson} install -C builddir --no-rebuild
 # The regression helper is test-only and must never enter the runtime RPM.
 %{__rm} -f %{buildroot}%{pginstdir}/lib/pgvs_test_helpers.so
 # find-debuginfo scans executable ELF files; the packaged library remains 0644.
@@ -120,6 +147,9 @@ chmod 0755 %{buildroot}%{pginstdir}/lib/%{pname}-%{version}.so
 
 %changelog
 * Thu Oct 15 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
+- Support EL8 with GCC Toolset 13 and pinned build-only Meson 0.63.3
+- Keep atomic function pointer initialization compatible with Clang 15
+- Avoid LLVM 15 IFUNC thin-link failures while retaining native SIMD and bitcode
 - Package the upstream alpha release for PostgreSQL 18 evaluation
 - Retain portable SIMD, OpenBLAS, DWARF, and main-package LLVM bitcode
 - Exclude the regression helper library from the runtime package

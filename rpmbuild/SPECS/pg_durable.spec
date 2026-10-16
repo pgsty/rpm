@@ -7,13 +7,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.8
+Version:	0.2.9
 Release:	1PGSTY%{?dist}
 Summary:	Durable SQL functions for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/microsoft/pg_durable
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg-durable-0.2.8.patch
+Patch0:		pg-durable-0.2.9.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt openssl-devel pkgconfig
@@ -27,7 +27,7 @@ and requires loading pg_durable through shared_preload_libraries.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -35,7 +35,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -56,14 +56,17 @@ fi
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 mkdir -p %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
+install -m 644 sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extension/
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
 cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
 install -m 644 %{_builddir}/%{sname}-%{version}/README.md %{buildroot}%{_docdir}/%{name}/
+install -m 644 USER_GUIDE.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.txt %{buildroot}%{_licensedir}/%{name}/
 
 %files
 %doc %{_docdir}/%{name}/README.md
+%doc %{_docdir}/%{name}/USER_GUIDE.md
 %license %{_licensedir}/%{name}/LICENSE.txt
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -71,6 +74,10 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.txt %{buildroot}%{_licen
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 0.2.9-1PGSTY
+- Update to upstream 0.2.9 and align the source patch with pgrx 0.19.3.
+- Include the upstream SQL upgrade chain and HTTP policy documentation.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.2.8-1PGSTY
 - Update to 0.2.8
 

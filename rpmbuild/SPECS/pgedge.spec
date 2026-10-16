@@ -17,8 +17,8 @@
 %endif
 %endif
 %endif
-%global spockversion 5.0.12
-%global lolorversion 1.2.2
+%global spockversion 5.0.13
+%global lolorversion 1.2.3
 %global snowflakeversion 2.6.0
 %global pgbaseinstdir /usr/pgedge-%{pgmajorversion}
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
@@ -27,7 +27,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
-Release:        2PGSTY%{?dist}
+Release:        3PGSTY%{?dist}
 Summary:        pgEdge PostgreSQL kernel with bundled replication extensions
 License:        PostgreSQL
 URL:            https://github.com/pgEdge
@@ -35,7 +35,7 @@ Source0:        postgresql-%{pgversion}.tar.gz
 Source1:        spock-%{spockversion}.tar.gz
 Source2:        lolor-%{lolorversion}.tar.gz
 Source3:        snowflake-%{snowflakeversion}.tar.gz
-Patch0:         pgedge-spock-5.0.12-pg17-pg18.patch
+Patch0:         pgedge-spock-5.0.13-pg17-pg18.patch
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -102,9 +102,9 @@ for patch_name in $(ls -1 "$patch_dir" | sort); do
 done
 
 %build
-CFLAGS="${CFLAGS:-%optflags}"
+%set_build_flags
 CFLAGS=`echo $CFLAGS | xargs -n 1 | grep -v ffast-math | xargs -n 100`
-LDFLAGS="-Wl,--as-needed"; export LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,--as-needed"; export LDFLAGS
 export CFLAGS
 
 ./configure --enable-rpath \
@@ -241,6 +241,10 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 18.6-3PGSTY
+- Bundle Spock 5.0.13 and LOLOR 1.2.3 with the existing PostgreSQL cores.
+- Preserve distribution compiler and linker hardening flags.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 18.6-2PGSTY
 - Bundle Spock 5.0.12 and rebase its PostgreSQL 17/18 patchset.
 - Bump the package release so existing pgEdge cores receive the bundle update.

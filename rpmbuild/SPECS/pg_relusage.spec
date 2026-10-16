@@ -19,7 +19,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.1
+Version:	1.0.1
 Release:	1PGSTY%{?dist}
 Summary:	discover and log the relations used in your statements
 License:	BSD-3-Clause
@@ -36,7 +36,7 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pg_relusage is a PostgreSQL extension which allows one to discover
-and log the relations used in SQL statements. Supported PostgreSQL versions: 9.5 to 17.
+and log the relations used in SQL statements. This package supports PostgreSQL 14 through 18.
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -50,6 +50,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 
 %files
 %doc README.md
+%license LICENSE
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
@@ -60,6 +61,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 1.0.1-1PGSTY
+- Update to upstream 1.0.1.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.0.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

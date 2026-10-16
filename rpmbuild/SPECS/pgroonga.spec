@@ -2,6 +2,13 @@
 %global sname pgroonga
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?rhel} == 9
+# Require the repaired ABI provider while allowing newer upstream releases.
+%global groonga_min_version 16.1.3-1.el9.PGSTY.1
+%else
+%global groonga_min_version 15.1.7
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -14,7 +21,11 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	4.1.0
+%if 0%{?rhel} == 9
+Release:	2PGSTY%{?dist}
+%else
 Release:	1PGSTY%{?dist}
+%endif
 Summary:	Fast full-text search plugin for PostgreSQL based on Groonga
 Group:		Applications/Text
 License:	PostgreSQL
@@ -23,7 +34,7 @@ Source0:	pgroonga-%{version}.tar.gz
 
 BuildRequires:	ccache
 BuildRequires:	gcc
-BuildRequires:	groonga-devel >= 15.1.7
+BuildRequires:	groonga-devel >= %{groonga_min_version}
 BuildRequires:	make
 BuildRequires:	meson
 BuildRequires:	msgpack-devel
@@ -32,7 +43,7 @@ BuildRequires:	postgresql%{pgmajorversion}-devel
 BuildRequires:	xxhash-devel
 #BuildRequires:	libpq-devel
 
-Requires:	groonga-libs >= 15.1.7
+Requires:	groonga-libs >= %{groonga_min_version}
 Requires:	msgpack
 Requires:	postgresql%{pgmajorversion}-server
 Requires:	xxhash-libs
@@ -45,6 +56,7 @@ This package provides a fast full-text search plugin for PostgreSQL based on Gro
 
 %build
 %set_build_flags
+# Upstream Meson builds shared modules only; it has no LLVM bitcode target.
 meson setup build \
   -Dinstall_to_postgresql=true \
   -Dmessage_pack=enabled \
@@ -81,6 +93,10 @@ EOF
 %{pginstdir}/lib/*.so
 
 %changelog
+* Thu Oct 15 2026 Vonng <rh@vonng.com> - 4.1.0-2PGSTY
+- Rebuild EL9 packages against the repaired Groonga system simdjson ABI.
+- Require the fixed EL9 Groonga release and allow later upstream releases.
+
 * Sat Oct 10 2026 Vonng <rh@vonng.com> - 4.1.0-1PGSTY
 - Update pgroonga and pgroonga_database to upstream 4.1.0.
 - Retain the Meson build and the supported Groonga 15.1 ABI baseline.

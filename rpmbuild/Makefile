@@ -231,6 +231,10 @@ pg_search:      # rust pgrx 0.19.3, OpenBLAS
 	install -D -m 0644 SPECS/pg_search_collect_third_party_licenses.py SOURCES/pg_search_collect_third_party_licenses.py
 	./build pg_search 15 16 17 18
 
+# Groonga is independent of the PostgreSQL major; build it once on EL9.
+groonga:
+	./build groonga 18
+
 pgroonga:
 	./build pgroonga 14 15 16 17 18
 
@@ -1358,7 +1362,7 @@ rm-srpm:
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorsearch pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
-	pgml pgmnemo pg_search pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_jieba pg_bestmatch vchord_bm25 \
+	pgml pgmnemo pg_search groonga pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_jieba pg_bestmatch vchord_bm25 \
 	pg_tokenizer pg_biscuit pg_textsearch pg_fts acdat pg_pinyin pg_kazsearch psql_bm25s hunspell \
 	citus hydra pg_duckdb \
 	pg_lake pg_mooncake storage_engine pg_clickhouse pg_parquet pg_ducklake pg_kpart pg_partman pg_orca \

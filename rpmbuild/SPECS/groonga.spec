@@ -1,0 +1,1262 @@
+# -*- sh-shell: rpm -*-
+
+%define _amzn %{?amzn:%{amzn}}%{!?amzn:0}
+%define is_amazon_linux (%{_amzn} != 0)
+
+%define _rhel %{?rhel:%{rhel}}%{!?rhel:0}
+
+%define have_simdjson (%{_rhel} < 10 && !%{is_amazon_linux})
+
+%define enable_language_model_knn (%{_rhel} >= 9 && !%{is_amazon_linux})
+
+%if ! %{defined cmake}
+%define cmake %{cmake3}
+%endif
+%if ! %{defined cmake_build}
+%define cmake_build %{cmake3_build}
+%endif
+%if ! %{defined cmake_install}
+%define cmake_install %{cmake3_install}
+%endif
+
+Name:		groonga
+Version:	16.1.3
+# Keep the EL9 repair above upstream 1.el9 and below its next 2.el9.
+%if 0%{?rhel} == 9
+Release:	1%{?dist}.PGSTY.1
+%else
+Release:	1%{?dist}
+%endif
+Summary:	An Embeddable Fulltext Search Engine
+
+Group:		Applications/Text
+License:	LGPLv2
+URL:		https://groonga.org/
+Source0:	https://packages.groonga.org/source/groonga/groonga-%{version}.tar.gz
+
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
+BuildRequires:	cmake >= 3.22
+BuildRequires:	gcc
+BuildRequires:	gcc-c++
+BuildRequires:	make
+BuildRequires:	redhat-rpm-config
+BuildRequires:	systemd-rpm-macros
+BuildRequires:	arrow-compute-devel >= 25.0.1
+%if %{enable_language_model_knn}
+BuildRequires:	blas-devel
+BuildRequires:	lapack-devel
+%endif
+BuildRequires:	curl-devel
+BuildRequires:	libedit-devel
+BuildRequires:	libstemmer-devel
+BuildRequires:	libzstd-devel
+BuildRequires:	lz4-devel
+%if ! %{is_amazon_linux}
+BuildRequires:	mecab-devel
+BuildRequires:	msgpack-devel
+%endif
+BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig
+BuildRequires:	ruby
+%if 0%{?rhel} == 9
+BuildRequires:	simdjson-devel >= 5.0.1
+%else
+%if %{have_simdjson}
+BuildRequires:	simdjson-devel
+%endif
+%endif
+# Old xsimd-devel doesn't work. At least 9.0.0 or older don't work.
+# See also -DGRN_WITH_XSIMD=bundled with cmake.
+#BuildRequires:	xsimd-devel
+BuildRequires:	xxhash-devel
+BuildRequires:	zlib-devel
+#BuildRequires:	zeromq-devel
+#BuildRequires:	libevent-devel
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-plugin-suggest = %{version}-%{release}
+Requires:	libedit
+Obsoletes:	%{name} < 1.2.2-0
+
+%description
+Groonga is an embeddable full-text search engine library.  It can
+integrate with DBMS and scripting languages to enhance their search
+functionality.  It also provides a standalone data store server based
+on relational data model.
+
+%package libs
+Summary:	Runtime libraries for Groonga
+Group:		System Environment/Libraries
+License:	LGPLv2 and (MIT or GPLv2)
+Requires:	arrow2500-libs
+Requires:	libzstd
+Requires:	lz4
+%if ! %{is_amazon_linux}
+Requires:	msgpack
+%endif
+%if %{have_simdjson}
+Requires:	simdjson
+%endif
+Requires:	xxhash-libs
+Requires:	zlib
+Requires(post):	/sbin/ldconfig
+Requires(postun):	/sbin/ldconfig
+
+%description libs
+This package contains the libraries for Groonga
+
+%package examples
+Summary:	Examples for Groonga
+License:	LGPLv2
+Requires:	%{name} = %{version}-%{release}
+
+%description examples
+This package contains the examples for Groonga
+
+%package tools
+Summary:	Tools for Groonga
+License:	LGPLv2
+Requires:	%{name} = %{version}-%{release}
+
+%description tools
+This package contains the tools for Groonga
+
+%package server-common
+Summary:	Common packages for the Groonga server and the Groonga HTTP server
+Group:		Applications/Text
+License:	LGPLv2
+Requires:	%{name} = %{version}-%{release}
+Requires(pre):	shadow-utils
+
+%description server-common
+This package provides common settings for server use
+
+%package server-gqtp
+Summary:	Groonga GQTP server
+Group:		Applications/Text
+License:	LGPLv2
+Requires:	%{name}-server-common = %{version}-%{release}
+Requires(pre):	shadow-utils
+%systemd_requires
+Obsoletes:	%{name} < 1.2.2-0
+Obsoletes:	%{name}-server < 2.0.7-0
+
+%description server-gqtp
+This package contains the Groonga GQTP server
+
+%package server-http
+Summary:	Groonga HTTP server
+Group:		Applications/Text
+License:	LGPLv2
+Requires:	%{name}-server-common = %{version}-%{release}
+Requires:	curl
+Requires(pre):	shadow-utils
+%systemd_requires
+
+%description server-http
+This package contains the Groonga HTTP server
+
+%package doc
+Summary:	Documentation for Groonga
+Group:		Documentation
+License:	LGPLv2 and BSD
+
+%description doc
+Documentation for Groonga
+
+%package devel
+Summary:	Libraries and header files for Groonga
+Group:		Development/Libraries
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	arrow-compute-devel >= 25.0.1
+%if ! %{is_amazon_linux}
+Requires:	msgpack-devel
+%endif
+
+%description devel
+Libraries and header files for Groonga
+
+%if ! %{is_amazon_linux}
+%package tokenizer-mecab
+Summary:	MeCab tokenizer for Groonga
+Group:		Applications/Text
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	mecab-ipadic
+
+%description tokenizer-mecab
+MeCab tokenizer for Groonga
+%endif
+
+%package token-filter-stem
+Summary:	Stemming token filter for Groonga
+Group:		Applications/Text
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	libstemmer
+
+%description token-filter-stem
+Stemming token filter for Groonga. Name is TokenFilterStem.
+
+%package plugin-h3
+Summary:	H3 related plugin for Groonga
+Group:		Applications/Text
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description plugin-h3
+H3 plugin for Groonga.
+
+This provides TokenH3Index by tokenizers/h3_index and
+h3_*() functions by functions/h3.
+
+%package plugin-language-model
+Summary:	Language model plugin for Groonga
+Group:		Applications/Text
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description plugin-language-model
+Language model plugin for Groonga.
+
+This provides TokenLanguageModelKNN and language_model_knn() by
+language_model/knn.
+
+This provides language_model_vectorize() by functions/language_model.
+
+%package plugin-suggest
+Summary:	Suggest plugin for Groonga
+Group:		Applications/Text
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description plugin-suggest
+Suggest plugin for Groonga
+
+%if ! %{is_amazon_linux}
+%package munin-plugins
+Summary:	Munin plugins for Groonga
+Group:		Applications/System
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	munin-node
+Requires(post):	munin-node
+
+%description munin-plugins
+Munin plugins for Groonga
+%endif
+
+%prep
+#% define optflags -O0
+%setup -q
+
+
+%build
+%set_build_flags
+%cmake \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  -DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
+  -DGRN_FOR_RHEL=ON \
+  -DGRN_WITH_APACHE_ARROW=ON \
+  -DGRN_WITH_BLOSC=bundled \
+  -DGRN_WITH_DOC=ON \
+%if ! %{enable_language_model_knn}
+  -DGRN_WITH_FAISS=no \
+%endif
+  -DGRN_WITH_EXAMPLES=ON \
+%if ! %{is_amazon_linux}
+  -DGRN_WITH_MECAB=ON \
+%endif
+  -DGRN_WITH_MRUBY=ON \
+%if ! %{is_amazon_linux}
+  -DGRN_WITH_MUNIN_PLUGINS=ON \
+%endif
+  -DGRN_WITH_TOOLS=ON \
+%if 0%{?rhel} == 9
+  -DGRN_WITH_SIMDJSON=system \
+%endif
+  -DGRN_WITH_XSIMD=bundled
+%cmake_build
+
+
+%install
+%cmake_install
+# Workaround for old CMake on AlmaLinux 9.
+# It seems that preventing installing FetchContent library by EXCLUDE_FROM_ALL
+# doesn't work with old CMake.
+rm -rf $RPM_BUILD_ROOT%{_includedir}/h3/
+rm -rf $RPM_BUILD_ROOT%{_includedir}/xsimd/
+rm -rf $RPM_BUILD_ROOT%{_libdir}/cmake/h3/
+rm -rf $RPM_BUILD_ROOT%{_libdir}/cmake/xsimd/
+rm -rf $RPM_BUILD_ROOT%{_libdir}/debug${_libdir}/libh3*
+rm -rf $RPM_BUILD_ROOT%{_libdir}/libh3*
+rm -rf $RPM_BUILD_ROOT%{_libdir}/pkgconfig/xsimd.pc
+rm -rf $RPM_BUILD_ROOT/usr/lib/cmake/h3/
+rm -rf $RPM_BUILD_ROOT/usr/lib/debug/usr/lib/libh3*
+rm -rf $RPM_BUILD_ROOT/usr/lib/libh3*
+
+mv $RPM_BUILD_ROOT%{_datadir}/doc/groonga groonga-doc
+
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/groonga
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/groonga/db
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/log/groonga
+
+%if ! %{is_amazon_linux}
+mv $RPM_BUILD_ROOT%{_datadir}/groonga/munin/ $RPM_BUILD_ROOT%{_datadir}/
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/munin/plugin-conf.d/
+cat <<EOC > $RPM_BUILD_ROOT%{_sysconfdir}/munin/plugin-conf.d/groonga
+[groonga_*]
+  user groonga
+  group groonga
+  env.PATH %{_bindir}
+  env.database_path %{_localstatedir}/lib/groonga/db/db
+  env.host 127.0.0.1
+
+  env.http_host 127.0.0.1
+  env.http_port 10041
+  env.http_database_path %{_localstatedir}/lib/groonga/db/db
+  env.http_pid_path %{_rundir}/groonga/groonga-http.pid
+  env.http_query_log_path %{_localstatedir}/log/groonga/query-http.log
+
+  env.gqtp_host 127.0.0.1
+  env.gqtp_port 10043
+  env.gqtp_database_path %{_localstatedir}/lib/groonga/db/db
+  env.gqtp_pid_path %{_rundir}/groonga/groonga-gqtp.pid
+  env.gqtp_query_log_path %{_localstatedir}/log/groonga/query-gqtp.log
+EOC
+%endif
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%pre server-common
+getent group groonga >/dev/null || groupadd -r groonga
+getent passwd groonga >/dev/null || \
+       useradd -r -g groonga -d %{_localstatedir}/lib/groonga -s /sbin/nologin \
+	-c 'groonga' groonga
+if [ $1 = 1 ]; then
+	mkdir -p %{_localstatedir}/log/groonga
+	mkdir -p %{_localstatedir}/lib/groonga/db
+	groonga -n %{_localstatedir}/lib/groonga/db/db shutdown > /dev/null
+	chown -R groonga:groonga %{_localstatedir}/log/groonga
+	chown -R groonga:groonga %{_localstatedir}/lib/groonga
+	mkdir -p %{_localstatedir}/run/groonga
+	chown -R groonga:groonga %{_localstatedir}/run/groonga
+fi
+exit 0
+
+%post server-gqtp
+%systemd_post groonga-server-gqtp.service
+
+%post server-http
+%systemd_post groonga-server-http.service
+
+%post libs -p /sbin/ldconfig
+
+%if ! %{is_amazon_linux}
+%post munin-plugins
+%{_sbindir}/munin-node-configure --shell --remove-also | grep -e 'groonga_' | sh
+%systemd_post munin-node
+%endif
+
+%preun server-gqtp
+%systemd_preun groonga-server-gqtp.service
+
+%postun server-gqtp
+%systemd_postun groonga-server-gqtp.service
+
+%preun server-http
+%systemd_preun groonga-server-http.service
+
+%postun server-http
+%systemd_postun groonga-server-http.service
+
+%postun libs -p /sbin/ldconfig
+
+%if ! %{is_amazon_linux}
+%postun munin-plugins
+%{_sbindir}/munin-node-configure --shell --remove-also | grep -e 'groonga_' | sh
+%systemd_postun munin-node
+%endif
+
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/groonga
+%{_bindir}/grndb
+
+%files libs
+%defattr(-,root,root,-)
+%doc README.md COPYING
+%{_libdir}/*.so.*
+%dir %{_libdir}/groonga
+%dir %{_libdir}/groonga/ggml/
+%dir %{_libdir}/groonga/plugins
+%dir %{_libdir}/groonga/plugins/functions
+%dir %{_libdir}/groonga/plugins/ruby
+%dir %{_libdir}/groonga/plugins/sharding
+%dir %{_libdir}/groonga/plugins/token_filters
+%dir %{_libdir}/groonga/plugins/tokenizers
+%dir %{_libdir}/groonga/scripts
+%dir %{_libdir}/groonga/scripts/ruby
+%dir %{_libdir}/groonga/scripts/ruby/command_line
+%dir %{_libdir}/groonga/scripts/ruby/context
+%dir %{_libdir}/groonga/scripts/ruby/expression_rewriters
+%dir %{_libdir}/groonga/scripts/ruby/expression_tree
+%dir %{_libdir}/groonga/scripts/ruby/groonga-log
+%dir %{_libdir}/groonga/scripts/ruby/initialize
+%dir %{_libdir}/groonga/scripts/ruby/logger
+%dir %{_libdir}/groonga/scripts/ruby/query_logger
+%{_libdir}/groonga/ggml/*.so
+%{_libdir}/groonga/plugins/*.rb
+%{_libdir}/groonga/plugins/functions/binary.so
+%{_libdir}/groonga/plugins/functions/index_column.so
+%{_libdir}/groonga/plugins/functions/math.so
+%{_libdir}/groonga/plugins/functions/number.so
+%{_libdir}/groonga/plugins/functions/string.so
+%{_libdir}/groonga/plugins/functions/time.so
+%{_libdir}/groonga/plugins/functions/vector.so
+%{_libdir}/groonga/plugins/query_expanders/tsv.so
+%{_libdir}/groonga/plugins/ruby/*.rb
+%{_libdir}/groonga/plugins/sharding/*.rb
+%{_libdir}/groonga/plugins/token_filters/stop_word.so
+%{_libdir}/groonga/scripts/ruby/*.rb
+%{_libdir}/groonga/scripts/ruby/command_line/*.rb
+%{_libdir}/groonga/scripts/ruby/context/*.rb
+%{_libdir}/groonga/scripts/ruby/expression_rewriters/*.rb
+%{_libdir}/groonga/scripts/ruby/expression_tree/*.rb
+%{_libdir}/groonga/scripts/ruby/groonga-log/*.rb
+%{_libdir}/groonga/scripts/ruby/initialize/*.rb
+%{_libdir}/groonga/scripts/ruby/logger/*.rb
+%{_libdir}/groonga/scripts/ruby/query_logger/*.rb
+%{_datadir}/groonga/COPYING
+%{_datadir}/groonga/base64/
+%{_datadir}/groonga/c-blosc2/
+%{_datadir}/groonga/groonga-log/
+%{_datadir}/groonga/html/
+%{_datadir}/groonga/jsoncons/
+%{_datadir}/groonga/llama.cpp/
+%{_datadir}/groonga/mruby/
+%if %{is_amazon_linux}
+%{_datadir}/groonga/msgpack-c/
+%endif
+%if ! %{is_amazon_linux}
+%{_datadir}/groonga/openzl/
+%endif
+%if %{is_amazon_linux}
+%{_datadir}/groonga/simdjson/
+%endif
+%{_datadir}/groonga/xsimd/
+%config(noreplace) %{_sysconfdir}/groonga/synonyms.tsv
+
+%files examples
+%defattr(-,root,root,-)
+%{_datadir}/groonga/examples/
+
+%files tools
+%defattr(-,root,root,-)
+%{_datadir}/groonga/tools/
+
+%files server-common
+%defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/tmpfiles.d/groonga.conf
+
+%files server-gqtp
+%defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/groonga/
+%config(noreplace) %{_sysconfdir}/sysconfig/groonga-server-gqtp
+%config(noreplace) %{_sysconfdir}/logrotate.d/groonga-server-gqtp
+%{_unitdir}/groonga-server-gqtp.service
+%ghost %dir %{_localstatedir}/run/%{name}
+%attr(0750,groonga,groonga) %dir %{_localstatedir}/lib/%{name}
+%attr(0750,groonga,groonga) %dir %{_localstatedir}/lib/%{name}/db
+
+%files server-http
+%defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/groonga/
+%config(noreplace) %{_sysconfdir}/sysconfig/groonga-server-http
+%config(noreplace) %{_sysconfdir}/logrotate.d/groonga-server-http
+%{_unitdir}/groonga-server-http.service
+%ghost %dir %{_localstatedir}/run/%{name}
+%attr(0750,groonga,groonga) %dir %{_localstatedir}/lib/%{name}
+%attr(0750,groonga,groonga) %dir %{_localstatedir}/lib/%{name}/db
+
+%files doc
+%defattr(-,root,root,-)
+%doc README.md COPYING
+%doc groonga-doc/*
+%{_datadir}/groonga/README.md
+%{_datadir}/groonga/onigmo/*
+%if ! %{have_simdjson}
+%{_datadir}/groonga/simdjson/*
+%endif
+
+%files devel
+%defattr(-,root,root,-)
+%{_includedir}/groonga/
+%{_libdir}/*.so
+%{_libdir}/pkgconfig/groonga*.pc
+%{_libdir}/cmake/Groonga/*.cmake
+
+%files plugin-h3
+%defattr(-,root,root,-)
+%{_libdir}/groonga/plugins/functions/h3.so
+%{_libdir}/groonga/plugins/tokenizers/h3_index.so
+%{_datadir}/groonga/h3/
+
+%files plugin-language-model
+%defattr(-,root,root,-)
+%{_libdir}/groonga/plugins/functions/language_model.so
+%if %{enable_language_model_knn}
+%{_libdir}/groonga/plugins/language_model/*.so
+%{_datadir}/groonga/faiss/
+%endif
+
+%files plugin-suggest
+%defattr(-,root,root,-)
+%{_bindir}/groonga-suggest-*
+%dir %{_libdir}/groonga/plugins
+%{_libdir}/groonga/plugins/suggest/suggest.so
+
+%if ! %{is_amazon_linux}
+%files tokenizer-mecab
+%defattr(-,root,root,-)
+%{_libdir}/groonga/plugins/tokenizers/mecab.so
+%endif
+
+%files token-filter-stem
+%defattr(-,root,root,-)
+%{_libdir}/groonga/plugins/token_filters/stem.so
+
+%if ! %{is_amazon_linux}
+%files munin-plugins
+%defattr(-,root,root,-)
+%{_datadir}/munin/plugins/*
+%config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/*
+%endif
+
+%changelog
+* Thu Oct 15 2026 Vonng <rh@vonng.com> - 16.1.3-1.el9.PGSTY.1
+- Rebuild all EL9 subpackages against the current system simdjson ABI.
+- Keep upstream features and preserve RPM build flags and debug packages.
+
+* Thu Oct 08 2026 Abe Tomoaki <abe@clear-code.com> - 16.1.3-1
+- New upstream release.
+
+* Tue Sep 29 2026 Abe Tomoaki <abe@clear-code.com> - 16.1.2-1
+- New upstream release.
+
+* Wed Sep 23 2026 Abe Tomoaki <abe@clear-code.com> - 16.1.1-1
+- New upstream release.
+
+* Fri Aug 28 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.1.0-1
+- New upstream release.
+
+* Fri Aug 07 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.9-1
+- New upstream release.
+
+* Mon Jul 13 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.8-1
+- New upstream release.
+
+* Wed Jul 08 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.7-1
+- New upstream release.
+
+* Wed Jul 08 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.6-1
+- New upstream release.
+
+* Wed Jul 08 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.6-1
+- New upstream release.
+
+* Fri May 22 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.5-1
+- New upstream release.
+
+* Wed May 13 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.4-1
+- New upstream release.
+
+* Fri May 08 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.3-1
+- New upstream release.
+
+* Thu May 07 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.2-1
+- New upstream release.
+
+* Mon Mar 30 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.1-1
+- New upstream release.
+
+* Mon Feb 09 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 16.0.0-1
+- New upstream release.
+
+* Fri Jan 30 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.2.5-1
+- New upstream release.
+
+* Thu Jan 29 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.2.4-1
+- New upstream release.
+
+* Thu Jan 15 2026 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.2.3-1
+- New upstream release.
+
+* Thu Dec 25 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.2.2-1
+- New upstream release.
+
+* Tue Dec 02 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.2.1-1
+- New upstream release.
+
+* Mon Nov 10 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.2.0-1
+- New upstream release.
+
+* Wed Nov 05 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.9-1
+- New upstream release.
+
+* Fri Oct 31 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.8-1
+- New upstream release.
+
+* Mon Sep 29 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.7-1
+- New upstream release.
+
+* Fri Aug 29 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.5-1
+- New upstream release.
+
+* Tue Jul 29 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.4-1
+- New upstream release.
+
+* Fri Jul 18 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.3-1
+- New upstream release.
+
+* Mon Jul 07 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.2-1
+- New upstream release.
+
+* Mon Jun 02 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.1.1-1
+- New upstream release.
+
+* Thu May 08 2025 Abe Tomoaki <abe@clear-code.com> - 15.0.9-1
+- New upstream release.
+
+* Thu May 08 2025 Abe Tomoaki <abe@clear-code.com> - 15.0.8-1
+- New upstream release.
+
+* Fri Mar 28 2025 Sutou Kouhei <kou@clear-code.com> - 15.0.4-1
+- New upstream release.
+
+* Mon Mar 10 2025 Sutou Kouhei <kou@clear-code.com> - 15.0.3-1
+- New upstream release.
+
+* Fri Feb 21 2025 Horimoto Yasuhiro <horimoto@clear-code.com> - 15.0.2-1
+- New upstream release.
+
+* Thu Feb 20 2025 Abe Tomoaki <abe@clear-code.com> - 15.0.1-1
+- New upstream release.
+
+* Fri Feb 07 2025 Sutou Kouhei <kou@clear-code.com> - 15.0.0-1
+- New upstream release.
+
+* Wed Jan 29 2025 Abe Tomoaki <abe@clear-code.com> - 14.1.3-1
+- New upstream release.
+
+* Tue Dec 24 2024 Sutou Kouhei <kou@clear-code.com> - 14.1.2-1
+- New upstream release.
+
+* Tue Dec 03 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.1.1-1
+- New upstream release.
+
+* Fri Nov 01 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.1.0-1
+- New upstream release.
+
+* Fri Sep 27 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.9-1
+- New upstream release.
+
+* Tue Sep 24 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.8-1
+- New upstream release.
+
+* Tue Sep 03 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.7-1
+- New upstream release.
+
+* Mon Jul 29 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.6-1
+- New upstream release.
+
+* Wed Jun 26 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.5-1
+- New upstream release.
+
+* Tue May 28 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.4-1
+- New upstream release.
+
+* Thu May 09 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.3-1
+- New upstream release.
+
+* Fri Mar 29 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.2-1
+- New upstream release.
+
+* Thu Mar 14 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.1-1
+- New upstream release.
+
+* Thu Feb 29 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 14.0.0-1
+- New upstream release.
+
+* Tue Jan 09 2024 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.1.1-1
+- New upstream release.
+
+* Mon Dec 25 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.1.0-1
+- New upstream release.
+
+* Mon Oct 30 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.0.9-1
+- New upstream release.
+
+* Thu Sep 28 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.0.8-1
+- New upstream release.
+
+* Mon Sep 11 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.0.7-1
+- New upstream release.
+
+* Wed Aug 30 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.0.6-1
+- New upstream release.
+
+* Wed Aug 02 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.0.5-1
+- New upstream release.
+
+* Wed Jul 26 2023 Sutou Kouhei <kou@clear-code.com> - 13.0.4-1
+- New upstream release.
+
+* Mon Jul 24 2023 Sutou Kouhei <kou@clear-code.com> - 13.0.3-1
+- New upstream release.
+- groonga-httpd is removed.
+
+* Wed Jul 12 2023 Sutou Kouhei <kou@clear-code.com> - 13.0.2-1
+- New upstream release.
+
+* Thu Mar 23 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.0.1-1
+- New upstream release.
+
+* Wed Feb 08 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 13.0.0-1
+- New upstream release.
+
+* Fri Jan 27 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.1.2-1
+- New upstream release.
+
+* Fri Jan 06 2023 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.1.1-1
+- New upstream release.
+
+* Tue Nov 29 2022 Takashi Hashida <hashida@clear-code.com> - 12.1.0-1
+- New upstream release.
+
+* Mon Oct 31 2022 Takashi Hashida <hashida@clear-code.com> - 12.0.9-1
+- New upstream release.
+
+* Mon Oct 03 2022 Takashi Hashida <hashida@clear-code.com> - 12.0.8-1
+- New upstream release.
+
+* Mon Aug 29 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.7-1
+- New upstream release.
+
+* Wed Aug 03 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.6-1
+- New upstream release.
+
+* Wed Jun 29 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.5-1
+- New upstream release.
+
+* Fri Jun 03 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.4-1
+- New upstream release.
+
+* Thu Apr 28 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.3-1
+- New upstream release.
+
+* Mon Mar 28 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.2-1
+- New upstream release.
+
+* Mon Feb 28 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.1-1
+- New upstream release.
+
+* Mon Feb 07 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 12.0.0-1
+- New upstream release.
+
+* Sun Jan 30 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.1.3-1
+- New upstream release.
+
+* Thu Jan 27 2022 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.1.2-1
+- New upstream release.
+
+* Mon Dec 27 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.1.1-1
+- New upstream release.
+
+* Mon Nov 29 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.1.0-1
+- New upstream release.
+
+* Thu Nov 04 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.9-1
+- New upstream release.
+
+* Wed Sep 29 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.7-1
+- New upstream release.
+
+* Mon Aug 30 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.6-1
+- New upstream release.
+
+* Fri Jul 30 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.5-1
+- New upstream release.
+
+* Mon Jun 28 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.4-1
+- New upstream release.
+
+* Thu May 27 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.3-1
+- New upstream release.
+
+* Mon May 10 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.2-1
+- New upstream release.
+
+* Wed Mar 31 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.1-1
+- New upstream release.
+
+* Fri Feb 05 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 11.0.0-1
+- New upstream release.
+
+* Sat Jan 23 2021 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.1.1-1
+- New upstream release.
+
+* Thu Dec 24 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.1.0-1
+- New upstream release.
+
+* Tue Dec 01 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.9-1
+- New upstream release.
+
+* Thu Oct 29 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.8-1
+- New upstream release.
+
+* Tue Sep 29 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.7-1
+- New upstream release.
+
+* Fri Aug 28 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.6-1
+- New upstream release.
+
+* Wed Jul 29 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.5-1
+- New upstream release.
+
+* Fri Jun 26 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.4-1
+- New upstream release.
+
+* Fri May 29 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.3-1
+- New upstream release.
+
+* Sat May 16 2020 Sutou Kouhei <kou@clear-code.com> - 10.0.2-2
+- Stop using Zstandard on CentOS 8.1 because there are no available
+  Zstandard packages on CentOS 8.1 and EPEL. CentOS 8.2 will ship Zstandard
+  packages.
+
+* Mon Apr 27 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.2-1
+- New upstream release.
+
+* Mon Mar 30 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.1-1
+- New upstream release.
+
+* Fri Mar 27 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 10.0.0-1
+- New upstream release.
+
+* Wed Jan 29 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 9.1.2-1
+- New upstream release.
+
+* Tue Jan 07 2020 Horimoto Yasuhiro <horimoto@clear-code.com> - 9.1.1-1
+- New upstream release.
+
+* Wed Nov 27 2019 Yasuhiro Horimoto <horimoto@clear-code.com> - 9.1.0-1
+- New upstream release.
+
+* Wed Oct 30 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.9-1
+- new upstream release.
+
+* Sun Sep 29 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.8-1
+- new upstream release.
+
+* Thu Aug 29 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.7-1
+- new upstream release.
+
+* Mon Aug 05 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.6-1
+- new upstream release.
+
+* Tue Jul 30 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.5-1
+- new upstream release.
+
+* Sat Jun 29 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.4-1
+- new upstream release.
+
+* Wed May 29 2019 Yasuhiro Horimoto <horimoto@clear-code.com> - 9.0.3-1
+- new upstream release.
+
+* Mon Apr 29 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.2-1
+- new upstream release.
+
+* Fri Mar 29 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.1-2
+- new upstream release.
+- as shipping evaluation package before official release, Release: is changed to -2.
+
+* Sat Feb 09 2019 Kentaro Hayashi <hayashi@clear-code.com> - 9.0.0-1
+- new upstream release.
+
+* Tue Jan 29 2019 Kentaro Hayashi <hayashi@clear-code.com> - 8.1.1-1
+- new upstream release.
+
+* Thu Dec 27 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.1.0-1
+- new upstream release.
+
+* Thu Nov 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.9-1
+- new upstream release.
+
+* Mon Oct 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.8-1
+- new upstream release.
+
+* Sat Sep 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.7-1
+- new upstream release.
+
+* Wed Aug 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.6-1
+- new upstream release.
+
+* Sun Jul 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.5-1
+- new upstream release.
+
+* Fri Jun 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.4-1
+- new upstream release.
+
+* Tue May 29 2018 Yasuhiro Horimoto <horimoto@clear-code.com> - 8.0.3-1
+- new upstream release.
+
+* Sun Apr 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.2-1
+- new upstream release.
+
+* Thu Mar 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 8.0.1-1
+- new upstream release.
+
+* Fri Feb 09 2018 Yasuhiro Horimoto <horimoto@clear-code.com> - 8.0.0-1
+- new upstream release.
+
+* Mon Jan 29 2018 Kentaro Hayashi <hayashi@clear-code.com> - 7.1.1-1
+- new upstream release.
+
+* Fri Dec 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.1.0-1
+- new upstream release.
+
+* Wed Nov 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.9-1
+- new upstream release.
+
+* Sun Oct 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.8-1
+- new upstream release.
+
+* Fri Sep 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.7-1
+- new upstream release.
+
+* Tue Aug 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.6-1
+- new upstream release.
+
+* Sat Jul 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.5-1
+- new upstream release.
+
+* Thu Jun 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.4-1
+- new upstream release.
+
+* Mon May 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.3-1
+- new upstream release.
+
+* Sat Apr 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.2-1
+- new upstream release.
+
+* Wed Mar 29 2017 Kentaro Hayashi <hayashi@clear-code.com> - 7.0.1-1
+- new upstream release.
+
+* Mon Jan 23 2017 Kouhei Sutou <kou@clear-code.com> - 6.1.5-1
+- new upstream release.
+
+* Wed Jan 18 2017 Kouhei Sutou <kou@clear-code.com> - 6.1.4-1
+- new upstream release.
+
+* Thu Jan 05 2017 Masafumi Yokoyama <myokoym@gmail.com> - 6.1.3-1
+- new upstream release.
+
+* Thu Dec 29 2016 Kentaro Hayashi <hayashi@clear-code.com> - 6.1.2-1
+- new upstream release.
+
+* Fri Nov 11 2016 Kouhei Sutou <kou@clear-code.com> - 6.1.1-0
+- add Zstandard support.
+
+* Sat Oct 29 2016 Kentaro Hayashi <hayashi@clear-code.com> - 6.1.0-1
+- new upstream release.
+
+* Thu Sep 29 2016 Kentaro Hayashi <hayashi@clear-code.com> - 6.0.9-1
+- new upstream release.
+
+* Mon Aug 29 2016 Kentaro Hayashi <hayashi@clear-code.com> - 6.0.8-1
+- new upstream release.
+
+* Fri Jul 29 2016 Kentaro Hayashi <hayashi@clear-code.com> - 6.0.7-1
+- new upstream release.
+
+* Wed Jun 29 2016 Kentaro Hayashi <hayashi@clear-code.com> - 6.0.5-1
+- new upstream release.
+
+* Mon Jun 06 2016 Kouhei Sutou <kou@clear-code.com> - 6.0.4-1
+- new upstream release.
+
+* Sun May 29 2016 Kentaro Hayashi <hayashi@clear-code.com> - 6.0.3-1
+- new upstream release.
+
+* Fri Apr 29 2016 HAYASHI Kentaro <hayashi@clear-code.com> - 6.0.2-1
+- new upstream release.
+
+* Tue Mar 29 2016 HAYASHI Kentaro <hayashi@clear-code.com> - 6.0.1-1
+- new upstream release.
+
+* Mon Feb 29 2016 HAYASHI Kentaro <hayashi@clear-code.com> - 6.0.0-1
+- new upstream release.
+- add functions/string plugin GitHub#459
+
+* Fri Jan 29 2016 Kouhei Sutou <kou@clear-code.com> - 5.1.2-1
+- new upstream release.
+
+* Tue Dec 29 2015 Kouhei Sutou <kou@clear-code.com> - 5.1.1-1
+- new upstream release.
+
+* Sun Nov 29 2015 Kouhei Sutou <kou@clear-code.com> - 5.1.0-1
+- new upstream release.
+
+* Thu Oct 29 2015 Kouhei Sutou <kou@clear-code.com> - 5.0.9-1
+- new upstream release.
+
+* Tue Sep 29 2015 Kouhei Sutou <kou@clear-code.com> - 5.0.8-1
+- new upstream release.
+
+* Mon Aug 31 2015 Kouhei Sutou <kou@clear-code.com> - 5.0.7-1
+- new upstream release.
+
+* Wed Jul 29 2015 Masafumi Yokoyama <yokoyama@clear-code.com> - 5.0.6-1
+- new upstream release.
+
+* Mon Jun 29 2015 Masafumi Yokoyama <myokoym@gmail.com> - 5.0.5-1
+- new upstream release.
+
+* Fri May 29 2015 Masafumi Yokoyama <yokoyama@clear-code.com> - 5.0.4-1
+- new upstream release.
+
+* Wed Apr 29 2015 HAYASHI Kentaro <hayashi@clear-code.com> - 5.0.3-1
+- new upstream release.
+- add vector size plugin.
+
+* Tue Mar 31 2015 Masafumi Yokoyama <yokoyama@clear-code.com> - 5.0.2-1
+- new upstream release.
+- removed fix-crash-by-missing-libedit-initialization.patch
+
+* Mon Mar 30 2015 HAYASHI Kentaro <hayashi@clear-code.com> - 5.0.1-2
+- fix crash bug in standalone mode.
+  added fix-crash-by-missing-libedit-initialization.patch
+
+* Sun Mar 29 2015 HAYASHI Kentaro <hayashi@clear-code.com> - 5.0.1-1
+- new upstream release.
+
+* Mon Feb 09 2015  <hayashi@clear-code.com> - 5.0.0-1
+- new upstream release.
+
+* Thu Jan 29 2015 HAYASHI Kentaro <hayashi@clear-code.com> - 4.1.1-1
+- new upstream release.
+
+* Fri Jan 09 2015 Kouhei Sutou <kou@clear-code.com> - 4.1.0-1
+- new upstream release.
+
+* Mon Dec 29 2014 Kouhei Sutou <kou@cozmixng.org> - 4.0.9-1
+- new upstream release.
+
+* Sat Nov 29 2014 HAYASHI Kentaro <hayashi@clear-code.com> - 4.0.8-1
+- new upstream release.
+- make groonga-httpd as default HTTP server package
+- drop groonga-server-http, it is just changed to transitional package
+
+* Wed Oct 29 2014 Kouhei Sutou <kou@clear-code.com> - 4.0.7-1
+- new upstream release.
+
+* Mon Sep 29 2014 Kouhei Sutou <kou@cozmixng.org> - 4.0.6-1
+- new upstream release.
+
+* Fri Aug 29 2014 Kouhei Sutou <kou@clear-code.com> - 4.0.5-1
+- new upstream release.
+
+* Tue Jul 29 2014 HAYASHI Kentaro <hayashi@clear-code.com> - 4.0.4-1
+- new upstream release.
+
+* Sun Jun 29 2014 Kouhei Sutou <kou@clear-code.com> - 4.0.3-1
+- new upstream release.
+
+* Thu May 29 2014 Kouhei Sutou <kou@clear-code.com> - 4.0.2-0
+- new upstream release.
+
+* Sat Mar 29 2014 HAYASHI Kentaro <hayashi@clear-code.com> - 4.0.1-1
+- new upstream release.
+
+* Sun Feb 09 2014 HAYASHI Kentaro <hayashi@clear-code.com> - 4.0.0-1
+- new upstream release.
+
+* Wed Jan 29 2014 HAYASHI Kentaro <hayashi@clear-code.com> - 3.1.2-1
+- new upstream release.
+
+* Sun Dec 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.1.1-1
+- new upstream release.
+
+* Fri Nov 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.1.0-1
+- new upstream release.
+
+* Tue Oct 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.9-1
+- new upstream release.
+
+* Sun Sep 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.8-1
+- new upstream release.
+
+* Thu Aug 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.7-1
+- new upstream release.
+
+* Mon Jul 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.6-1
+- new upstream release.
+
+* Sat Jun 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.5-0
+- new upstream release.
+
+* Wed May 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.4-0
+- new upstream release.
+
+* Mon Apr 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.3-0
+- Add additional_configure_options parameter.
+- Make MeCab optional. Use use_mecab parameter for it.
+
+* Fri Mar 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.2-0
+- new upstream release.
+
+* Thu Feb 28 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.1-0
+- new upstream release.
+
+* Sat Feb 09 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 3.0.0-0
+- new upstream release.
+
+* Tue Jan 29 2013 HAYASHI Kentaro <hayashi@clear-code.com> - 2.1.2-0
+- new upstream release.
+
+* Sat Dec 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.1.1-0
+- new upstream release.
+
+* Sat Dec 29 2012 HAYASHI Kentaro <hayashi@clear-code.com> - 2.1.0-0
+- new upstream release.
+
+* Thu Nov 29 2012 HAYASHI Kentaro <hayashi@clear-code.com> - 2.0.9-0
+- new upstream release.
+
+* Mon Oct 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.8-0
+- new upstream release.
+- Remove needless "Requires". They will be added by rpmbuild automatically.
+  Reported by by Daiki Ueno. Thanks!!!
+- Fix license of server-gqtp.
+- Fix license of server-http.
+- Add more description to server-http and httpd.
+
+* Sat Sep 29 2012 HAYASHI Kentaro <hayashi@clear-code.com> - 2.0.7-0
+- new upstream release.
+- Split groonga-server package into groonga-server-gqtp and
+  groonga-server-http package.
+
+* Wed Aug 29 2012 HAYASHI Kentaro <hayashi@clear-code.com> - 2.0.6-0
+- new upstream release.
+- Split common tasks for server use into groonga-server-common package.
+- groonga-server and groonga-httpd require groonga-server-common package.
+
+* Sun Jul 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.5-0
+- new upstream release.
+- split groonga-httpd related files into groonga-httpd package.
+
+* Fri Jun 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.4-0
+- new upstream release.
+- groonga package does not require groonga-tokenizer-mecab package.
+
+* Tue May 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.3-0
+- new upstream release.
+
+* Sun Apr 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.2-0
+- new upstream release.
+
+* Fri Mar 30 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.1-2
+- Use shutdown command for stop.
+
+* Fri Mar 30 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.1-1
+- Fix bind address argument parameter.
+  Patch by Masaharu IWAI. Thanks!!!
+
+* Thu Mar 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.1-0
+- new upstream release.
+- grntest -> groonga-benchmark.
+- remove groong-tools package.
+
+* Wed Feb 29 2012 Kouhei Sutou <kou@clear-code.com> - 2.0.0-0
+- new upstream release.
+- remove other permission from DB directory.
+- install init.d related files directly.
+- use HTTP as the default protocol.
+
+* Sun Jan 29 2012 Kouhei Sutou <kou@clear-code.com> - 1.3.0-0
+- new upstream release.
+- groonga-server package does not require groonga-munin-plugins package.
+  suggested by Masaharu IWAI. Thanks!!!
+- groonga package does not require groonga-doc package.
+  suggested by Masaharu IWAI. Thanks!!!
+
+* Thu Dec 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.9-0
+- new upstream release.
+
+* Tue Nov 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.8-0
+- new upstream release.
+- enable zlib support.
+- enable lzo support.
+- add --with-package-platform=redhat configure option to install init script.
+- add --with-munin-plugins cofnigure option to install Munin plugins.
+
+* Sat Oct 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.7-0
+- new upstream release.
+
+* Thu Sep 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.6-0
+- new upstream release.
+
+* Mon Aug 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.5-0
+- new upstream release.
+
+* Fri Jul 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.4-0
+- new upstream release.
+
+* Wed Jun 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.3-0
+- new upstream release.
+- add a new groong-tools package.
+
+* Sun May 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.2-0
+- new upstream release.
+- split server files into groonga-server package.
+
+* Fri Apr 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.1-0
+- new upstream release.
+
+* Tue Mar 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.2.0-0
+- new upstream release.
+
+* Wed Feb 09 2011 Kouhei Sutou <kou@clear-code.com> - 1.1.0-0
+- new upstream release.
+
+* Wed Feb 02 2011 Kouhei Sutou <kou@clear-code.com> - 1.0.8-0
+- new upstream release.
+
+* Sat Jan 29 2011 Kouhei Sutou <kou@clear-code.com> - 1.0.7-0
+- new upstream release.
+
+* Fri Dec 31 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.6-0
+- new upstream release
+
+* Wed Dec 29 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.5-0
+- new upstream release.
+
+* Mon Nov 29 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.4-1
+- new upstream release
+
+* Wed Nov 24 2010 Daiki Ueno <dueno@redhat.com> - 1.0.3-2
+- %%ghost /var/run/*.
+
+* Fri Oct 29 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.3-1
+- new upstream release.
+
+* Sat Oct 09 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.2-2
+- merge Fedora changes.
+
+* Thu Sep 09 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.2-1
+- new upstream release.
+
+* Mon Sep 06 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.1-1
+- new upstream release.
+
+* Thu Sep 02 2010 Kouhei Sutou <kou@clear-code.com> - 1.0.0-1
+- split packages.
+
+* Tue Aug 24 2010 Daiki Ueno <dueno@redhat.com> - 0.7.6-1
+- initial packaging for Fedora

@@ -23,7 +23,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.10.14
+Version:	2.10.15
 Release:	1PGSTY%{?dist}
 Summary:	Additional tools for PL/pgSQL function validation
 License:	MIT
@@ -66,6 +66,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 2.10.15-1PGSTY
+- Update to upstream 2.10.15.
+
 * Sun Oct 11 2026 Vonng <rh@vonng.com> - 2.10.14-1PGSTY
 - Update to 2.10.14
 

@@ -8,15 +8,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.11.1
+Version:        1.14.0
 Release:        1PGSTY%{?dist}
 Summary:        Datomic-compatible Datalog query engine for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/mentat
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/mentat/archive/v1.11.1.tar.gz
+#               https://codeberg.org/gregburd/mentat/archive/v1.14.0.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
-Patch0:         pg-mentat-1.11.1.patch
+Patch0:         pg-mentat-1.14.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -28,7 +28,8 @@ query engine inside PostgreSQL, including pull queries, time travel, and
 transaction processing through SQL functions.
 
 %prep
-%autosetup -p1 -n %{srcdir}
+%autosetup -N -n %{srcdir}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -44,8 +45,8 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
-CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 LOCK_SHA256=$(sha256sum Cargo.lock | awk '{print $1}')
+CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true \
@@ -78,6 +79,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 1.14.0-1PGSTY
+- Update to upstream 1.14.0 and align the source patch with pgrx 0.19.3.
+
 * Sat Oct 10 2026 Vonng <rh@vonng.com> - 1.11.1-1PGSTY
 - Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.
 - Update to upstream 1.11.1 and rebase the pgrx 0.19.3 compatibility patch.

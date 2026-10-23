@@ -281,6 +281,9 @@ pg_tre:
 codesystem:
 	./build codesystem 14 15 16 17 18
 
+pg_lease:                # pure SQL, upstream testing release
+	./build pg_lease 14 15 16 17 18
+
 pg_icu_parser:
 	./build pg_icu_parser 14 15 16 17 18
 

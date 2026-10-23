@@ -917,6 +917,9 @@ pg_try_cast:
 pg_synonym:
 	./build pg_synonym 15 16 17 18
 
+pg_kv:			# rust pgrx 0.19.3, shared-memory cache
+	./build pg_kv 15 16 17 18
+
 pg_orphaned:
 	./build pg_orphaned 14 15 16 17 18
 
@@ -1378,7 +1381,7 @@ rm-srpm:
 # All targets declared as .PHONY to ensure make always runs them
 # even if a file with the same name exists
 
-.PHONY: hdr_histogram pg_try_cast pg_synonym env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
+.PHONY: hdr_histogram pg_kv pg_try_cast pg_synonym env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
 	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \

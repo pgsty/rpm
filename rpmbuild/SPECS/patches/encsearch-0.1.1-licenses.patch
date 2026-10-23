@@ -1,0 +1,1297 @@
+--- /dev/null
++++ b/packaging/collect-licenses.py
+@@ -0,0 +1,133 @@
++#!/usr/bin/env python3
++"""Collect reviewed licenses for the active Cargo normal dependency closure.
++
++Python 3.6 compatible; no network, TOML parser or external Python dependencies.
++The policy pins complete license texts, including release omissions recovered
++from upstream. New crates, versions, declarations or altered texts fail closed.
++"""
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import re
++import shutil
++import sys
++
++
++def require(condition, message):
++    if not condition:
++        raise ValueError(message)
++
++
++def read_json(path):
++    with path.open(encoding="utf-8") as stream:
++        return json.load(stream)
++
++
++def checked_path(root, relative):
++    path = (root / relative).resolve()
++    require(root.resolve() in path.parents, "Path escapes its source: " + relative)
++    require(path.is_file(), "Missing license file: " + str(path))
++    return path
++
++
++def collect(args):
++    packaging = Path(__file__).resolve().parent
++    policy = read_json(packaging / "license-policy.json")
++    metadata = read_json(Path(args.metadata))
++    require(int(args.pg[2:]) in policy["pg"], "Unreviewed PostgreSQL feature")
++    require(args.target in ("aarch64-unknown-linux-gnu", "x86_64-unknown-linux-gnu"),
++            "Unreviewed target platform")
++    packages = {p["id"]: p for p in metadata["packages"]}
++    nodes = {n["id"]: n for n in metadata["resolve"]["nodes"]}
++    root_id = metadata["resolve"]["root"]
++    root = packages[root_id]
++    require((root["name"], root["version"], root["license"]) ==
++            (policy["project"], policy["version"], policy["root_license"]),
++            "Unexpected root package")
++    features = sorted(f for f in nodes[root_id]["features"] if re.fullmatch(r"pg\d+", f))
++    require(features == [args.pg], "Cargo metadata has unexpected PostgreSQL features")
++    # Cargo --filter-platform has already removed inapplicable target edges.
++    # Follow normal edges only: build/dev-only tools are not distributed.
++    # Proc macro normal edges are retained conservatively for generated code.
++    pending, closure = [root_id], set()
++    while pending:
++        ident = pending.pop()
++        if ident in closure:
++            continue
++        closure.add(ident)
++        for dep in nodes[ident]["deps"]:
++            if any(kind["kind"] in (None, "normal") for kind in dep["dep_kinds"]):
++                pending.append(dep["pkg"])
++    output = Path(args.output)
++    require(not output.exists(), "Refusing to merge stale license output: " + str(output))
++    output.mkdir(parents=True)
++    entries, licenses = [], set(policy["root_license"].split(" AND "))
++    for ident in sorted(closure - {root_id}):
++        package = packages[ident]
++        key = package["name"] + "-" + package["version"]
++        require(key in policy["packages"], "Unreviewed dependency: " + key)
++        reviewed = policy["packages"][key]
++        require(package["source"] == "registry+https://github.com/rust-lang/crates.io-index",
++                "Unreviewed dependency source: " + key)
++        require(package["license"] == reviewed["declared"], "License changed: " + key)
++        crate = Path(package["manifest_path"]).resolve().parent
++        destination = output / key
++        destination.mkdir()
++        files = []
++        require(bool(reviewed["files"]), "No reviewed license text: " + key)
++        for document in reviewed["files"]:
++            origin = document["from"]
++            require(origin in ("crate", "packaging"), "Unknown license origin")
++            source = checked_path(crate if origin == "crate" else packaging, document["path"])
++            digest = hashlib.sha256(source.read_bytes()).hexdigest()
++            require(digest == document["sha256"], "License text changed: " + str(source))
++            relative = Path(origin) / document["path"]
++            target = destination / relative
++            target.parent.mkdir(parents=True, exist_ok=True)
++            shutil.copyfile(str(source), str(target))
++            files.append(dict(document, installed_path=str(Path(key) / relative)))
++        # REUSE puts actual copyright holders in source headers rather than in
++        # its generic MIT.txt. Preserve those exact lines with their source path.
++        copyrights = []
++        for source in sorted(crate.rglob("*")):
++            if not source.is_file() or source.suffix not in (".rs", ".c", ".h", ".S"):
++                continue
++            lines = [line for line in source.read_text(encoding="utf-8").splitlines()
++                     if "SPDX-FileCopyrightText:" in line]
++            if lines:
++                copyrights.append(str(source.relative_to(crate)) + "\n" + "\n".join(lines))
++        if copyrights:
++            (destination / "SPDX-COPYRIGHTS.txt").write_text("\n\n".join(copyrights) + "\n", encoding="utf-8")
++        # Upstream authors are attribution data, never fabricated copyright text.
++        (destination / "AUTHORS.txt").write_text("\n".join(package["authors"]) + "\n", encoding="utf-8")
++        for vendor in reviewed.get("vendored", []):
++            require((crate / vendor["path"]).is_dir(), "Missing reviewed vendored source: " + key)
++            licenses.update(vendor["license"].split(" AND "))
++        licenses.update(reviewed["selected"].split(" AND "))
++        entries.append({"name": package["name"], "version": package["version"],
++                        "declared_license": package["license"], "selected_license": reviewed["selected"],
++                        "repository": package["repository"], "authors": package["authors"],
++                        "documents": files, "vendored": reviewed.get("vendored", [])})
++    expression = " AND ".join(sorted(licenses))
++    require(expression == policy["license_expression"] == args.expected_license,
++            "RPM License field does not match the selected dependency licenses: " + expression)
++    manifest = {"project": policy["project"], "version": policy["version"],
++                "pg_feature": args.pg, "target": args.target,
++                "scope": "Cargo normal dependency closure, including proc macros and vendored native code",
++                "license_expression": expression, "packages": entries}
++    (output / "manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8")
++    print("Collected {} dependency licenses: {}".format(len(entries), expression))
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("metadata")
++    parser.add_argument("--pg", required=True, choices=["pg16", "pg17", "pg18"])
++    parser.add_argument("--target", required=True)
++    parser.add_argument("--expected-license", required=True)
++    parser.add_argument("--output", default="THIRD_PARTY_LICENSES")
++    try:
++        collect(parser.parse_args())
++    except (KeyError, OSError, ValueError) as error:
++        sys.exit("License collection failed: " + str(error))
+--- /dev/null
++++ b/packaging/license-policy.json
+@@ -0,0 +1,1044 @@
++{
++  "license_expression": "BSD-3-Clause AND CC0-1.0 AND MIT AND PostgreSQL AND Unicode-3.0 AND Zlib",
++  "packages": {
++    "aead-0.6.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "33b32a251d445c5c03a634e64c53314c55540fc367fabdd45d9b6c8f260c028c"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "aegis-0.9.20": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE",
++          "sha256": "d4ea02a54d266337ef2bc54d3d674dab3d407e28330ab1bd9fc4733ef261528b"
++        },
++        {
++          "from": "packaging",
++          "path": "licenses/libaegis-LICENSE",
++          "reason": "aegis 0.9.20 omits its C submodule license. rust-aegis VCS 86b692a4f28c815b855a1c85afb5ca5ab62c410d pins this libaegis commit.",
++          "sha256": "2239900b73e88ac9f37bd9fdf5d668fa67862645b983fc2ee5a4c20095aa5fe7",
++          "url": "https://raw.githubusercontent.com/jedisct1/libaegis/3992508d3c9dfd87ed7ed769e65bb26a9281e592/LICENSE"
++        }
++      ],
++      "selected": "MIT",
++      "vendored": [
++        {
++          "commit": "3992508d3c9dfd87ed7ed769e65bb26a9281e592",
++          "license": "MIT",
++          "path": "src/c/libaegis",
++          "repository": "https://github.com/jedisct1/libaegis"
++        }
++      ]
++    },
++    "aes-0.9.3": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "25f77efa393854f7c15eaf6a2589a2071db2d7337642742763adb12bdecf0445"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "aes-gcm-0.11.1": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "aes-gcm-siv-0.12.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "aes-siv-0.8.0": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "arrayvec-0.7.8": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "4da95ec4ecb65b738d470b7d762894ad9c97da93e6cbfb18b570fc2c96f4b871"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "ascon-aead-0.6.0": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "888d587145a4dfaa1770cb433df7b650be4ad5d32b5e99bcab124666989f710c"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "ascon-core-0.5.1": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "888d587145a4dfaa1770cb433df7b650be4ad5d32b5e99bcab124666989f710c"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "bitflags-2.13.2": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "6485b8ed310d3f0340bf1ad1f47645069ce4069dcc6bb46c7d5c6faf41de1fdb"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "bitvec-1.1.1": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE.txt",
++          "sha256": "411781fd38700f2357a14126d0ab048164ab881f1dcb335c1bb932e232c9a2f5"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "blake3-1.8.7": {
++      "declared": "CC0-1.0 OR Apache-2.0 OR Apache-2.0 WITH LLVM-exception",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE_CC0",
++          "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
++        }
++      ],
++      "selected": "CC0-1.0",
++      "vendored": [
++        {
++          "license": "CC0-1.0",
++          "note": "The Rust and C implementations share the root LICENSE_CC0.",
++          "path": "c"
++        }
++      ]
++    },
++    "block-buffer-0.12.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "98181e7249d0c01737645ec982499ce99a0f07eb8f7d625b8840d799d10dbc01"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "cee-scape-0.2.0": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "ad305155ac1d50482bc7d4473ea75e1287c064194ee0edab689422e8461454f0"
++        }
++      ],
++      "selected": "MIT",
++      "vendored": [
++        {
++          "license": "MIT",
++          "note": "The bundled C shim shares the root LICENSE-MIT.",
++          "path": "src"
++        }
++      ]
++    },
++    "cfg-if-1.0.5": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "378f5840b258e2779c39418f3f2d7b2ba96f1c7917dd6be0713f88305dbda397"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "chacha20-0.10.2": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "chacha20poly1305-0.11.0": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "cipher-0.5.2": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "950d712c518a02fcb7cff96950aee304a1cc5283361712c980ea21e8d6d669a5"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "cmac-0.8.0": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "9e0dfd2dd4173a530e238cb6adb37aa78c34c6bc7444e0e10c1ab5d8881f63ba"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "cmov-0.5.4": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "70c9d40f1f9545c3f133b8a67206e89da850f6468eed072281bb3701514114a9"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "const-oid-0.10.2": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "73b9dc2e79c7308998dd30296e073aefaefb944a68fb89aa412c23c0edcabcaa"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "constant_time_eq-0.4.2": {
++      "declared": "CC0-1.0 OR MIT-0 OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-CC0",
++          "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
++        }
++      ],
++      "selected": "CC0-1.0"
++    },
++    "convert_case-0.11.0": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE",
++          "sha256": "aed7b1758e35afa0cd0fde059d61950747ca11cd0e5e169cb21c11608daed772"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "cpubits-0.1.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "003736bc98408b53511b9cc8ff5d1af3bf0a8f17d53841cc39d8ab1b96a195b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "cpufeatures-0.3.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "73b9dc2e79c7308998dd30296e073aefaefb944a68fb89aa412c23c0edcabcaa"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "crypto-common-0.2.2": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "d2e7ec5355c96eeade56b09187ceb48a6a30299da3ce7531a66d3d11405ab963"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "ctr-0.10.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "63af4bea227c94d021e99427f6ca3a4b8efddadcca93ab6130f708cf6138cf68"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "ctutils-0.4.3": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "91585c36e4fb9ab4ca0d3dfac5d66d3c0c62cc51f640a0e1196542daf2267eae"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "dbl-0.5.0": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "98181e7249d0c01737645ec982499ce99a0f07eb8f7d625b8840d799d10dbc01"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "digest-0.11.3": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "af59cea35d7f5e2777a713b8d155d65efa2c339eb43f3c14e868c6ac8506edad"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "enum-map-2.7.3": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/enum-map-2.7.3-LICENSE",
++          "reason": "Crate omits REUSE license texts; source SPDX copyright headers are collected separately.",
++          "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
++          "url": "https://codeberg.org/sugar700/enum-map/raw/commit/c788a9c4bd0431308d889942719f7a38761d9884/LICENSES/MIT.txt"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "enum-map-derive-0.17.0": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/enum-map-derive-0.17.0-LICENSE",
++          "reason": "Crate omits REUSE license texts; source SPDX copyright headers are collected separately.",
++          "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
++          "url": "https://codeberg.org/sugar700/enum-map/raw/commit/2026968c30ad14d268f3d70c618a704e22a3b980/LICENSES/MIT.txt"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "equivalent-1.0.2": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "7365cc8878a1d7ce155a58c4ca09c3d7a6be413efa5334a80ea842912b669349"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "eyre-0.6.14": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "fixedbitset-0.5.7": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "ce592787ff2321feab698a4c612237f4378cc658ebb1d472913e5802cc47afb4"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "foldhash-0.1.5": {
++      "declared": "Zlib",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE",
++          "sha256": "b1181a40b2a7b25cf66fd01481713bc1005df082c53ef73e851e55071b102744"
++        }
++      ],
++      "selected": "Zlib"
++    },
++    "funty-2.0.0": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE.txt",
++          "sha256": "f790cc576999f5998c766d3d26d7d64dc368e805a98461484f65e8d961ec6d9f"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "getrandom-0.4.3": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "523a42c25d245dde9c015f882cec7f4555aad883382a6cf19b4b7d9b2cd5419b"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "ghash-0.6.0": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "half-1.8.3": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/half-1.8.3-LICENSE",
++          "reason": "Crate LICENSE is only an SPDX expression; use the release commit REUSE text and crate .reuse/dep5 copyright notice.",
++          "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
++          "url": "https://raw.githubusercontent.com/VoidStarKat/half-rs/c9a9776e73aaf2408c6657c86f411901ed6076b3/LICENSES/MIT.txt"
++        },
++        {
++          "from": "crate",
++          "path": ".reuse/dep5",
++          "sha256": "7aa615df0376504c0dfa905f81759d00e64155345640a802db721b72ad4ec19e"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "hashbrown-0.15.5": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "ff8f68cb076caf8cefe7a6430d4ac086ce6af2ca8ce2c4e5a2004d4552ef52a2"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "hashbrown-0.17.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "ff8f68cb076caf8cefe7a6430d4ac086ce6af2ca8ce2c4e5a2004d4552ef52a2"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "hkdf-0.13.0": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "d288f9c9b4590446ec18c22ead8f8b5a12a3d4025b68f62dc9015063eb9cca69"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "hmac-0.13.0": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "9e0dfd2dd4173a530e238cb6adb37aa78c34c6bc7444e0e10c1ab5d8881f63ba"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "hybrid-array-0.4.15": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "70c9d40f1f9545c3f133b8a67206e89da850f6468eed072281bb3701514114a9"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "indenter-0.3.4": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "indexmap-2.14.2": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "ecc269ef87fd38a1d98e30bfac9ba964a9dbd9315c3770fed98d4d7cb5882055"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "inout-0.2.2": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "a07fcacc3c60de4dc0fab10ac9d6aaba7379974e28451c99da7f7df09c25b28c"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "itoa-1.0.18": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "libc-0.2.190": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "123a331b5dbf04c30097fa43b8f858bc85df671fe776de498d01f3d6b7c1f69e"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "memchr-2.8.3": {
++      "declared": "Unlicense OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "0f96a83840e146e43c0ec96a22ec1f392e0680e6c1226e6f3ba87e0740af850f"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "ocb3-0.2.0": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "003736bc98408b53511b9cc8ff5d1af3bf0a8f17d53841cc39d8ab1b96a195b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "once_cell-1.21.4": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "petgraph-0.8.3": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "7576269ea71f767b99297934c0b2367532690f8c4badc695edf8e04ab6a1e545"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "pgrx-0.19.3": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/pgrx-0.19.3-LICENSE",
++          "reason": "Crates omit the pgrx workspace license; recovered from the matching release tag.",
++          "sha256": "074f7499b019ffe4bc37b61842f709ccd8bf9800c456e6a2d14f0353c4973fe3",
++          "url": "https://raw.githubusercontent.com/pgcentralfoundation/pgrx/v0.19.3/LICENSE"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "pgrx-macros-0.19.3": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/pgrx-0.19.3-LICENSE",
++          "reason": "Crates omit the pgrx workspace license; recovered from the matching release tag.",
++          "sha256": "074f7499b019ffe4bc37b61842f709ccd8bf9800c456e6a2d14f0353c4973fe3",
++          "url": "https://raw.githubusercontent.com/pgcentralfoundation/pgrx/v0.19.3/LICENSE"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "pgrx-pg-sys-0.19.3": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/pgrx-0.19.3-LICENSE",
++          "reason": "Crates omit the pgrx workspace license; recovered from the matching release tag.",
++          "sha256": "074f7499b019ffe4bc37b61842f709ccd8bf9800c456e6a2d14f0353c4973fe3",
++          "url": "https://raw.githubusercontent.com/pgcentralfoundation/pgrx/v0.19.3/LICENSE"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "pgrx-sql-entity-graph-0.19.3": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/pgrx-0.19.3-LICENSE",
++          "reason": "Crates omit the pgrx workspace license; recovered from the matching release tag.",
++          "sha256": "074f7499b019ffe4bc37b61842f709ccd8bf9800c456e6a2d14f0353c4973fe3",
++          "url": "https://raw.githubusercontent.com/pgcentralfoundation/pgrx/v0.19.3/LICENSE"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "poly1305-0.9.1": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b67acfaaf787b346e1d3bf7654b4fabfd20360fdeb4351cc5e9d624147824527"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "polyval-0.7.3": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "proc-macro2-1.0.107": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "quote-1.0.47": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "radium-0.7.0": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE.txt",
++          "sha256": "13f4cc9fbc8d4a447b28aa84019c10ad4abf4b5f6919db061bf6690ccc23bc02"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "rand_core-0.10.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "COPYRIGHT",
++          "sha256": "92b81db30f7ab6d693e0af5661a40d273ca1947e891123ed823924192c10cbc7"
++        },
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "8b6e9feec03e7c9a5facb26855cecd31662bf989b636bcfe79521bdf8ac863f0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "seahash-4.1.0": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "packaging",
++          "path": "licenses/seahash-4.1.0-LICENSE",
++          "reason": "Release commit 94b632aeac099031c373599313d5b5f0acbbaec0 omits the license. Use the upstream fix: add missing MIT license text commit, preserving its bytes; authors are recorded from Cargo metadata.",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
++          "url": "https://gitlab.redox-os.org/redox-os/seahash/-/raw/3088c5c912b70b586d27bf553fbe964e025a2c89/LICENSE"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "serde-1.0.229": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "serde_cbor-0.11.2": {
++      "declared": "MIT/Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "e03e58ea9205f51989b7a50f450051b24e6516cc1f0b920222dcda992072be99"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "serde_core-1.0.229": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "serde_derive-1.0.229": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "serde_json-1.0.154": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "sha2-0.11.0": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "831e0f43ad0bf014c1c4fec5767aae470434c1d66d6e671be2d823e729063e25"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "softaes-0.1.7": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE",
++          "sha256": "d4ea02a54d266337ef2bc54d3d674dab3d407e28330ab1bd9fc4733ef261528b"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "subtle-2.6.1": {
++      "declared": "BSD-3-Clause",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE",
++          "sha256": "d1fc1bc0d155df60b2e7705b6b2ae02a05c96f948e1cec6e2fb86360b09f346b"
++        }
++      ],
++      "selected": "BSD-3-Clause"
++    },
++    "syn-2.0.119": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "syn-3.0.8": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "tap-1.0.1": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE.txt",
++          "sha256": "8b4e95f5cf0dc40269c99f7b787203ffe04ded245ca2427422c196efa2b2f42a"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "thiserror-2.0.21": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "thiserror-impl-2.0.21": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "typenum-1.20.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "a825bd853ab71619a4923d7b4311221427848070ff44d990da39b0b274c1683f"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "unescape-0.1.0": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE",
++          "sha256": "c4ca5b28d9121b3e582a9e8d6aaa65240eb323a379d04a8bf8343b879e12752a"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "unicode-ident-1.0.26": {
++      "declared": "(MIT OR Apache-2.0) AND Unicode-3.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        },
++        {
++          "from": "crate",
++          "path": "LICENSE-UNICODE",
++          "sha256": "f7db81051789b729fea528a63ec4c938fdcb93d9d61d97dc8cc2e9df6d47f2a1"
++        }
++      ],
++      "selected": "MIT AND Unicode-3.0"
++    },
++    "unicode-segmentation-1.13.3": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "COPYRIGHT",
++          "sha256": "23860c2a7b5d96b21569afedf033469bab9fe14a1b24a35068b8641c578ce24d"
++        },
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "7b63ecd5f1902af1b63729947373683c32745c16a10e8e6292e2e2dcd7e90ae0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "universal-hash-0.6.1": {
++      "declared": "MIT OR Apache-2.0",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "efa52eb70a774b62c50cf50f5e57e2625c29d375d09b91132f4f020e47b9944e"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "uuid-1.28.0": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "436bc5a105d8e57dcd8778730f3754f7bf39c14d2f530e4cde4bd2d17a83ec3d"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "wyz-0.5.1": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE.txt",
++          "sha256": "411781fd38700f2357a14126d0ab048164ab881f1dcb335c1bb932e232c9a2f5"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "zeroize-1.9.1": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "8c7516d4b27b1e495be5e38b612298b63de48d05f49cdac94f70f3cd70f8864b"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "zeroize_derive-1.5.0": {
++      "declared": "Apache-2.0 OR MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "b8c6939380a400f53e11923d50fcc4dd2fa1ba8339fd9d04cda38a0251b6c9b0"
++        }
++      ],
++      "selected": "MIT"
++    },
++    "zmij-1.0.23": {
++      "declared": "MIT",
++      "files": [
++        {
++          "from": "crate",
++          "path": "LICENSE-MIT",
++          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
++        }
++      ],
++      "selected": "MIT"
++    }
++  },
++  "pg": [
++    17
++  ],
++  "project": "encsearch",
++  "root_license": "PostgreSQL",
++  "version": "0.1.1"
++}
+--- /dev/null
++++ b/packaging/licenses/enum-map-2.7.3-LICENSE
+@@ -0,0 +1,9 @@
++MIT License
++
++Copyright (c) <year> <copyright holders>
++
++Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+--- /dev/null
++++ b/packaging/licenses/enum-map-derive-0.17.0-LICENSE
+@@ -0,0 +1,9 @@
++MIT License
++
++Copyright (c) <year> <copyright holders>
++
++Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+--- /dev/null
++++ b/packaging/licenses/half-1.8.3-LICENSE
+@@ -0,0 +1,9 @@
++MIT License
++
++Copyright (c) <year> <copyright holders>
++
++Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+--- /dev/null
++++ b/packaging/licenses/libaegis-LICENSE
+@@ -0,0 +1,21 @@
++MIT License
++
++Copyright (c) 2023-2026 Frank Denis
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+--- /dev/null
++++ b/packaging/licenses/pgrx-0.19.3-LICENSE
+@@ -0,0 +1,25 @@
++MIT License
++
++Portions Copyright 2019-2021 ZomboDB, LLC.
++Portions Copyright 2021-2023 Technology Concepts & Design, Inc.
++Portions Copyright 2023 PgCentral Foundation, Inc.
++
++All rights reserved.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+--- /dev/null
++++ b/packaging/licenses/seahash-4.1.0-LICENSE
+@@ -0,0 +1,23 @@
++Permission is hereby granted, free of charge, to any
++person obtaining a copy of this software and associated
++documentation files (the "Software"), to deal in the
++Software without restriction, including without
++limitation the rights to use, copy, modify, merge,
++publish, distribute, sublicense, and/or sell copies of
++the Software, and to permit persons to whom the Software
++is furnished to do so, subject to the following
++conditions:
++
++The above copyright notice and this permission notice
++shall be included in all copies or substantial portions
++of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
++ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
++TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
++PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
++SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
++CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
++IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++DEALINGS IN THE SOFTWARE.

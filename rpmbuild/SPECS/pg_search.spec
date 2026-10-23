@@ -13,9 +13,7 @@ Name:		%{sname}_%{pgmajorversion}
 Version:	0.26.1
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
-# Exact per-crate expressions are installed as third-party/LICENSE-EXPRESSIONS.txt.
-# This aggregate enumerates every atomic license family in the resolved package closure.
-License:	(AGPL-3.0-or-later) AND 0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND CDLA-Permissive-2.0 AND ISC AND MIT AND MPL-2.0 AND Unicode-3.0 AND Unlicense AND Zlib AND zlib-acknowledgement
+License:	AGPL-3.0-or-later
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
 Source1:	pg_search_collect_third_party_licenses.py

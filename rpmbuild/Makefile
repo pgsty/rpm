@@ -275,6 +275,9 @@ pg_textsearch:
 textsearch_intl:
 	./build textsearch_intl 14 15 16 17 18
 
+pg_tre:
+	./build pg_tre 17 18
+
 pg_icu_parser:
 	./build pg_icu_parser 14 15 16 17 18
 

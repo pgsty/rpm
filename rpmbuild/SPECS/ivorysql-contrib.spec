@@ -1,5 +1,5 @@
 %global sname ivorysql-18-contrib
-%global ivoryversion 5.4
+%global ivoryversion 5.6
 %global pgmajorversion 18
 %global pgbaseinstdir /usr/ivory-18
 
@@ -13,11 +13,11 @@ Name:           %{sname}
 Version:        %{ivoryversion}
 Release:        1PGSTY%{?dist}
 Summary:        External extensions for IvorySQL 5 / PostgreSQL 18
-License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND PostgreSQL
+License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND ISC AND MIT AND PostgreSQL
 URL:            https://github.com/IvorySQL/IvorySQL
 Source0:        %{sname}-%{version}-sources.tar.gz
-Source1:        ivorysql-contrib-build.sh
-Source2:        ivorysql-18-contrib-extensions.md
+Source1:        ivorysql-contrib-build-%{version}.sh
+Source2:        ivorysql-18-contrib-%{version}-extensions.md
 Source3:        sfcgal-config-pkgconf
 
 ExclusiveArch:  aarch64 x86_64
@@ -25,7 +25,11 @@ ExclusiveArch:  aarch64 x86_64
 BuildRequires:  ivorysql-18 >= 5.0
 BuildRequires:  ivorysql-18 < 6.0
 BuildRequires:  autoconf automake bison boost-devel cmake flex gcc gcc-c++ git
-BuildRequires:  libtool make pkgconf-pkg-config
+BuildRequires:  libtool make meson ninja-build pkgconf-pkg-config
+BuildRequires:  cargo rust rustfmt
+# pg_bulkload/pg_repack clients use the private core PGXS link inputs.
+BuildRequires:  openssl-devel pam-devel libselinux-devel readline-devel krb5-devel
+BuildRequires:  numactl-devel liburing-devel libicu-devel libuuid-devel lz4-devel libzstd-devel
 %if 0%{?rhel} == 8
 # IvorySQL's EL8 PL/Perl module links Perl 5.26. Request the matching module
 # packages instead of DNF's newest Perl 5.32 modular stream. FindBin is part
@@ -37,7 +41,8 @@ BuildRequires:  perl-interpreter
 BuildRequires:  perl(version)
 BuildRequires:  perl(FindBin)
 %endif
-BuildRequires:  clang llvm-devel
+BuildRequires:  clang-devel >= 19.0
+BuildRequires:  llvm-devel >= 19.0
 BuildRequires:  SFCGAL-devel geos314-devel
 %if 0%{?rhel} == 8
 BuildRequires:  gdal38-devel proj96-devel
@@ -46,7 +51,13 @@ BuildRequires:  gdal311-devel proj97-devel
 %endif
 BuildRequires:  gmp-devel json-c-devel libgeotiff17-devel libxml2-devel libxslt-devel
 BuildRequires:  pcre2-devel protobuf-c-devel xerces-c-devel
+%if 0%{?rhel} == 9
+# The EL9 bundle uses the repaired Groonga ABI built in this batch.
+BuildRequires:  groonga-devel >= 16.1.4-1PGSTY.el9
+Requires:       groonga-libs >= 16.1.4-1PGSTY.el9
+%else
 BuildRequires:  groonga-devel >= 15.1.7
+%endif
 BuildRequires:  hiredis-devel libcurl-devel msgpack-devel scws xxhash-devel
 
 Requires:       ivorysql-18%{?_isa} >= 5.0
@@ -56,8 +67,8 @@ Requires:       python3-psycopg2
 %description
 External extensions compiled against the IvorySQL 5 / PostgreSQL 18 ABI and
 installed below %{pgbaseinstdir}. This package fills the complete extension
-gap between Pigsty's ivorysql-18 kernel RPM and the official IvorySQL 5.4
-bundle: 29 extension controls from 23 projects, plus the wal2json output
+gap between Pigsty's ivorysql-18 kernel RPM and the official IvorySQL 5.6
+bundle: 39 extension controls from 31 projects, plus the wal2json output
 plugin. Non-PostgreSQL runtime libraries remain normal RPM dependencies.
 
 %prep
@@ -72,6 +83,9 @@ plugin. Non-PostgreSQL runtime libraries remain normal RPM dependencies.
 RPM_BUILD_NCPUS=%{_smp_build_ncpus} ./ivorysql-contrib-build.sh
 
 %install
+# Nested source archives are unpacked during the build. Remove group/other
+# write permission before find-debuginfo copies them into debugsource.
+find work -type f -perm /022 -exec chmod go-w {} +
 %{__mkdir_p} %{buildroot}
 %{__cp} -a stage/usr %{buildroot}/
 # pg_partman's maintenance tools are Python 3 programs. EL rejects the
@@ -80,17 +94,25 @@ find %{buildroot}%{pgbaseinstdir}/bin -maxdepth 1 -type f -name '*.py' \
     -exec sed -i '1s|^#!/usr/bin/env python$|#!/usr/bin/python3|' {} +
 
 %check
-test "$(find %{buildroot}%{pgbaseinstdir}/share/postgresql/extension -maxdepth 1 -name '*.control' | wc -l)" -eq 29
-test "$(find %{buildroot}%{pgbaseinstdir}/lib/postgresql -maxdepth 1 -type f -name '*.so' | wc -l)" -eq 31
+test "$(find %{buildroot}%{pgbaseinstdir}/share/postgresql/extension -maxdepth 1 -name '*.control' | wc -l)" -eq 39
+test "$(find %{buildroot}%{pgbaseinstdir}/lib/postgresql -maxdepth 1 -type f -name '*.so' | wc -l)" -eq 39
 test -f %{buildroot}%{pgbaseinstdir}/lib/postgresql/wal2json.so
 grep -Eq "^default_version[[:space:]]*=[[:space:]]*'?2[.]8'?" \
   %{buildroot}%{pgbaseinstdir}/share/postgresql/extension/plpgsql_check.control
 
 %files
-%doc EXTENSIONS.md SOURCES.sha256 FILES.sha256
+%doc EXTENSIONS.md SOURCES.sha256 FILES.sha256 sources.json expected-controls.txt expected-modules.txt
 %{pgbaseinstdir}
 
 %changelog
+* Fri Oct 23 2026 Ruohang Feng <rh@vonng.com> - 5.6-1PGSTY
+- Remove group and other write permissions from bundled debug sources
+
+* Thu Oct 22 2026 Ruohang Feng <rh@vonng.com> - 5.6-1PGSTY
+- Match the verified IvorySQL 5.6 extension payload with 31 source projects
+- Add eight projects, update PGroonga and pgvector, retain the GIS and plpgsql_check ABI pins
+- Preserve native and Rust debug information and install only upstream SQL
+
 * Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 5.4-1PGSTY
 - Build pgvector with portable CPU flags instead of the build host instruction set
 

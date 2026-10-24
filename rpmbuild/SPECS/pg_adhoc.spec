@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{pname}
-Version:	17.4
+Version:	19.0
 Release:	1PGSTY%{?dist}
 Summary:	Ad-hoc PostgreSQL diagnostic utilities
 License:	GPL-2.0-or-later
 URL:		https://github.com/df7cb/pg_filedump
-Source0:	pg_filedump-REL_17_4.tar.gz
+Source0:	pg_filedump-REL_19_0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	%{sname}%{?_isa} = %{version}-%{release}
@@ -26,7 +26,7 @@ pg_filedump is a utility to format PostgreSQL heap/index/control files into a hu
 You can format/dump the files several ways, as listed in the Invocation section, as well as dumping straight binary.
 
 %prep
-%setup -q -n %{sname}-REL_17_4
+%setup -q -n %{sname}-REL_19_0
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -43,6 +43,9 @@ cp pg_filedump %{buildroot}/usr/bin/pg_filedump
 /usr/bin/pg_filedump
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 19.0-1PGSTY
+- Update to upstream 19.0.
+
 * Wed Aug 12 2026 Vonng <rh@vonng.com> - 17.4-1PGSTY
 - Package pg_filedump as a component of pg_adhoc
 

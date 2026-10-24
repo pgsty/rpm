@@ -600,6 +600,9 @@ pgmp:
 pguint:
 	./build pguint 14 15 16 17 18
 
+pg_nanotime:
+	./build pg_nanotime 17 18
+
 pg_uint128:
 	./build pg_uint128 14 15 16 17 18
 
@@ -1518,4 +1521,4 @@ pg_statkit:
 colnames:
 	./build colnames 14 15 16 17 18
 
-.PHONY: pg_checksums_ext
+.PHONY: pg_nanotime pg_checksums_ext

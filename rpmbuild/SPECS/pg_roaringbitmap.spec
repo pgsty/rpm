@@ -19,13 +19,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.0
+Version:	1.3.0
 Release:	1PGSTY%{?dist}
 Summary:	RoaringBitmap extension for PostgreSQL.
 License:	Apache-2.0
 URL:		https://github.com/ChenHuajun/pg_roaringbitmap
 Source0:	pg_roaringbitmap-%{version}.tar.gz
-#           https://github.com/ChenHuajun/pg_roaringbitmap/archive/refs/tags/v1.2.0.tar.gz
+#           https://github.com/ChenHuajun/pg_roaringbitmap/archive/refs/tags/v1.3.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -63,6 +63,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 1.3.0-1PGSTY
+- Update to upstream 1.3.0.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

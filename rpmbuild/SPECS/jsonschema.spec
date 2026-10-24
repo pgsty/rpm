@@ -7,14 +7,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.10
+Version:	0.1.11
 Release:	1PGSTY%{?dist}
 Summary:	JSON Schema validation functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/theory/pg-jsonschema-boon
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		jsonschema-0.1.10.patch
-#           normalized from the official v0.1.10 GitHub tag archive
+Patch0:		jsonschema-0.1.11.patch
+#           normalized from the official v0.1.11 GitHub tag archive
 #           This is distinct from Supabase pg_jsonschema.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -35,8 +35,9 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{version}/target}"
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -57,9 +58,10 @@ fi
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{version}/target}"
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
 install -m 644 %{_builddir}/%{sname}-%{version}/README.md %{buildroot}%{_docdir}/%{name}/
 install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licensedir}/%{name}/
 
@@ -72,6 +74,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licens
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.11-1PGSTY
+- Update to upstream 0.1.11.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 0.1.10-1PGSTY
 - Update to upstream 0.1.10 and pin pgrx to 0.19.2
 - Apply the shared compatibility patch to pristine upstream sources

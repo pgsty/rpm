@@ -14,7 +14,7 @@
 %global _docdir_fmt %{name}
 
 Name:           haproxy
-Version:        3.4.4
+Version:        3.4.7
 Release:        1PGSTY%{?dist}
 Summary:        HAProxy reverse proxy for high availability environments
 
@@ -22,7 +22,7 @@ License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT AND BSD-2-Clause
 URL:            https://www.haproxy.org/
 Source0:        https://www.haproxy.org/download/%(v=%{version}; echo ${v%.*})/src/%{name}-%{version}.tar.gz
 Source1:        %{name}-utils-%{version}.tar.gz
-Patch0:         haproxy-3.4.4.patch
+Patch0:         haproxy-3.4.7.patch
 
 BuildRequires:  gcc
 BuildRequires:  libxcrypt-devel
@@ -203,6 +203,9 @@ fi
 %doc CHANGELOG doc/* examples/
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 3.4.7-1PGSTY
+- Update to upstream 3.4.7.
+
 * Mon Aug 31 2026 Ruohang Feng <rh@vonng.com> - 3.4.4-1PGSTY
 - Update to HAProxy 3.4.4.
 - Install the IPv4 range helper as haproxy-iprange to avoid colliding with

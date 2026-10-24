@@ -327,7 +327,8 @@ hydra:
 	./build hydra 14 15 16 #17 not ready yet
 
 # DuckDB family platform policy:
-# - pg_duckdb, duckdb_fdw, and pg_mooncake remain EL8/EL9/EL10 capable.
+# - pg_duckdb and pg_mooncake remain EL8/EL9/EL10 capable.
+# - duckdb_fdw 2.0.2 embeds DuckDB 2.0.0; EL8 requires separate validation.
 # - pg_lake requires EL9+ for system OpenSSL 3.
 # - pg_ducklake is EL9+ until its EL8/GCC8 filesystem path is fixed and tested.
 #pg_analytics:   # download, obsolete
@@ -346,8 +347,8 @@ storage_engine:
 pg_clickhouse:
 	./build pg_clickhouse 14 15 16 17 18
 
-#duckdb_fdw:
-#	./build duckdb_fdw
+duckdb_fdw:
+	./build duckdb_fdw 14 15 16 17 18
 
 pg_parquet:			# rust pgrx 0.19.2
 	./build pg_parquet 14 15 16 17 18

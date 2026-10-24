@@ -4,7 +4,7 @@
 
 %if 0%{?rhel} == 9
 # Require the repaired ABI provider while allowing newer upstream releases.
-%global groonga_min_version 16.1.3-1.el9.PGSTY.1
+%global groonga_min_version 16.1.4-1PGSTY.el9
 %else
 %global groonga_min_version 15.1.7
 %endif
@@ -22,7 +22,7 @@
 Name:		%{sname}_%{pgmajorversion}
 Version:	4.1.0
 %if 0%{?rhel} == 9
-Release:	2PGSTY%{?dist}
+Release:	3PGSTY%{?dist}
 %else
 Release:	1PGSTY%{?dist}
 %endif
@@ -63,7 +63,7 @@ meson setup build \
   -Dtest=false \
   -Dxxhash=enabled \
   -Dpg_config=%{pginstdir}/bin/pg_config
-meson compile -C build
+meson compile -C build %{?_smp_mflags}
 
 %install
 DESTDIR=$RPM_BUILD_ROOT meson install -C build
@@ -93,6 +93,9 @@ EOF
 %{pginstdir}/lib/*.so
 
 %changelog
+* Thu Oct 22 2026 Ruohang Feng <rh@vonng.com> - 4.1.0-3PGSTY
+- Rebuild on EL9 against Groonga 16.1.4.
+
 * Thu Oct 15 2026 Vonng <rh@vonng.com> - 4.1.0-2PGSTY
 - Rebuild EL9 packages against the repaired Groonga system simdjson ABI.
 - Require the fixed EL9 Groonga release and allow later upstream releases.

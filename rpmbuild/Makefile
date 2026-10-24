@@ -1303,7 +1303,7 @@ pdu:
 	./build pdu 14 15 16 17 18
 
 pgdog:			# rust 1.96.1, deterministic pg_raw_parse/scram vendor
-	cp -f SPECS/patches/pgdog-0.1.57.patch SOURCES/pgdog-0.1.57.patch
+	cp -f SPECS/patches/pgdog-0.1.62.patch SOURCES/pgdog-0.1.62.patch
 	rpmbuild -ba SPECS/pgdog.spec
 pgdog-install:
 	sudo yum remove -y pgdog || /bin/true

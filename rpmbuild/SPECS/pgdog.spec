@@ -2,13 +2,13 @@
 %global cfgdir %{_sysconfdir}/pgdog
 
 Name:           %{sname}
-Version:        0.1.57
+Version:        0.1.62
 Release:        1PGSTY%{?dist}
 Summary:        Modern PostgreSQL proxy, pooler, load balancer and query router
 License:        AGPL-3.0-only AND (MIT OR Apache-2.0) AND BSD-3-Clause AND PostgreSQL
 URL:            https://github.com/pgdogdev/pgdog
 Source0:        pgdog-%{version}.tar.gz
-#               https://github.com/pgdogdev/pgdog/archive/refs/tags/v0.1.57.tar.gz
+#               https://github.com/pgdogdev/pgdog/archive/refs/tags/v0.1.62.tar.gz
 Source1:        pgdog-%{version}-vendor.tar.gz
 Patch0:         pgdog-%{version}.patch
 
@@ -20,7 +20,7 @@ Requires:       ca-certificates, postgresql18-server, systemd
 
 %description
 PgDog is a PostgreSQL proxy, pooler, load balancer, sharder and query router
-written in Rust. Version 0.1.57 uses the new parser and plugin ABI 0.4; custom
+written in Rust. Version 0.1.62 uses the new parser and plugin ABI 0.5; custom
 0.1.32 plugins must be rebuilt and manual query fingerprints retired.
 
 %prep
@@ -41,7 +41,7 @@ export CXX=clang++
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export RUSTUP_TOOLCHAIN=1.96.1
-export PGDOG_GIT_HASH=8897e56
+export PGDOG_GIT_HASH=96ba64d
 export RUSTFLAGS="--cfg tokio_unstable"
 if [ "%{_arch}" = "aarch64" ]; then
   export RUSTFLAGS="$RUSTFLAGS -C target-feature=+lse"
@@ -50,7 +50,7 @@ LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 PATH=~/.cargo/bin:$PATH cargo fetch --locked
 PATH=~/.cargo/bin:$PATH CARGO_NET_OFFLINE=true cargo build --release --locked -p pgdog
 test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')"
-target/release/pgdog --version | grep -Fq 'PgDog v0.1.57 (8897e56)'
+target/release/pgdog --version | grep -Fq 'PgDog v0.1.62 (96ba64d)'
 target/release/pgdog -c packaging/rpm/pgdog.toml -u packaging/rpm/users.toml configcheck
 
 %install
@@ -98,6 +98,9 @@ install -pm 0644 vendor/scram/LICENSE %{buildroot}%{_licensedir}/%{name}/third-p
 %dir %attr(0750,postgres,postgres) %{_localstatedir}/lib/pgsql/pgdog
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.62-1PGSTY
+- Update to upstream 0.1.62.
+
 * Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 0.1.57-1PGSTY
 - Update to upstream PgDog 0.1.57 and its pinned SCRAM dependency
 - Preserve deterministic source identity and full debug packages

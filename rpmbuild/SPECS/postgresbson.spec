@@ -23,13 +23,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.1.0
+Version:	2.2.0
 Release:	1PGSTY%{?dist}
 Summary:	BSON data type and accessor functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/buzzm/postgresbson
 Source0:	%{sname}-%{version}.tar.gz
-#		normalized from https://api.pgxn.org/dist/bson/2.1.0/bson-2.1.0.zip
+#		normalized from https://api.pgxn.org/dist/bson/2.2.0/bson-2.2.0.zip
+Patch0:		%{sname}-%{version}.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libbson-devel pkgconf-pkg-config
@@ -47,7 +48,7 @@ type together with accessor, comparison, and conversion functions.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/postgresbson-2.1.0.patch
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
@@ -74,6 +75,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1PGSTY
+- Update to upstream 2.2.0.
+- Include the compatibility patch in the source RPM.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.1.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

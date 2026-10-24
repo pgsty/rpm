@@ -1197,8 +1197,8 @@ dbt2:          # EL8 x86_64/aarch64 gap only
 	./build dbt2 17 18
 
 documentdb:
-	bash bin/documentdb.sh documentdb-0.117-0.tar.gz intelrdfpmath-applied-2.0u3-1.tar.gz
-	./build documentdb 15 16 17 18
+	bash bin/documentdb.sh documentdb-1.0-0.tar.gz intelrdfpmath-applied-2.0u3-1.tar.gz
+	./build documentdb 16 17 18
 
 pg_projection:
 	./build pg_projection 14 15 16 17 18

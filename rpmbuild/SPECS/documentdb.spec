@@ -2,8 +2,8 @@
 %global sname documentdb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:documentdb only supports PostgreSQL 15-18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
+%{error:documentdb only supports PostgreSQL 16-18 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -23,7 +23,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.117
+Version:	1.0
 Release:	1PGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
@@ -32,9 +32,6 @@ Source0:	%{sname}-%{version}-0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 pkgconf-pkg-config
 BuildRequires:	gcc gcc-c++ make cmake libicu-devel krb5-devel
-%if %{pgmajorversion} == 15
-BuildRequires: systemtap-sdt-devel
-%endif
 
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -51,7 +48,7 @@ Requires:   rum_%{pgmajorversion}
 Requires:   postgis36_%{pgmajorversion}
 
 # Require extra dependencies for building: https://github.com/microsoft/documentdb/tree/main/scripts
-# Available for PostgreSQL 15,16,17,18
+# Available for PostgreSQL 16,17,18
 
 %description
 DocumentDB offers a native implementation of document-oriented NoSQL database,
@@ -74,7 +71,7 @@ sed -i 's|-Wl,-rpath=$(shell $(PG_CONFIG) --pkglibdir)|-Wl,-rpath='"'"'$$ORIGIN'
   Makefile.cflags pg_documentdb_extended_rum/core/Makefile
 
 %build
-# Match the upstream 0.117 RPM packaging: keep linker-generated ELF boundary
+# Match the upstream 1.0 RPM packaging: keep linker-generated ELF boundary
 # symbols out of the two bundled RUM libraries without changing upstream code.
 cat > %{_builddir}/documentdb-hide-linker-syms.map <<'EOF'
 {
@@ -93,9 +90,7 @@ if echo 'int _documentdb_uvprobe;' | gcc -shared -fPIC -x c - \
 fi
 rm -f %{_builddir}/.documentdb-uvprobe.so
 
-# PostgreSQL 15 expands COPT into both CFLAGS and LDFLAGS, which sends the
-# anonymous map to ld twice.  Keep the upstream map but pass it exactly once
-# through the documented link flags instead.
+# Pass the upstream anonymous map exactly once through the link flags.
 # PostgreSQL's module lookup does not apply to the ELF loader's transitive
 # DT_NEEDED lookup.  Strip the absolute pg_config RUNPATH here only because the
 # module Makefiles above now provide a relative sibling lookup.  The current
@@ -131,6 +126,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 1.0-1PGSTY
+- Update to upstream 1.0.
+- Restrict PGSTY builds to PostgreSQL 16-18 after the PG15 alignment failure.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.117-1PGSTY
 - Update to 0.117
 

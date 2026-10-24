@@ -10,13 +10,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.16
+Version:	1.17
 Release:	1PGSTY%{?dist}
 Summary:	Incremental View Maintenance extension for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/sraoss/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#		https://github.com/sraoss/pg_ivm/archive/refs/tags/v1.16.tar.gz
+#		https://github.com/sraoss/pg_ivm/archive/refs/tags/v1.17.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
 %if %llvm
@@ -55,6 +55,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags
 %endif
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 1.17-1PGSTY
+- Update to upstream 1.17.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.16-1PGSTY
 - Update to 1.16.
 

@@ -19,12 +19,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.0
+Version:	2.1.0
 Release:	1PGSTY%{?dist}
 Summary:	Trust pg_class statistics for query planning instead of physical file size
 License:	BSD-2-Clause
 URL:		https://github.com/boringsql/regresql
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		pg_regresql-2.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -40,7 +41,7 @@ statistics instead of estimates from physical file size.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg_regresql-2.0.0.patch
+patch -p1 --forward -f < %{PATCH0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -62,6 +63,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
+- Update to upstream 2.1.0.
+- Include the default build target patch in the source RPM.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.0.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

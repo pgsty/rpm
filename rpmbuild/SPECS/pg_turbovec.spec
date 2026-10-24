@@ -8,15 +8,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.12.1
+Version:        2.14.1
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.12.1.tar.gz
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.14.1.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
-Patch0:         pg-turbovec-2.12.1.patch
+Patch0:         pg-turbovec-2.14.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -37,6 +37,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=stable
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
 PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
@@ -54,7 +55,7 @@ export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true \
     cargo pgrx package -v --no-default-features \
     --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
+EXT_DIR="$CARGO_TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
 cp -f sql/%{pname}--*--*.sql "$EXT_DIR/"
 test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 	echo "Cargo.lock changed during cargo pgrx package" >&2
@@ -65,7 +66,8 @@ test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name} %{buildroot}%{_licensedir}/%{name}
-PKGDIR=%{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
+PKGDIR="$TARGET_DIR/release/%{pname}-pg%{pgmajorversion}"
 cp -a "$PKGDIR%{pginstdir}/lib/%{pname}.so" %{buildroot}%{pginstdir}/lib/
 cp -a "$PKGDIR%{pginstdir}/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
 cp -a "$PKGDIR%{pginstdir}/share/extension/%{pname}"*.sql %{buildroot}%{pginstdir}/share/extension/
@@ -83,6 +85,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 2.14.1-1PGSTY
+- Update to upstream 2.14.1.
+
 * Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 2.12.1-1PGSTY
 - Update to upstream 2.12.1 and align the source patch with pgrx 0.19.3.
 

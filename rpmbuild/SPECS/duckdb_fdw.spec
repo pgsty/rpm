@@ -5,8 +5,9 @@
 %{!?duckdb_core_jobs:%global duckdb_core_jobs 2}
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:duckdb_fdw only targets PostgreSQL 14 through 18}
+# Upstream 2.0.2 uses boolVal/makeBoolean, which PG14 does not provide.
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:duckdb_fdw 2.0.2 currently targets PostgreSQL 15 through 18}
 %endif
 
 %if %llvm

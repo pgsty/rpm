@@ -20,13 +20,8 @@
 %endif
 
 Name:		groonga
-Version:	16.1.3
-# Keep the EL9 repair above upstream 1.el9 and below its next 2.el9.
-%if 0%{?rhel} == 9
-Release:	1%{?dist}.PGSTY.1
-%else
-Release:	1%{?dist}
-%endif
+Version:	16.1.4
+Release:	1PGSTY%{?dist}
 Summary:	An Embeddable Fulltext Search Engine
 
 Group:		Applications/Text
@@ -529,6 +524,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 16.1.4-1PGSTY
+- Update to upstream 16.1.4.
+
 * Thu Oct 15 2026 Vonng <rh@vonng.com> - 16.1.3-1.el9.PGSTY.1
 - Rebuild all EL9 subpackages against the current system simdjson ABI.
 - Keep upstream features and preserve RPM build flags and debug packages.

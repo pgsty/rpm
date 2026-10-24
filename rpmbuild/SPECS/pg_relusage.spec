@@ -19,7 +19,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.1
+Version:	1.0.2
 Release:	1PGSTY%{?dist}
 Summary:	discover and log the relations used in your statements
 License:	BSD-3-Clause
@@ -61,6 +61,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 1.0.2-1PGSTY
+- Update to upstream 1.0.2.
+
 * Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 1.0.1-1PGSTY
 - Update to upstream 1.0.1.
 

@@ -1521,4 +1521,4 @@ pg_statkit:
 colnames:
 	./build colnames 14 15 16 17 18
 
-.PHONY: pg_nanotime pg_checksums_ext
+.PHONY: pg_nanotime pg_checksums_ext pg_tre

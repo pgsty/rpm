@@ -46,6 +46,7 @@ BuildRequires:	clang-devel >= 19.0
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
+Conflicts:	duckdb_fdw_%{pgmajorversion}
 
 %description
 pg_duckdb is a Postgres extension that embeds DuckDB's columnar-vectorized analytics engine and features into Postgres.

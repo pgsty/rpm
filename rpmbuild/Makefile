@@ -874,7 +874,10 @@ pg_rewrite:
 # pg_squeeze:
 # pg_dirtyread:
 # pg_prioritize:
-# pg_checksums:
+# pg_checksums: supplied by PGDG (standalone utility)
+pg_checksums_ext:
+	./build pg_checksums_ext 14 15 16 17 18
+
 # pg_readonly:
 # pg_permissions:
 pgautofailover:
@@ -1514,3 +1517,5 @@ pg_statkit:
 
 colnames:
 	./build colnames 14 15 16 17 18
+
+.PHONY: pg_checksums_ext

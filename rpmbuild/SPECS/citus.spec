@@ -4,8 +4,8 @@
 
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:citus 14.2.0 only supports PostgreSQL 16-18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 17
+%{error:citus 13.5.0 only supports PostgreSQL 15-17}
 %endif
 
 %if %llvm
@@ -16,7 +16,7 @@
 
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
-Version:	14.2.0
+Version:	13.5.0
 Release:	9PGSTY%{?dist}
 License:	AGPL-3.0-only
 URL:		https://github.com/citusdata/%{sname}
@@ -25,7 +25,7 @@ Source0:    %{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel libxml2-devel
 BuildRequires:	libxslt-devel openssl-devel pam-devel readline-devel
-BuildRequires:	libcurl-devel pgdg-srpm-macros libzstd-devel krb5-devel
+BuildRequires:	libcurl-devel pgdg-srpm-macros lz4-devel libzstd-devel krb5-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
@@ -107,6 +107,11 @@ make %{with_llvm_arg} install DESTDIR=%{buildroot}
 %{pginstdir}/include/server/distributed/*.h
 
 %changelog
+* Sat Oct 24 2026 Vonng <rh@vonng.com> - 13.5.0-9PGSTY
+- Package upstream 13.5.0 with the established 9PGSTY release revision
+- Align supported PostgreSQL versions with upstream 15-17
+- Declare the LZ4 build dependency required by the default configuration
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 14.2.0-9PGSTY
 - Preserve the established Citus release revision for the production matrix
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms

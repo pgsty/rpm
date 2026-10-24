@@ -3,14 +3,13 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.13.0
+Version:	1.13.1
 Release:	1PGSTY%{?dist}
 Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
 URL:		https://github.com/pgmq/pgmq
 Source0:	%{sname}-%{version}.tar.gz
-# The PGXN archive omits the license present in the upstream release tag.
-Patch0:		pgmq-1.13.0-license.patch
+# Normalized from the upstream pgmq-extension directory with its root LICENSE.
 BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -24,7 +23,6 @@ Messages stay in the queue until explicitly removed, Messages can be archived, i
 
 %prep
 %setup -q -n %{sname}-%{version}
-%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH make
@@ -41,6 +39,9 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 1.13.1-1PGSTY
+- Update to upstream 1.13.1.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 1.13.0-1PGSTY
 - Update to 1.13.0
 - Include the upstream license in the binary package

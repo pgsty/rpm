@@ -321,7 +321,7 @@ hunspell:
 #                       Category: OLAP                        #
 ###############################################################
 citus:
-	./build citus 15 16 17
+	./build citus 15 16 17 18
 
 hydra:
 	./build hydra 14 15 16 #17 not ready yet

@@ -4,8 +4,14 @@
 
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 17
-%{error:citus 13.5.0 only supports PostgreSQL 15-17}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:citus supports PostgreSQL 15-18; PG15 uses Citus 13.5.0}
+%endif
+
+%if 0%{?pgmajorversion} == 15
+%global citus_version 13.5.0
+%else
+%global citus_version 14.3.0
 %endif
 
 %if %llvm
@@ -16,7 +22,7 @@
 
 Summary:	PostgreSQL extension that transforms Postgres into a distributed database
 Name:		%{sname}_%{pgmajorversion}
-Version:	13.5.0
+Version:	%{citus_version}
 Release:	9PGSTY%{?dist}
 License:	AGPL-3.0-only
 URL:		https://github.com/citusdata/%{sname}
@@ -107,6 +113,10 @@ make %{with_llvm_arg} install DESTDIR=%{buildroot}
 %{pginstdir}/include/server/distributed/*.h
 
 %changelog
+* Sat Oct 24 2026 Vonng <rh@vonng.com> - 14.3.0-9PGSTY
+- Update PostgreSQL 16-18 to upstream 14.3.0
+- Keep PostgreSQL 15 on Citus 13.5.0
+
 * Sat Oct 24 2026 Vonng <rh@vonng.com> - 13.5.0-9PGSTY
 - Package upstream 13.5.0 with the established 9PGSTY release revision
 - Align supported PostgreSQL versions with upstream 15-17

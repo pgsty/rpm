@@ -28,6 +28,13 @@ Patch0:         duckdb_fdw-2.0.2-static.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc gcc-c++ make cmake ninja-build python3
+%if 0%{?rhel} == 8
+# DuckDB 2.0 uses reference_wrapper conversions absent from GCC 8's headers.
+BuildRequires:  gcc-toolset-15-gcc-c++ gcc-toolset-15-annobin-plugin-gcc
+%global fdw_cc_arg CC=/opt/rh/gcc-toolset-15/root/usr/bin/gcc PG_CFLAGS=-std=gnu17
+%else
+%global fdw_cc_arg %{nil}
+%endif
 %if %llvm
 BuildRequires:  llvm-devel >= 19.0
 BuildRequires:  clang-devel >= 19.0
@@ -56,15 +63,22 @@ tar -xf %{SOURCE1} -C duckdb --strip-components=1
 
 %build
 %set_build_flags
+%if 0%{?rhel} == 8
+source /opt/rh/gcc-toolset-15/enable
+export CC=/opt/rh/gcc-toolset-15/root/usr/bin/gcc
+export CXX=/opt/rh/gcc-toolset-15/root/usr/bin/g++
+# Keep C17 semantics for older PostgreSQL headers with GCC 15.
+export CFLAGS="$CFLAGS -std=gnu17"
+%endif
 # GCC 11 LTO linking breaks file-backed INSERT (PhysicalBatchInsert NULL state).
 # Linking the same archives as native objects passes. This does not disable
 # PGXS Clang bitcode, its thin index, or PostgreSQL LLVM JIT.
 export PG_LDFLAGS="$LDFLAGS -fno-lto"
 DUCKDB_BUILD_JOBS=%{duckdb_core_jobs} sh ./build-duckdb.sh
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{fdw_cc_arg} %{with_llvm_arg} %{?_smp_mflags}
 
 %install
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{fdw_cc_arg} %{with_llvm_arg} install DESTDIR=%{buildroot}
 
 %files
 %doc README.md
@@ -84,6 +98,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 - Retain built-in Parquet/JSON/ICU, dynamic plugins, LLVM and debug packages
 - Conflict with pg_duckdb for the same PostgreSQL major; require restart on switch
 - Replace obsolete snapshot fixes with a static build and runtime guard patch
+- Use GCC Toolset 15 on EL8 for DuckDB's C++17 library requirements
 
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.0.1-1.git20260529.9354241PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms

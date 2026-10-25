@@ -328,7 +328,7 @@ hydra:
 
 # DuckDB family platform policy:
 # - pg_duckdb and pg_mooncake remain EL8/EL9/EL10 capable.
-# - duckdb_fdw 2.0.2 embeds DuckDB 2.0.0; EL8 requires separate validation.
+# - duckdb_fdw 2.0.2 embeds DuckDB 2.0.0; PG15-18 on EL8/9/10 (EL8: GCC Toolset 15).
 # - pg_lake requires EL9+ for system OpenSSL 3.
 # - pg_ducklake is EL9+ until its EL8/GCC8 filesystem path is fixed and tested.
 #pg_analytics:   # download, obsolete

@@ -1,8 +1,27 @@
 # duckdb_fdw 独立静态打包
 
-当前设计：duckdb_fdw **2.0.2** 内嵌从源码构建的 DuckDB **2.0.0**，同一 PostgreSQL 主版本与 `pg_duckdb` 安装互斥。此文件记录 2026-10-24 的代表性构建和运行验收，不是发布记录。
+当前设计：duckdb_fdw **2.0.2** 内嵌从源码构建的 DuckDB **2.0.0**，同一 PostgreSQL 主版本与 `pg_duckdb` 安装互斥。此文件记录 2026-10-24 的代表性验收及后续完整矩阵验收，不是发布记录。
 
 独立包相关文件：`rpmbuild/SPECS/duckdb_fdw.spec`、本目录的记录文件、`rpmbuild/Makefile` 的 duckdb_fdw 目标及平台说明、新 `patches/duckdb_fdw-2.0.2-static.patch`，以及 `bin/duckdb-fdw-smoke.sql` / `bin/duckdb-fdw-httpfs.sql`。旧 `patches/duckdb_fdw-2.0.1.patch` 删除。
+
+## 2026-10-24 全矩阵补充验收
+
+在首轮代表性验收之后，又以本轮新构建的二进制包完成 **16 个平台 × PG15–18，共 64 个主包坐标**。六个 RPM 平台为 EL8/9/10 × x86_64/aarch64；十个 DEB 平台为 bookworm/trixie/jammy/noble/resolute × amd64/arm64。
+
+| 范围 | 构建、包/ELF/DWARF、SQL/Parquet、11 个 examples、取回 | PG18 官方 httpfs、LLVM JIT、双向安装冲突、残留 preload/重启 |
+|---|---|---|
+| EL8、EL9、EL10，双架构 | 24/24 通过 | 6/6 平台通过 |
+| bookworm、trixie、jammy、noble、resolute，双架构 | 40/40 通过 | 10/10 平台通过 |
+
+每个 PG 都执行原样上游 installcheck，仍保留已知 EXPLAIN CAST 与空行/对齐预期差异；仅规范化这些差异后 SQL 输出一致，不能宣称原样回归全绿。插件/JIT/残留 preload 检查限于每个平台 PG18。全部上游 control 与 11 个 SQL 文件原样安装并逐文件比较。
+
+EL8 完整构建发现 GCC8 在 DuckDB `filter_combiner.cpp:1174` 的 reference_wrapper 转换错误。RPM spec 仅在 EL8 改用 GCC Toolset 15、匹配 annobin 和 C17 native C 语义后，双架构 PG15–18 全部通过。EL10 直接 rpmbuild 编排恢复仓库 wrapper 已有的 `QA_RPATHS=3`，并验证实际 RUNPATH 仅为对应 PG 库目录。Ubuntu 26.04 的符号比较脚本固定 `LC_ALL=C` 解决 uutils sort/comm 的 locale 排序差异，原包重验通过；未修改 DEB recipe 或通用源码补丁。EL8 HTTP 测试兼容 Python3.6。原失败日志均保留。
+
+本轮产物已取回本地 `rpm/yum/<el>.<arch>/` 与 `deb/apt/<codename>/`：24 RPM 主包、24 debuginfo、24 debugsource、24 SRPM；40 DEB 主包、40 dbgsym、10 buildinfo、10 changes，共 **196 个文件**。所有文件独立复核 SHA-256 和大小，DEB 元数据引用与实际文件一致；全部路径被 Git 忽略。
+
+完整矩阵、实际系统/工具链、逐文件哈希、失败与重试记录位于 `/Users/vonng/tmp/duckdb-fdw-matrix-20261024/REPORT.md`、`verification.json`、`artifacts/manifest.json`、`environments/` 和 `logs/`；复现入口为该目录的 `REPRODUCE.md`。未复用首轮代表性二进制包。完整 DWARF、LLVM bitcode/index、动态插件均保留，未用 llvm=0 回退。
+
+必要修复与本文记录保持未提交。未导入生产 staging、签名、发布源码/YUM/APT 或写入 pgext；未重编 pg_duckdb。下面的首轮记录保留其当时的验证范围和制品哈希，后续支持范围以上述矩阵为准。
 
 ## 来源与旧补丁审查
 
@@ -42,11 +61,11 @@ FDW 的 `Conflicts: pg_duckdb_%{pgmajorversion}` 已能阻止两种安装顺序�
 
 从 pg_duckdb 模式切换到 FDW 模式时，修改 `shared_preload_libraries` 并重启 PostgreSQL。卸载/替换包不会卸载已有服务器进程内的库；新连接仍可能继承 postmaster 预加载的旧库。不同数据库或查询顺序不构成隔离。不能承诺同一 backend 内临时切换。
 
-## 验证与复现
+## 首轮代表性验证与复现
 
 工作证据目录：`/Users/vonng/tmp/duckdb-fdw-20261024/`，包含官方 release/tag JSON、下载校验、原工作树状态、构建与测试日志以及最终产物。
 
-已按顺序完成 `pgsty/el9a:build` / PG18 和随后 `pgsty/u24a:build` / PG18 的代表性完整包与运行验收。未执行生产矩阵、仓库导入、签名、推送或发布；pgext 元数据更新仍为外部待办。
+已按顺序完成 `pgsty/el9a:build` / PG18 和随后 `pgsty/u24a:build` / PG18 的代表性完整包与运行验收。首轮尚未执行生产矩阵；后续完整矩阵见上文。两轮均未导入仓库、签名、推送或发布；pgext 元数据更新仍为外部待办。
 
 ### EL9 aarch64 / PG18
 
@@ -116,13 +135,13 @@ rpmbuild -ba --define 'pgmajorversion 18' --define 'duckdb_core_jobs 12' \
 
 完整安装、运行、双向包冲突和残留预加载测试命令见证据目录的 `REPRODUCE.md` 和 `work/`；所建 PostgreSQL 集群仅在独立容器内，使用 `/tmp` 目录、Unix socket 和 55432/55433 端口，未操作用户数据库。
 
-## 后续推广
+## 首轮范围与后续验证
 
-当前完整验证坐标只有两个 ARM64 PG18。另在 EL9 对 PG14.24 做了单独 native/LLVM 编译探测（没有安装包或运行数据库）：正式 2.0.2 的 `duckdb_fdw.c:1747` 使用 PG14 没有的 `boolVal`，`:2357` 使用 `makeBoolean`，LLVM 编译明确失败。日志为 `logs/el9a-pg14-compile-probe-final.log`。没有为此关闭 LLVM；PG14 适配列为后续任务，默认 RPM/DEB 入口、spec 版本门槛和 debian/pgversions 收敛到 PG15–18。这次范围调整不改变 PG18 的编译、链接、依赖和 payload。
+首轮完整验证坐标只有两个 ARM64 PG18；后续 64 坐标矩阵已补齐 PG15–18。另在 EL9 对 PG14.24 做了单独 native/LLVM 编译探测（没有安装包或运行数据库）：正式 2.0.2 的 `duckdb_fdw.c:1747` 使用 PG14 没有的 `boolVal`，`:2357` 使用 `makeBoolean`，LLVM 编译明确失败。日志为 `logs/el9a-pg14-compile-probe-final.log`。没有为此关闭 LLVM；PG14 适配列为后续任务，默认 RPM/DEB 入口、spec 版本门槛和 debian/pgversions 收敛到 PG15–18。这次范围调整不改变 PG18 的编译、链接、依赖和 payload。
 
-PG15–17 尚未完整构建和运行验收。建议下一轮先补 PG17、再 PG15/16；PG14 应先由上游或单独兼容补丁解决该节点 API，再重新验收。随后在原生 x86_64 builder 检查 ABI 和 `linux_amd64` 官方插件。EL10、Debian 12/13、Ubuntu 22.04/26.04 都应分别完成包与插件验收后再推广，不默认展开六/十平台矩阵。
+后续矩阵已按 PG17 优先的顺序补齐 PG15–18，以及各目标系统的原生 x86_64/ARM64 包与 PG18 官方插件验收。PG14 仍需由上游或单独兼容补丁解决节点 API 后再验收，不在本轮支持范围。
 
-EL8 做了有限尝试：`pgsty/el8a:build`，镜像 ID 前缀 `8ba85800f972`，Rocky 8.10 / aarch64 / PG18.6 / 默认 GCC 8.5.0 / CMake 3.26.5 / Python 3.6.8；依赖安装后 LLVM/Clang 为 21.1.8。先 `pig build get`，仅在两个固定归档 404 后复制缺失文件；`./dep duckdb_fdw 18` 成功。以 2 jobs 执行 `timeout 180s rpmbuild -bc --define 'pgmajorversion 18' --define 'duckdb_core_jobs 2' --define '_smp_mflags -j2' SPECS/duckdb_fdw.spec`，配置通过并完成 88/2,018 个步骤后达到时限（退出 124）。未观察到真实编译错误，末尾 `interrupted by user` 来自 timeout，不能当作编译器不兼容证据。没有完成 ELF、RPM、LLVM bridge 或运行验收，也没有切换工具链、禁用 LLVM或开展移植；EL8 状态为待验证。日志为 `logs/el8a-environment-get.log`、`el8a-dependencies.log`、`el8a-probe.log`。
+首轮 EL8 仅做了有限尝试（后续完整构建发现错误并完成工具链适配，见上文）：`pgsty/el8a:build`，镜像 ID 前缀 `8ba85800f972`，Rocky 8.10 / aarch64 / PG18.6 / 默认 GCC 8.5.0 / CMake 3.26.5 / Python 3.6.8；依赖安装后 LLVM/Clang 为 21.1.8。先 `pig build get`，仅在两个固定归档 404 后复制缺失文件；`./dep duckdb_fdw 18` 成功。以 2 jobs 执行 `timeout 180s rpmbuild -bc --define 'pgmajorversion 18' --define 'duckdb_core_jobs 2' --define '_smp_mflags -j2' SPECS/duckdb_fdw.spec`，配置通过并完成 88/2,018 个步骤后达到时限（退出 124）。未观察到真实编译错误，末尾 `interrupted by user` 来自 timeout，不能当作编译器不兼容证据。没有完成 ELF、RPM、LLVM bridge 或运行验收，也没有切换工具链、禁用 LLVM或开展移植；当时 EL8 状态为待验证。日志为 `logs/el8a-environment-get.log`、`el8a-dependencies.log`、`el8a-probe.log`。
 
 PG14 范围收敛后，已比较 PG18 的展开 spec，除注释外相同（`logs/rpm-final-scope-check.log`）；仅刷新 SRPM 以包含最终 spec，PG18 二进制包保持上述已验收文件。官方 2.0.2 的 `.github/workflows/build_and_test.yml` / `release.yml` 也只列 PG15–18，但上游 CI 配置不能替代本配方的实际验收。
 
@@ -130,4 +149,4 @@ pg_duckdb 及其消费者没有使用本次新构建输入，无须因本包独�
 
 ## 外部待办
 
-未修改 pgext 元数据库。后续在授权元数据更新时，需要将 upstream/RPM/DEB 版本设为实际验证值，source 改为两个新归档，移除 pg_duckdb 运行依赖，记录同 PG 主版本安装互斥。不要将只完成代表性构建的结果推广为所有平台可用。
+未修改 pgext 元数据库。后续在授权元数据更新时，需要将 upstream/RPM/DEB 版本设为实际验证值，source 改为两个新归档，移除 pg_duckdb 运行依赖，记录同 PG 主版本安装互斥。元数据应使用本轮实际完成的 PG15–18 矩阵范围，不能扩大到 PG14 或未经检查的其他平台。

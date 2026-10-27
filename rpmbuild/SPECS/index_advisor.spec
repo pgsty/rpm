@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	0.2.1
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL Index Advisor
 License:	PostgreSQL
@@ -13,6 +13,7 @@ BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
+Requires:	hypopg_%{pgmajorversion}
 
 %description
 A PostgreSQL extension for recommending indexes to improve query performance.
@@ -35,5 +36,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude %{pginstdir}/doc/extension/README.md
 
 %changelog
+* Tue Oct 27 2026 Vonng <rh@vonng.com> - 0.2.1-1PGSTY
+- Update to upstream 0.2.1.
+- Require the HypoPG package declared by the extension control file.
+
 * Sat Aug 10 2024 Vonng <rh@vonng.com> - 0.2.0
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

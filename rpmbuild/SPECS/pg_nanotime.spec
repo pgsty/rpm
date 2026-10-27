@@ -14,13 +14,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.2.0
+Version:        0.3.0
 Release:        1PGSTY%{?dist}
 Summary:        Nanosecond-precision timestamp types and clocks for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/bunko666-cloud/pg_nanotime
 Source0:        %{pname}-%{version}.tar.gz
-# https://api.github.com/repos/bunko666-cloud/pg_nanotime/tarball/v0.2.0
+# https://api.github.com/repos/bunko666-cloud/pg_nanotime/tarball/v0.3.0
 # Normalize the official tag archive root with GNU tar.
 
 BuildRequires:  gcc make
@@ -58,6 +58,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Tue Oct 27 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
+- Update pg_nanotime to 0.3.0 with range and multirange support.
+
 * Sat Oct 24 2026 Ruohang Feng <rh@vonng.com> - 0.2.0-1PGSTY
 - Initial RPM release for PostgreSQL 17 through 18.
 - Include PGXS bitcode and retain debuginfo and debugsource packages.

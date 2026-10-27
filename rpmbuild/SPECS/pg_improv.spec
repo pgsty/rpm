@@ -7,13 +7,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.10.0
+Version:        0.11.0
 Release:        1PGSTY%{?dist}
 Summary:        Incremental multidimensional models over PostgreSQL tables
 License:        Apache-2.0 OR MIT
 URL:            https://codeberg.org/gregburd/improv
 Source0:        improv-%{version}.tar.gz
-Patch0:         pg-improv-0.10.0-pgrx-0.19.3.patch
+Patch0:         pg-improv-0.11.0-pgrx-0.19.3.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -66,6 +66,9 @@ cp -a crates/pg_improv/sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extens
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Oct 27 2026 Vonng <rh@vonng.com> - 0.11.0-1PGSTY
+- Update to upstream 0.11.0 and retain the pgrx 0.19.3 dependency patch.
+
 * Fri Oct 23 2026 Vonng <rh@vonng.com> - 0.10.0-1PGSTY
 - Initial RPM release for PostgreSQL 15 through 18
 - Build with pgrx 0.19.3 and the shared locked dependency patch

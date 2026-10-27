@@ -23,14 +23,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.0.0
+Version:	3.1.0
 Release:	1PGSTY%{?dist}
 Summary:	RDF triplestore foreign data wrapper for PostgreSQL
 License:	MIT
 URL:		https://github.com/jimjonesbr/rdf_fdw
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		rdf_fdw-3.0.0.patch
-#           normalized from https://github.com/jimjonesbr/rdf_fdw/archive/refs/tags/v3.0.tar.gz
+#           normalized from https://github.com/jimjonesbr/rdf_fdw/archive/refs/tags/v3.1.tar.gz
 #           Supported: PostgreSQL 9.5+
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -52,7 +51,6 @@ for rdfnode indexes and dependent objects before ALTER EXTENSION UPDATE.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -81,6 +79,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %endif
 
 %changelog
+* Tue Oct 27 2026 Vonng <rh@vonng.com> - 3.1.0-1PGSTY
+- Update to upstream 3.1.0; the release includes the libcurl compatibility logic.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 3.0.0-1PGSTY
 - Update to upstream 3.0 and preserve the EL8 libcurl compatibility fix
 - Record the rdfnode migration requirements for upgrades from 2.x

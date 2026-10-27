@@ -8,7 +8,7 @@
 %global _lto_cflags %{nil}
 
 Name:           %{sname}-%{pgmajorversion}
-Version:        2.18.4.0
+Version:        2.18.6.0
 Release:        1PGSTY%{?dist}
 Summary:        AgensGraph kernel (PG%{pgmajorversion} fork)
 License:        PostgreSQL
@@ -115,6 +115,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Oct 27 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 2.18.6.0-1PGSTY
+- Update AgensGraph to 2.18.6.0 based on PostgreSQL 18.6.
+
 * Tue Oct 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 2.18.4.0-1PGSTY
 - Update to the stable AgensGraph 2.18.4.0 tag based on PostgreSQL 18.4
 - Install the PostgreSQL 18 kernel under /usr/agens-18

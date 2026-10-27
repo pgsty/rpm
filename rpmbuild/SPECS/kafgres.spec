@@ -4,18 +4,19 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} != 16
-%{error:PGSTY builds kafgres 0.3.0 for PostgreSQL 16}
+%{error:PGSTY builds kafgres 0.3.1 for PostgreSQL 16}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.0
+Version:	0.3.1
 Release:	1PGSTY%{?dist}
 Summary:        Kafka protocol broker embedded in PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/kafgres
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.0.tar.gz
-# Build the unmodified upstream release with its committed Cargo.lock.
+#           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.1.tar.gz
+Patch0:		kafgres-0.3.1-pgrx-0.19.3.patch
+# The release targets pgrx 0.16.1; use the locked 0.19.3 dependency update.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -30,6 +31,7 @@ The table engine stores the message log in PostgreSQL tables.
 
 %prep
 %setup -q -n %{srcdir}
+%patch -P0 -p1
 find . -type f -name '._*' -delete
 
 %build
@@ -38,7 +40,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:${PGRX_BIN_DIR:-$HOME/.cargo/bin}:$PATH
 
-PGRX_VERSION=0.16.1
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -75,6 +77,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Oct 27 2026 Vonng <rh@vonng.com> - 0.3.1-1PGSTY
+- Update to kafgres 0.3.1 and migrate the locked build to pgrx 0.19.3.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
 - Update to 0.3.0.
 

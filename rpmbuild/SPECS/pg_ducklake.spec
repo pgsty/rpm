@@ -7,11 +7,11 @@
 %{!?duckdb_core_jobs:%global duckdb_core_jobs 2}
 
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_ducklake 1.0.2 is currently supported on EL9 and later; EL8 GCC8 filesystem compatibility is not validated}
+%{error:pg_ducklake 1.0.3 is currently supported on EL9 and later; EL8 GCC8 filesystem compatibility is not validated}
 %endif
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_ducklake 1.0.2 only supports PostgreSQL 14 through 18}
+%{error:pg_ducklake 1.0.3 only supports PostgreSQL 14 through 18}
 %endif
 
 %{!?llvm:%global llvm 1}
@@ -23,23 +23,23 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.2
+Version:	1.0.3
 Release:	1PGSTY%{?dist}
 Summary:	DuckLake lakehouse extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/relytcloud/pg_ducklake
-# Source0 is a normalized v1.0.2 release tarball with all build-time sources:
-# pg_ducklake b7da9fc28f4845a7c84c026ca6569d2d289ea303
+# Source0 is a normalized v1.0.3 release tarball with all build-time sources:
+# pg_ducklake 9fef142965aa4af3e9da17be7ce210ed90f12ed6
 # duckdb 9a64d338f2fa1d3c1d43c016b09c538b529dd397
 # pg_ducklake/third_party/ducklake 93cc490d9b5554f6fd5322dbef23f41d4fa91bb8
 # pg_ducklake/third_party/duckdb-postgres c89234f0b1985f4ee0f52f16e742a1ab2d4ae4f0
 # pg_ducklake/third_party/duckdb-postgres/database-connector 746b56c4063f3682f4eb4facdc49408ed1885555
 # pg_ducklake/third_party/duckdb-postgres/postgres REL_15_13
 Source0:	%{sname}-%{version}.tar.gz
-# Upstream v1.0.2 CI pins vcpkg 84bab45d, whose roaring port is 4.5.0.
+# Upstream v1.0.3 CI pins vcpkg 84bab45d, whose roaring port is 4.5.0.
 # Keep Pigsty's already-validated 4.7.1; CRoaring 5 is a separate major upgrade.
 Source1:	CRoaring-4.7.1-amalgamation.tar.gz
-Patch0:		pg_ducklake-1.0.2.patch
+Patch0:		pg_ducklake-1.0.3.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc gcc-c++ make cmake ninja-build patch pkgconf-pkg-config ccache
@@ -166,6 +166,10 @@ CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pgi
 %endif
 
 %changelog
+* Tue Oct 27 2026 Vonng <rh@vonng.com> - 1.0.3-1PGSTY
+- Update to pg_ducklake 1.0.3 with the bundled source manifest.
+- Build only the bundled static archives used by the PostgreSQL module.
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.0.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

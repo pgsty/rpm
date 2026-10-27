@@ -20,13 +20,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.1
+Version:	0.3.2
 Release:	1PGSTY%{?dist}
 Summary:	Extension for storing encrypted secrets in the Vault
 License:	Apache-2.0
 URL:		https://github.com/supabase/vault
 Source0:	vault-%{version}.tar.gz
-#           https://github.com/supabase/vault/archive/refs/tags/v0.3.1.tar.gz
+#           https://github.com/supabase/vault/archive/refs/tags/v0.3.2.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  libsodium-devel
@@ -61,6 +61,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
+%{pginstdir}/include/server/extension/%{pname}/
 %exclude /usr/lib/.build-id/*
 
 %if %llvm
@@ -68,6 +69,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Tue Oct 27 2026 Vonng <rh@vonng.com> - 0.3.2-1PGSTY
+- Update to vault 0.3.2 and build against its direct libsodium interface.
+- Package the headers installed by the upstream PGXS Makefile.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.3.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

@@ -26,7 +26,7 @@ spec:
 	pig build spec
 rust:
 	pig build rust
-pgrx: pgrx0192
+pgrx: pgrx0193
 pgrx0161:
 	pig build pgrx -v 0.16.1
 pgrx0170:
@@ -39,6 +39,8 @@ pgrx0191:
 	pig build pgrx -v 0.19.1
 pgrx0192:
 	pig build pgrx -v 0.19.2
+pgrx0193:
+	pig build pgrx -v 0.19.3
 
 ###############################################################
 #                            Summary                          #
@@ -1153,7 +1155,7 @@ pgspider_ext:
 #mongo_fdw
 #hdfs_fdw
 
-wrappers:			# rust pgrx 0.19.2
+wrappers:			# rust pgrx 0.19.3
 	./build wrappers 14 15 16 17 18
 
 sqlite_fdw:
@@ -1404,7 +1406,7 @@ rm-srpm:
 # even if a file with the same name exists
 
 .PHONY: hdr_histogram pg_improv pg_kv pg_try_cast pg_synonym env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
-	pgrx0191 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
+	pgrx0191 pgrx0192 pgrx0193 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorsearch pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \

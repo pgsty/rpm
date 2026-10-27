@@ -15,7 +15,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.4.4
+Version:	4.0.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0 AND PostgreSQL AND LicenseRef-Public-Domain
@@ -56,6 +56,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Tue Oct 27 2026 Ruohang Feng <rh@vonng.com> - 4.0.0-1PGSTY
+- Update to upstream supautils 4.0.0.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 3.4.4-1PGSTY
 - Update to 3.4.4.
 

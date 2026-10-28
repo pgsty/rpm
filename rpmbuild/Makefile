@@ -811,12 +811,13 @@ pg_improv:		# rust pgrx 0.19.3, Rust 1.97+
 pg_agent_gate:           # rust pgrx 0.19.3, PostgreSQL 18 only
 	./build pg_agent_gate 18
 
-.PHONY: pg_agent_gate
-
 pg_integrity_checksums:  # SQL extension, unrelated to the pg_checksums utility
 	./build pg_integrity_checksums 14 15 16 17 18
 
-.PHONY: pg_agent_gate pg_integrity_checksums
+oai_fdw:
+	./build oai_fdw 14 15 16 17 18
+
+.PHONY: pg_agent_gate pg_integrity_checksums oai_fdw
 
 vasco:
 	./build vasco 14 15 16 17 18

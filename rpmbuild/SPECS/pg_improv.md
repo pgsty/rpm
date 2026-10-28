@@ -1,17 +1,17 @@
-# pg_improv 0.10.0 试包
+# pg_improv 0.12.1 试包
 
-2026-10-23 新增 RPM/DEB 配方。按用户要求，Rust 构建统一为 pgrx **0.19.3**。
-上游 0.10.0 的 PG 扩展仍固定在 0.17.0；两侧应用同一份
-`pg-improv-0.10.0-pgrx-0.19.3.patch`，更新独立 workspace 的 Cargo.toml/
+2026-10-28 将 RPM/DEB 配方从 0.11.0 升至 0.12.1，沿用 pgrx **0.19.3**。
+上游 0.12.1 的 PG 扩展仍固定在 0.17.0；两侧应用同一份
+`pg-improv-0.12.1-pgrx-0.19.3.patch`，更新独立 workspace 的 Cargo.toml/
 Cargo.lock，并删除已经废弃的 embed binary 声明和源文件。
 不修改产品逻辑或补写 SQL 迁移。
 
 - 上游：<https://codeberg.org/gregburd/improv>
-- 正式版本：<https://github.com/gburd/improv/releases/tag/v0.10.0>
-- 原始源码：<https://github.com/gburd/improv/archive/refs/tags/v0.10.0.tar.gz>
-- 本地归档：`~/pgsty/repo/ext/src/improv-0.10.0.tar.gz`
-- SHA-256：`4d27747a90a358750ddd05811687618c1de97e1c73743d97c92d98aed38ad626`
-- 补丁 SHA-256：`ec9c111b57fdecfd6021188a20f94a281bac673dc52d96867741df07a924583e`
+- 正式版本：<https://codeberg.org/gregburd/improv/src/tag/v0.12.1>
+- 原始源码：<https://codeberg.org/gregburd/improv/archive/v0.12.1.tar.gz>
+- 本地归档：`~/pgsty/repo/ext/src/improv-0.12.1.tar.gz`
+- SHA-256：`491b23690ee9c2de6deba93ac0f773a7365953b8d580ab9c65cfc300ae188487`
+- 补丁 SHA-256：`b9fa5237b9ea9b833efde7fe01aa7074e7a0552500f154e98c19339c2cbe0da5`
 - License：Apache-2.0 OR MIT；MSRV 1.97；本次 Rust 1.99.0。
 - 支持声明 PG15–18；独立 crate 为 `crates/pg_improv`，不是根 workspace。
 
@@ -20,17 +20,30 @@ Cargo.lock，并删除已经废弃的 embed binary 声明和源文件。
 ```sh
 pig build get pg_improv
 # 未发布到源码镜像时，只复制该缺失归档到 builder 的 SOURCES。
-pig build pgrx -v 0.19.3 --pg 17
+pig build pgrx -v 0.19.3 --pg 18
 cd ~/rpmbuild
-./dep pg_improv 17
-./build pg_improv 17
+./dep pg_improv 18
+./build pg_improv 18
 ```
 
 配方执行 locked fetch、离线打包、lockfile 不变检查，保留 release DWARF。
-主包安装 SO、control、生成的 0.10.0 base SQL 以及上游原有三条 upgrade SQL。
+主包安装 SO、control、生成的 0.12.1 base SQL 以及上游提供的 upgrade SQL。
 Rust/pgrx 不生成 PGXS bitcode；没有关闭 LLVM 或生成扩展 llvmjit 子包。
 
-## 已验证范围
+## 本次验证：0.12.1，2026-10-28
+
+Rocky Linux 9.8 aarch64 / Ubuntu 24.04.5 arm64、PostgreSQL 18.6 均通过
+构建、安装和上游 `txn.sh`、`finance.sh`。主包、RPM debuginfo/debugsource、
+DEB dbgsym 的 payload、实际 DWARF 和 build-id 均通过核对；lockfile 未变化。
+EL9 只在临时 finance 测试脚本中关闭 logging_collector，避免日志路径冲突。
+其他 PG 版本未做本批二进制构建或运行验收。
+
+产物与完整证据：`/Users/vonng/tmp/pgxn-packaging-20261028-hassp03o/`。
+本批报告位于本地忽略的 `docs/pgxn-pilot-20261028.md`，未提交或发布。
+
+## 历史验证范围：0.10.0，2026-10-23
+
+以下记录属于旧版，不代表 0.12.1 的其他 PG 版本已通过验收。
 
 - `pgsty/el9a:build`：Rocky Linux 9.8 / aarch64 / PostgreSQL 17.11。
 - `pgsty/u24a:build`：Ubuntu 24.04.5 noble / arm64 / PostgreSQL 17.11。

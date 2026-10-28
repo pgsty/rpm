@@ -7,13 +7,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.11.0
+Version:        0.12.1
 Release:        1PGSTY%{?dist}
 Summary:        Incremental multidimensional models over PostgreSQL tables
 License:        Apache-2.0 OR MIT
 URL:            https://codeberg.org/gregburd/improv
 Source0:        improv-%{version}.tar.gz
-Patch0:         pg-improv-0.11.0-pgrx-0.19.3.patch
+# https://codeberg.org/gregburd/improv/archive/v0.12.1.tar.gz
+# SHA256: 491b23690ee9c2de6deba93ac0f773a7365953b8d580ab9c65cfc300ae188487
+Patch0:         pg-improv-0.12.1-pgrx-0.19.3.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -28,7 +30,7 @@ Numeric model values use double precision.
 
 %prep
 %setup -q -n improv-%{version}
-%patch -P0 -p1
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -66,6 +68,10 @@ cp -a crates/pg_improv/sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extens
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Oct 28 2026 Ruohang Feng <rh@vonng.com> - 0.12.1-1PGSTY
+- Update to upstream 0.12.1 and refresh the shared pgrx 0.19.3 patch.
+- Preserve the upstream SQL files and locked dependency graph.
+
 * Tue Oct 27 2026 Vonng <rh@vonng.com> - 0.11.0-1PGSTY
 - Update to upstream 0.11.0 and retain the pgrx 0.19.3 dependency patch.
 

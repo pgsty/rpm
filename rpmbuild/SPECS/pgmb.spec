@@ -4,17 +4,17 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	A simple PostgreSQL Message Broker system
 License:	PostgreSQL
 URL:		https://github.com/fraruiz/pgmb
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		pgmb-1.0.0-extension-schema.patch
 BuildArch:	noarch
 #           https://github.com/fraruiz/pgmb/archive/refs/tags/release.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion}
-Recommends: pgsql_http_%{pgmajorversion}
+Requires:	postgresql%{pgmajorversion}-server pg_cron_%{pgmajorversion} pgsql_http_%{pgmajorversion}
 
 %description
 A lightweight message broker system built inside PostgreSQL. pgmb enables
@@ -25,6 +25,7 @@ message publishing, and scheduled dispatch via pg_cron.
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH make
@@ -37,8 +38,12 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %doc README.md
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
-%exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Oct 28 2026 Vonng <rh@vonng.com> - 1.0.0-2PGSTY
+- Require canonical pgsql_http instead of recommending legacy pg_http
+- Avoid recreating the schema already declared by the extension control file
+- Package the SQL-only extension as noarch
+
 * Thu Feb 12 2026 Vonng <rh@vonng.com> - 1.0.0-1PIGSTY
 - Initial RPM release, used by PGSTY/PIGSTY <https://pgsty.com>

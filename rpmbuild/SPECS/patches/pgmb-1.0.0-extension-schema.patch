@@ -1,0 +1,17 @@
+From: PGSTY Packaging <rh@vonng.com>
+Subject: [PATCH] avoid recreating the extension control schema
+
+PostgreSQL creates pgmb before running the install script because the control
+file specifies schema = 'pgmb'. Repeating CREATE SCHEMA IF NOT EXISTS fails
+the extension ownership check. Leave schema creation to CREATE EXTENSION.
+
+--- a/pgmb--1.0.0.sql
++++ b/pgmb--1.0.0.sql
+@@ -5,7 +5,6 @@
+ -- because it is automatically created by postgres due to being declared in
+ -- the extension control fi
+ 
+-CREATE SCHEMA IF NOT EXISTS pgmb;
+ 
+ CREATE TABLE IF NOT EXISTS pgmb.workers (
+     "id"             uuid NOT NULL PRIMARY KEY,

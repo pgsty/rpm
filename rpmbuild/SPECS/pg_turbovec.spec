@@ -8,15 +8,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.14.1
+Version:        2.15.0
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.14.1.tar.gz
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.15.0.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
-Patch0:         pg-turbovec-2.14.1.patch
+Patch0:         pg-turbovec-2.15.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -85,6 +85,10 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Oct 29 2026 Ruohang Feng <rh@vonng.com> - 2.15.0-1PGSTY
+- Update to upstream 2.15.0.
+- Fix empty-IVF fallback and reporting; cache query decoding and rotation matrices.
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 2.14.1-1PGSTY
 - Update to upstream 2.14.1.
 

@@ -18,13 +18,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.0
+Version:	1.6.1
 Release:	1PGSTY%{?dist}
 Summary:	Incremental Data Processing in PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/CrunchyData/pg_incremental
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/CrunchyData/pg_incremental/archive/refs/tags/v1.5.0.tar.gz
+#           https://github.com/CrunchyData/pg_incremental/archive/refs/tags/v1.6.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -61,6 +61,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Thu Oct 29 2026 Ruohang Feng <rh@vonng.com> - 1.6.1-1PGSTY
+- Update to upstream 1.6.1.
+- Include upstream search_path and pipeline privilege security fixes.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.5.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

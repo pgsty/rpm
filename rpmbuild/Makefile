@@ -1084,10 +1084,12 @@ pagevis:
 #pgaudit
 #pgauditlogtofile
 #pg_auth_mon
-#credcheck
 #pg_jobmon
 #logerrors
 #set_user
+
+credcheck:      # EL8 security supplement; reuse PGDG on other platforms
+	./build credcheck 14 15 16 17 18
 
 supautils:
 	./build supautils 14 15 16 17 18

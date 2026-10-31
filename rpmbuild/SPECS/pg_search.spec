@@ -10,14 +10,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.26.3
+Version:	0.26.4
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0-or-later
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
 Source1:	pg_search_collect_third_party_licenses-%{version}.py
-# Upstream 0.26.3 already pins pgrx 0.19.3 in its manifests and Cargo.lock.
+# Upstream 0.26.4 already pins pgrx 0.19.3 in its manifests and Cargo.lock.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang git rust rustfmt openssl-devel openblas-devel libicu-devel pkgconfig python3
@@ -88,6 +88,10 @@ cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 0.26.4-1PGSTY
+- Update to upstream 0.26.4.
+- Build with the upstream locked pgrx 0.19.3 dependencies.
+
 * Fri Oct 23 2026 Ruohang Feng <rh@vonng.com> - 0.26.3-1PGSTY
 - Update to upstream 0.26.3 with pgrx 0.19.3.
 - Refresh locked dependency license source revisions.

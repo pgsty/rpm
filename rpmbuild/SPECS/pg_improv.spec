@@ -7,15 +7,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.12.1
+Version:        0.12.2
 Release:        1PGSTY%{?dist}
 Summary:        Incremental multidimensional models over PostgreSQL tables
 License:        Apache-2.0 OR MIT
 URL:            https://codeberg.org/gregburd/improv
 Source0:        improv-%{version}.tar.gz
-# https://codeberg.org/gregburd/improv/archive/v0.12.1.tar.gz
-# SHA256: 491b23690ee9c2de6deba93ac0f773a7365953b8d580ab9c65cfc300ae188487
-Patch0:         pg-improv-0.12.1-pgrx-0.19.3.patch
+# https://codeberg.org/gregburd/improv/archive/v0.12.2.tar.gz
+# SHA256: db14fc1f3f7e7d5425c5230122baeafda6e11583fbb91107c8d09ca521265e15
+Patch0:         pg-improv-0.12.2-pgrx-0.19.3.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -36,6 +36,7 @@ patch -p1 --fuzz=0 < %{PATCH0}
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/improv-%{version}/crates/pg_improv/target}"
 cd crates/pg_improv
 PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
@@ -53,7 +54,8 @@ test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')"
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-PKGDIR=crates/pg_improv/target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/improv-%{version}/crates/pg_improv/target}"
+PKGDIR="$TARGET_DIR/release/%{pname}-pg%{pgmajorversion}%{pginstdir}"
 cp -a "$PKGDIR/lib/%{pname}.so" %{buildroot}%{pginstdir}/lib/
 cp -a "$PKGDIR/share/extension/"* %{buildroot}%{pginstdir}/share/extension/
 # Preserve upstream migration files; cargo-pgrx handles the generated base SQL.
@@ -68,6 +70,10 @@ cp -a crates/pg_improv/sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extens
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 0.12.2-1PGSTY
+- Update to upstream 0.12.2.
+- Refresh the locked pgrx 0.19.3 compatibility patch.
+
 * Wed Oct 28 2026 Ruohang Feng <rh@vonng.com> - 0.12.1-1PGSTY
 - Update to upstream 0.12.1 and refresh the shared pgrx 0.19.3 patch.
 - Preserve the upstream SQL files and locked dependency graph.

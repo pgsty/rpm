@@ -8,16 +8,18 @@
 %endif
 
 Name:		pg_anon_%{pgmajorversion}
-Version:	3.2.3
+Version:	3.3.2
 Release:	1PGSTY%{?dist}
 Summary:	Anonymization & Data Masking for PostgreSQL
 License:	PostgreSQL
 URL:		https://gitlab.com/dalibo/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#           https://gitlab.com/dalibo/postgresql_anonymizer/-/archive/3.2.3/postgresql_anonymizer-3.2.3.tar.gz
-# Repacked with pgrx 0.19.2; SOURCE_MANIFEST records the manifest and lock changes.
+#           https://gitlab.com/dalibo/postgresql_anonymizer/-/archive/3.3.2/postgresql_anonymizer-3.3.2.tar.gz
+# Upstream 3.3.2 pins pgrx 0.19.3; fix only its stale package version in Cargo.lock.
+Patch0:		pg-anon-3.3.2-lock-version.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -27,15 +29,16 @@ PostgreSQL database.
 
 %prep
 %setup -q -n %{srcdir}
-# The source archive includes the pgrx 0.19.2 dependency update.
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -55,9 +58,10 @@ test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension/anon
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a "$TARGET_DIR"/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 cp -a %{_builddir}/%{srcdir}/data/*.csv %{buildroot}%{pginstdir}/share/extension/anon/
 cp -a %{_builddir}/%{srcdir}/data/en_US/fake/*.csv %{buildroot}%{pginstdir}/share/extension/anon/
 cp -a %{_builddir}/%{srcdir}/data/en_US %{buildroot}%{pginstdir}/share/extension/anon/
@@ -73,6 +77,10 @@ cp -a %{_builddir}/%{srcdir}/data/fr_FR %{buildroot}%{pginstdir}/share/extension
 %exclude /usr/lib/.build-id
 
 %changelog
+* Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 3.3.2-1PGSTY
+- Update to upstream 3.3.2.
+- Build with upstream pgrx 0.19.3 and correct the stale root package lock version.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 3.2.3-1PGSTY
 - Update to 3.2.3.
 

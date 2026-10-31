@@ -20,7 +20,7 @@
 %endif
 
 Name:		groonga
-Version:	16.1.4
+Version:	16.1.5
 Release:	1PGSTY%{?dist}
 Summary:	An Embeddable Fulltext Search Engine
 
@@ -33,6 +33,9 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildRequires:	cmake >= 3.22
 BuildRequires:	gcc
 BuildRequires:	gcc-c++
+%if 0%{?rhel} == 8
+BuildRequires:	gcc-toolset-15-gcc gcc-toolset-15-gcc-c++ gcc-toolset-15-annobin-plugin-gcc
+%endif
 BuildRequires:	make
 BuildRequires:	redhat-rpm-config
 BuildRequires:	systemd-rpm-macros
@@ -240,7 +243,18 @@ Munin plugins for Groonga
 
 
 %build
+%if 0%{?rhel} == 8
+# Arrow 25 headers require C++20, unavailable in the EL8 base GCC 8.
+source /opt/rh/gcc-toolset-15/enable
+export CC=/opt/rh/gcc-toolset-15/root/usr/bin/gcc
+export CXX=/opt/rh/gcc-toolset-15/root/usr/bin/g++
+%endif
 %set_build_flags
+%if 0%{?rhel} == 8
+# GCC 15 rejects uninstantiated template bodies in EL8 simdjson 3.6.3.
+# Retain the system ABI and the pre-GCC-15 deferred template checking.
+export CXXFLAGS="$CXXFLAGS -Wno-template-body"
+%endif
 %cmake \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
@@ -524,6 +538,11 @@ exit 0
 %endif
 
 %changelog
+* Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 16.1.5-1PGSTY
+- Update to upstream 16.1.5.
+- Use GCC Toolset 15 on EL8 for the Arrow 25 C++20 headers.
+- Preserve the EL8 system simdjson ABI with deferred template diagnostics.
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 16.1.4-1PGSTY
 - Update to upstream 16.1.4.
 

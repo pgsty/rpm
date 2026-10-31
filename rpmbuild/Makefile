@@ -233,7 +233,7 @@ pg_search:      # rust pgrx 0.19.3, OpenBLAS
 	install -D -m 0644 SPECS/pg_search_collect_third_party_licenses.py SOURCES/pg_search_collect_third_party_licenses-0.26.4.py
 	./build pg_search 15 16 17 18
 
-# Groonga is independent of the PostgreSQL major; build it once on EL9.
+# Groonga is independent of the PostgreSQL major; build it once per EL/architecture.
 groonga:
 	./build groonga 18
 

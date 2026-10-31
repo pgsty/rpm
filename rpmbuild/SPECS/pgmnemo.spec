@@ -7,13 +7,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.20.0
+Version:	0.21.0
 Release:	1PGSTY%{?dist}
 Summary:	Provenance-gated vector memory for LLM agents in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/pgmnemo/pgmnemo
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgmnemo/0.20.0/pgmnemo-0.20.0.zip
+#           https://github.com/pgmnemo/pgmnemo/archive/refs/tags/v0.21.0.tar.gz
 BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -26,7 +26,6 @@ agents in PostgreSQL. It installs SQL schema objects and depends on pgvector.
 
 %prep
 %setup -q -n %{sname}-%{version}
-cp -f extension/%{pname}.control %{pname}.control
 
 %build
 # SQL-only PGXS extension, nothing to compile.
@@ -44,6 +43,9 @@ cp -f extension/%{pname}.control %{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 0.21.0-1PGSTY
+- Update to upstream 0.21.0.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.20.0-1PGSTY
 - Update to upstream PGXN 0.20.0
 - Package the complete upstream SQL upgrade chain from 0.16.1

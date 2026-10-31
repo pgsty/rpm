@@ -2,11 +2,10 @@
 %global sname pgroonga
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?rhel} == 9
-# Require the repaired ABI provider while allowing newer upstream releases.
-%global groonga_min_version 16.1.4-1PGSTY.el9
-%else
-%global groonga_min_version 15.1.7
+%global groonga_min_version 16.1.5
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pgroonga supports PostgreSQL 14 through 18}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -22,9 +21,9 @@
 Name:		%{sname}_%{pgmajorversion}
 Version:	4.1.0
 %if 0%{?rhel} == 9
-Release:	3PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 %else
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 %endif
 Summary:	Fast full-text search plugin for PostgreSQL based on Groonga
 Group:		Applications/Text
@@ -34,6 +33,9 @@ Source0:	pgroonga-%{version}.tar.gz
 
 BuildRequires:	ccache
 BuildRequires:	gcc
+%if 0%{?rhel} == 8
+BuildRequires:	gcc-toolset-15-gcc gcc-toolset-15-annobin-plugin-gcc
+%endif
 BuildRequires:	groonga-devel >= %{groonga_min_version}
 BuildRequires:	make
 BuildRequires:	meson
@@ -55,7 +57,15 @@ This package provides a fast full-text search plugin for PostgreSQL based on Gro
 %setup -q -n pgroonga-%{version}
 
 %build
+%if 0%{?rhel} == 8
+# Match the compiler used by Groonga headers (including __bf16).
+source /opt/rh/gcc-toolset-15/enable
+export CC=/opt/rh/gcc-toolset-15/root/usr/bin/gcc
+%endif
 %set_build_flags
+%if 0%{?rhel} == 8
+export CFLAGS="$CFLAGS -std=gnu17"
+%endif
 # Upstream Meson builds shared modules only; it has no LLVM bitcode target.
 meson setup build \
   -Dinstall_to_postgresql=true \
@@ -93,6 +103,11 @@ EOF
 %{pginstdir}/lib/*.so
 
 %changelog
+* Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 4.1.0-4PGSTY
+- Rebuild against Groonga 16.1.5 on EL8, EL9 and EL10.
+- Use release 4 on EL9 and release 2 on EL8/EL10 after prior publication.
+- Match GCC Toolset 15 on EL8 to the rebuilt Groonga headers.
+
 * Thu Oct 22 2026 Ruohang Feng <rh@vonng.com> - 4.1.0-3PGSTY
 - Rebuild on EL9 against Groonga 16.1.4.
 

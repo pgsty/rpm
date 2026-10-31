@@ -9,13 +9,13 @@
 %endif
 
 Name:		%{rpmname}_%{pgmajorversion}
-Version:	5.0.0
+Version:	5.0.1
 Release:	1PGSTY%{?dist}
 Summary:	Table change logging and rollback extension for PostgreSQL
 License:	GPL-3.0-or-later
 URL:		https://github.com/dalibo/emaj
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/E-Maj/5.0.0/E-Maj-5.0.0.zip
+#           https://github.com/dalibo/emaj/archive/refs/tags/v5.0.1.tar.gz
 BuildArch:	noarch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -48,6 +48,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %{pginstdir}/share/%{pname}/
 
 %changelog
+* Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 5.0.1-1PGSTY
+- Update to upstream 5.0.1.
+
 * Thu Jul 30 2026 Vonng <rh@vonng.com> - 5.0.0-2PIGSTY
 - Align package name with PGDG and obsolete emaj_$v
 

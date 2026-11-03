@@ -12,7 +12,7 @@
 # /usr/pgsql-NN paths; retain ELF build-id notes but do not package the links.
 
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_lake 3.5.9 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
+%{error:pg_lake 3.5.10 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
 %endif
 
 # The bundled runtimes are private implementation details.  Do not let their
@@ -22,7 +22,7 @@
 %global __requires_exclude ^(libduckdb\\.so|libavro\\.so\\.24).*$
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_lake 3.5.9 only supports PostgreSQL 16 through 18}
+%{error:pg_lake 3.5.10 only supports PostgreSQL 16 through 18}
 %endif
 
 %{!?llvm:%global llvm 1}
@@ -34,7 +34,7 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        3.5.9
+Version:        3.5.10
 Release:	1PGSTY%{?dist}
 Summary:        PostgreSQL lakehouse extensions powered by DuckDB
 License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND ICU AND ISC AND PostgreSQL AND Unicode-3.0 AND Zlib AND curl AND OpenSSL AND LicenseRef-TPC-EULA-2.2
@@ -42,7 +42,7 @@ URL:            https://github.com/Snowflake-Labs/pg_lake
 # Repacked upstream release with the pinned Avro, DuckDB, and duckdb-postgres
 # submodules required by the build.
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pg_lake-3.5.9.patch
+Patch0:         pg_lake-3.5.10.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
@@ -351,6 +351,10 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %endif
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 3.5.10-1PGSTY
+- Update to pg_lake 3.5.10 with the upstream Brotli 1.1.1 security fix.
+- Regenerate packaging patches with valid unified diff context.
+
 * Tue Oct 27 2026 Vonng <rh@vonng.com> - 3.5.9-1PGSTY
 - Update to pg_lake 3.5.9 with the pinned DuckDB and Avro runtimes.
 

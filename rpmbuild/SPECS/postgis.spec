@@ -1,5 +1,9 @@
 # Based on the PGDG EL9 source RPM; see bin/postgis-sources.json.
-%global postgismajorversion 3.6
+# PostGIS 3.7 is the current package layout on all EL targets. EL8 selects
+# older GIS library branches below where required by the platform.
+%global postgismajorversion 3.7
+%global postgismicroversion 0
+%global postgis_legacy_extensions 0
 %global postgissomajorversion 3
 %global postgiscurrmajorversion %(echo %{postgismajorversion}|tr -d '.')
 %global sname	postgis
@@ -62,7 +66,7 @@
 
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Name:		%{sname}%{postgiscurrmajorversion}_%{pgmajorversion}
-Version:	%{postgismajorversion}.4
+Version:	%{postgismajorversion}.%{postgismicroversion}
 Release:        1PGSTY%{?dist}
 %if 0%{?rhel} == 8
 # EL8 otherwise seeds identical client binaries only with VERSION-RELEASE.
@@ -132,7 +136,9 @@ BuildRequires:  clang-devel >= 19.0
 Requires:	postgresql%{pgmajorversion} geos%{geosmajorversion} >= %{geosfullversion}
 Requires:	postgresql%{pgmajorversion}-contrib proj%{projmajorversion} >= %{projfullversion}
 Requires:	libgeotiff%{libgeotiffmajorversion}
+%if %{postgis_legacy_extensions}
 Requires:	hdf5
+%endif
 Requires:	gdal%{gdalmajorversion}-libs >= %{gdalfullversion}
 %if 0%{?suse_version} == 1500
 Requires:	libjson-c5
@@ -145,8 +151,11 @@ Requires:	libxerces-c-3_3
 BuildRequires:	libxerces-c-devel
 %endif
 %if 0%{?fedora} >= 43 || 0%{?rhel} >= 8
-Requires:	json-c xerces-c
+Requires:	json-c
+%if %{postgis_legacy_extensions}
+Requires:	xerces-c
 BuildRequires:	xerces-c-devel
+%endif
 %endif
 
 Provides:	%{sname} = %{version}-%{release}
@@ -229,6 +238,8 @@ autoconf
 %endif
 %if %{sfcgal}
 	--with-sfcgal=%{_bindir}/sfcgal-config \
+%else
+	--without-sfcgal \
 %endif
 %if %{shp2pgsqlgui}
 	--with-gui \
@@ -295,11 +306,13 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc COPYING CREDITS NEWS TODO README.%{sname} doc/html loader/README.* doc/%{sname}.xml doc/ZMSgeoms.txt
+%doc COPYING CREDITS NEWS README.%{sname} doc/html loader/README.* doc/%{sname}.xml doc/ZMSgeoms.txt
 %license LICENSE.TXT
 %{pginstdir}/bin/postgis
 %{pginstdir}/bin/postgis_restore
+%if %{postgis_legacy_extensions}
 %{pginstdir}/doc/extension/README.address_standardizer
+%endif
 %{pginstdir}/share/contrib/%{sname}-%{postgismajorversion}/postgis.sql
 %{pginstdir}/share/contrib/%{sname}-%{postgismajorversion}/postgis_comments.sql
 %{pginstdir}/share/contrib/%{sname}-%{postgismajorversion}/postgis_upgrade*.sql
@@ -318,14 +331,18 @@ fi
 %endif
 %{pginstdir}/share/extension/%{sname}.control
 %{pginstdir}/lib/%{sname}_topology-%{postgissomajorversion}.so
+%if %{postgis_legacy_extensions}
 %{pginstdir}/lib/address_standardizer-3.so
 %{pginstdir}/share/extension/address_standardizer*.sql
 %{pginstdir}/share/extension/address_standardizer*.control
+%endif
 %{pginstdir}/share/contrib/%{sname}-%{postgismajorversion}/sfcgal_comments.sql
 %{pginstdir}/share/contrib/%{sname}-%{postgismajorversion}/raster_comments.sql
 %{pginstdir}/share/contrib/%{sname}-%{postgismajorversion}/spatial*.sql
+%if %{postgis_legacy_extensions}
 %{pginstdir}/share/extension/%{sname}_tiger_geocoder*.sql
 %{pginstdir}/share/extension/%{sname}_tiger_geocoder.control
+%endif
 %{pginstdir}/share/extension/%{sname}_topology-*.sql
 %{pginstdir}/share/extension/%{sname}_topology.control
 %{pginstdir}/share/contrib/%{sname}-%{postgismajorversion}/uninstall_legacy.sql
@@ -341,8 +358,10 @@ fi
 %{_mandir}/%{name}/man1/*
 
 %if %llvm
+%if %{postgis_legacy_extensions}
    %{pginstdir}/lib/bitcode/address_standardizer*.bc
    %{pginstdir}/lib/bitcode/address_standardizer-3/*.bc
+%endif
    %{pginstdir}/lib/bitcode/postgis-%{postgissomajorversion}*.bc
    %{pginstdir}/lib/bitcode/postgis_topology-%{postgissomajorversion}/*.bc
    %{pginstdir}/lib/bitcode/postgis_topology-%{postgissomajorversion}*.bc
@@ -386,11 +405,20 @@ fi
 %if %utils
 %files utils
 %defattr(-,root,root)
+%if %{postgis_legacy_extensions}
 %doc utils/README
+%else
+%doc utils/README.md
+%endif
 %attr(755,root,root) %{_datadir}/%{name}/*.pl
 %endif
 
 %changelog
+* Mon Nov 02 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
+- Update all EL builds to PostGIS 3.7.0.
+- Drop the address standardizer and Tiger geocoder payloads removed upstream.
+- Remove obsolete HDF5 and Xerces-C dependencies and track the new utility README.
+
 * Sun Oct 04 2026 Ruohang Feng <rh@vonng.com> - 3.6.4-1PGSTY
 - Import PGDG PostGIS 3.6.4 for PostgreSQL 14 through 18.
 - Keep LLVM bitcode in the main package without an extension llvmjit package.

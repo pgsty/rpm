@@ -35,22 +35,29 @@ so the automatic split has real DWARF to package.
 
 ## PostGIS and the PGDG GIS stack
 
-`rpmbuild/SPECS/postgis.spec` builds PostGIS 3.6.4 for PostgreSQL 14–18 with
-PGDG's `postgis36_<major>` package names and versioned GIS library paths.
-Raster, SFCGAL, topology, address standardizer, Tiger geocoder, client tools,
-GUI, utilities, and PDF documentation are retained. LLVM bitcode belongs to
-the main package. Native payloads retain debuginfo and debugsource packages;
+`rpmbuild/SPECS/postgis.spec` builds PostGIS 3.7.0 for PostgreSQL 14–18 on
+EL8/EL9/EL10 with `postgis37_<major>` package names. Raster, SFCGAL, topology,
+client tools, GUI, utilities, and PDF documentation are retained. LLVM bitcode belongs to the
+main package. Native payloads retain debuginfo and debugsource packages;
 the empty upstream `devel` package is omitted. GDAL's Python tools and
 Javadoc are `noarch`; its Java and Python native bindings retain debug
 packages. The Javadoc patch fixes invalid links and makes generator errors
 fail the build.
+
+PostGIS 3.7 no longer ships `address_standardizer` or
+`postgis_tiger_geocoder` in the core source tree. They are built independently
+from their upstream archives as `address_standardizer_<major>` (3.7.0) and
+`postgis_tiger_geocoder_<major>` (2025.2); the Tiger package is limited to
+PostgreSQL 16–18 and is `noarch`.
 
 The EL9/EL10 build order is:
 
 1. `geos314` 3.14.1, `proj98` 9.8.1, and `sfcgal` 2.2.0.
 2. `libgeotiff17` 1.7.4 and `librttopo` 1.1.0, then `libspatialite50` 5.1.0.
 3. `gdal313` 3.13.3, including the PGDG Python 3.12 and Java bindings.
-4. `postgis` 3.6.4 for the selected PostgreSQL major.
+4. `postgis` 3.7.0 for the selected PostgreSQL major.
+5. `address_standardizer` 3.7.0 and `postgis_tiger_geocoder` 2025.2 for the
+   selected PostgreSQL major.
 
 Build and install each library's runtime and development RPMs before
 building its consumers. On EL9/EL10, system dependencies including CGAL,
@@ -81,9 +88,12 @@ manifest there, then run `./dep <package> 18` and `./build <package> 18`.
 The local checkout's `rpmbuild/SOURCES/` must remain empty.
 
 After installing the built RPMs, run `bin/postgis-test.sql` with `psql -f`
-in a disposable database. It creates all seven PostGIS extensions and
+in a disposable database. It creates the four PostGIS 3.7.0 extensions and
 checks GEOS overlay, PROJ transformation, SFCGAL 3D area, GDAL GeoTIFF
-export/import, and topology creation. A pilot on one builder does not
+export/import, and topology creation. The two split packages can then be
+checked separately with `CREATE EXTENSION address_standardizer`,
+`CREATE EXTENSION address_standardizer_data_us`, and
+`CREATE EXTENSION postgis_tiger_geocoder`. A pilot on one builder does not
 validate the other platforms or publish any package.
 
 The 2026-10-04 full build passed on `pgsty/el8{,a}:build`,

@@ -14,7 +14,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.13.0
+Version:	1.13.1
 Release:	1PGSTY%{?dist}
 Summary:	Semiring provenance and uncertainty management for PostgreSQL
 License:	MIT
@@ -78,7 +78,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} -f Makefile.internal PG_CXXFLAGS="-g" %{?_
 
 %files
 %license LICENSE
-%doc README.md
+%doc doc/provsql.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}--*.sql
@@ -89,6 +89,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} -f Makefile.internal PG_CXXFLAGS="-g" %{?_
 %endif
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.13.1-1PGSTY
+- Update to 1.13.1 with bounded circuit evaluation and cancellation fixes.
+- Retain LLVM output, complete debug packages, and EL8 toolset compatibility.
+- Install the documentation target instead of the upstream README symlink.
+
 * Fri Oct 23 2026 Ruohang Feng <rh@vonng.com> - 1.13.0-1PGSTY
 - Use GCC Toolset 15 on EL8 to retain upstream shortest-roundtrip float text.
 - Leave the EL9 and EL10 compiler paths and source code unchanged.

@@ -1,22 +1,19 @@
 Name:           cloudberry
-Version:        2.1.0
+Version:        2.2.0
 Release:        1PGSTY%{?dist}
 Summary:        High-performance open-source data warehouse based on PostgreSQL/Greenplum
 
 License:        Apache-2.0
 URL:            https://cloudberry.apache.org
-Source0:        apache-cloudberry-2.1.0-incubating-src.tar.gz
-Source1:        psutil-5.7.0.tar.gz
-Source2:        PyGreSQL-5.2.tar.gz
-Source3:        PyYAML-5.4.1.tar.gz
+Source0:        apache-cloudberry-2.2.0-incubating-src.tar.gz
+Source1:        psutil-7.2.2.tar.gz
+Source2:        PyGreSQL-5.2.5.tar.gz
+Source3:        PyYAML-6.0.1.tar.gz
 Source4:        Cython-0.29.37.tar.gz
-Patch0:         cloudberry-2.1.0-env-symlink.patch
-Patch1:         cloudberry-2.1.0-initdb-cdb-initd-errno.patch
-Patch2:         cloudberry-2.1.0-el10-build-fixes.patch
-Patch3:         cloudberry-2.1.0-el8-pax-storage-build-fixes.patch
+Patch2:         cloudberry-2.2.0-el10-build-fixes.patch
+Patch3:         cloudberry-2.2.0-el8-pax-storage-build-fixes.patch
 Patch4:         cloudberry-2.1.0-regress-build-flags.patch
-Patch5:         cloudberry-2.1.0-gpmgmt-offline-python.patch
-Patch6:         cloudberry-2.1.0-python313-runtime.patch
+Patch5:         cloudberry-2.2.0-gpmgmt-offline-python.patch
 %global cb_prefix /usr/cloudberry
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{cb_prefix}/lib(64)?/.*\\.so.*$
@@ -41,12 +38,9 @@ Cloudberry is an advanced, open-source, massively parallel processing (MPP)
 data warehouse developed from PostgreSQL and Greenplum.
 
 %prep
-%setup -q -n apache-cloudberry-2.1.0-incubating
-%patch -P 0 -p1
-%patch -P 1 -p1
+%setup -q -n apache-cloudberry-2.2.0-incubating
 %patch -P 4 -p1
 %patch -P 5 -p1
-%patch -P 6 -p1
 %if 0%{?rhel} >= 10
 %patch -P 2 -p1
 %endif
@@ -178,6 +172,11 @@ fi
 /sbin/ldconfig
 
 %changelog
+* Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1PGSTY
+- Update to the official Apache Cloudberry 2.2.0 incubating source release.
+- Refresh platform patches and the pinned offline Python dependencies.
+- Drop environment and initdb fixes already merged upstream.
+
 * Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
 - Use shlex quoting for Python 3.13 and require the gpMgmt pager
 

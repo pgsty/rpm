@@ -7,13 +7,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.3.0
+Version:        0.4.0
 Release:        1PGSTY%{?dist}
 Summary:        Tools for interfacing with the PostgreSQL catalog
 License:        MIT
-URL:            https://github.com/decibel/cat_tools
+URL:            https://github.com/Postgres-Extensions/cat_tools
 Source0:        %{sname}-%{version}.tar.gz
-#               normalized from https://api.pgxn.org/dist/cat_tools/0.3.0/cat_tools-0.3.0.zip
+#               https://github.com/Postgres-Extensions/cat_tools/archive/refs/tags/0.4.0.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -21,7 +21,7 @@ Requires:       postgresql%{pgmajorversion}-server
 
 %description
 cat_tools provides SQL functions and views for inspecting and working with
-PostgreSQL system catalogs. Version 0.3.0 supports PostgreSQL 12 and later;
+PostgreSQL system catalogs. Version 0.4.0 supports PostgreSQL 12 and later;
 PGSTY packages it for the active PostgreSQL 14 through 18 releases.
 
 %prep
@@ -41,5 +41,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot} PG_CONFIG=%{p
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 0.4.0-1PGSTY
+- Update to upstream 0.4.0.
+
 * Fri Aug 07 2026 Vonng <rh@vonng.com> - 0.3.0-1PIGSTY
 - Initial RPM release for upstream PGXN 0.3.0

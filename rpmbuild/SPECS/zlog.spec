@@ -1,5 +1,5 @@
 Name:           zlog
-Version:        1.2.18
+Version:        1.2.20
 Release:        1PGSTY%{?dist}
 Summary:        High-performance C logging library
 License:        Apache-2.0
@@ -15,8 +15,13 @@ PolarDB-FileSystem.
 
 %prep
 %setup -q -n zlog-%{version}
+%if 0%{?rhel} == 8
+# GNU make 4.2 treats an unescaped hash in the version shell expression as a comment.
+sed -i '/^ZLOG_VERSION :=/s/#define/\\#define/' src/Makefile
+%endif
 
 %build
+%set_build_flags
 %{__make} %{?_smp_mflags}
 
 %install
@@ -44,6 +49,11 @@ ln -s libzlog.so.1.2 %{buildroot}%{_libdir}/libzlog.so
 /sbin/ldconfig
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.2.20-1PGSTY
+- Update to 1.2.20 for the PolarStore and PolarDB rebuild.
+- Apply distribution compiler and linker flags.
+- Escape the version parser hash for GNU make 4.2 on EL8.
+
 * Sun Aug 09 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 1.2.18-2PGSTY
 - Rebuild with the PGSTY package release brand
 

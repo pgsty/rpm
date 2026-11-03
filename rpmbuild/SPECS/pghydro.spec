@@ -1,6 +1,7 @@
 %global pname pghydro
 %global sname pghydro
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global postgis_package postgis37
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	6.6
@@ -14,7 +15,7 @@ BuildArch:	noarch
 
 BuildRequires:	pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
-Requires:	postgis36_%{pgmajorversion}
+Requires:	%{postgis_package}_%{pgmajorversion}
 
 %description
 PgHydro is a SQL-only bundle of PostgreSQL and PostGIS extensions for drainage

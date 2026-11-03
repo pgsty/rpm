@@ -11,7 +11,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.1
+Version:	1.5.2
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension providing Active session history
 License:	PostgreSQL
@@ -58,6 +58,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
    %{pginstdir}/lib/bitcode/*
 %endif
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.5.2-1PGSTY
+- Update to 1.5.2; retain PGDG as the binary supplier.
+- https://github.com/pgsentinel/pgsentinel/releases/tag/v1.5.2
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.5.1-1PGSTY
 - Update to 1.5.1.
 

@@ -8,10 +8,10 @@
 %global _lto_cflags %{nil}
 
 Name:           %{sname}-%{pgmajorversion}
-Version:        2.18.6.0
+Version:        2.18.6.1
 Release:        1PGSTY%{?dist}
 Summary:        AgensGraph kernel (PG%{pgmajorversion} fork)
-License:        PostgreSQL
+License:        PostgreSQL AND Apache-2.0
 URL:            https://github.com/skaiworldwide-oss/agensgraph
 Source0:        %{sname}-%{version}.tar.gz
 
@@ -97,7 +97,7 @@ MAKELEVEL=0 %{__make} %{?_smp_mflags} world-bin
 
 %files
 %doc README.md
-%license COPYRIGHT
+%license COPYRIGHT LICENSE NOTICE
 %{pgbaseinstdir}/lib/*
 %{pgbaseinstdir}/bin/*
 %{pgbaseinstdir}/share/*
@@ -115,6 +115,11 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 2.18.6.1-1PGSTY
+- Update to 2.18.6.1 with corrected vendor and contact text.
+- Retain the complete PostgreSQL 18.6 kernel, contrib, LLVM JIT, and debug payload.
+- Include both upstream PostgreSQL and Apache license texts.
+
 * Tue Oct 27 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 2.18.6.0-1PGSTY
 - Update AgensGraph to 2.18.6.0 based on PostgreSQL 18.6.
 

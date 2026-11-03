@@ -271,7 +271,7 @@ pg_bestmatch:		# rust pgrx 0.19.2
 vchord_bm25:		# rust pgrx 0.19.2
 	./build vchord_bm25 14 15 16 17 18
 
-pg_tokenizer:		# rust pgrx 0.19.2
+pg_tokenizer:		# rust pgrx 0.19.3
 	./build pg_tokenizer 14 15 16 17 18
 
 pg_biscuit:

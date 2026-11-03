@@ -14,6 +14,7 @@ Patch0:         pgdog-%{version}.patch
 
 BuildRequires:  cargo, clang, clang-devel, cmake, gcc, gcc-c++, git, openssl-devel, pkgconf-pkg-config, protobuf-compiler, rust
 BuildRequires:  bison flex libicu-devel make readline-devel zlib-devel
+BuildRequires:  perl(JSON::PP)
 BuildRequires:  systemd-rpm-macros
 # Default pg_dump provider for schema-sync / resharding workflows and
 # the default postgres service account expected by the systemd unit.
@@ -104,6 +105,7 @@ install -pm 0644 vendor/pg-internals/pg_internals/vendor/postgres/COPYRIGHT %{bu
 * Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 0.1.63-1PGSTY
 - Update to upstream security release 0.1.63.
 - Vendor each pinned Git source without changing the upstream Cargo.lock.
+- Declare the JSON::PP module used by the vendored PostgreSQL GUC generator.
 
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.62-1PGSTY
 - Update to upstream 0.1.62.

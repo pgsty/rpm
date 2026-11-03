@@ -2,14 +2,12 @@
 
 Name:           cloudberry-backup
 Version:        2.2.0
-Release:        1.git20260813.6d61e7ePGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Backup and restore utilities for Apache Cloudberry
 
 License:        Apache-2.0
 URL:            https://cloudberry.apache.org
-Source0:        apache-cloudberry-backup-2.2.0-src.tar.gz
-# Deterministic snapshot of apache/cloudberry-backup main commit
-# 6d61e7e744243f256c971a90e0b33841cae36aea (VERSION=2.2.0).
+Source0:        apache-cloudberry-backup-2.2.0-incubating-src.tar.gz
 ExclusiveArch:  x86_64 aarch64
 %global cb_prefix /usr/cloudberry
 
@@ -23,7 +21,7 @@ gpbackup_s3_plugin, gpbackman, and gpbackup_exporter utilities for Apache
 Cloudberry.
 
 %prep
-%setup -q -n apache-cloudberry-backup-%{version}
+%setup -q -n apache-cloudberry-backup-%{version}-incubating
 %if 0%{?rhel} == 8
 # EL8's binutils/debugedit cannot decode Go's compressed DWARF sections.
 sed -i "s/--ldflags '/--ldflags '-compressdwarf=false /g" Makefile
@@ -31,12 +29,16 @@ sed -i 's/-ldflags "/-ldflags "-compressdwarf=false /g' Makefile
 %endif
 
 %build
+%set_build_flags
+export CGO_CFLAGS="$CFLAGS"
+export CGO_CPPFLAGS="$CPPFLAGS"
+export CGO_LDFLAGS="$LDFLAGS"
 export GOPATH=%{_builddir}/go
 export GOPROXY=${GOPROXY:-https://goproxy.cn,direct}
 export GOTOOLCHAIN=go1.25.0
 # EL debugedit cannot yet read Go's DWARF 5 directory strings. Keep full DWARF 4.
 export GOEXPERIMENT=nodwarf5
-export SOURCE_DATE_EPOCH=1786614056
+export SOURCE_DATE_EPOCH=1790147090
 export PATH=${GOPATH}/bin:/usr/local/go/bin:$PATH
 make depend
 make build BUILD_DATE=$(date -u -d @${SOURCE_DATE_EPOCH} '+%%Y%%m%%d-%%H:%%M:%%S')
@@ -63,6 +65,9 @@ install -Dpm 0644 NOTICE %{buildroot}%{_docdir}/%{name}/NOTICE
 %doc %{_docdir}/%{name}/NOTICE
 
 %changelog
+* Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1PGSTY
+- Replace the unpublished main snapshot with the official 2.2.0 source release.
+
 * Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1.git20260813.6d61e7ePGSTY
 - Use a reachable Go module proxy while respecting builder overrides
 - Generate DWARF 4 with Go 1.25.0 for EL debugsource compatibility

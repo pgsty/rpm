@@ -8,17 +8,17 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.3.0
+Version:        0.4.1
 Release:        1PGSTY%{?dist}
 Summary:        Server-side SQL proposal and approval gate for agent roles
 License:        Apache-2.0
 URL:            https://github.com/Manuelreyesbravo/pg_agent_gate
 Source0:        %{sname}-%{version}.tar.gz
-# Normalized with GNU tar from https://api.github.com/repos/Manuelreyesbravo/pg_agent_gate/tarball/v0.3.0
-# SHA256: 07f3c91aa54d03b51f9a4101ed8edc47d65cf7072b7b32b94c9b50a56eb3a7c0
+# https://github.com/Manuelreyesbravo/pg_agent_gate/archive/refs/tags/v0.4.1.tar.gz
+# SHA256: fae0bff41e71f5f6462745477800c334a7cbf043953aaf862de81dd42076ec36
 # Upstream pins pgrx 0.19.2 but omits Cargo.lock. Use the builder's pgrx 0.19.3
 # with a fixed dependency graph, and explicitly select pg18 instead of pg19.
-Patch0:         pg-agent-gate-0.3.0-pgrx-0.19.3.patch
+Patch0:         pg-agent-gate-0.4.1-pgrx-0.19.3.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -69,6 +69,10 @@ cp -a sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extension/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 0.4.1-1PGSTY
+- Update to 0.4.1 with agent-role membership escape fixes.
+- Retain the pinned pgrx 0.19.3 dependency graph and full debug output.
+
 * Wed Oct 28 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
 - Initial RPM release for PostgreSQL 18.
 - Pin pgrx 0.19.3 and a shared Cargo.lock for reproducible builds.

@@ -36,11 +36,16 @@ Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT
 URL:		https://github.com/duckdb/pg_duckdb
 Source0:	%{sname}-%{version}.tar.gz
-# Release v1.2.0 is experimental; full-matrix validation is deferred.
+%if 0%{?rhel} < 10
+# httpfs needs libcurl >= 7.85; EL8/9 ship older headers.  This private
+# static build input is not installed over the distribution libcurl.
+Source1:	https://curl.se/download/curl-8.23.0.tar.gz
+%endif
+# Upstream marks v1.2.0 experimental; package validation is not a production recommendation.
 # Source archive includes DuckDB d54cbbe3df17e8e5ce68312f483b4155836112aa.
 Patch0:		pg_duckdb-1.2.0-source-build.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	gcc gcc-c++ make cmake ninja-build python3 git
+BuildRequires:	gcc gcc-c++ make cmake >= 3.18 ninja-build python3 git pkgconfig
 BuildRequires:	libcurl-devel lz4-devel openssl-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -56,10 +61,15 @@ We recommend using pg_duckdb to build high performance analytics and data-intens
 pg_duckdb was developed in collaboration with our partners, Hydra and MotherDuck.
 
 %prep
+%if 0%{?rhel} < 10
+%autosetup -a 1 -p1 -n %{sname}-%{version}
+%else
 %autosetup -p1 -n %{sname}-%{version}
+%endif
 
 %build
 %set_build_flags
+export DUCKDB_COMMIT=d54cbbe3df17e8e5ce68312f483b4155836112aa
 PG_CFLAGS="$CFLAGS"
 PG_CXXFLAGS="$CXXFLAGS"
 PG_LDFLAGS="$LDFLAGS"
@@ -76,11 +86,19 @@ DUCKDB_LDFLAGS="$(printf '%s\n' "$DUCKDB_LDFLAGS" | sed -E 's/(^|[[:space:]])-fl
 case " $PG_LDFLAGS " in *" -flto"*) ;; *) PG_LDFLAGS="$PG_LDFLAGS -flto=2" ;; esac
 case " $DUCKDB_LDFLAGS " in *" -flto"*) ;; *) DUCKDB_LDFLAGS="$DUCKDB_LDFLAGS -flto=1" ;; esac
 %endif
+# The bridge finds its bundled core in this PostgreSQL major's private lib
+# directory. Use modern DT_RUNPATH instead of legacy DT_RPATH.
+PG_LDFLAGS="$PG_LDFLAGS -Wl,--enable-new-dtags"
 # The bundled DuckDB keeps function and line-table DWARF only (-g1); the PGXS
 # bridge keeps the full distribution -g so the debuginfo package stays tractable.
 DUCKDB_CFLAGS="$DUCKDB_CFLAGS -g1"
 DUCKDB_CXXFLAGS="$DUCKDB_CXXFLAGS -g1"
 DUCKDB_CMAKE_FLAGS="-DCMAKE_C_FLAGS:STRING=\"$DUCKDB_CFLAGS\" -DCMAKE_CXX_FLAGS:STRING=\"$DUCKDB_CXXFLAGS\" -DCMAKE_EXE_LINKER_FLAGS:STRING=\"$DUCKDB_LDFLAGS\" -DCMAKE_SHARED_LINKER_FLAGS:STRING=\"$DUCKDB_LDFLAGS\" -DCMAKE_MODULE_LINKER_FLAGS:STRING=\"$DUCKDB_LDFLAGS\""
+CFLAGS="$DUCKDB_CFLAGS" LDFLAGS="$DUCKDB_LDFLAGS" \
+  sh scripts/build-distribution-curl.sh "$PWD/curl-8.23.0" "$PWD/.pgsty-curl" %{duckdb_core_jobs}
+if test -f .pgsty-curl/lib/libcurl.a; then
+  DUCKDB_CMAKE_FLAGS="$DUCKDB_CMAKE_FLAGS -DCURL_ROOT=$PWD/.pgsty-curl -DCURL_USE_STATIC_LIBS=ON"
+fi
 # DuckDB itself has no PostgreSQL-major input.  Reuse its build tree only
 # inside this platform's RPM topdir, keyed by the complete source archive,
 # compiler identity, distribution flags, and DuckDB build controls.  Copy the
@@ -89,6 +107,11 @@ DUCKDB_CMAKE_FLAGS="-DCMAKE_C_FLAGS:STRING=\"$DUCKDB_CFLAGS\" -DCMAKE_CXX_FLAGS:
 # PGXS bridge objects remain outside this tree and are rebuilt per PG major.
 DUCKDB_CACHE_KEY="$(printf '%s\n' \
   "$(sha256sum %{SOURCE0})" \
+  "$(sha256sum %{PATCH0})" "$DUCKDB_COMMIT" \
+%if 0%{?rhel} < 10
+  "$(sha256sum %{SOURCE1})" \
+%endif
+  "$(pkg-config --modversion libcurl openssl)" \
   "$(${CXX:-c++} --version | head -1)" \
   "$DUCKDB_CFLAGS" "$DUCKDB_CXXFLAGS" "$DUCKDB_LDFLAGS" "$DUCKDB_CMAKE_FLAGS" \
   "${DUCKDB_BUILD:-Release}" "${DUCKDB_DISABLE_ASSERTIONS:-0}" | sha256sum | awk '{print $1}')"
@@ -96,6 +119,10 @@ DUCKDB_CACHE_DIR="%{_topdir}/.cache/pg_duckdb/$DUCKDB_CACHE_KEY"
 if test -f "$DUCKDB_CACHE_DIR/.complete" && test -f "$DUCKDB_CACHE_DIR/release/src/libduckdb.so"; then
   mkdir -p third_party/duckdb/build
   cp -a "$DUCKDB_CACHE_DIR/." third_party/duckdb/build/
+  # Applying the same patch gives the top-level extension CMake file a fresh
+  # timestamp. The content-keyed cache already includes that exact input;
+  # keep make from unnecessarily reconfiguring and relinking the cached core.
+  touch third_party/duckdb/build/release/src/libduckdb.so
 fi
 PATH=%{pginstdir}/bin:$PATH \
   CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
@@ -114,6 +141,7 @@ mv "$DUCKDB_CACHE_TMP" "$DUCKDB_CACHE_DIR"
 %install
 %{__rm} -rf %{buildroot}
 %set_build_flags
+export DUCKDB_COMMIT=d54cbbe3df17e8e5ce68312f483b4155836112aa
 PG_CFLAGS="$CFLAGS"
 PG_CXXFLAGS="$CXXFLAGS"
 PG_LDFLAGS="$LDFLAGS"
@@ -130,11 +158,16 @@ DUCKDB_LDFLAGS="$(printf '%s\n' "$DUCKDB_LDFLAGS" | sed -E 's/(^|[[:space:]])-fl
 case " $PG_LDFLAGS " in *" -flto"*) ;; *) PG_LDFLAGS="$PG_LDFLAGS -flto=2" ;; esac
 case " $DUCKDB_LDFLAGS " in *" -flto"*) ;; *) DUCKDB_LDFLAGS="$DUCKDB_LDFLAGS -flto=1" ;; esac
 %endif
+# Keep the bridge link flags identical when PGXS runs during installation.
+PG_LDFLAGS="$PG_LDFLAGS -Wl,--enable-new-dtags"
 # The bundled DuckDB keeps function and line-table DWARF only (-g1); the PGXS
 # bridge keeps the full distribution -g so the debuginfo package stays tractable.
 DUCKDB_CFLAGS="$DUCKDB_CFLAGS -g1"
 DUCKDB_CXXFLAGS="$DUCKDB_CXXFLAGS -g1"
 DUCKDB_CMAKE_FLAGS="-DCMAKE_C_FLAGS:STRING=\"$DUCKDB_CFLAGS\" -DCMAKE_CXX_FLAGS:STRING=\"$DUCKDB_CXXFLAGS\" -DCMAKE_EXE_LINKER_FLAGS:STRING=\"$DUCKDB_LDFLAGS\" -DCMAKE_SHARED_LINKER_FLAGS:STRING=\"$DUCKDB_LDFLAGS\" -DCMAKE_MODULE_LINKER_FLAGS:STRING=\"$DUCKDB_LDFLAGS\""
+if test -f .pgsty-curl/lib/libcurl.a; then
+  DUCKDB_CMAKE_FLAGS="$DUCKDB_CMAKE_FLAGS -DCURL_ROOT=$PWD/.pgsty-curl -DCURL_USE_STATIC_LIBS=ON"
+fi
 PATH=%{pginstdir}/bin:$PATH \
   CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
   %{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} install DESTDIR=%{buildroot} \
@@ -158,11 +191,14 @@ PATH=%{pginstdir}/bin:$PATH \
 %endif
 
 %changelog
-* Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 1.2.0-1PGSTY
-- Prepare upstream experimental 1.2.0 with its pinned DuckDB 2.0.0 source.
-- Build from the bundled source tree and set the module version without Git.
+* Wed Nov 04 2026 Ruohang Feng <rh@vonng.com> - 1.2.0-1PGSTY
+- Package upstream experimental 1.2.0 with its pinned DuckDB 2.0.0 source.
+- Preserve the module version and DuckDB source identity without Git metadata.
+- Apply the pinned httpfs source patch for GCC 8-11 unique_ptr conversion.
+- Build private static curl 8.23.0 for httpfs when system libcurl is too old.
+- Include patches, dependency versions and source identity in the core cache key.
+- Link the bridge with RUNPATH to its PostgreSQL-major-private DuckDB library.
 - Retain PostgreSQL 14-18, LLVM, debug packaging and bounded core concurrency.
-- Defer build and runtime validation to the dedicated DuckDB build task.
 
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.1.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms

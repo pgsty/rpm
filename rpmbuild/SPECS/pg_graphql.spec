@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.6.2
+Version:	1.6.3
 Release:	1PGSTY%{?dist}
 Summary:	GraphQL support to your PostgreSQL database.
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_graphql
 Source0:	pg_graphql-%{version}.tar.gz
-#           https://github.com/supabase/pg_graphql/archive/refs/tags/v1.6.2.tar.gz
-Patch0:		pg-graphql-1.6.2.patch
+#           https://github.com/supabase/pg_graphql/archive/refs/tags/v1.6.3.tar.gz
+Patch0:		pg-graphql-1.6.3-pgrx-0.19.3.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -35,8 +35,9 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -48,8 +49,6 @@ cargo fetch --locked
 
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
-cp -f sql/%{pname}--*--*.sql "$EXT_DIR/"
 LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
 	echo "Cargo.lock changed during cargo pgrx package" >&2
@@ -59,9 +58,10 @@ fi
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
+cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
+cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %license LICENSE
@@ -72,6 +72,11 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.6.3-1PGSTY
+- Update to 1.6.3 with quoted primary-key names in nodeId queries.
+- Adapt the locked pgrx dependencies to the 0.19.3 builder toolchain.
+- Install upstream SQL only and drop the former synthetic upgrade edge.
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 1.6.2-1PGSTY
 - Update to upstream 1.6.2 with its query-depth security limit
 - Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2

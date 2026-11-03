@@ -1,5 +1,6 @@
 %global sname mobilitydb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global postgis_package postgis37
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
 %{error:mobilitydb only supports PostgreSQL 14 through 18}
@@ -25,7 +26,7 @@ ExclusiveArch:  x86_64 aarch64
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
-BuildRequires:  postgis36_%{pgmajorversion}
+BuildRequires:  %{postgis_package}_%{pgmajorversion}
 BuildRequires:  cmake >= 3.12
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
@@ -36,7 +37,7 @@ BuildRequires:  json-c-devel
 BuildRequires:  gsl-devel
 
 Requires:       postgresql%{pgmajorversion}-server
-Requires:       postgis36_%{pgmajorversion}
+Requires:       %{postgis_package}_%{pgmajorversion}
 
 %description
 MobilityDB is a database management system for moving-object geospatial
@@ -51,7 +52,7 @@ mobilitydb_datagen companion extension.
 %set_build_flags
 export PATH=%{pginstdir}/bin:$PATH
 # Release mode supplies -DNDEBUG, matching Debian's maintainer CPPFLAGS.
-# Use the same GEOS/PROJ ABI generation as the packaged PostGIS 3.6 build.
+# Use the same GEOS/PROJ ABI generation as the packaged PostGIS build.
 cmake -S . -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DPOSTGRESQL_PG_CONFIG=%{pginstdir}/bin/pg_config \

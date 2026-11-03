@@ -44,9 +44,19 @@ Source1:	https://curl.se/download/curl-8.23.0.tar.gz
 # Upstream marks v1.2.0 experimental; package validation is not a production recommendation.
 # Source archive includes DuckDB d54cbbe3df17e8e5ce68312f483b4155836112aa.
 Patch0:		pg_duckdb-1.2.0-source-build.patch
+%if 0%{?rhel} == 8
+Patch1:		pg_duckdb-1.2.0-el8-httpfs-cflags.patch
+%endif
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc gcc-c++ make cmake >= 3.18 ninja-build python3 git pkgconfig
 BuildRequires:	libcurl-devel lz4-devel openssl-devel
+%if 0%{?rhel} >= 10
+BuildRequires:	patchelf
+%endif
+%if 0%{?rhel} == 8
+BuildRequires:	openssl3-devel
+BuildRequires:	gcc-toolset-15-gcc-c++ gcc-toolset-15-annobin-plugin-gcc
+%endif
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
@@ -69,6 +79,19 @@ pg_duckdb was developed in collaboration with our partners, Hydra and MotherDuck
 
 %build
 %set_build_flags
+%if 0%{?rhel} == 8
+# DuckDB 2.0 needs reference_wrapper conversions absent from GCC 8 headers.
+source /opt/rh/gcc-toolset-15/enable
+export CC=/opt/rh/gcc-toolset-15/root/usr/bin/gcc
+export CXX=/opt/rh/gcc-toolset-15/root/usr/bin/g++
+export CFLAGS="$CFLAGS -std=gnu17"
+# curl 8.23 requires OpenSSL 3. EPEL installs it alongside EL8's OpenSSL 1.1.
+# Present its separate include/library directories as a private CMake prefix.
+mkdir -p .pgsty-openssl3
+ln -snf %{_includedir}/openssl3 .pgsty-openssl3/include
+ln -snf %{_libdir}/openssl3 .pgsty-openssl3/lib
+export OPENSSL_ROOT_DIR="$PWD/.pgsty-openssl3"
+%endif
 export DUCKDB_COMMIT=d54cbbe3df17e8e5ce68312f483b4155836112aa
 PG_CFLAGS="$CFLAGS"
 PG_CXXFLAGS="$CXXFLAGS"
@@ -112,6 +135,10 @@ DUCKDB_CACHE_KEY="$(printf '%s\n' \
   "$(sha256sum %{SOURCE1})" \
 %endif
   "$(pkg-config --modversion libcurl openssl)" \
+%if 0%{?rhel} == 8
+  "$(sha256sum %{PATCH1})" \
+  "$(pkg-config --modversion openssl3)" "$OPENSSL_ROOT_DIR" \
+%endif
   "$(${CXX:-c++} --version | head -1)" \
   "$DUCKDB_CFLAGS" "$DUCKDB_CXXFLAGS" "$DUCKDB_LDFLAGS" "$DUCKDB_CMAKE_FLAGS" \
   "${DUCKDB_BUILD:-Release}" "${DUCKDB_DISABLE_ASSERTIONS:-0}" | sha256sum | awk '{print $1}')"
@@ -127,6 +154,9 @@ fi
 PATH=%{pginstdir}/bin:$PATH \
   CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
   %{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} PG_DUCKDB_VERSION=v%{version} PG_MAX_VER=18 \
+%if 0%{?pgmajorversion} >= 18
+  PG_CPPFLAGS='-DPG_DUCKDB_VERSION=\"v%{version}\"' \
+%endif
   PG_CFLAGS="$PG_CFLAGS" PG_CXXFLAGS="$PG_CXXFLAGS" \
   LDFLAGS="$PG_LDFLAGS" \
   EXTRA_CMAKE_VARIABLES="$DUCKDB_CMAKE_FLAGS"
@@ -141,6 +171,13 @@ mv "$DUCKDB_CACHE_TMP" "$DUCKDB_CACHE_DIR"
 %install
 %{__rm} -rf %{buildroot}
 %set_build_flags
+%if 0%{?rhel} == 8
+source /opt/rh/gcc-toolset-15/enable
+export CC=/opt/rh/gcc-toolset-15/root/usr/bin/gcc
+export CXX=/opt/rh/gcc-toolset-15/root/usr/bin/g++
+export CFLAGS="$CFLAGS -std=gnu17"
+export OPENSSL_ROOT_DIR="$PWD/.pgsty-openssl3"
+%endif
 export DUCKDB_COMMIT=d54cbbe3df17e8e5ce68312f483b4155836112aa
 PG_CFLAGS="$CFLAGS"
 PG_CXXFLAGS="$CXXFLAGS"
@@ -172,9 +209,18 @@ PATH=%{pginstdir}/bin:$PATH \
   CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
   %{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} install DESTDIR=%{buildroot} \
   PG_DUCKDB_VERSION=v%{version} PG_MAX_VER=18 \
+%if 0%{?pgmajorversion} >= 18
+  PG_CPPFLAGS='-DPG_DUCKDB_VERSION=\"v%{version}\"' \
+%endif
   PG_CFLAGS="$PG_CFLAGS" PG_CXXFLAGS="$PG_CXXFLAGS" \
   LDFLAGS="$PG_LDFLAGS" \
   EXTRA_CMAKE_VARIABLES="$DUCKDB_CMAKE_FLAGS"
+
+%if 0%{?rhel} >= 10
+# EL10 validates RUNPATH as well as RPATH and rejects /usr/pgsql-N/lib.
+# Resolve the bundled core beside the installed bridge in the same PG major.
+patchelf --set-rpath '$ORIGIN' %{buildroot}%{pginstdir}/lib/%{pname}.so
+%endif
 
 %files
 %doc README.md
@@ -196,8 +242,16 @@ PATH=%{pginstdir}/bin:$PATH \
 - Preserve the module version and DuckDB source identity without Git metadata.
 - Apply the pinned httpfs source patch for GCC 8-11 unique_ptr conversion.
 - Build private static curl 8.23.0 for httpfs when system libcurl is too old.
+%if 0%{?rhel} == 8
+- Select the parallel OpenSSL 3 headers and libraries on EL8.
+- Probe httpfs C++ warning support before enabling it with GCC 8.
+- Use GCC Toolset 15 for DuckDB 2.0 C++ library requirements on EL8.
+%endif
 - Include patches, dependency versions and source identity in the core cache key.
 - Link the bridge with RUNPATH to its PostgreSQL-major-private DuckDB library.
+%if 0%{?rhel} >= 10
+- Use a relative private RUNPATH accepted by EL10 package validation.
+%endif
 - Retain PostgreSQL 14-18, LLVM, debug packaging and bounded core concurrency.
 
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.1.1-1PGSTY

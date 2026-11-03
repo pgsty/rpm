@@ -1,0 +1,18 @@
+--- /dev/null
++++ b/third_party/duckdb/.github/patches/extensions/httpfs/0002-check-cxx-warning.patch
+@@ -0,0 +1,15 @@
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -5,7 +5,11 @@
++ add_extension_definitions()
++ 
++ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
++-  add_compile_options(-Wpessimizing-move)
+++  include(CheckCXXCompilerFlag)
+++  check_cxx_compiler_flag("-Wpessimizing-move" HTTPFS_HAVE_PESSIMIZING_MOVE)
+++  if(HTTPFS_HAVE_PESSIMIZING_MOVE)
+++    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-Wpessimizing-move>")
+++  endif()
++ endif()
++ 
++ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

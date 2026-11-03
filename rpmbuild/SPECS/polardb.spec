@@ -10,7 +10,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        17.11.1.0
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        PolarDB PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL AND BSD-2-Clause AND BSD-3-Clause AND MIT AND Spencer-94
 URL:            https://github.com/polardb/PolarDB-for-PostgreSQL
@@ -30,7 +30,8 @@ BuildRequires:  perl-interpreter, perl-ExtUtils-Embed, perl-FindBin, perl-Opcode
 %endif
 BuildRequires:  python3-devel, tcl-devel, lz4-devel, libzstd-devel, libunwind-devel
 BuildRequires:  clang-devel >= 19.0, llvm-devel >= 19.0, file, binutils
-BuildRequires:  polarstore >= 1.2.42
+BuildRequires:  polarstore = 1.2.42-3PGSTY%{?dist}
+BuildRequires:  zlog = 1.2.20-1PGSTY%{?dist}
 Requires:       tzdata
 Requires(pre):  shadow-utils
 
@@ -53,6 +54,7 @@ chmod +x build.sh
 
 %build
 %set_build_flags
+export LDFLAGS="${LDFLAGS} -Wl,--trace"
 export COPT="-Wno-error ${COPT-}"
 export CC=gcc CXX=g++
 export NM=gcc-nm AR=gcc-ar RANLIB=gcc-ranlib
@@ -67,6 +69,7 @@ POLAR_PACKAGE_PREFIX=%{pgbaseinstdir} DESTDIR="$stage_root" ./build.sh \
   --ec="--with-deploy-mode=opensource --with-pfsd" \
   --port=%{pgport} \
   --debug=off \
+  --quiet=off \
   --jobs=%{_smp_build_ncpus} \
   --ni
 
@@ -171,6 +174,11 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 17.11.1.0-2PGSTY
+- Rebuild the complete kernel and contrib bundle with PolarStore 1.2.42-3 and zlog 1.2.20.
+- Pin the updated SDK build inputs and retain verbose compile and link evidence.
+- Resolve bundled libraries from nested PGXS tools using the installed private prefix.
+
 * Tue Oct 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 17.11.1.0-1PGSTY
 - Preserve distribution build flags and debug information in optimized builds
 

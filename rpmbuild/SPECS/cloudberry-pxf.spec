@@ -2,21 +2,17 @@
 %define _build_id_links none
 
 Name:           cloudberry-pxf
-Version:        2.1.0
+Version:        2.2.0
 Release:        1PGSTY%{?dist}
 Summary:        Apache Cloudberry PXF for advanced external data access
 
 License:        Apache-2.0
 URL:            https://cloudberry.apache.org
-Source0:        apache-cloudberry-pxf-2.1.0-incubating-src.tar.gz
-Source1:        gradle-wrapper-6.8.2.jar
-Source2:        gradle-wrapper-6.8.2.jar.sha256
-Source3:        gradle-wrapper-8.5.jar
-Source4:        gradle-wrapper-8.5.jar.sha256
-Source5:        gradle-6.8.2-bin.zip
-Source6:        gradle-8.5-bin.zip
-Patch0:         cloudberry-pxf-2.1.0-java-utf8.patch
-Patch1:         cloudberry-pxf-2.1.0-el10-java21-build-fixes.patch
+Source0:        apache-cloudberry-pxf-2.2.0-incubating-src.tar.gz
+Source1:        gradle-wrapper-8.14.4.jar
+Source2:        gradle-wrapper-8.14.4.jar.sha256
+Source3:        gradle-8.14.4-bin.zip
+Patch0:         cloudberry-pxf-2.2.0-java-build.patch
 %global cb_prefix /usr/cloudberry
 %global pxf_prefix /usr/cloudberry-pxf
 ExclusiveArch:  x86_64 aarch64
@@ -42,27 +38,18 @@ Apache Cloudberry PXF (Platform Extension Framework) provides Cloudberry
 connectors for external data systems together with the PXF service and CLI.
 
 %prep
-%setup -q -n apache-cloudberry-pxf-%{version}
+%setup -q -n apache-cloudberry-pxf-%{version}-incubating
 %if 0%{?rhel} == 8
 sed -i 's/LDFLAGS := -ldflags "/LDFLAGS := -ldflags "-compressdwarf=false /' cli/Makefile
 %endif
 %patch -P 0 -p1
-%if 0%{?rhel} >= 10
-%patch -P 1 -p1
-cp -fp %{SOURCE3} server/gradle/wrapper/gradle-wrapper.jar
-cp -fp %{SOURCE4} server/gradle/wrapper/gradle-wrapper-8.5.jar.sha256
-cp -fp %{SOURCE6} server/gradle/wrapper/gradle-8.5-bin.zip
-sed -i "s#^distributionUrl=.*#distributionUrl=file://$(pwd)/server/gradle/wrapper/gradle-8.5-bin.zip#" server/gradle/wrapper/gradle-wrapper.properties
-sed -i "s#^distributionSha256Sum=.*#distributionSha256Sum=9d926787066a081739e8200858338b4a69e837c3a821a33aca9db09dd4a41026#" server/gradle/wrapper/gradle-wrapper.properties
-%else
 cp -fp %{SOURCE1} server/gradle/wrapper/gradle-wrapper.jar
-cp -fp %{SOURCE2} server/gradle/wrapper/gradle-wrapper-6.8.2.jar.sha256
-cp -fp %{SOURCE5} server/gradle/wrapper/gradle-6.8.2-bin.zip
-sed -i "s#^distributionUrl=.*#distributionUrl=file://$(pwd)/server/gradle/wrapper/gradle-6.8.2-bin.zip#" server/gradle/wrapper/gradle-wrapper.properties
-sed -i "s#^distributionSha256Sum=.*#distributionSha256Sum=8de6efc274ab52332a9c820366dd5cf5fc9d35ec7078fd70c8ec6913431ee610#" server/gradle/wrapper/gradle-wrapper.properties
-%endif
+cp -fp %{SOURCE2} server/gradle/wrapper/gradle-8.14.4-wrapper.jar.sha256
+cp -fp %{SOURCE3} server/gradle/wrapper/gradle-8.14.4-bin.zip
+sed -i "s#^distributionUrl=.*#distributionUrl=file://$(pwd)/server/gradle/wrapper/gradle-8.14.4-bin.zip#" server/gradle/wrapper/gradle-wrapper.properties
 
 %build
+%set_build_flags
 export GPHOME=%{cb_prefix}
 export QA_RPATHS=3
 if [ ! -x "${GPHOME}/bin/postgres" ]; then
@@ -148,6 +135,11 @@ fi
 %config(noreplace) %{pxf_prefix}/conf/pxf-profiles.xml
 
 %changelog
+* Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1PGSTY
+- Update to the official Apache Cloudberry PXF 2.2.0 source release.
+- Build against Cloudberry 2.2.0 and the upstream Gradle 8.14.4 toolchain.
+- Refresh Java compatibility and retain distribution compiler flags.
+
 * Wed Sep 09 2026 Ruohang Feng <rh@vonng.com> - 2.1.0-1PGSTY
 - Include all four PXF configuration templates as protected configuration files
 

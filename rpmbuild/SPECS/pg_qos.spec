@@ -1,6 +1,7 @@
 %global pname qos
 %global sname pg_qos
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global postgis_package postgis37
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -33,7 +34,7 @@ BuildRequires:	clang-devel >= 19.0
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
-Recommends: postgis36_%{pgmajorversion}
+Recommends: %{postgis_package}_%{pgmajorversion}
 
 %description
 QoS is a PostgreSQL extension that provides resource governance for sessions

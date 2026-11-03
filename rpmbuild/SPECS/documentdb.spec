@@ -1,6 +1,7 @@
 %global pname documentdb
 %global sname documentdb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global postgis_package postgis37
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
 %{error:documentdb only supports PostgreSQL 16-18 in PGSTY builds}
@@ -45,7 +46,7 @@ Requires:   pgvector_%{pgmajorversion}
 %if 0%{?pgmajorversion} < 18
 Requires:   rum_%{pgmajorversion}
 %endif
-Requires:   postgis36_%{pgmajorversion}
+Requires:   %{postgis_package}_%{pgmajorversion}
 
 # Require extra dependencies for building: https://github.com/microsoft/documentdb/tree/main/scripts
 # Available for PostgreSQL 16,17,18

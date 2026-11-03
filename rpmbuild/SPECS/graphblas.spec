@@ -1,16 +1,20 @@
 %global sname graphblas
 
 Name:           %{sname}
-Version:        10.5.0
+Version:        10.5.2
 Release:        1PGSTY%{?dist}
 Summary:        SuiteSparse implementation of the GraphBLAS standard
 License:        Apache-2.0
 URL:            https://github.com/DrTimothyAldenDavis/GraphBLAS
 Source0:        graphblas-%{version}.tar.gz
+Patch0:         graphblas-10.5.2-jit-rpm-specs.patch
 
 BuildRequires:  cmake >= 3.23
 BuildRequires:  gcc
 BuildRequires:  make
+
+# Compact mode compiles missing kernels at runtime.
+Requires:       gcc
 
 %description
 SuiteSparse:GraphBLAS is a complete implementation of the GraphBLAS standard
@@ -26,10 +30,12 @@ Headers, pkg-config metadata, and CMake package files for SuiteSparse:GraphBLAS.
 
 %prep
 %setup -q -n GraphBLAS-%{version}
+%patch -P 0 -p1
 
 %build
 %set_build_flags
 cmake -S . -B build \
+  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \
   -DGRAPHBLAS_COMPACT=ON \
@@ -61,6 +67,11 @@ DESTDIR=%{buildroot} cmake --install build
 %{_libdir}/cmake/GraphBLAS/*
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 10.5.2-1PGSTY
+- Update to 10.5.2 with arena, import, sort, reshape, and selection fixes.
+- Retain compact mode, CPU JIT, and complete compiler debug information.
+- Keep RPM-only compiler specs out of runtime JIT and require its C compiler.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 10.5.0-1PGSTY
 - Update SuiteSparse:GraphBLAS to 10.5.0 with libgraphblas.so.10 ABI retained
 - Use upstream's distro-recommended compact mode with the CPU JIT enabled

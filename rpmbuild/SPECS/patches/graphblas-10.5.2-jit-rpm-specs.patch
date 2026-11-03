@@ -1,0 +1,13 @@
+--- a/cmake_modules/GraphBLAS_JIT_configure.cmake
++++ b/cmake_modules/GraphBLAS_JIT_configure.cmake
+@@ -17,6 +17,10 @@
+ set ( GB_C_COMPILER  "${C_COMPILER_BINARY}" )
+ set ( GB_C_FLAGS "${CMAKE_C_FLAGS}" )
+ set ( GB_C_LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}" )
++# RPM compiler specs are only valid inside a package build environment.
++# Retain normal compiler/linker flags for JIT, without RPM-specific specs files.
++string ( REGEX REPLACE "-specs=[^ ]+" "" GB_C_FLAGS "${GB_C_FLAGS}" )
++string ( REGEX REPLACE "-specs=[^ ]+" "" GB_C_LINK_FLAGS "${GB_C_LINK_FLAGS}" )
+ set ( GB_LIB_SUFFIX "${CMAKE_SHARED_LIBRARY_SUFFIX}" )
+ set ( GB_LIB_PREFIX "${CMAKE_SHARED_LIBRARY_PREFIX}" )
+ 

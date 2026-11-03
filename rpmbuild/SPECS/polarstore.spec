@@ -3,7 +3,7 @@
 
 Name:           polarstore
 Version:        %{sdk_version}
-Release:        1PGSTY%{?dist}
+Release:        3PGSTY%{?dist}
 # Keep DWARF in the static archive for downstream PolarDB debug packages.
 %global __brp_strip_static_archive %{nil}
 %undefine _debugsource_packages
@@ -12,8 +12,8 @@ License:        Apache-2.0
 URL:            https://github.com/ApsaraDB/PolarDB-FileSystem
 Source0:        polarstore-%{version}-%{pfs_commit}.tar.gz
 BuildRequires:  cmake, gcc, gcc-c++, make
-BuildRequires:  zlog >= 1.2.18, libaio-devel
-Requires:       zlog >= 1.2.18, libaio-devel
+BuildRequires:  zlog = 1.2.20-1PGSTY%{?dist}, libaio-devel
+Requires:       zlog >= 1.2.20, libaio-devel
 
 %description
 PolarStore PFSD SDK files built from PolarDB-FileSystem source and used by
@@ -29,7 +29,7 @@ sed -i -e 's|calloc(sizeof(chnl_ctx_shm_t), 1)|calloc(1, sizeof(chnl_ctx_shm_t))
 
 %build
 %set_build_flags
-cmake -S . -B obj -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+cmake -S . -B obj -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 cmake --build obj --target pfsd -j%{_smp_build_ncpus}
 
 %install
@@ -43,6 +43,11 @@ install -m 0644 lib/libpfsd.a %{buildroot}/usr/local/polarstore/pfsd/lib/
 /usr/local/polarstore/pfsd/lib/libpfsd.a
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.2.42-3PGSTY
+- Rebuild the static PFSD SDK with zlog 1.2.20-1PGSTY.
+- Preserve archive DWARF for the matching PolarDB rebuild.
+- Advance the release after published 1.2.42-2PGSTY packages.
+
 * Sat Sep 05 2026 Vonng <rh@vonng.com> - 1.2.42-1PGSTY
 - Preserve static PFSD SDK debug information for downstream consumers
 - Require zlog 1.2.18 or newer and use the PGSTY package release brand

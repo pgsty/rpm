@@ -24,24 +24,25 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Sparse linear algebra and graph extension for PostgreSQL 18
 License:	Apache-2.0
 URL:		https://github.com/OneSparse/OneSparse
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		onesparse-1.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc pkgconf-pkg-config
-BuildRequires:	graphblas-devel >= 10.2.0
-BuildRequires:	lagraph-devel >= 1.2.1
+BuildRequires:	graphblas-devel = 10.5.2-1PGSTY%{?dist}
+BuildRequires:	lagraph-devel = 1.2.2-1PGSTY%{?dist}
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
-Requires:	graphblas%{?_isa} >= 10.2.0
-Requires:	lagraph%{?_isa} >= 1.2.1
+Requires:	graphblas%{?_isa} >= 10.5.2
+Requires:	lagraph%{?_isa} >= 1.2.2
 
 %description
 OneSparse exposes sparse vectors, matrices, and graph algorithms to PostgreSQL
@@ -49,9 +50,12 @@ through GraphBLAS- and LAGraph-backed data types and functions. The upstream
 v1.0.0 release currently targets PostgreSQL 18 and ships extension SQL version
 0.1.0 inside the release tarball.
 
+Load onesparse through shared_preload_libraries before CREATE EXTENSION so
+that its postmaster-scoped JIT configuration can be registered at startup.
+
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/onesparse-1.0.0.patch
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH PKG_CONFIG_LIBDIR=%{_libdir}/pkgconfig:%{_datadir}/pkgconfig %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -73,6 +77,12 @@ PATH=%{pginstdir}/bin:$PATH PKG_CONFIG_LIBDIR=%{_libdir}/pkgconfig:%{_datadir}/p
 %endif
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.0.0-2PGSTY
+- Rebuild with GraphBLAS 10.5.2 and the matching LAGraph 1.2.2 build.
+- Include the existing pkg-config path patch in the source RPM.
+- Retain upstream SQL version 0.1.0, LLVM output, and complete debug packages.
+- Document the shared preload requirement for postmaster-scoped settings.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.0.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

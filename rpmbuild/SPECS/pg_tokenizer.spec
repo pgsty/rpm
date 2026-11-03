@@ -1,5 +1,5 @@
 %global pname pg_tokenizer
-%global sname pg_tokenizer.rs
+%global sname pg_tokenizer
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
@@ -23,7 +23,8 @@ A PostgreSQL extension that provides tokenizers for full-text search.
 
 %prep
 %setup -q -n %{sname}-%{version}
-# Source archive is the PGSTY fork snapshot; no downstream patch is applied.
+# GitHub tag archive: https://github.com/pgsty/pg_tokenizer/archive/refs/tags/v%{version}.tar.gz
+# No downstream patch is applied.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -70,6 +71,7 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 * Tue Nov 03 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
 - Switch to the PGSTY-maintained fork and prepare pg_tokenizer 0.2.0
 - Build directly from the fork source without a downstream compatibility patch
+- Use the v0.2.0 GitHub source archive with the pg_tokenizer name
 
 * Mon Nov 02 2026 Vonng <rh@vonng.com> - 0.1.1-2PGSTY
 - Build with cargo-pgrx 0.19.3 and refresh the source patch and locked dependencies

@@ -1,11 +1,11 @@
-%global source0_sha256 19c23908e7d57e8d91ef85b41f5646307582f10f4f0fb999bbf89ed24ec9c983
+%global source0_sha256 184e34ed2d9b51879b682b5b15205e2b9d677c60280e3cb453be8f520d04e293
 %global valkey_modules_abi 1
 %global valkey_modules_dir %{_libdir}/valkey/modules
 
 %bcond_without tests
 
 Name:           valkey
-Version:        9.1.2
+Version:        9.1.3
 Release:        1PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
@@ -294,6 +294,10 @@ exit 0
 %{_rpmmacrodir}/macros.valkey
 
 %changelog
+* Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 9.1.3-1PGSTY
+- Update to upstream security release 9.1.3.
+- Fix GHSA-f4q9-j22m-xqq9 in Cluster Pub/Sub message construction.
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 9.1.2-1PGSTY
 - Update to upstream 9.1.2.
 - Allow bounded scheduling margins in asynchronous tests.

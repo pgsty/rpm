@@ -1394,7 +1394,7 @@ orioledb-17:
 orioledb-16:
 	QA_RPATHS=3 ./build orioledb 16
 orioledb-all:
-	QA_RPATHS=3 ./build orioledb 16 17 18
+	QA_RPATHS=3 ./build orioledb 18 17 16
 
 ###############################################################
 #                      Cloudberry Build                        #

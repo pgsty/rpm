@@ -11,11 +11,11 @@ PATCH_DIR="${ROOT_DIR}/rpmbuild/SPECS/patches"
 PG_MAJOR="${PG_MAJOR:-18}"
 if [ -z "${PATCHSET:-}" ]; then
     case "${PG_MAJOR}" in
-        16) PATCHSET=49 ;;
-        17) PATCHSET=22 ;;
-        18) PATCHSET=3 ;;
+        16) PATCHSET=50 ;;
+        17) PATCHSET=23 ;;
+        18) PATCHSET=4 ;;
         *)
-            echo "unsupported PG_MAJOR for OrioleDB beta19: ${PG_MAJOR}" >&2
+            echo "unsupported PG_MAJOR for OrioleDB 1.10.1: ${PG_MAJOR}" >&2
             exit 1
             ;;
     esac

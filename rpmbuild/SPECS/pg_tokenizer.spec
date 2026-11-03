@@ -7,15 +7,15 @@
 %endif
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	0.1.1
+Version:	0.2.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL tokenizer extension for full-text search
 License:	Apache-2.0
-URL:		https://github.com/tensorchord/%{sname}
+URL:		https://vchord.pgsty.com/
 Source0:    %{sname}-%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt
+BuildRequires:	cargo clang clang-devel rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -23,7 +23,7 @@ A PostgreSQL extension that provides tokenizers for full-text search.
 
 %prep
 %setup -q -n %{sname}-%{version}
-# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
+# Source archive is the PGSTY fork snapshot; no downstream patch is applied.
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -31,13 +31,13 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=be4da993c058c27886ce2350aaf0ffe67be8aff81d49d7336bd42328fbbab7fb
+LOCK_EXPECTED=1874ff742dafdef8210ff0177b12cc5e4e500275f0419cee94012b8295799c1e
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -67,6 +67,13 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Nov 03 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
+- Switch to the PGSTY-maintained fork and prepare pg_tokenizer 0.2.0
+- Build directly from the fork source without a downstream compatibility patch
+
+* Mon Nov 02 2026 Vonng <rh@vonng.com> - 0.1.1-2PGSTY
+- Build with cargo-pgrx 0.19.3 and refresh the source patch and locked dependencies
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.1-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies
 

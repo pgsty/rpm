@@ -108,6 +108,9 @@ cron_utils:
 postgis:
 	./build postgis 14 15 16 17 18
 
+address_standardizer:
+	./build address_standardizer 14 15 16 17 18
+
 # PGDG-compatible GIS libraries are independent of the PostgreSQL major.
 geos314:
 	./build geos314 18
@@ -1423,7 +1426,7 @@ rm-srpm:
 
 .PHONY: hdr_histogram pg_improv pg_kv pg_try_cast pg_synonym env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
 	pgrx0191 pgrx0192 pgrx0193 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
-	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background \
+	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background address_standardizer \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorsearch pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \
 	pgml pgmnemo pg_search groonga pgroonga pg_bigm scws scws-install zhparser pg_cjk_parser pg_jieba pg_bestmatch vchord_bm25 \

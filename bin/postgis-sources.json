@@ -128,6 +128,21 @@
       ]
     },
     {
+      "package": "address_standardizer",
+      "srpm_url": "https://dnf-srpms.postgresql.org/srpms/18/redhat/rhel-9-x86_64/address_standardizer_18-3.7.0-4PGDG.rhel9.8.src.rpm",
+      "srpm_sha256": "9e3f4b9855125c0323e3868a8064f074ee74e7de9a2c63285929f4982b3f0f48",
+      "files": [
+        {
+          "name": "address_standardizer-3.7.0.tar.gz",
+          "sha256": "3f193591c1c0f8ec7d9f3cd179021a9df4e35594e0543fae187f3394721f2983",
+          "size": 466771,
+          "archive_roots": [
+            "address_standardizer-3.7.0"
+          ]
+        }
+      ]
+    },
+    {
       "package": "proj98",
       "srpm_url": "https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/proj98-9.8.1-1PGDG.rhel9.8.src.rpm",
       "srpm_sha256": "e3ae1425ea09030134f6e03c97be50b6e171fb937dc20ea723a27affebff6875",

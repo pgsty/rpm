@@ -10,7 +10,7 @@
 %{!?duckdb_core_jobs:%global duckdb_core_jobs 2}
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_duckdb 1.1.1 only supports PostgreSQL 14 through 18}
+%{error:pg_duckdb 1.2.0 is packaged for PostgreSQL 14 through 18}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -30,13 +30,15 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.1.1
+Version:	1.2.0
 Release:	1PGSTY%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT
 URL:		https://github.com/duckdb/pg_duckdb
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_duckdb-1.1.1-install-order.patch
+# Release v1.2.0 is experimental; full-matrix validation is deferred.
+# Source archive includes DuckDB d54cbbe3df17e8e5ce68312f483b4155836112aa.
+Patch0:		pg_duckdb-1.2.0-source-build.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc gcc-c++ make cmake ninja-build python3 git
 BuildRequires:	libcurl-devel lz4-devel openssl-devel
@@ -97,7 +99,7 @@ if test -f "$DUCKDB_CACHE_DIR/.complete" && test -f "$DUCKDB_CACHE_DIR/release/s
 fi
 PATH=%{pginstdir}/bin:$PATH \
   CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
-  %{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} \
+  %{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} PG_DUCKDB_VERSION=v%{version} PG_MAX_VER=18 \
   PG_CFLAGS="$PG_CFLAGS" PG_CXXFLAGS="$PG_CXXFLAGS" \
   LDFLAGS="$PG_LDFLAGS" \
   EXTRA_CMAKE_VARIABLES="$DUCKDB_CMAKE_FLAGS"
@@ -136,6 +138,7 @@ DUCKDB_CMAKE_FLAGS="-DCMAKE_C_FLAGS:STRING=\"$DUCKDB_CFLAGS\" -DCMAKE_CXX_FLAGS:
 PATH=%{pginstdir}/bin:$PATH \
   CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
   %{__make} -j%{duckdb_core_jobs} %{with_llvm_arg} install DESTDIR=%{buildroot} \
+  PG_DUCKDB_VERSION=v%{version} PG_MAX_VER=18 \
   PG_CFLAGS="$PG_CFLAGS" PG_CXXFLAGS="$PG_CXXFLAGS" \
   LDFLAGS="$PG_LDFLAGS" \
   EXTRA_CMAKE_VARIABLES="$DUCKDB_CMAKE_FLAGS"
@@ -155,6 +158,12 @@ PATH=%{pginstdir}/bin:$PATH \
 %endif
 
 %changelog
+* Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 1.2.0-1PGSTY
+- Prepare upstream experimental 1.2.0 with its pinned DuckDB 2.0.0 source.
+- Build from the bundled source tree and set the module version without Git.
+- Retain PostgreSQL 14-18, LLVM, debug packaging and bounded core concurrency.
+- Defer build and runtime validation to the dedicated DuckDB build task.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.1.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

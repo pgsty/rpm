@@ -4,13 +4,13 @@
 %bcond_without tests
 
 Name:           redis
-Version:        7.2.16
+Version:        7.2.17
 Release:        1PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0
 URL:            https://redis.io/
 Source0:        https://download.redis.io/releases/redis-%{version}.tar.gz
-Patch0:         redis-7.2.16.patch
+Patch0:         redis-7.2.17.patch
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -281,6 +281,11 @@ exit 0
 %{_rpmmacrodir}/macros.redis
 
 %changelog
+* Wed Nov 04 2026 Ruohang Feng <rh@vonng.com> - 7.2.17-1PGSTY
+- Update to the Redis 7.2.17 security release.
+- Fix the heap buffer overflow when propagating oversized PUBLISH/SPUBLISH
+  messages over the cluster bus.
+
 * Mon Aug 31 2026 Ruohang Feng <rh@vonng.com> - 7.2.16-1PGSTY
 - Update to the Redis 7.2.16 security release.
 - Fix TLS and blocked-client use-after-free issues plus ACL validation bugs.

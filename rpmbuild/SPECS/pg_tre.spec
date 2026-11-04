@@ -13,6 +13,12 @@
 %global with_llvm_arg with_llvm=no
 %endif
 
+%if 0%{?rhel} >= 10
+# TRE is linked statically; no private PostgreSQL library search path is needed.
+# EL10 RPM payload checks reject the absolute RUNPATH supplied by PGXS.
+%global pgxs_rpath_arg enable_rpath=no
+%endif
+
 Name:           %{sname}_%{pgmajorversion}
 Version:        4.6.1
 Release:        1PGSTY%{?dist}
@@ -47,12 +53,12 @@ sed -n '1,/^ \*\//p' include/pg_tre/sparsemap.h > LICENSE.sparsemap
 
 %build
 %set_build_flags
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?pgxs_rpath_arg} %{?_smp_mflags} \
     PG_CFLAGS="%{build_cflags}" PG_LDFLAGS="%{build_ldflags}"
 
 %install
 rm -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?pgxs_rpath_arg} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE LICENSE.tre LICENSE.sparsemap NOTICE
@@ -69,6 +75,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %changelog
 * Wed Nov 04 2026 Ruohang Feng <rh@vonng.com> - 4.6.1-1PGSTY
 - Update to upstream 4.6.1.
+- Disable the unused PGXS RUNPATH on EL10 for RPM payload checks.
 
 * Thu Oct 29 2026 Ruohang Feng <rh@vonng.com> - 4.5.3-1PGSTY
 - Update to upstream 4.5.3.

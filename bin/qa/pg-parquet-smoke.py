@@ -17,9 +17,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pg-bin", required=True)
     parser.add_argument("--port", required=True)
+    parser.add_argument("--host", default="127.0.0.1")
     args = parser.parse_args()
     command = [str(Path(args.pg_bin) / "psql"), "-X", "-qAt", "-v",
-               "ON_ERROR_STOP=1", "-h", "127.0.0.1", "-p", args.port,
+               "ON_ERROR_STOP=1", "-h", args.host, "-p", args.port,
                "-d", "postgres"]
     env = dict(os.environ)
 

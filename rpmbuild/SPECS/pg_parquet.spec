@@ -8,7 +8,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.5.1
-Release:	2PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	Copy to/from Parquet in S3 from within PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/CrunchyData/pg_parquet
@@ -78,9 +78,10 @@ cp -a "$PACKAGE_DIR/share/extension/"%{pname}*.sql %{buildroot}%{pginstdir}/shar
 %exclude /usr/lib/.build-id
 
 %changelog
-* Thu Nov 05 2026 Vonng <rh@vonng.com> - 0.5.1-2PGSTY
+* Thu Nov 05 2026 Vonng <rh@vonng.com> - 0.5.1-4PGSTY
 - Backport upstream #178 to fix temporary file leaks in streaming COPY
 - Patch official sources with pgrx 0.19.3 and refreshed locked dependencies
+- Supersede the previously published 0.5.1-3PIGSTY packages
 
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.5.1-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2

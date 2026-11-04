@@ -7,7 +7,7 @@
 %endif
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	0.2.0
+Version:	1.0.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL tokenizer extension for full-text search
 License:	Apache-2.0
@@ -38,7 +38,7 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=1874ff742dafdef8210ff0177b12cc5e4e500275f0419cee94012b8295799c1e
+LOCK_EXPECTED=4151c42b09d343cc03fb98a4a13e1721b561687b6dd260d90bb7e241ee75fbb6
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -68,10 +68,11 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
-* Tue Nov 03 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
-- Switch to the PGSTY-maintained fork and prepare pg_tokenizer 0.2.0
+* Wed Nov 04 2026 Vonng <rh@vonng.com> - 1.0.0-1PGSTY
+- Switch to the PGSTY-maintained fork and package pg_tokenizer 1.0.0
+- Fetch Snowball stemmers from pgsty/rust-stemmers v1.2.1
 - Build directly from the fork source without a downstream compatibility patch
-- Use the v0.2.0 GitHub source archive with the pg_tokenizer name
+- Use the v1.0.0 GitHub source archive with the pg_tokenizer name
 
 * Mon Nov 02 2026 Vonng <rh@vonng.com> - 0.1.1-2PGSTY
 - Build with cargo-pgrx 0.19.3 and refresh the source patch and locked dependencies

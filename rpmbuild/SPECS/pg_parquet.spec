@@ -8,14 +8,15 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.5.1
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Copy to/from Parquet in S3 from within PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/CrunchyData/pg_parquet
-Source0:	pg_parquet-%{version}.tar.gz
+Source0:	pg_parquet-v%{version}.tar.gz
+Patch0:		pg-parquet-0.5.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt
+BuildRequires:	cargo clang clang-devel rust rustfmt gcc gcc-c++ make cmake openssl-devel pkgconfig
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -24,7 +25,8 @@ pg_parquet is a PostgreSQL extension that allows you to read and write Parquet f
 
 %prep
 %setup -q -n %{sname}-%{version}
-# The source archive includes the pgrx 0.19.2 dependency update.
+# Official v0.5.1 source plus the upstream temp-file fix and pgrx 0.19.3.
+%patch -P 0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -37,13 +39,13 @@ export LDFLAGS=$(echo "${LDFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=795ae5d41327dec6a8caf514d3016b12122e41d532d282e0458dad3584a0f355
+LOCK_EXPECTED=428de8eff063e6d7e207aec170247e18700007e401034d9b46395aebabf5dac2
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -62,9 +64,11 @@ fi
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+cd %{_builddir}/%{sname}-%{version}
+PACKAGE_DIR="${CARGO_TARGET_DIR:-target}/release/%{pname}-pg%{pgmajorversion}%{pginstdir}"
+cp -a "$PACKAGE_DIR/lib/%{pname}.so" %{buildroot}%{pginstdir}/lib/
+cp -a "$PACKAGE_DIR/share/extension/%{pname}.control" %{buildroot}%{pginstdir}/share/extension/
+cp -a "$PACKAGE_DIR/share/extension/"%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %{pginstdir}/lib/%{pname}.so
@@ -74,6 +78,10 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu Nov 05 2026 Vonng <rh@vonng.com> - 0.5.1-2PGSTY
+- Backport upstream #178 to fix temporary file leaks in streaming COPY
+- Patch official sources with pgrx 0.19.3 and refreshed locked dependencies
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.5.1-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

@@ -34,3 +34,5 @@ doc/
 doc/*
 !doc/neon.md
 !doc/pg_duckdb.md
+!doc/vchord-suite.md
+!doc/vchord-suite-qa-20261104.md

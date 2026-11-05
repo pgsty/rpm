@@ -101,5 +101,9 @@ DEB dbgsym 以构建器实际生成的 `.deb` 或 `.ddeb` 文件名收集；不�
 2026-11-04 检查的两种架构 v2.0.0 公共插件路径均为 404。
 本批不声明与现有 Mooncake 插件兼容；等待上游提供匹配插件后另行验收。
 
+2026-11-05：PGSTY fork 的 pg_mooncake 0.3.0 已随包构建匹配的 Mooncake v0.0.2
+插件，并在 EL9 / Ubuntu 24.04 ARM64、PG18 上与 pg_duckdb 1.2.0 完成安装和
+联合测试。原 0.2.0 社区插件的限制仍成立；新配方与验证记录见 [pg_mooncake](pg_mooncake.md)。
+
 `duckdb_fdw` 使用独立的静态源码输入，不因本次升级自动重建。
 同一 PG 主版本的既有互斥关系保留。

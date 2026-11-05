@@ -23,13 +23,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.15.2
+Version:	1.16.0
 Release:	1PGSTY%{?dist}
 Summary:	Full-text search with BM25 ranking for PostgreSQL
 License:	PostgreSQL AND MIT
 URL:		https://codeberg.org/gregburd/pg_fts
 Source0:	%{sname}-%{version}.tar.gz
-#           https://codeberg.org/gregburd/pg_fts/archive/v1.15.2.tar.gz
+#           https://codeberg.org/gregburd/pg_fts/archive/v1.16.0.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -67,6 +67,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 1.16.0-1PGSTY
+- Update to upstream 1.16.0 and preserve the complete SQL upgrade chain.
+
 * Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 1.15.2-1PGSTY
 - Update to upstream 1.15.2.
 

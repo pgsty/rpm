@@ -19,7 +19,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0.5
+Version:	2.0.6
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension for spatial indexing on a sphere
 License:	GPL-2.0-only
@@ -60,6 +60,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 2.0.6-1PGSTY
+- Update to upstream 2.0.6.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.0.5-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

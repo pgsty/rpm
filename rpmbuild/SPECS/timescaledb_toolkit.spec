@@ -2,19 +2,19 @@
 %global sname timescaledb-toolkit
 %global srcdir timescaledb-toolkit-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:timescaledb_toolkit 1.26 supports PostgreSQL 16 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:timescaledb_toolkit 1.27 supports PostgreSQL 15 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.26.0
+Version:	1.27.0
 Release:	1PGSTY%{?dist}
 Summary:	Analytical hyperfunctions for PostgreSQL and TimescaleDB
 License:	LicenseRef-Timescale
 URL:		https://github.com/timescale/timescaledb-toolkit
 Source0:	%{sname}-%{version}.tar.gz
-#           https://codeload.github.com/timescale/timescaledb-toolkit/tar.gz/refs/tags/1.26.0
-Patch0:		timescaledb-toolkit-1.26.0.patch
+#           https://codeload.github.com/timescale/timescaledb-toolkit/tar.gz/refs/tags/1.27.0
+Patch0:		timescaledb-toolkit-1.27.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt gcc make pkgconfig openssl-devel
@@ -24,7 +24,7 @@ Requires:	postgresql%{pgmajorversion}-server
 TimescaleDB Toolkit provides approximate aggregates, counter and gauge
 analysis, time-weighted averages, state tracking, downsampling, and SQL
 pipeline utilities for PostgreSQL and TimescaleDB. This package supports
-PostgreSQL 16 through 18.
+PostgreSQL 15 through 18.
 
 %prep
 %setup -q -n %{srcdir}
@@ -38,7 +38,7 @@ export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN=stable
 export CARGO_INCREMENTAL=0
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -80,6 +80,11 @@ install -m 644 LICENSE NOTICE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu Nov 05 2026 Vonng <rh@vonng.com> - 1.27.0-1PGSTY
+- Update to upstream 1.27.0 with pgrx 0.19.3 and PostgreSQL 15 through 18
+- Apply the release version to the tagged Cargo metadata before upstream SQL generation
+- Ship all 22 upstream direct upgrade paths
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 1.26.0-1PGSTY
 - Update to upstream 1.26.0 for PostgreSQL 16 through 18
 - Build with pgrx and cargo-pgrx 0.19.2 using the locked dependency graph

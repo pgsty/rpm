@@ -1087,12 +1087,14 @@ pagevis:
 #passwordcheck_cracklib
 
 #pg_tde
-#pgaudit
 #pgauditlogtofile
 #pg_auth_mon
 #pg_jobmon
 #logerrors
 #set_user
+
+pgaudit:        # Normalize PG14/15 package names; reuse PGDG for PG16-18
+	./build pgaudit 14 15
 
 credcheck:      # EL8 security supplement; reuse PGDG on other platforms
 	./build credcheck 14 15 16 17 18

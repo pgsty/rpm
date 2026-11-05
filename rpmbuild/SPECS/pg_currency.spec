@@ -1,6 +1,8 @@
 %global pname currency
 %global sname pg_currency
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global source_commit 6c91875373f5edfbf38670d12809ece88231a609
+%global source_snapshot git20261006.6c91875
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -19,12 +21,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.4
-Release:	1PGSTY%{?dist}
+Version:	0.0.6
+Release:	1.%{source_snapshot}PGSTY%{?dist}
 Summary:	1 Byte Currency ISO type for PostgreSQL
 License:	MIT
 URL:		https://github.com/adjust/pg-currency
-Source0:	pg-currency-%{version}.tar.gz
+Source0:	pg-currency-%{version}+%{source_snapshot}.tar.gz
+# https://github.com/adjust/pg-currency/archive/6c91875373f5edfbf38670d12809ece88231a609.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -38,7 +41,7 @@ Requires:	postgresql%{pgmajorversion}-server
 A 1-byte ISO 4217 Currency Code data-type for PostgreSQL.
 
 %prep
-%setup -q -n pg-currency-%{version}
+%setup -q -n pg-currency-%{source_commit}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -53,13 +56,16 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %{pginstdir}/share/extension/%{pname}.control
 %{pginstdir}/share/extension/%{pname}*sql
 %exclude /usr/lib/.build-id/*
-%exclude %{pginstdir}/doc/extension/README.md
 
 %if %llvm
    %{pginstdir}/lib/bitcode/*
 %endif
 
 %changelog
+* Thu Nov 05 2026 Vonng <rh@vonng.com> - 0.0.6-1.git20261006.6c91875PGSTY
+- Update to upstream control version 0.0.6 at commit 6c91875373f5
+- Include the upstream MRU currency addition and supplied SQL files
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.0.4-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

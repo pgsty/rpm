@@ -90,13 +90,12 @@ The local checkout's `rpmbuild/SOURCES/` must remain empty.
 After installing the built RPMs, run `bin/postgis-test.sql` with `psql -f`
 in a disposable database. It creates the four PostGIS 3.7.0 extensions and
 checks GEOS overlay, PROJ transformation, SFCGAL 3D area, GDAL GeoTIFF
-export/import, and topology creation. The two split packages can then be
-checked separately with `CREATE EXTENSION address_standardizer`,
-`CREATE EXTENSION address_standardizer_data_us`, and
-`CREATE EXTENSION postgis_tiger_geocoder`. A pilot on one builder does not
+export/import, and topology creation. Run `bin/postgis-split-test.sql` in the
+same database to check address parsing, US standardization, and, on PG16–18,
+TIGER address normalization and loader SQL generation. A pilot on one builder does not
 validate the other platforms or publish any package.
 
-The 2026-10-04 full build passed on `pgsty/el8{,a}:build`,
+The PostGIS 3.6.4 full build on 2026-10-04 passed on `pgsty/el8{,a}:build`,
 `pgsty/el9{,a}:build` and `pgsty/el10{,a}:build`: Rocky Linux 8.10, 9.8 and
 10.2 on x86_64/aarch64, each with PostgreSQL 14–18. It produced 506 binary
 RPMs (including 226 debug packages) and 76 SRPMs. PostGIS passed 21,300 SQL
@@ -105,6 +104,27 @@ CUnit tests were not separately run. Installed payloads, native dependencies,
 GDAL Python/Java bindings, debug packages, LLVM bitcode and multi-version
 coinstallation were verified. Artifacts and SHA-256 receipts are retained in
 `yum/postgis-full-20261004/`; packages were collected locally, not published.
+
+The 2026-11-05 EL8 gap build passed on Rocky Linux 8.10 with
+`pgsty/el8:build` (x86_64) and `pgsty/el8a:build` (aarch64). PostGIS 3.7.0
+and address_standardizer 3.7.0 cover PG14–18; TIGER 2025.2 covers PG16–18.
+PGDG supplies the GIS dependencies: GEOS 3.14.1, PROJ 9.6.2, GDAL 3.8.5,
+SFCGAL 1.5.2, and libgeotiff 1.7.4. EL8 explicitly supplies GMP flags because
+its development package has no `gmp.pc`, and disables LTO through configure;
+LLVM remains enabled. The standalone address parser no longer requires PostGIS.
+Each platform directory contains 63 RPMs, including 30 debug packages. The
+13 noarch RPMs are shared byte-for-byte, yielding 113 distinct RPMs and 23
+SRPMs across both builders. Payloads, DWARF, main-package LLVM bitcode,
+runtime dependencies, parallel PG installation, and both smoke scripts passed
+for every supported target. RPMs and SHA-256 manifests are in
+`yum/postgis37-el8-20261105/`; logs, source RPMs, build inputs, and QA receipts
+are in `~/pgsty/artifacts/postgis37-el8-20261105/`. On the same day, 33 normal
+RPMs per architecture entered `~/pgsty/repo/yum/pgsql/el8.{aarch64,x86_64}/`;
+60 debug RPMs were archived separately under `~/pgsty/repo/pkg/debug/20261105/rpm/`.
+Both repositories passed signing, metadata verification, and native EL8 client
+downloads of all 66 package placements. The import report is
+`~/pgsty/repo/reports/postgis37-el8-import-20261105.md`; CDN synchronization
+has not been run.
 
 
 ## Babelfish (EL10A, PG17)

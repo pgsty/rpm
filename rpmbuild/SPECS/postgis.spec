@@ -216,6 +216,12 @@ The %{name}-utils package provides the utilities for PostGIS.
 
 %build
 %set_build_flags
+%if 0%{?rhel} == 8
+# EL8's gmp-devel provides the headers and library but no gmp.pc file.
+# PostGIS 3.7 uses pkg-config and accepts these explicit dependency flags.
+export GMP_CFLAGS="-I%{_includedir}"
+export GMP_LIBS="-lgmp"
+%endif
 LDFLAGS="-Wl,-rpath,%{geosinstdir}/lib64 ${LDFLAGS}" ; export LDFLAGS
 LDFLAGS="-Wl,-rpath,%{projinstdir}/lib64 ${LDFLAGS}" ; export LDFLAGS
 SHLIB_LINK="$SHLIB_LINK -Wl,-rpath,%{geosinstdir}/lib64" ; export SHLIB_LINK
@@ -231,7 +237,11 @@ autoconf
 	--bindir=%{pginstdir}/bin/ \
 	--datadir=%{pginstdir}/share/ \
 	--mandir=%{_mandir}/%{name} \
+%if 0%{?rhel} == 8
+	--disable-lto \
+%else
 	--enable-lto \
+%endif
 	--with-projdir=%{projinstdir} \
 %if !%raster
 	--without-raster \
@@ -252,11 +262,6 @@ autoconf
 	--enable-rpath --libdir=%{pginstdir}/lib \
 	--with-geosconfig=%{geosinstdir}/bin/geos-config \
 	--with-gdalconfig=%{gdalinstdir}/bin/gdal-config
-
-%if 0%{?rhel} && 0%{?rhel} == 8
-# Strip -flto from generated Makefiles (breaks RHEL 8 static archive linking)
-find . -name "Makefile" | xargs sed -i 's/-flto\b//g'
-%endif
 
 SHLIB_LINK="$SHLIB_LINK" %{__make} %{?_smp_mflags} LPATH=`%{pginstdir}/bin/pg_config --pkglibdir` shlib="%{sname}-%{postgissomajorversion}.so" %{with_llvm_arg}
 
@@ -414,6 +419,10 @@ fi
 %endif
 
 %changelog
+* Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
+- Supply GMP build flags on EL8, where gmp-devel does not ship pkg-config metadata.
+- Disable EL8 LTO at configure time instead of partially stripping -flto=auto.
+
 * Mon Nov 02 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
 - Update all EL builds to PostGIS 3.7.0.
 - Drop the address standardizer and Tiger geocoder payloads removed upstream.

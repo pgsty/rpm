@@ -37,7 +37,6 @@ BuildRequires:  pgdg-srpm-macros >= 2.0.0
 %endif
 
 Requires:       postgresql%{pgmajorversion}-server
-Requires:       postgis3_%{pgmajorversion} >= 3.7
 Requires:       pcre2
 
 %description
@@ -77,6 +76,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR
 %endif
 
 %changelog
+* Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
+- Remove the PostGIS runtime dependency from the standalone address parser.
+
 * Mon Nov 02 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
 - Package address_standardizer independently following the PostGIS 3.7 split.
 - Keep PGXS LLVM bitcode in the main package with native debug packages.

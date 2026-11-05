@@ -16,6 +16,7 @@ Source0:        repmgr-5.5.1.tar.gz
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc make libcurl-devel json-c-devel flex
+BuildRequires:  libselinux-devel libxslt-devel pam-devel numactl-devel
 Requires:       postgresql%{pgmajorversion}-server
 
 %{!?llvm:%global llvm 1}
@@ -33,7 +34,7 @@ repmgr provides tools for managing PostgreSQL replication and failover.
 %setup -q -n repmgr-5.5.1
 
 %build
-PATH=%{pginstdir}/bin:$PATH ./configure --with-pgconfig=%{pginstdir}/bin/pg_config
+PG_CONFIG=%{pginstdir}/bin/pg_config PATH=%{pginstdir}/bin:$PATH ./configure
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}  %{with_llvm_arg}
 
 %install

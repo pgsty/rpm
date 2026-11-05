@@ -17,6 +17,7 @@ Source0:        %{sname}-%{version}.tar.gz
 
 BuildRequires:  postgresql%{pgmajorversion}
 BuildRequires:  postgresql%{pgmajorversion}-devel
+BuildRequires:  make
 
 Requires:       postgresql%{pgmajorversion}
 Requires:       postgis3_%{pgmajorversion} >= 3.7.0
@@ -48,6 +49,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} DESTDIR=%{build
 %{pginstdir}/share/extension/%{sname}*
 
 %changelog
+* Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 2025.2-1PGSTY
+- Declare the make build dependency for the standalone SQL package.
+
 * Mon Nov 02 2026 Ruohang Feng <rh@vonng.com> - 2025.2-1PGSTY
 - Package the PostGIS Tiger geocoder independently following the PostGIS 3.7 split.
 - Restrict the package to PostgreSQL 16 through 18, matching upstream support.

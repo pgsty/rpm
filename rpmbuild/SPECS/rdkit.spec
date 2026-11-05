@@ -1,5 +1,5 @@
 %global sname rdkit
-%global upstream_version 2026_09_1
+%global upstream_version 2026_09_2
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 # Each PG cartridge must remain debuggable with the final shared runtime RPM.
 # Cross-file DWZ would give every PG build a different file under the same NVR.
@@ -10,8 +10,8 @@
 %endif
 
 Name:           %{sname}
-Version:        202609.1
-Release:        2PGSTY%{?dist}
+Version:        202609.2
+Release:        1PGSTY%{?dist}
 Summary:        RDKit runtime libraries and PostgreSQL cartridge with InChI enabled
 License:        BSD-3-Clause
 URL:            https://github.com/rdkit/rdkit
@@ -19,8 +19,8 @@ Source0:        rdkit-Release_%{upstream_version}.tar.gz
 Source1:        better-enums-0.11.3-enum.h
 # mirrored from the upstream better-enums 0.11.3 header used by RDKit
 Source2:        RingDecomposerLib-1.1.3_rdkit.tar.gz
-Patch0:         rdkit-202609.1-offline.patch
-Patch2:         rdkit-202609.1-boost175.patch
+Patch0:         rdkit-202609.2-offline.patch
+Patch2:         rdkit-202609.2-boost175.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
@@ -167,6 +167,11 @@ patchelf --remove-rpath %{buildroot}%{pginstdir}/lib/rdkit.so
 %{pginstdir}/share/extension/rdkit--*.sql
 
 %changelog
+* Thu Nov 05 2026 Vonng <rh@vonng.com> - 202609.2-1PGSTY
+- Update runtime, Python bindings and PostgreSQL cartridges to RDKit 2026.09.2
+- Rebase offline packaging against the upstream Catch2 and Python fixes
+- Preserve the existing EL8 compatibility baseline
+
 * Sat Oct 10 2026 Vonng <rh@vonng.com> - 202609.1-2PGSTY
 - Ship the upstream extension update SQL without downstream migration repairs.
 

@@ -9,7 +9,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0-only
 URL:		https://vchord.pgsty.com/
@@ -25,6 +25,8 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 %prep
 %setup -q -n vchord-%{version}
 # GitHub tag archive: https://github.com/pgsty/vchord/archive/refs/tags/%{version}.tar.gz
+# Reissued tag commit: 6ea6a3be3b2ec5521f2575055d3c77a0b9771f95
+# Source SHA256: caf1a482b62e8eba507c881f3acda3365393fc4d1648ad5ca9d4dd51d47a96a0
 # No downstream patch is applied.
 
 %build
@@ -123,6 +125,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Thu Nov 05 2026 Vonng <rh@vonng.com> - 1.2.0-2PGSTY
+- Rebuild the reissued upstream 1.2.0 tag at commit 6ea6a3be3b2e
+- Verify the refreshed source archive and retain Clang and full debug settings
+
 * Wed Nov 04 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
 - Switch to the PGSTY-maintained fork and prepare VectorChord 1.2.0
 - Build directly from the fork source without a downstream compatibility patch

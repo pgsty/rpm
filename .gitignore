@@ -34,5 +34,6 @@ doc/
 doc/*
 !doc/neon.md
 !doc/pg_duckdb.md
+!doc/pg_mooncake.md
 !doc/vchord-suite.md
 !doc/vchord-suite-qa-20261104.md

@@ -4,18 +4,18 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} != 16
-%{error:PGSTY builds kafgres 0.3.1 for PostgreSQL 16}
+%{error:PGSTY builds kafgres 0.3.2 for PostgreSQL 16}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.1
+Version:	0.3.2
 Release:	1PGSTY%{?dist}
 Summary:        Kafka protocol broker embedded in PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/kafgres
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.1.tar.gz
-Patch0:		kafgres-0.3.1-pgrx-0.19.3.patch
+#           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.2.tar.gz
+Patch0:		kafgres-0.3.2-pgrx-0.19.3.patch
 # The release targets pgrx 0.16.1; use the locked 0.19.3 dependency update.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -31,7 +31,7 @@ The table engine stores the message log in PostgreSQL tables.
 
 %prep
 %setup -q -n %{srcdir}
-%patch -P0 -p1
+patch -p1 --fuzz=0 < %{PATCH0}
 find . -type f -name '._*' -delete
 
 %build
@@ -77,6 +77,10 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 0.3.2-1PGSTY
+- Update to upstream 0.3.2 for PostgreSQL 16.
+- Regenerate the pgrx 0.19.3 patch and adapt Utf8Text SQL metadata.
+
 * Tue Oct 27 2026 Vonng <rh@vonng.com> - 0.3.1-1PGSTY
 - Update to kafgres 0.3.1 and migrate the locked build to pgrx 0.19.3.
 

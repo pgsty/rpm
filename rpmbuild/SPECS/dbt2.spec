@@ -40,13 +40,17 @@ patch -d storedproc/pgsql/c -p1 --fuzz=0 < %{PATCH0}
 
 %build
 pushd storedproc/pgsql/c
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
+# Keep source paths for RPM's debugedit; the shared patch also serves Debian,
+# whose relative prefix maps otherwise leave the RPM debugsource list empty.
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
+    PG_CFLAGS="-g -fno-omit-frame-pointer -Wall"
 popd
 
 %install
 %{__rm} -rf %{buildroot}
 pushd storedproc/pgsql/c
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{buildroot} install
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} \
+    PG_CFLAGS="-g -fno-omit-frame-pointer -Wall" DESTDIR=%{buildroot} install
 popd
 
 %files
@@ -62,6 +66,9 @@ popd
 %endif
 
 %changelog
+* Thu Nov 05 2026 Vonng <rh@vonng.com> - 0.62.0-1PGSTY
+- Preserve RPM source paths so debugedit can populate the debugsource package
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.62.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

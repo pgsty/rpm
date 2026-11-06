@@ -26,6 +26,7 @@ License:	Apache-2.0
 URL:		https://github.com/aws/pgcollection
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pgcollection-2.1.3.patch
+Patch1:		pgcollection-2.1.3-icollection-output.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -44,6 +45,7 @@ The value of an element can be any PostgreSQL type including composite types wit
 %prep
 %setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH1}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -67,6 +69,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Fri Nov 06 2026 Vonng <rh@vonng.com> - 2.1.3-1PGSTY
+- Make icollection text output roundtrip through COPY and pg_dump
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.1.3-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

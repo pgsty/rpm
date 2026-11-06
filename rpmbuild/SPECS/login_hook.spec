@@ -17,6 +17,7 @@ Summary:	Postgres database extension to execute some code on user login, compara
 License:	GPL-3.0-only
 URL:		https://github.com/splendiddata/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		login_hook-1.8-pg14-error-cleanup.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -31,6 +32,7 @@ comparable to Oracle's after logon trigger.
 
 %prep
 %setup -q -n %{sname}-%{version}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -58,6 +60,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags
 %endif
 
 %changelog
+* Fri Nov 06 2026 Vonng <rh@vonng.com> - 1.8-1PGSTY
+- Preserve login-hook diagnostics before PG14 transaction cleanup
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.8-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

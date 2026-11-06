@@ -18,6 +18,7 @@ License:	Apache-2.0
 URL:		https://github.com/aws/pgactive
 Source0:    %{sname}-%{version}.tar.gz
 Patch0:     pgactive-2.1.9.patch
+Patch1:     pgactive-2.1.9-shmem-offset.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros libselinux-devel libxslt-devel pam-devel numactl-devel
 %if %{pgmajorversion} >= 14
@@ -36,6 +37,7 @@ pgactive is a PostgreSQL replication extension for creating an active-active dat
 %prep
 %setup -q -n %{pname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH1}
 
 %build
 %set_build_flags
@@ -63,6 +65,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
 %endif
 
 %changelog
+* Fri Nov 06 2026 Vonng <rh@vonng.com> - 2.1.9-1PGSTY
+- Fix byte offsets in shared lock state allocation
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.1.9-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

@@ -25,6 +25,7 @@ Summary:	Country data type, ISO 3166-1
 License:	PostgreSQL
 URL:		https://github.com/adjust/pg-country
 Source0:	pg-country-%{version}.tar.gz
+Patch0:		pg_country-0.0.4-text-length.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -41,6 +42,7 @@ and conversion functions.
 
 %prep
 %setup -q -n pg-country-%{version}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -61,6 +63,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Fri Nov 06 2026 Vonng <rh@vonng.com> - 0.0.4-1PGSTY
+- Exclude trailing NUL bytes from country name text values
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.0.4-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

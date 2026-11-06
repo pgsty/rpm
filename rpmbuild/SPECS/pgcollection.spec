@@ -70,7 +70,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 
 %changelog
 * Fri Nov 06 2026 Vonng <rh@vonng.com> - 2.1.3-1PGSTY
-- Make icollection text output roundtrip through COPY and pg_dump
+- Preserve collection and icollection types through empty text I/O
+- Pass type I/O parameters for arrays, enums, composites and domains
 
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.1.3-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms

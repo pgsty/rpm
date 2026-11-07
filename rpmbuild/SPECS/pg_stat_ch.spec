@@ -19,7 +19,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.4.0
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        PostgreSQL query telemetry exporter to ClickHouse
 License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT AND OpenSSL
 URL:            https://github.com/ClickHouse/pg_stat_ch
@@ -124,6 +124,9 @@ test -f %{buildroot}%{pginstdir}/share/extension/%{pname}--0.3--0.4.sql
 %{pginstdir}/share/extension/%{pname}*.sql
 
 %changelog
+* Fri Nov 06 2026 Vonng <rh@vonng.com> - 0.4.0-2PGSTY
+- Publish the verified matrix rebuild under a distinct package revision
+
 * Mon Oct 05 2026 Vonng <rh@vonng.com> - 0.4.0-1PGSTY
 - Build on EL8 with GCC Toolset 14 and the parallel-installable OpenSSL 3 runtime
 - Build a private Bison 3.8 tool for the pinned Thrift parser on EL8

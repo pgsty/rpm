@@ -5,7 +5,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	6.6
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Drainage network analysis extensions for PostgreSQL and PostGIS
 License:	GPL-2.0-only
 URL:		https://github.com/pghydro/pghydro
@@ -77,5 +77,8 @@ install -m 0644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %{pginstdir}/share/extension/pgh_consistency--6.6.sql
 
 %changelog
+* Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 6.6-2PGSTY
+- Rebuild the SQL-only bundle as noarch with the PostGIS 3.7 dependency.
+
 * Sun Apr 12 2026 Vonng <rh@vonng.com> - 6.6-1PIGSTY
 - Package upstream release v.6.6x carrying PgHydro 6.6 SQL extensions

@@ -7,15 +7,14 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.12.2
+Version:        0.13.0
 Release:        1PGSTY%{?dist}
 Summary:        Incremental multidimensional models over PostgreSQL tables
 License:        Apache-2.0 OR MIT
 URL:            https://codeberg.org/gregburd/improv
 Source0:        improv-%{version}.tar.gz
-# https://codeberg.org/gregburd/improv/archive/v0.12.2.tar.gz
-# SHA256: db14fc1f3f7e7d5425c5230122baeafda6e11583fbb91107c8d09ca521265e15
-Patch0:         pg-improv-0.12.2-pgrx-0.19.3.patch
+# https://codeberg.org/gregburd/improv/archive/v0.13.0.tar.gz
+# SHA256: 1758815bf497d0d9913a1dab465ffc5473272d01674501c414d3d96e675983ef
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -30,7 +29,6 @@ Numeric model values use double precision.
 
 %prep
 %setup -q -n improv-%{version}
-patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -70,6 +68,10 @@ cp -a crates/pg_improv/sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extens
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 0.13.0-1PGSTY
+- Update to upstream 0.13.0 with model access policies and the 0.12.2 to 0.13.0 SQL migration.
+- Use the upstream pgrx 0.19.3 crate configuration without the obsolete compatibility patch.
+
 * Fri Oct 30 2026 Ruohang Feng <rh@vonng.com> - 0.12.2-1PGSTY
 - Update to upstream 0.12.2.
 - Refresh the locked pgrx 0.19.3 compatibility patch.

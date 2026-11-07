@@ -10,6 +10,34 @@ rpmbuild/targets/
 yum/
 tmp/
 
+# Downloaded sources and build artifacts must never enter Git snapshots.
+/pkg/
+/reports/
+/research_notes/
+rpmbuild/BUILD/
+rpmbuild/BUILDROOT/
+*.tar
+*.tar.*
+*.tgz
+*.tbz
+*.tbz2
+*.txz
+*.zip
+*.7z
+*.rar
+*.rpm
+*.deb
+*.ddeb
+*.changes
+*.buildinfo
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+
 docs/
 doc/pig.md
 

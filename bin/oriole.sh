@@ -15,7 +15,7 @@ if [ -z "${PATCHSET:-}" ]; then
         17) PATCHSET=23 ;;
         18) PATCHSET=4 ;;
         *)
-            echo "unsupported PG_MAJOR for OrioleDB 1.10.1: ${PG_MAJOR}" >&2
+            echo "unsupported PG_MAJOR for OrioleDB: ${PG_MAJOR}" >&2
             exit 1
             ;;
     esac

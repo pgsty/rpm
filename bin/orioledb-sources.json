@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-07",
+  "extension": "orioledb",
+  "version": "1.10.2",
+  "sql_version": "1.10",
+  "release_url": "https://github.com/orioledb/orioledb/releases/tag/v1.10.2",
+  "patchsets_source": "https://github.com/orioledb/orioledb/blob/v1.10.2/.pgtags",
+  "pg_patchsets": {
+    "16": "patches16_50",
+    "17": "patches17_23",
+    "18": "patches18_4"
+  },
+  "files": [
+    {
+      "name": "orioledb-1.10.2.tar.gz",
+      "upstream_url": "https://github.com/orioledb/orioledb/archive/refs/tags/v1.10.2.tar.gz",
+      "sha256": "78f1ea1da694ae147d40ab11497eabd8382b6c68a0cf3e11f5310e1707f03633",
+      "size": 7064949,
+      "archive_root": "orioledb-1.10.2",
+      "source_kind": "release-tag",
+      "method": "Downloaded the official v1.10.2 tag archive without repacking."
+    },
+    {
+      "name": "postgres-patches16_50.tar.gz",
+      "upstream_url": "https://github.com/orioledb/postgres/archive/refs/tags/patches16_50.tar.gz",
+      "sha256": "4ffef2b213ea7bd0014f69b67ef11590fe6120f86d10173fd9cd6a7f0b78b1ca",
+      "size": 27855019,
+      "archive_root": "postgres-patches16_50",
+      "source_kind": "release-tag",
+      "method": "Reused the existing authoritative local archive matching the v1.10.2 .pgtags entry; archive bytes were preserved."
+    },
+    {
+      "name": "postgres-patches17_23.tar.gz",
+      "upstream_url": "https://github.com/orioledb/postgres/archive/refs/tags/patches17_23.tar.gz",
+      "sha256": "d2a09b303d1a2ab7a29da387e9ea703c320c49f254dabb36a029d75678375943",
+      "size": 28819130,
+      "archive_root": "postgres-patches17_23",
+      "source_kind": "release-tag",
+      "method": "Reused the existing authoritative local archive matching the v1.10.2 .pgtags entry; archive bytes were preserved."
+    },
+    {
+      "name": "postgres-patches18_4.tar.gz",
+      "upstream_url": "https://github.com/orioledb/postgres/archive/refs/tags/patches18_4.tar.gz",
+      "sha256": "5c47d7a975aee2cd67e00ce156e050a26e018511ea4b9db3ac97737eefbf2e00",
+      "size": 30029840,
+      "archive_root": "postgres-patches18_4",
+      "source_kind": "release-tag",
+      "method": "Reused the existing authoritative local archive matching the v1.10.2 .pgtags entry; archive bytes were preserved."
+    }
+  ]
+}

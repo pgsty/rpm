@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-07",
+  "purpose": "Rebuild RPM dependencies for PostGIS 3.7; retain upstream versions. Restore the supported DocumentDB 1.0 PG15 build.",
+  "documentdb_pg15": {
+    "release": "v1.0-0",
+    "release_url": "https://github.com/documentdb/documentdb/releases/tag/v1.0-0",
+    "support_url": "https://github.com/documentdb/documentdb/blob/v1.0-0/packaging/README.md",
+    "ci_url": "https://github.com/documentdb/documentdb/blob/v1.0-0/.github/workflows/regress_tests.yml",
+    "previous_rpm": "documentdb_15-0.117-1PGSTY",
+    "decision": "Use 1.0: upstream supports the PG15 extension, and current EL builders compile it with LLVM enabled."
+  },
+  "mobilitydb_input_preservation": {
+    "upstream_commit": "3f9ee86639f4e494172d843fa13ce8ffd151498d",
+    "upstream_url": "https://github.com/MobilityDB/MobilityDB/commit/3f9ee86639f4e494172d843fa13ce8ffd151498d",
+    "upstream_title": "Copy a geometry before rewriting its coordinates in place",
+    "patch": "rpmbuild/SPECS/patches/mobilitydb-1.3.1-preserve-geometry-input.patch",
+    "sha256": "60a2331240b9c7d398515d7e865c2c601b9ee0ba66d40e3e6a818a9f9ff2a185",
+    "decision": "Backport the three runtime source changes to v1.3.1; retain 2PGSTY because this binary revision has not been published. The official source archive is unchanged.",
+    "regression_sql": "bin/qa/mobilitydb-preserve-input.sql",
+    "validation": {
+      "build_coordinates": 30,
+      "binary_rpms": 90,
+      "deep_assertions_passed": 1332,
+      "preservation_cases_passed": 780,
+      "restart_clusters_passed": 30,
+      "upstream_regression_files_passed": 6,
+      "upstream_regression_platform": "pgsty/el9a:build, Rocky 9.8, aarch64, PG18",
+      "report": "doc/mobilitydb-transform-fix-20261107.md",
+      "manifest": "yum/mobilitydb-transform-fix-20261107.json"
+    },
+    "limits": "Focused regression coverage, not the complete upstream suite. The MEOS-only geo_reverse change is included but not exercised by the RPM SQL tests. Already modified data is not reconstructed."
+  },
+  "matrix": {
+    "mobilitydb": {
+      "version": "1.3.1",
+      "release": "2PGSTY",
+      "pg": [
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "platforms": "EL8/9/10 x86_64 and aarch64"
+    },
+    "pghydro": {
+      "version": "6.6",
+      "release": "2PGSTY",
+      "pg": [
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "platforms": "EL8/9/10 noarch; one build per EL/PG, reused on both architectures"
+    },
+    "documentdb": {
+      "version": "1.0",
+      "release": "2PGSTY",
+      "pg": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "platforms": "EL8/9/10 x86_64 and aarch64"
+    }
+  },
+  "sources": [
+    {
+      "filename": "documentdb-1.0-0.tar.gz",
+      "sha256": "e5a7313a50dcc0e9d69fecf7d39f140fa6f7877c37951f54d8900eb7de0edfb9",
+      "size": 16880955
+    },
+    {
+      "filename": "mobilitydb-1.3.1.tar.gz",
+      "sha256": "6fad822e49c765e4c10307493d9b85d1a8a1faa1b124cce812bb3e8521bd383c",
+      "size": 47200465
+    },
+    {
+      "filename": "pghydro-6.6.tar.gz",
+      "sha256": "98cc917d1ed2b3a3573b03737cdc9c68aaab3441ec1496f5d250a0504e741ac5",
+      "size": 598568
+    },
+    {
+      "filename": "intelrdfpmath-applied-2.0u3-1.tar.gz",
+      "sha256": "3212a37262ce55c9f0bf16103f6a5df0e4ce9e9eea3c2a7866c39097227e5e56",
+      "size": 5805822
+    },
+    {
+      "filename": "mongo-c-driver-1.28.0.tar.gz",
+      "sha256": "bec90c85361b4a9f89d80243440d53f39b9e706b1fe4bf901c4d3ffd6f50fbdb",
+      "size": 7277377
+    },
+    {
+      "filename": "pcre2-10.40.tar.gz",
+      "sha256": "ded42661cab30ada2e72ebff9e725e745b4b16ce831993635136f2ef86177724",
+      "size": 2359622
+    },
+    {
+      "filename": "uncrustify-uncrustify-0.68.1.tar.gz",
+      "sha256": "504615382aa4c05193bdd5fbe629e65e8bbec12ff0f172896763c76419e4cd12",
+      "size": 1558940
+    },
+    {
+      "filename": "citus-tools-e36e4ea4258989bf527744334f6c633bb67e0686.tar.gz",
+      "sha256": "ef0cac3425d2df013d24d4d7b7472f6883879aed2456dc3ff09cf6eba2d26a34",
+      "size": 182116
+    }
+  ]
+}

@@ -20,5 +20,25 @@
     "license_archive_sha256": "d3aab58f3b2514aebc585f56ef73288e77cad39c76df9853227357c8013b6221",
     "normalization": "Add only the MIT LICENSE from the matching PGXN distribution to the upstream runtime/dev bundle. Repack with COPYFILE_DISABLE=1 GNU tar --format=gnu --no-xattrs --no-acls, excluding .git, .DS_Store and ._*; root pg_statecharts-0.1.0. Runtime SQL trees in both distributions are identical.",
     "architecture": "noarch/all"
+  },
+  {
+    "package": "pg_warren",
+    "version": "0.8.0",
+    "pg_versions": [
+      15,
+      16,
+      17,
+      18
+    ],
+    "archive": "pg_warren-0.8.0.tar.gz",
+    "sha256": "387a652d767505b7d931aa6442618188f615a0a6a98c6e406fcb80930c607ab5",
+    "repository": "https://github.com/ExaDev/pg_warren",
+    "extensions": [
+      "pg_warren"
+    ],
+    "source_url": "https://github.com/ExaDev/pg_warren/archive/refs/tags/v0.8.0.tar.gz",
+    "pgrx": "0.19.3",
+    "minimum_rust": "1.97",
+    "architecture": "native"
   }
 ]

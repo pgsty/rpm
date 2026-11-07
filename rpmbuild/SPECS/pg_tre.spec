@@ -20,15 +20,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        4.6.1
+Version:        4.6.2
 Release:        1PGSTY%{?dist}
 Summary:        Native index access method for approximate regular expressions
 License:        MIT AND BSD-2-Clause
 URL:            https://codeberg.org/gregburd/pg_tre
 Source0:        %{sname}-%{version}.tar.gz
 # Complete upstream release archive, including the pinned TRE and Lime sources:
-# https://github.com/gburd/pg_tre/releases/download/v4.6.1/pg_tre-4.6.1.tar.gz
-Patch0:         pg-tre-4.6.1-build-flags.patch
+# https://github.com/gburd/pg_tre/releases/download/v4.6.2/pg_tre-4.6.2.tar.gz
+Patch0:         pg-tre-4.6.2-build-flags.patch
 
 BuildRequires:  gcc make git autoconf automake libtool gettext-devel m4
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -73,6 +73,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?pgxs_rpath_arg} instal
 %endif
 
 %changelog
+* Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 4.6.2-1PGSTY
+- Update to upstream 4.6.2 with the sparsemap cursor fix.
+- Retain the build flags patch for the vendored TRE and Lime sources.
+
 * Wed Nov 04 2026 Ruohang Feng <rh@vonng.com> - 4.6.1-1PGSTY
 - Update to upstream 4.6.1.
 - Disable the unused PGXS RUNPATH on EL10 for RPM payload checks.

@@ -1,0 +1,32 @@
+{
+  "package": "pg_opencc",
+  "extension": "opencc",
+  "version": "0.1.0",
+  "repository": "https://github.com/pgsty/pg_opencc",
+  "tag": "v0.1.0",
+  "commit": "d57209123e7eef7b19c8bdca9d27a3720c37a8e2",
+  "source": "pg_opencc-0.1.0.tar.gz",
+  "url": "https://github.com/pgsty/pg_opencc/archive/refs/tags/v0.1.0.tar.gz",
+  "sha256": "969440046835bda4c785cea88efa9062aff5c3ba61fee1c7036ccc381d95f282",
+  "archive_root": "pg_opencc-0.1.0",
+  "postgresql": [
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "bundled": {
+    "opencc": "1.4.2",
+    "marisa": "0.3.1",
+    "darts-clone": "0.32h",
+    "rapidjson": "1.1.0"
+  },
+  "runtime": {
+    "encoding": "UTF8",
+    "schema": "opencc",
+    "trusted": true,
+    "preload_required": false,
+    "system_opencc_required": false
+  }
+}

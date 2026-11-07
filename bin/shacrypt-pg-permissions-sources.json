@@ -11,5 +11,18 @@
     "legacy_archive": "postgres_shacrypt-1.1.tar.gz",
     "source_files_unchanged": true,
     "repack": "GNU tar, sorted names, mtime=0, uid/gid=0, gzip -n; no .git or Apple metadata"
+  },
+  {
+    "package": "pg_permissions",
+    "version": "1.4.1",
+    "upstream_ref": "REL_1_4_1",
+    "url": "https://codeload.github.com/cybertec-postgresql/pg_permissions/tar.gz/refs/tags/REL_1_4_1",
+    "upstream_sha256": "11e0482eed0b853bde3c56df1bef2a49e42edfea33179dd8a27bc1221e697ee1",
+    "archive": "pg_permissions-1.4.1.tar.gz",
+    "sha256": "6fea86207abb3b1176583192d553c2369a50ee8fde831e211d2180a0c996e5d0",
+    "root": "pg_permissions-1.4.1",
+    "legacy_archive": "pg_permissions-REL_1_4_1.tar.gz",
+    "source_files_unchanged": true,
+    "repack": "GNU tar, sorted names, mtime=0, uid/gid=0, gzip -n; no .git or Apple metadata"
   }
 ]

@@ -1,0 +1,15 @@
+[
+  {
+    "package": "shacrypt",
+    "version": "1.1",
+    "upstream_ref": "09cc46affa270f79d0402eb0c4ce140588118309",
+    "url": "https://codeload.github.com/dverite/postgres-shacrypt/tar.gz/09cc46affa270f79d0402eb0c4ce140588118309",
+    "upstream_sha256": "13c83814ff20727f2ae59f5c965e8fcb8dc0f1e66405b6ce68157608c86900b6",
+    "archive": "shacrypt-1.1.tar.gz",
+    "sha256": "d87548b2c5463cbe5b54e86d694b4beb2cbe2c9442f0e33b0ec48c205aa90f1a",
+    "root": "shacrypt-1.1",
+    "legacy_archive": "postgres_shacrypt-1.1.tar.gz",
+    "source_files_unchanged": true,
+    "repack": "GNU tar, sorted names, mtime=0, uid/gid=0, gzip -n; no .git or Apple metadata"
+  }
+]

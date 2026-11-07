@@ -1246,6 +1246,10 @@ documentdb:
 	bash bin/documentdb.sh documentdb-1.0-0.tar.gz intelrdfpmath-applied-2.0u3-1.tar.gz
 	./build documentdb 16 17 18
 
+documentdb15:  # upstream 1.0 also supports the PG15 extension-only build
+	bash bin/documentdb.sh documentdb-1.0-0.tar.gz intelrdfpmath-applied-2.0u3-1.tar.gz
+	./build documentdb 15
+
 pg_projection:
 	./build pg_projection 14 15 16 17 18
 

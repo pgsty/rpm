@@ -3,8 +3,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global postgis_package postgis37
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:documentdb only supports PostgreSQL 16-18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:documentdb only supports PostgreSQL 15-18 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -25,7 +25,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/documentdb/documentdb
@@ -33,6 +33,9 @@ Source0:	%{sname}-%{version}-0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 pkgconf-pkg-config
 BuildRequires:	gcc gcc-c++ make cmake libicu-devel krb5-devel
+%if 0%{?pgmajorversion} == 15
+BuildRequires:  systemtap-sdt-devel
+%endif
 
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -49,7 +52,7 @@ Requires:   rum_%{pgmajorversion}
 Requires:   %{postgis_package}_%{pgmajorversion}
 
 # Require extra dependencies for building: https://github.com/microsoft/documentdb/tree/main/scripts
-# Available for PostgreSQL 16,17,18
+# Available for PostgreSQL 15,16,17,18; PG15 is extension-only upstream.
 
 %description
 DocumentDB offers a native implementation of document-oriented NoSQL database,
@@ -66,8 +69,7 @@ delivering robust functionality and flexibility for diverse data management need
 sed -i '/internal\/pg_documentdb_distributed/d' Makefile
 # EL10 aarch64's brp check rejects the upstream absolute self-RPATH.  Keep the
 # required sibling-library lookup relative to each installed module.  The
-# make-to-shell expansion and EL10 brp behavior of this form are preflighted,
-# but the resulting DocumentDB RPM still requires a fresh build and runtime QA.
+# ELF loader must also find the bundled RUM libraries when PostgreSQL starts.
 sed -i 's|-Wl,-rpath=$(shell $(PG_CONFIG) --pkglibdir)|-Wl,-rpath='"'"'$$ORIGIN'"'"',--enable-new-dtags|g' \
   Makefile.cflags pg_documentdb_extended_rum/core/Makefile
 
@@ -94,8 +96,7 @@ rm -f %{_builddir}/.documentdb-uvprobe.so
 # Pass the upstream anonymous map exactly once through the link flags.
 # PostgreSQL's module lookup does not apply to the ELF loader's transitive
 # DT_NEEDED lookup.  Strip the absolute pg_config RUNPATH here only because the
-# module Makefiles above now provide a relative sibling lookup.  The current
-# EL10 aarch64 candidate predates that change and is not suitable for release.
+# module Makefiles above now provide a relative sibling lookup.
 PG_LDFLAGS="$(%{pginstdir}/bin/pg_config --ldflags)"
 PG_LDFLAGS="$(printf '%s\n' "$PG_LDFLAGS" | sed -E "s@-Wl,-rpath,'/usr/pgsql-[0-9]+/lib',--enable-new-dtags@@g")"
 DOCUMENTDB_LDFLAGS="$PG_LDFLAGS $UNDEF_VERSION_FLAG -Wl,--version-script=%{_builddir}/documentdb-hide-linker-syms.map"
@@ -127,6 +128,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 1.0-2PGSTY
+- Rebuild with the PostGIS 3.7 runtime dependency.
+- Restore the upstream-supported PostgreSQL 15 extension build.
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 1.0-1PGSTY
 - Update to upstream 1.0.
 - Restrict PGSTY builds to PostgreSQL 16-18 after the PG15 alignment failure.

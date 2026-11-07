@@ -12,7 +12,7 @@
 Summary:	SQLite Foreign Data Wrapper for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.5.0
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/pgspider/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
@@ -72,6 +72,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflag
 %endif
 
 %changelog
+* Fri Nov 06 2026 Vonng <rh@vonng.com> - 2.5.0-4PGSTY
+- Publish the verified matrix rebuild above the released 3PIGSTY revision
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.5.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

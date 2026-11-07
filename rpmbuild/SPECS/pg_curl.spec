@@ -1,7 +1,8 @@
 %global pname pg_curl
 %global sname pg_curl
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global whitelist_commit fbca6aef6962b20126714eaaa3f55c77f65bb5c3
+%global pg_curl_commit 6abdb3dbe81c0e320eebeeb0120cff993d593b31
+%global whitelist_commit 9001c0cb09483e0828c2578f8e842cf00268a44e
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
 %{error:pg_curl supports PostgreSQL 14 through 18}
@@ -24,16 +25,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.4.6
+Version:	2.5.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL tool for transferring data with URL syntax
 License:	MIT
 URL:		https://github.com/RekGRpth/pg_curl
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_curl-2.4.6.patch
-# Official PGXN 2.4.6 with the exact upstream pg_whitelist submodule.
-# pg_curl 35481dc401864f7cfaf75be7e87d002780b1906f
-# and pg_whitelist fbca6aef6962b20126714eaaa3f55c77f65bb5c3.
+# Official PGXN 2.5.0 with the exact upstream pg_whitelist submodule.
+# pg_curl %{pg_curl_commit} and pg_whitelist %{whitelist_commit}.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	libcurl-devel
@@ -48,14 +47,15 @@ Requires:	    postgresql%{pgmajorversion}-server
 %description
 PostgreSQL tool for transferring data with URL syntax, supporting DICT, FILE, FTP, FTPS, GOPHER, GOPHERS, HTTP, HTTPS, IMAP, IMAPS,
  LDAP,LDAPS, MQTT, POP3, POP3S, RTMP, RTMPS, RTSP, SCP, SFTP, SMB, SMBS, SMTP, SMTPS, TELNET, TFTP, WS and WSS.
-The official PGXN source includes the pg_whitelist submodule at
-%{whitelist_commit}. The installed SQL version remains 2.4.1
-to preserve existing installations and the previously shipped upgrade chain.
+This package combines the official PGXN source with pg_whitelist at
+%{whitelist_commit}. The upstream SQL version is 2.5 and includes
+the 2.4 to 2.5 catalog upgrade script.
 
 %prep
 %setup -q -n %{sname}-%{version}
-cp pg_curl--2.4.sql pg_curl--2.4.1.sql
-patch -p1 --fuzz=0 < %{PATCH0}
+grep -qx "default_version = '2.5'" %{pname}.control
+test -s %{pname}--2.4.sql
+test -s %{pname}--2.4--2.5.sql
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -79,6 +79,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 2.5.0-1PGSTY
+- Update to the official PGXN 2.5.0 release.
+- Include the pinned pg_whitelist submodule and upstream 2.4 to 2.5 upgrade script.
+- Remove the obsolete downstream 2.4.1 SQL migration workaround.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.4.6-1PGSTY
 - Update to 2.4.6
 

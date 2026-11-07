@@ -1,6 +1,13 @@
 %global sname mobilitydb
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global postgis_package postgis37
+%if 0%{?rhel} >= 9
+%global geos_package geos315
+%global proj_package proj98
+%else
+%global geos_package geos314
+%global proj_package proj96
+%endif
 
 %if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
 %{error:mobilitydb only supports PostgreSQL 14 through 18}
@@ -8,7 +15,7 @@
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.3.1
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Geospatial trajectory data management and analysis platform
 # MobilityDB is PostgreSQL-licensed; the shared library embeds GPL-2.0-or-later
 # PostGIS liblwgeom/libpgcommon objects, as documented by debian/copyright.
@@ -19,6 +26,8 @@ Source0:        %{sname}-%{version}.tar.gz
 
 # Rebased PGDG/Debian mobilitydb 1.3.0-2 patches, in their original order.
 Patch0:         mobilitydb-1.3.1.patch
+# Upstream fix for in-place mutation of stored geometry inputs.
+Patch1:         mobilitydb-1.3.1-preserve-geometry-input.patch
 
 # Debian limits builds to 64-bit little-endian architectures. These are the two
 # such architectures in the PGSTY RPM matrix.
@@ -31,8 +40,8 @@ BuildRequires:  cmake >= 3.12
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  make
-BuildRequires:  geos314-devel
-BuildRequires:  proj96-devel
+BuildRequires:  %{geos_package}-devel
+BuildRequires:  %{proj_package}-devel
 BuildRequires:  json-c-devel
 BuildRequires:  gsl-devel
 
@@ -56,11 +65,11 @@ export PATH=%{pginstdir}/bin:$PATH
 cmake -S . -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DPOSTGRESQL_PG_CONFIG=%{pginstdir}/bin/pg_config \
-    -DGEOS_CONFIG=/usr/geos314/bin/geos-config \
-    -DGEOS_INCLUDE_DIR=/usr/geos314/include \
-    -DGEOS_LIBRARY=/usr/geos314/lib64/libgeos_c.so \
-    -DPROJ_INCLUDE_DIRS=/usr/proj96/include \
-    -DPROJ_LIBRARIES=/usr/proj96/lib64/libproj.so
+    -DGEOS_CONFIG=/usr/%{geos_package}/bin/geos-config \
+    -DGEOS_INCLUDE_DIR=/usr/%{geos_package}/include \
+    -DGEOS_LIBRARY=/usr/%{geos_package}/lib64/libgeos_c.so \
+    -DPROJ_INCLUDE_DIRS=/usr/%{proj_package}/include \
+    -DPROJ_LIBRARIES=/usr/%{proj_package}/lib64/libproj.so
 cmake --build build -- %{?_smp_mflags}
 
 # Upstream regression tests require a live PostgreSQL cluster. As in Debian,
@@ -80,6 +89,11 @@ DESTDIR=%{buildroot} cmake --install build
 %{pginstdir}/share/extension/mobilitydb_datagen--*.sql
 
 %changelog
+* Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 1.3.1-2PGSTY
+- Rebuild with the PostGIS 3.7 runtime dependency.
+- Match GEOS and PROJ to the PostGIS provider on each EL major.
+- Backport upstream input preservation for transform, affine, scale and reverse.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.3.1-1PGSTY
 - Update to 1.3.1.
 

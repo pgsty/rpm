@@ -14,33 +14,37 @@ PG_MAJOR ?= 18
 ###############################################################
 #                            Prepare                          #
 ###############################################################
-env: pig setup
-pig:
-	curl https://repo.pigsty.cc/pig | bash
-setup: repo tool spec rust pgrx
+env: setup
+setup:
+	command -v pgext
+	$(MAKE) repo
+	$(MAKE) tool
+	$(MAKE) spec
+	$(MAKE) rust
+	$(MAKE) pgrx
 repo:
-	pig build repo
+	pgext env repo
 tool:
-	pig build tool
+	pgext env tool
 spec:
-	pig build spec
+	pgext env spec
 rust:
-	pig build rust
+	pgext env rust
 pgrx: pgrx0193
 pgrx0161:
-	pig build pgrx -v 0.16.1
+	pgext env pgrx -v 0.16.1
 pgrx0170:
-	pig build pgrx -v 0.17.0
+	pgext env pgrx -v 0.17.0
 pgrx0180:
-	pig build pgrx -v 0.18.0
+	pgext env pgrx -v 0.18.0
 pgrx0181:
-	pig build pgrx -v 0.18.1
+	pgext env pgrx -v 0.18.1
 pgrx0191:
-	pig build pgrx -v 0.19.1
+	pgext env pgrx -v 0.19.1
 pgrx0192:
-	pig build pgrx -v 0.19.2
+	pgext env pgrx -v 0.19.2
 pgrx0193:
-	pig build pgrx -v 0.19.3
+	pgext env pgrx -v 0.19.3
 
 ###############################################################
 #                            Summary                          #
@@ -1453,7 +1457,7 @@ rm-srpm:
 # All targets declared as .PHONY to ensure make always runs them
 # even if a file with the same name exists
 
-.PHONY: hdr_histogram pg_improv pg_kv pg_try_cast pg_synonym env pig setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
+.PHONY: hdr_histogram pg_improv pg_kv pg_try_cast pg_synonym env setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
 	pgrx0191 pgrx0192 pgrx0193 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background address_standardizer postgis_tiger_geocoder \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \

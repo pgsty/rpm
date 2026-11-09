@@ -8,7 +8,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.4
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	PostgreSQL extension providing JSON Schema validation
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_jsonschema
@@ -62,6 +62,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 09 2026 Vonng <rh@vonng.com> - 0.3.4-4PGSTY
+- Raise release above published 0.3.4-3PIGSTY packages
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.3.4-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

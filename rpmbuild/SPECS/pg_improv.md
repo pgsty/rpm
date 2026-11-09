@@ -1,14 +1,14 @@
-# pg_improv 0.13.0 打包
+# pg_improv 0.14.0 打包
 
-RPM/DEB 使用上游 0.13.0，原生采用 pgrx **0.19.3**，不再应用旧 pgrx
+RPM/DEB 使用上游 0.14.0，原生采用 pgrx **0.19.3**，不再应用旧 pgrx
 兼容补丁。独立扩展 workspace 位于 `crates/pg_improv`，支持 PG15–18，
 Rust 最低版本为 1.97。许可为 Apache-2.0 OR MIT。
 
 - 上游：<https://codeberg.org/gregburd/improv>
-- 正式版本：<https://codeberg.org/gregburd/improv/src/tag/v0.13.0>
-- 源码：<https://codeberg.org/gregburd/improv/archive/v0.13.0.tar.gz>
-- 归档：`improv-0.13.0.tar.gz`
-- SHA-256：`1758815bf497d0d9913a1dab465ffc5473272d01674501c414d3d96e675983ef`
+- 正式版本：<https://codeberg.org/gregburd/improv/src/tag/v0.14.0>
+- 源码：<https://codeberg.org/gregburd/improv/archive/v0.14.0.tar.gz>
+- 归档：`improv-0.14.0.tar.gz`，原始根目录为 `improv/`
+- SHA-256：`a54ba0d206f482122cacfe31fdf36a975634a81be39cf496ee59e27ff8e452c1`
 
 ```sh
 pig build get pg_improv
@@ -20,8 +20,19 @@ cd ~/rpmbuild
 ```
 
 配方执行 locked fetch、离线打包和 lockfile 不变检查，保留 release DWARF。
-主包安装 SO、control、生成的 0.13.0 安装 SQL 及上游全部迁移脚本，包括
-0.12.2→0.13.0。Rust/pgrx 不生成 PGXS bitcode。打包不补写产品功能或迁移。
+主包安装 SO、control、生成的 0.14.0 安装 SQL 及上游全部迁移脚本，包括
+0.13.0→0.14.0。Rust/pgrx 不生成 PGXS bitcode。打包不补写产品功能或迁移。
+
+## 0.14.0 边界版本验证：2026-11-09
+
+Rocky Linux 9.8 aarch64 与 Ubuntu 24.04.5 arm64 的 PG15.19、PG18.6
+均通过构建、安装和上游未修改的 `tests/txn.sh`。检查了主包、RPM
+debuginfo/debugsource、DEB dbgsym、实际 DWARF 与匹配的 build-id；
+Cargo.lock 未变化，9 份上游迁移 SQL 的安装内容与源码校验值一致。
+事务测试覆盖无 preload 创建扩展、trigger/commit/logical 模式、回滚、
+savepoint、两阶段提交和 dump/restore 后继续同步。
+
+产物与日志：`/Users/vonng/pgsty/artifacts/extension-upgrade-20261109/`。
 
 ## 0.13.0 代表性验证：2026-11-07
 

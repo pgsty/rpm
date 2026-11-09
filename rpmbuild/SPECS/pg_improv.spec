@@ -7,14 +7,14 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.13.0
+Version:        0.14.0
 Release:        1PGSTY%{?dist}
 Summary:        Incremental multidimensional models over PostgreSQL tables
 License:        Apache-2.0 OR MIT
 URL:            https://codeberg.org/gregburd/improv
 Source0:        improv-%{version}.tar.gz
-# https://codeberg.org/gregburd/improv/archive/v0.13.0.tar.gz
-# SHA256: 1758815bf497d0d9913a1dab465ffc5473272d01674501c414d3d96e675983ef
+# https://codeberg.org/gregburd/improv/archive/v0.14.0.tar.gz
+# SHA256: a54ba0d206f482122cacfe31fdf36a975634a81be39cf496ee59e27ff8e452c1
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -28,13 +28,13 @@ and wal_level = logical. Manual and trigger modes also work without preload.
 Numeric model values use double precision.
 
 %prep
-%setup -q -n improv-%{version}
+%setup -q -n improv
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/improv-%{version}/crates/pg_improv/target}"
+export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/improv/crates/pg_improv/target}"
 cd crates/pg_improv
 PGRX_VERSION=0.19.3
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
@@ -52,7 +52,7 @@ test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')"
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/improv-%{version}/crates/pg_improv/target}"
+TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/improv/crates/pg_improv/target}"
 PKGDIR="$TARGET_DIR/release/%{pname}-pg%{pgmajorversion}%{pginstdir}"
 cp -a "$PKGDIR/lib/%{pname}.so" %{buildroot}%{pginstdir}/lib/
 cp -a "$PKGDIR/share/extension/"* %{buildroot}%{pginstdir}/share/extension/
@@ -68,6 +68,10 @@ cp -a crates/pg_improv/sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extens
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 09 2026 Ruohang Feng <rh@vonng.com> - 0.14.0-1PGSTY
+- Update to upstream 0.14.0 and preserve its supplied SQL migration files.
+- Use the official Codeberg archive with its unmodified improv source root.
+
 * Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 0.13.0-1PGSTY
 - Update to upstream 0.13.0 with model access policies and the 0.12.2 to 0.13.0 SQL migration.
 - Use the upstream pgrx 0.19.3 crate configuration without the obsolete compatibility patch.

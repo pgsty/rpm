@@ -10,17 +10,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.26.5
+Version:	0.26.6
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0-or-later
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-Source1:	pg_search_collect_third_party_licenses-%{version}.py
-# Upstream 0.26.5 already pins pgrx 0.19.3 in its manifests and Cargo.lock.
+# Upstream 0.26.6 already pins pgrx 0.19.3 in its manifests and Cargo.lock.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang curl git rust rustfmt openssl-devel openblas-devel libicu-devel pkgconfig python3
+BuildRequires:	cargo clang curl git rust rustfmt openssl-devel openblas-devel libicu-devel pkgconfig
 Requires:	postgresql%{pgmajorversion}-server pgvector_%{pgmajorversion}
 
 %description
@@ -82,12 +81,6 @@ export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 cd %{pname}
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 cd ..
-TARGET_TRIPLE=$(rustc -vV | sed -n 's/^host: //p')
-CARGO_NET_OFFLINE=true cargo metadata --locked --offline \
-	--manifest-path %{pname}/Cargo.toml --no-default-features \
-	--features pg%{pgmajorversion} --filter-platform "$TARGET_TRIPLE" \
-	--format-version=1 > .cargo-metadata-pg-search.json
-python3 %{SOURCE1} .cargo-metadata-pg-search.json third-party-licenses
 LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
 	echo "Cargo.lock changed during cargo pgrx package" >&2
@@ -101,12 +94,9 @@ TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
 cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
 cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
-install -d %{buildroot}%{_licensedir}/%{name}/third-party
-cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 
 %files
 %license LICENSE
-%license %{_licensedir}/%{name}/third-party
 %doc %{pname}/README.md
 %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
@@ -114,6 +104,10 @@ cp -a third-party-licenses/. %{buildroot}%{_licensedir}/%{name}/third-party/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Nov 09 2026 Ruohang Feng <rh@vonng.com> - 0.26.6-1PGSTY
+- Update to upstream 0.26.6 with its locked pgrx 0.19.3 dependency graph.
+- Simplify source inputs and package the upstream license.
+
 * Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 0.26.5-1PGSTY
 - Update to upstream 0.26.5 with the unchanged locked pgrx 0.19.3 dependencies.
 - Prefetch and verify the pinned Lindera dictionary assets with proxy-aware curl.

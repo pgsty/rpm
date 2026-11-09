@@ -8,7 +8,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.0
 Release:	1PGSTY%{?dist}
 Summary:	Native BM25 Ranking Index in PostgreSQL
 License:	AGPL-3.0-only
@@ -44,7 +44,7 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=332f2ea12e66ead36e59d6a8592d69e48b84c8c42233e46cc2d743ed9976cc40
+LOCK_EXPECTED=7b5c0ced620a2361ea1ad1adbd92529bd2d371b6259fdf263e24ef0c9d2cb9a8
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -81,6 +81,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 09 2026 Vonng <rh@vonng.com> - 1.1.0-1PGSTY
+- Update to upstream 1.1.0 with the Block-WAND score-bound correction.
+- Refresh the upstream Cargo.lock checksum and retain pgrx 0.19.3.
+
 * Wed Nov 04 2026 Vonng <rh@vonng.com> - 1.0.0-1PGSTY
 - Switch to the PGSTY-maintained fork and prepare VectorChord-bm25 1.0.0
 - Use PostgreSQL tsvector values and the new PGSTY index format

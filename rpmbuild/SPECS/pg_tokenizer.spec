@@ -8,7 +8,7 @@
 %endif
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL tokenizer extension for full-text search
 License:	Apache-2.0
@@ -40,7 +40,7 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=4151c42b09d343cc03fb98a4a13e1721b561687b6dd260d90bb7e241ee75fbb6
+LOCK_EXPECTED=a304d086682fb33d16c8be39bfb756edc43c75e6fc7613793c103b3167e93746
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -72,6 +72,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 09 2026 Vonng <rh@vonng.com> - 1.1.0-1PGSTY
+- Update to upstream 1.1.0 with tokenizer permission and cache fixes.
+- Refresh the upstream Cargo.lock checksum and retain pgrx 0.19.3.
+
 * Wed Nov 04 2026 Vonng <rh@vonng.com> - 1.0.0-1PGSTY
 - Switch to the PGSTY-maintained fork and package pg_tokenizer 1.0.0
 - Fetch Snowball stemmers from pgsty/rust-stemmers v1.2.1

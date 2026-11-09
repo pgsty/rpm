@@ -11,13 +11,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.8
+Version:	1.9
 Release:	1PGSTY%{?dist}
 Summary:	Postgres database extension to execute some code on user login, comparable to Oracle's after logon trigger.
 License:	GPL-3.0-only
 URL:		https://github.com/splendiddata/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		login_hook-1.8-pg14-error-cleanup.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -31,8 +30,7 @@ Postgres database extension to execute some code on user login,
 comparable to Oracle's after logon trigger.
 
 %prep
-%setup -q -n %{sname}-%{version}
-patch -p1 --fuzz=0 < %{PATCH0}
+%setup -q -n %{sname}-Version_%{version}
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -60,6 +58,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags
 %endif
 
 %changelog
+* Mon Nov 09 2026 Vonng <rh@vonng.com> - 1.9-1PGSTY
+- Update to upstream Version_1.9 and its supplied SQL upgrade scripts.
+- Drop the PG14 error-cleanup patch now included upstream.
+
 * Fri Nov 06 2026 Vonng <rh@vonng.com> - 1.8-1PGSTY
 - Preserve login-hook diagnostics before PG14 transaction cleanup
 

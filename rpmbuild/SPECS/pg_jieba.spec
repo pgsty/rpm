@@ -8,7 +8,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.0.1
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Chinese full-text search parser for PostgreSQL
 License:	BSD-3-Clause AND MIT
 URL:		https://github.com/jaiminpan/pg_jieba
@@ -62,6 +62,9 @@ cd build
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Nov 09 2026 Vonng <rh@vonng.com> - 2.0.1-2PGSTY
+- Raise release above published 2.0.1-1PIGSTY packages
+
 * Tue Jul 21 2026 Vonng <rh@vonng.com> - 2.0.1-1PIGSTY
 - Initial RPM release with the pinned cppjieba submodule
 - Support CMake 4 by requiring CMake policy level 3.5 or newer

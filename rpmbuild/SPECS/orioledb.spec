@@ -24,7 +24,7 @@
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 
 Name:		%{sname}-%{pgmajorversion}
-Version:	1.10.2
+Version:	1.10.3
 Release:	1PGSTY%{?dist}
 Summary:	OrioleDB PostgreSQL kernel with bundled storage engine extension
 License:	PostgreSQL AND Apache-2.0
@@ -139,6 +139,10 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Mon Nov 09 2026 Vonng <rh@vonng.com> - 1.10.3-1PGSTY
+- Update to OrioleDB 1.10.3, fixing skipped ON CONFLICT updates after foreign key locks.
+- Retain SQL version 1.10 and PostgreSQL 18/17/16 patchsets 4/23/50.
+
 * Sat Nov 07 2026 Vonng <rh@vonng.com> - 1.10.2-1PGSTY
 - Update to OrioleDB 1.10.2 with the corrected runtime version string.
 - Retain SQL version 1.10 and PostgreSQL 18/17/16 patchsets 4/23/50.

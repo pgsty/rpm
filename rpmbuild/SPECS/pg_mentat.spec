@@ -8,15 +8,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.19.1
+Version:        1.20.0
 Release:        1PGSTY%{?dist}
 Summary:        Datomic-compatible Datalog query engine for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/mentat
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/mentat/archive/v1.19.1.tar.gz
-# Repacked with GNU tar to use a versioned archive root.
-Patch0:         pg-mentat-1.19.1.patch
+#               https://api.pgxn.org/dist/pg_mentat/1.20.0/pg_mentat-1.20.0.zip
+# Official PGXN bundle normalized to tar.gz without changing source contents.
+Patch0:         pg-mentat-1.20.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -79,6 +79,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Tue Nov 10 2026 Ruohang Feng <rh@vonng.com> - 1.20.0-1PGSTY
+- Update to 1.20.0, retaining PG14-18 and the locked pgrx 0.19.3 build.
+
 * Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 1.19.1-1PGSTY
 - Update to upstream 1.19.1 and retain the PG14-18 pgrx 0.19.3 build.
 

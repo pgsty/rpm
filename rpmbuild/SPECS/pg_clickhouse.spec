@@ -2,22 +2,10 @@
 %global sname pg_clickhouse
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%ifarch x86_64
- %if 0%{?rhel} && 0%{?rhel} == 9
-  %{!?llvm:%global llvm 0}
- %else
-  %{!?llvm:%global llvm 1}
- %endif
-%else
-%ifarch ppc64 ppc64le s390 s390x armv7hl
- %if 0%{?rhel} && 0%{?rhel} == 7
-  %{!?llvm:%global llvm 0}
- %else
-  %{!?llvm:%global llvm 1}
- %endif
-%else
- %{!?llvm:%global llvm 1}
-%endif
+%{!?llvm:%global llvm 1}
+
+%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%{error:pg_clickhouse is packaged for PostgreSQL 14 through 18}
 %endif
 
 %if %llvm
@@ -27,16 +15,16 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.11.0
+Version:	0.11.1
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to query ClickHouse databases
 License:	Apache-2.0
 URL:		https://github.com/ClickHouse/pg_clickhouse
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		pg_clickhouse-0.11.0.patch
-#           https://github.com/ClickHouse/pg_clickhouse/releases/tag/v0.11.0
-#           Repacked from the release tag with its recursive submodules.
-#           SOURCE_MANIFEST records the pinned pg-clickhouse-c and clickhouse-c revisions.
+Patch0:		pg_clickhouse-0.11.1.patch
+#           https://api.pgxn.org/dist/pg_clickhouse/0.11.1/pg_clickhouse-0.11.1.zip
+#           Official PGXN bundle includes the recursive vendored C client.
+#           Normalized to tar.gz without modifying source contents.
 #           Supported: PostgreSQL 14, 15, 16, 17, 18
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -67,7 +55,8 @@ Features:
 - Supports PostgreSQL 14-18 in Pigsty builds and ClickHouse v23+
 
 %prep
-%autosetup -p1 -n %{sname}-%{version}
+%autosetup -N -n %{sname}-%{version}
+patch -p1 --fuzz=0 < %{PATCH0}
 
 # Skip git submodule command since the recursive vendor tree is included.
 sed -i 's/git submodule update --init/@echo "Skipping submodule (included in tarball)"/' Makefile
@@ -100,6 +89,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Tue Nov 10 2026 Ruohang Feng <rh@vonng.com> - 0.11.1-1PGSTY
+- Update to 0.11.1 using the complete official PGXN source bundle.
+- Retain OpenSSL compatibility; drop the upstreamed GCC clobber fix.
+- Enable LLVM on every supported platform and keep bitcode in the main package.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 0.11.0-1PGSTY
 - Update to 0.11.0.
 

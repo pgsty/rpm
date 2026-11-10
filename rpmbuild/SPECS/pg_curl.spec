@@ -26,11 +26,12 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	2.5.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	PostgreSQL tool for transferring data with URL syntax
 License:	MIT
 URL:		https://github.com/RekGRpth/pg_curl
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:         pg_curl-2.5.0-minimal-reset.patch
 # Official PGXN 2.5.0 with the exact upstream pg_whitelist submodule.
 # pg_curl %{pg_curl_commit} and pg_whitelist %{whitelist_commit}.
 
@@ -53,6 +54,7 @@ the 2.4 to 2.5 catalog upgrade script.
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch0 -p1
 grep -qx "default_version = '2.5'" %{pname}.control
 test -s %{pname}--2.4.sql
 test -s %{pname}--2.4--2.5.sql
@@ -79,6 +81,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Tue Nov 10 2026 Ruohang Feng <rh@vonng.com> - 2.5.0-2PGSTY
+- Allow clearing options for protocols omitted from the system libcurl build.
+
 * Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 2.5.0-1PGSTY
 - Update to the official PGXN 2.5.0 release.
 - Include the pinned pg_whitelist submodule and upstream 2.4 to 2.5 upgrade script.

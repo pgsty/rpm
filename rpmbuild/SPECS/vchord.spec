@@ -8,8 +8,8 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.0
-Release:	2PGSTY%{?dist}
+Version:	1.3.0
+Release:	1PGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0-only
 URL:		https://vchord.pgsty.com/
@@ -25,8 +25,8 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 %prep
 %setup -q -n vchord-%{version}
 # GitHub tag archive: https://github.com/pgsty/vchord/archive/refs/tags/%{version}.tar.gz
-# Reissued tag commit: 6ea6a3be3b2ec5521f2575055d3c77a0b9771f95
-# Source SHA256: caf1a482b62e8eba507c881f3acda3365393fc4d1648ad5ca9d4dd51d47a96a0
+# Tag commit: 1b35b7a0bc9a71bc82aa4c3396c5545da062d050
+# Source SHA256: 097cf21776d6bce4c62c85193e8627d9422d3af9a25e871dc809315fc0310cf4
 # No downstream patch is applied.
 
 %build
@@ -88,7 +88,7 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=8d2e52210bcb7daca5643af4ef8ebe703b86451a8bd6a8fddf3c939464ccbb84
+LOCK_EXPECTED=f785b8189d9609ea3df07008d3e84232bf46413035c6c988e21bd2f45ef8687c
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -125,6 +125,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Nov 10 2026 Vonng <rh@vonng.com> - 1.3.0-1PGSTY
+- https://github.com/pgsty/vchord/releases/tag/1.3.0
+- Refresh locked dependencies and ship the upstream 1.2.0 to 1.3.0 upgrade SQL
+
 * Thu Nov 05 2026 Vonng <rh@vonng.com> - 1.2.0-2PGSTY
 - Rebuild the reissued upstream 1.2.0 tag at commit 6ea6a3be3b2e
 - Verify the refreshed source archive and retain Clang and full debug settings

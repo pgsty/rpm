@@ -1524,7 +1524,7 @@ kafgres:
         pg_lexo addressing_dictionary pg_statkit colnames
 
 vgram:
-	./build vgram 14 15 16 17 18
+	./build vgram 15 16 17 18 19
 
 pg_money:
 	./build pg_money 14 15 16 17 18

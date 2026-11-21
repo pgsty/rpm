@@ -1,7 +1,7 @@
 %global sname graphblas
 
 Name:           %{sname}
-Version:        10.5.2
+Version:        10.5.3
 Release:        1PGSTY%{?dist}
 Summary:        SuiteSparse implementation of the GraphBLAS standard
 License:        Apache-2.0
@@ -67,6 +67,9 @@ DESTDIR=%{buildroot} cmake --install build
 %{_libdir}/cmake/GraphBLAS/*
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 10.5.3-1PGSTY
+- Update to 10.5.3; retain compact JIT and compiler debug information.
+
 * Tue Nov 03 2026 Vonng <rh@vonng.com> - 10.5.2-1PGSTY
 - Update to 10.5.2 with arena, import, sort, reshape, and selection fixes.
 - Retain compact mode, CPU JIT, and complete compiler debug information.

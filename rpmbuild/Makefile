@@ -621,7 +621,7 @@ pgmp:
 	./build pgmp 15 16 17 18 19
 
 pguint:
-	./build pguint 14 15 16 17 18
+	./build pguint 15 16 17 18 19
 
 pg_nanotime:
 	./build pg_nanotime 17 18 19

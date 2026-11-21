@@ -1190,7 +1190,7 @@ pg_noset:
 jdbc_fdw:
 	./build jdbc_fdw 15 16 17 18 19
 pgspider_ext:
-	./build pgspider_ext 14 15 16 17 18
+	./build pgspider_ext 15 16 17 18 19
 #mysql_fdw
 #oracle_fdw
 #tds_fdw

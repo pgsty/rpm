@@ -4,7 +4,7 @@
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -17,6 +17,7 @@ License:        PostgreSQL
 URL:            https://github.com/pgspider/%{sname}
 Source0:        %{sname}-%{version}.tar.gz
 Patch0:         pgspider_ext-1.3.0.patch
+Patch1:        pgspider_ext-1.3.0-pg19-compat.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
 %if %llvm
@@ -35,6 +36,7 @@ data from multiple foreign data wrappers through a partitioned-table interface.
 %if 0%{?pgmajorversion} >= 18
 %patch -P 0 -p1
 %endif
+%patch -P 1 -p1
 
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -55,6 +57,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDI
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.3.0-1PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.3.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

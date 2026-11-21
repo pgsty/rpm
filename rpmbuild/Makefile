@@ -898,7 +898,7 @@ pg_financial:
 	./build pg_financial 14 15 16 17 18
 
 pg_accumulator:
-	./build pg_accumulator 14 15 16 17 18
+	./build pg_accumulator 15 16 17 18 19
 
 pg_convert:		# rust pgrx 0.19.2
 	./build pg_convert 14 15 16 17 18

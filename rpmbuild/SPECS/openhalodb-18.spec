@@ -6,9 +6,9 @@
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 
 Name:		%{sname}-%{pgmajorversion}
-Version:	18.6
+Version:	18.6.1
 Release:	1PGSTY%{?dist}
-Summary:	OpenHalo 18: PostgreSQL 18 with MySQL wire protocol and dialect
+Summary:	OpenHalo 18: PostgreSQL 18.6 with MySQL wire protocol and dialect
 License:	PostgreSQL AND GPL-3.0-only
 URL:		https://github.com/pgsty/openhalo
 Source0:	%{sname}-%{version}.tar.gz
@@ -31,15 +31,15 @@ Requires:       systemd, lz4-libs, libzstd >= 1.4.0, /sbin/ldconfig, libicu, ope
 Requires(pre):  shadow-utils
 
 %description
-OpenHalo 18 lets applications written for MySQL work with PostgreSQL 18:
+OpenHalo 18 lets applications written for MySQL work with PostgreSQL 18.6:
 MySQL clients, drivers and the mysql CLI connect on port 3306, PostgreSQL
-clients on 5432, against the same data.  It is PostgreSQL %{version} with a
+clients on 5432, against the same data.  It is PostgreSQL 18.6 with a
 small generic protocol extension patch and openHalo's aux_mysql extension
-(MySQL protocol, dialect and functions), preloaded and listening on 3306 by
-default.  Installed under %{pgbaseinstdir}, next to openhalodb-14.
+(MySQL protocol, dialect and functions, version 1.9), preloaded and listening
+on 3306 by default.  Installed under %{pgbaseinstdir}, next to openhalodb-14.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n openhalo-%{version}
 
 %build
 %set_build_flags
@@ -153,6 +153,10 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Tue Nov 10 2026 Ruohang Feng <rh@vonng.com> - 18.6.1-1PGSTY
+- Update OpenHalo 18 to the PGSTY fork tag v18.6.1 (PostgreSQL 18.6)
+- Update the bundled aux_mysql extension from 1.5 to 1.9
+
 * Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 18.6-1PGSTY
 - Initial OpenHalo 18 package: PostgreSQL 18.6, protocol extension hooks and
   openHalo's aux_mysql 1.5 extension (upstream synced to 90fc8d7)

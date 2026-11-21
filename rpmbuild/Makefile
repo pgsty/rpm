@@ -748,7 +748,7 @@ cat_tools:
 	./build cat_tools 15 16 17 18 19
 
 pg_readme:
-	./build pg_readme 14 15 16 17 18
+	./build pg_readme 15 16 17 18 19
 
 pg_statviz:
 	./build pg_statviz 14 15 16 17 18

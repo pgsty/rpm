@@ -648,7 +648,7 @@ pg_bikram_sambat:
 	./build pg_bikram_sambat 15 16 17 18 19
 
 pg_rrule:
-	./build pg_rrule 14 15 16 17 18
+	./build pg_rrule 15 16 17 18 19
 
 chkpass:
 	./build chkpass 15 16 17 18 19

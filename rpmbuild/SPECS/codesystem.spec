@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:codesystem is packaged for PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:codesystem is packaged for PostgreSQL 15 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -20,6 +20,7 @@ Summary:        Validated, ordered and hierarchical classification codes
 License:        BSD-2-Clause
 URL:            https://github.com/John-Cameron-Burns/pg-codesystem
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:         codesystem-0.2.1-pg19-c11.patch
 # https://github.com/John-Cameron-Burns/pg-codesystem/archive/refs/tags/v0.2.1.tar.gz
 
 BuildRequires:  gcc make
@@ -37,6 +38,7 @@ The upstream 0.2.1 distribution retains SQL extension version 0.2.0.
 
 %prep
 %setup -q -n pg-codesystem-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -58,6 +60,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.2.1-1PGSTY
+- Use C11 for PostgreSQL 19 header compatibility; target PostgreSQL 15-19.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+
 * Fri Oct 23 2026 Vonng <rh@vonng.com> - 0.2.1-1PGSTY
 - Initial RPM release with upstream SQL extension version 0.2.0
 - Preserve PGXS bitcode and native debug packages

@@ -1302,7 +1302,7 @@ libpgfeutils-install:
 	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/libpgfeutils*$(ARCH).rpm
 
 pgactive:
-	./build pgactive 14 15 16 17 18
+	./build pgactive 15 16 17 18 19
 
 pgclone:
 	./build pgclone 14 15 16 17 18

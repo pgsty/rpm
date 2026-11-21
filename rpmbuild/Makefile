@@ -247,7 +247,7 @@ groonga:
 	./build groonga 18
 
 pgroonga:
-	./build pgroonga 14 15 16 17 18
+	./build pgroonga 15 16 17 18 19
 
 pg_bigm:     	# covered by PGDG (deb break on 18)
 	./build pg_bigm 15 16 17 18 19

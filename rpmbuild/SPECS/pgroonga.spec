@@ -4,8 +4,8 @@
 
 %global groonga_min_version 16.1.5
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pgroonga supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pgroonga supports PostgreSQL 15 through 19}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl

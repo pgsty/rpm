@@ -17,7 +17,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -27,7 +27,7 @@ Version:	1.0.0
 Release:	1PGSTY%{?dist}
 Summary:	Generate random timestamp-based slugs in PostgreSQL
 License:	MIT
-URL:		https://github.com/nandoolle/pg_slug_gen
+URL:            https://pgxn.org/dist/pg_slug_gen/
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized source tarball from the upstream GitHub tag archive
 #           Supported: PostgreSQL 14+

@@ -1,8 +1,8 @@
 %global sname pg_statecharts
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_statecharts supports PostgreSQL 16 through 18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:pg_statecharts supports PostgreSQL 16 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

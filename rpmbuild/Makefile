@@ -642,7 +642,7 @@ pg_acl:
 	./build pg_acl 15 16 17 18 19
 
 pg_duration:
-	./build pg_duration 17 18
+	./build pg_duration 17 18 19
 
 pg_bikram_sambat:
 	./build pg_bikram_sambat 15 16 17 18 19

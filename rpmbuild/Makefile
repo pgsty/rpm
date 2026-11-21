@@ -718,7 +718,7 @@ pg_extra_time:
 
 pgpcre:
 	@if [ "$$(rpm -E '%{rhel}')" -lt 10 ]; then \
-		./build pgpcre 14 15 16 17 18; \
+		./build pgpcre 15 16 17 18; \ 19
 	else \
 		echo "pgpcre requires legacy PCRE and is not built on EL10"; \
 	fi

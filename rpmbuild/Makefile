@@ -110,7 +110,7 @@ cron_utils:
 ###############################################################
 
 postgis:
-	./build postgis 14 15 16 17 18
+	./build postgis 15 16 17 18
 
 address_standardizer:
 	./build address_standardizer 15 16 17 18 19

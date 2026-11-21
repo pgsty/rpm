@@ -1162,7 +1162,7 @@ pgcryptokey:
 	./build pgcryptokey 14 15 16 17 18
 
 login_hook:
-	./build login_hook 14 15 16 17 18
+	./build login_hook 15 16 17 18 19
 
 pg_snakeoil:
 	./build pg_snakeoil 14 15 16 17 18

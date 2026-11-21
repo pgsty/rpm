@@ -1542,7 +1542,7 @@ pg_json_diff:
 	./build pg_json_diff 15 16 17 18 19
 
 pgtelemetry:
-	./build pgtelemetry 14 15 16 17 18
+	./build pgtelemetry 15 16 17 18 19
 
 pgexporter_ext:
 	./build pgexporter_ext 15 16 17 18 19

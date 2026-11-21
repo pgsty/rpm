@@ -180,7 +180,7 @@ mobilitydb:
 	./build mobilitydb 15 16 17 18 19
 
 pghydro:
-	./build pghydro 14 15 16 17 18
+	./build pghydro 15 16 17 18 19
 
 pg_tzf:         # rust pgrx 0.19.2
 	./build pg_tzf 14 15 16 17 18

@@ -4,17 +4,17 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?llvm:%global llvm 1}
 %if %llvm
-%global with_llvm_arg with_llvm=yes
+%global with_llvm_arg with_llvm=yes LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:provsql only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:provsql only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.13.1
+Version:	1.14.0
 Release:	1PGSTY%{?dist}
 Summary:	Semiring provenance and uncertainty management for PostgreSQL
 License:	MIT
@@ -89,6 +89,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} -f Makefile.internal PG_CXXFLAGS="-g" %{?_
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.14.0-1PGSTY
+- Update to 1.14.0 and retain the validated packaging fixes
+
 * Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.13.1-1PGSTY
 - Update to 1.13.1 with bounded circuit evaluation and cancellation fixes.
 - Retain LLVM output, complete debug packages, and EL8 toolset compatibility.

@@ -501,7 +501,7 @@ pgs3:			# rust pgrx 0.19.2, shared_preload_libraries
 	./build pgs3 17 18
 
 provsql:
-	./build provsql 14 15 16 17 18
+	./build provsql 15 16 17 18 19
 
 # pgq
 

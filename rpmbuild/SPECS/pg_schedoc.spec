@@ -5,8 +5,8 @@
 %global source_date 20260430
 %global source_short 9f135c3
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_schedoc supports PostgreSQL 14 through 18 in Pigsty}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_schedoc supports PostgreSQL 15 through 19 in Pigsty}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}

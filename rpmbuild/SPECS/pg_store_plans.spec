@@ -1,3 +1,7 @@
+%if 0%{?pgmajorversion} > 18
+%{error:PostgreSQL 19 is not enabled for this recipe; see the PG19 audit record}
+%endif
+
 %global pname pg_store_plans
 %global sname pg_store_plans
 %global pginstdir /usr/pgsql-%{pgmajorversion}

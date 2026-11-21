@@ -1048,7 +1048,7 @@ pg_stat_monitor:
 	./build pg_stat_monitor 18 19 # fix the missing pgdg 19
 
 pg_store_plans:
-	./build pg_store_plans 14 15 16 17 18
+	./build pg_store_plans 15 16 17 18
 
 pg_track_optimizer:
 	./build pg_track_optimizer 17 18

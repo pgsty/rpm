@@ -937,7 +937,7 @@ online_advisor:
 	./build online_advisor 15 16 17 18
 
 pgmemento:
-	./build pgmemento 14 15 16 17 18
+	./build pgmemento 15 16 17 18 19
 
 pg_roast:
 	./build pg_roast 15 16 17 18 19

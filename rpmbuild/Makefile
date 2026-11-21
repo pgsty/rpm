@@ -302,7 +302,7 @@ pg_lease:                # pure SQL, upstream testing release
 	./build pg_lease 14 15 16 17 18
 
 pg_icu_parser:
-	./build pg_icu_parser 14 15 16 17 18
+	./build pg_icu_parser 15 16 17 18 19
 
 pg_fts:
 	./build pg_fts 17 18 19

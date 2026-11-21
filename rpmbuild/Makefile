@@ -961,7 +961,7 @@ pg_strict:		# rust pgrx 0.19.2
 	./build pg_strict 14 15 16 17 18
 
 preprepare:
-	./build preprepare 14 15 16 17 18
+	./build preprepare 15 16 17 18 19
 
 pg_permissions:
 	./build pg_permissions 15 16 17 18 19

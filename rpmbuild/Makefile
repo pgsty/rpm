@@ -1551,7 +1551,7 @@ plphp:
 	./build plphp 14 15 16 17 18
 
 istore:
-	./build istore 14 15 16 17 18
+	./build istore 15 16 17 18 19
 
 is_jsonb_valid:
 	./build is_jsonb_valid 15 16 17 18 19

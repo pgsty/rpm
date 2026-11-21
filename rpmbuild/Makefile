@@ -1240,8 +1240,8 @@ pg_dbms_metadata: # recipe validation; reuse PGDG on active EL platforms
 #pg_dbms_lock
 #pg_dbms_job
 ##babelfishpg
-pgmemcache:    # EL8 aarch64 gap only
-	./build pgmemcache 14 15
+pgmemcache:    # recipe validation; reuse PGDG on active EL platforms
+	./build pgmemcache 15 19
 
 dbt2:          # recipe validation; reuse PGDG on active EL platforms
 	./build dbt2 17 18 19

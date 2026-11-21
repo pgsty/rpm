@@ -912,7 +912,7 @@ parray_gin:
 ###############################################################
 # pg_repack:
 pg_rewrite:
-	./build pg_rewrite 14 15 16 17 18
+	./build pg_rewrite 15 16 17 18 19
 # pg_squeeze:
 # pg_dirtyread:
 # pg_prioritize:

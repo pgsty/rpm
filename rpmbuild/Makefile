@@ -1006,7 +1006,7 @@ pg_disorder:	# test-only session preload module
 	./build pg_disorder 15 16 17 18 19
 
 pg_savior:		# breaks on pg18 (fixed)
-	./build pg_savior 14 15 16 17 18
+	./build pg_savior 15 16 17 18 19
 
 pg_policy:
 	./build pg_policy 15 16 17 18 19

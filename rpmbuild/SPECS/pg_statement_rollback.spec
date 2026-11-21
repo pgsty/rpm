@@ -1,14 +1,14 @@
 %global pname pg_statement_rollback
 %global sname pg_statement_rollback
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_statement_rollback 1.6 supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_statement_rollback 1.6 supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -22,6 +22,7 @@ URL:            https://github.com/HexaCluster/pg_statement_rollback
 Source0:        %{sname}-%{version}.tar.gz
 #               https://github.com/HexaCluster/pg_statement_rollback/archive/refs/tags/v1.6.tar.gz
 Patch0:         pg_statement_rollback-1.6.patch
+Patch1:        pg_statement_rollback-1.6-pg19-compat.patch
 
 BuildRequires:	gcc make
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -64,6 +65,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bi
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.6-2PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.6-2PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

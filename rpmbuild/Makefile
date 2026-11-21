@@ -383,7 +383,7 @@ pg_sorted_heap:
 plproxy:
 	./build plproxy 14 15 16 17 18
 pg_strom:                    # EL10 x86_64 / PostgreSQL 14 gap
-	./build pg_strom 14
+	@echo "pg_strom: retired with PostgreSQL 14; no active build target"
 
 ###############################################################
 #                       Category: FEAT                        #

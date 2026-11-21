@@ -1,8 +1,8 @@
 %global sname pg_checksums
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_checksums supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_checksums supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
@@ -17,6 +17,11 @@ Source0:        pg_checksums-1.4.tar.gz
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc make
 Requires:       postgresql%{pgmajorversion}-server
+
+# PGDG split frontend archives out of -devel starting with PostgreSQL 19.
+%if 0%{?pgmajorversion} >= 19
+BuildRequires: postgresql%{pgmajorversion}-static
+%endif
 
 %description
 The pg_checksums_ext utility checks, enables and disables PostgreSQL data checksums.

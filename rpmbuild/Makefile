@@ -1098,7 +1098,7 @@ pg_stat_tcpinfo:
 	./build pg_stat_tcpinfo 14 15 16 17 18
 
 pagevis:
-	./build pagevis 14 15 16 17 18
+	./build pagevis 15 16 17 18 19
 
 
 ###############################################################

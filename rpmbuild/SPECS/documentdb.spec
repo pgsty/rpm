@@ -3,8 +3,8 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global postgis_package postgis37
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:documentdb only supports PostgreSQL 15-18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:documentdb only supports PostgreSQL 15-19 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -18,14 +18,14 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0
-Release:	2PGSTY%{?dist}
+Version:        1.2
+Release:        1PGSTY%{?dist}
 Summary:	Native implementation of document-oriented NoSQL database on PostgreSQL
 License:	MIT
 URL:		https://github.com/documentdb/documentdb
@@ -128,6 +128,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.2-1PGSTY
+- Update to upstream v1.2-0 and retain pinned offline dependency inputs
+
 * Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 1.0-2PGSTY
 - Rebuild with the PostGIS 3.7 runtime dependency.
 - Restore the upstream-supported PostgreSQL 15 extension build.

@@ -846,7 +846,7 @@ oai_fdw:
 .PHONY: pg_agent_gate pg_integrity_checksums oai_fdw
 
 vasco:
-	./build vasco 14 15 16 17 18
+	./build vasco 15 16 17 18 19
 
 pgxicor:
 	./build pgxicor 15 16 17 18 19

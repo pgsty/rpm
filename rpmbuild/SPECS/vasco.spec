@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	Maximal Information Coefficient (MIC) Extension for Postgres
 License:	GPL-3.0-only
 URL:		https://github.com/Florents-Tselai/vasco
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        vasco-0.1.0-pg19-tuple-header.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -40,6 +41,7 @@ It is based on the MIC and the MINE family of statistics.
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -61,6 +63,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-1PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

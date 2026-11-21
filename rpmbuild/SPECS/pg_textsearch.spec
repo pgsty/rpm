@@ -2,7 +2,7 @@
 %global sname pg_textsearch
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
+%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
 %{error:pg_textsearch 1.5.1 only supports PostgreSQL 17 and 18}
 %endif
 
@@ -17,7 +17,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -29,6 +29,7 @@ Summary:	BM25-based full-text search for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/timescale/pg_textsearch
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        pg_textsearch-1.5.1-pg19-limits-header.patch
 #           https://github.com/timescale/pg_textsearch/releases/download/v1.5.1/pg_textsearch-1.5.1.tar.gz
 #           Supported: PostgreSQL 17, 18 only
 
@@ -55,6 +56,7 @@ Features:
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -76,6 +78,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.5.1-1PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Fri Oct 02 2026 Ruohang Feng <rh@vonng.com> - 1.5.1-1PGSTY
 - Update to 1.5.1.
 

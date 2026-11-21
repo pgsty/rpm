@@ -877,7 +877,7 @@ aggs_for_arrays:
 	./build aggs_for_arrays 15 16 17 18 19
 
 pg_arraymath:
-	./build pg_arraymath 14 15 16 17 18
+	./build pg_arraymath 15 16 17 18 19
 
 pg_math:
 	./build pg_math 14 15 16 17 18

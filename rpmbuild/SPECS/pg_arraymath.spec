@@ -16,7 +16,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -28,6 +28,7 @@ Summary:	Functions and operators for element-by-element math and logic on arrays
 License:	MIT
 URL:		https://github.com/pramsey/pgsql-arraymath
 Source0:	pgsql-%{pname}-%{version}+git%{snapshot_date}.%{snapshot_short}.tar.gz
+Patch0:        pg_arraymath-1.1-pg19-compat.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -42,6 +43,7 @@ An extension for element-by-element operations on PostgreSQL arrays with a integ
 
 %prep
 %setup -q -n pgsql-%{pname}-%{version}+git%{snapshot_date}.%{snapshot_short}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -63,6 +65,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.1-2.git%{snapshot_date}.%{snapshot_short}PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.1-2.git20260702.4822319PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

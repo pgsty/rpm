@@ -2,8 +2,8 @@
 %global sname pg_partman
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_partman only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_partman only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -17,19 +17,19 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	5.5.0
+Version:	5.5.1
 Release:	1PGSTY%{?dist}
 Summary:	Partition management extension for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/pgpartman/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/pgpartman/pg_partman/archive/refs/tags/v5.5.0.tar.gz
+#           https://github.com/pgpartman/pg_partman/archive/refs/tags/v5.5.1.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -81,6 +81,9 @@ sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|g' %{buildroot}%{pginstdi
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 5.5.1-1PGSTY
+- Update to upstream 5.5.1.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 5.5.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

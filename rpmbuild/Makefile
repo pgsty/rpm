@@ -372,7 +372,7 @@ pg_kpart:
 	./build pg_kpart 15 16 17 18 19
 
 pg_partman:
-	./build pg_partman 14 15 16 17 18
+	./build pg_partman 15 16 17 18 19
 
 pg_orca:
 	./build pg_orca 18

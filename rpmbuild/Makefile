@@ -1120,7 +1120,7 @@ credcheck:      # recipe validation; reuse PGDG on active EL platforms
 	./build credcheck 15 16 17 18 19
 
 supautils:
-	./build supautils 14 15 16 17 18
+	./build supautils 15 16 17 18 19
 
 pgsodium-libsodium:
 	./build pgsodium-libsodium 18

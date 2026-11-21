@@ -4,24 +4,24 @@
 
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:supautils 3.4.4 supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:supautils supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	4.0.0
+Version:	4.0.1
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension that secures a cluster on a cloud environment
 License:	Apache-2.0 AND PostgreSQL AND LicenseRef-Public-Domain
 URL:		https://github.com/supabase/supautils
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/supabase/supautils/archive/refs/tags/v3.4.4.tar.gz
+#           https://github.com/supabase/supautils/archive/refs/tags/v4.0.1.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -56,6 +56,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 4.0.1-1PGSTY
+- Update to upstream 4.0.1 and target PostgreSQL 15 through 19.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+
 * Tue Oct 27 2026 Ruohang Feng <rh@vonng.com> - 4.0.0-1PGSTY
 - Update to upstream supautils 4.0.0.
 

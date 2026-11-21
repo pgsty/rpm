@@ -4,8 +4,8 @@
 %global pg_curl_commit 6abdb3dbe81c0e320eebeeb0120cff993d593b31
 %global whitelist_commit 9001c0cb09483e0828c2578f8e842cf00268a44e
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_curl supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_curl supports PostgreSQL 15 through 19}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -19,7 +19,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif

@@ -684,7 +684,7 @@ pg_csv:
 	./build pg_csv 15 16 17 18 19
 
 pg_curl:
-	./build pg_curl 14 15 16 17 18
+	./build pg_curl 15 16 17 18 19
 
 pg_retry:
 	./build pg_retry 17 18

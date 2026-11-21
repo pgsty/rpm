@@ -904,7 +904,7 @@ pg_convert:		# rust pgrx 0.19.2
 	./build pg_convert 14 15 16 17 18
 
 parray_gin:
-	./build parray_gin 14 15 16 17 18
+	./build parray_gin 15 16 17 18 19
 
 
 ###############################################################

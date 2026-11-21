@@ -74,3 +74,4 @@ doc/*
 !doc/pg_tre-4.6.5-validation.md
 !doc/plx-3.1.0-validation.md
 !doc/pg_vectorsearch-0.2.0-validation.md
+!doc/pg_regresql-2.2.0-validation.md

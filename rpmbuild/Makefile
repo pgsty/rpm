@@ -1021,7 +1021,7 @@ table_log:
 #                       Category: STAT                         #
 ###############################################################
 pg_profile:
-	./build pg_profile 14 15 16 17 18
+	./build pg_profile 15 16 17 18 19
 #pg_show_plans
 #pg_stat_kcache
 #pg_stat_monitor      	# break on pg18

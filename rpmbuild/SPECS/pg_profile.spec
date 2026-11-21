@@ -1,8 +1,8 @@
 %global sname pg_profile
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_profile 4.16 supports PostgreSQL 14 through 18 in Pigsty}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_profile 4.16 supports PostgreSQL 15 through 19 in Pigsty}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

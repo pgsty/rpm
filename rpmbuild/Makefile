@@ -1188,7 +1188,7 @@ pg_noset:
 #multicorn
 #odbc_fdw
 jdbc_fdw:
-	./build jdbc_fdw 14 15 16 17 18
+	./build jdbc_fdw 15 16 17 18 19
 pgspider_ext:
 	./build pgspider_ext 14 15 16 17 18
 #mysql_fdw

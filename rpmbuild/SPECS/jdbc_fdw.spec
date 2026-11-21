@@ -3,8 +3,8 @@
 
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:jdbc_fdw supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:jdbc_fdw supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 # Keep the embedded JVM aligned with the JDK selected by the PGDG PL/Java
@@ -30,7 +30,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -42,6 +42,7 @@ Summary:        JDBC Foreign Data Wrapper for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/pgspider/%{sname}
 Source0:        %{sname}-%{version}.tar.gz
+Patch1:        jdbc_fdw-0.5.0-pg19-compat.patch
 Patch0:         %{sname}-%{version}.patch
 
 BuildRequires:  gcc make pgdg-srpm-macros >= 1.0.27
@@ -107,6 +108,9 @@ export PATH=%{java_home}/bin:%{pginstdir}/bin:$PATH
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 0.5.0-1PGSTY
+- Adapt PostgreSQL 19 APIs while preserving earlier PostgreSQL paths
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.5.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

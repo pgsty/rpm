@@ -874,7 +874,7 @@ aggs_for_vecs:
 	./build aggs_for_vecs 14 15 16 17 18
 
 aggs_for_arrays:
-	./build aggs_for_arrays 14 15 16 17 18
+	./build aggs_for_arrays 15 16 17 18 19
 
 pg_arraymath:
 	./build pg_arraymath 14 15 16 17 18

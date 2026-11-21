@@ -585,7 +585,7 @@ md5hash:
 	./build md5hash 14 15 16 17 18
 
 asn1oid:
-	./build asn1oid 14 15 16 17 18
+	./build asn1oid 15 16 17 18 19
 
 pg_roaringbitmap:
 	./build pg_roaringbitmap 14 15 16 17 18

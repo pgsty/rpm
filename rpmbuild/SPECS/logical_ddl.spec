@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	Replicate supported DDL changes over PostgreSQL logical replication
 License:	MIT
 URL:		https://github.com/samedyildirim/logical_ddl
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        logical_ddl-0.1.0-pg19-compat.patch
 #           https://github.com/samedyildirim/logical_ddl/archive/refs/tags/v0.1.0.tar.gz
 #           Supported: PostgreSQL 11+
 
@@ -45,6 +46,7 @@ on logical replication subscribers to reduce schema drift between nodes.
 %prep
 %setup -q -n %{sname}-%{version}
 patch -p1 --forward -f < %{_specdir}/patches/logical_ddl-0.1.0.patch
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -68,6 +70,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-1PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

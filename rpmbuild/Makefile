@@ -1283,7 +1283,7 @@ pglogical_ticker:
 	./build pglogical_ticker 14 15 16 17 #18
 
 logical_ddl:
-	./build logical_ddl 14 15 16 17 18
+	./build logical_ddl 15 16 17 18 19
 
 pg_failover_slots:
 	./build pg_failover_slots 14 15 16 17 18

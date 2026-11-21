@@ -967,7 +967,7 @@ pg_permissions:
 	./build pg_permissions 15 16 17 18 19
 
 pg_upless:
-	./build pg_upless 14 15 16 17 18
+	./build pg_upless 15 16 17 18 19
 
 pgcozy:
 	./build pgcozy 14 15 16 17 18

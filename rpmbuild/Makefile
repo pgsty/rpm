@@ -82,7 +82,7 @@ temporal_tables:
 	./build temporal_tables 14 15 16 17 18
 
 emaj:
-	./build emaj 14 15 16 17 18
+	./build emaj 15 16 17 18 19
 
 # table_version (handled by PGDG)
 # pg_cron       (handled by PGDG)

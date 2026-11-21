@@ -68,3 +68,6 @@ doc/*
 !doc/nonrust-pg19-20261121.md
 !doc/nonrust-pg19-20261121.json
 !doc/nonrust-spec-review-20261121.md
+
+# Lightweight heavy-extension follow-up matrix; binaries/logs stay outside the repo.
+!doc/nonrust-heavy-20261121.json

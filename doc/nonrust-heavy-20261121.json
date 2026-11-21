@@ -1,0 +1,1055 @@
+{
+  "intro": "本批覆盖上一轮暂缓的 9 个大型非 Rust 源码单元：逐项核验上游、审查 RPM/DEB 配方与补丁，并以 EL9 ARM64、Ubuntu 24.04 x86_64 的真实包和运行记录确定支持范围。Rust/pgrx 继续冻结，包含 Rust 的 pg_mooncake 保持排除。",
+  "headline": "6 项 PG19 两侧通过",
+  "headline_detail": "两个复杂 PG19 移植暂缓；独立 libduckdb 因完整 DWARF 缺失保留候选。每个扩展在两仓库独立提交，结果回写 PGEXT。",
+  "updated_at": "2026-11-21T18:35+08:00",
+  "metrics": [
+    {
+      "value": "9",
+      "label": "源码单元",
+      "detail": "8 个扩展/包族 + 1 个基础库"
+    },
+    {
+      "value": "4",
+      "label": "扩展版本升级",
+      "detail": "另升级 FDW 内嵌 DuckDB 核心"
+    },
+    {
+      "value": "6",
+      "label": "PG19 两侧通过",
+      "detail": "包、debug 与针对性运行验证"
+    },
+    {
+      "value": "2 + 1",
+      "label": "暂缓 / 候选",
+      "detail": "2 项复杂移植 · 1 项 debug 受限"
+    }
+  ],
+  "hosts": [
+    {
+      "name": "m0",
+      "arch": "x86_64",
+      "work": "plv8 · pg_ducklake"
+    },
+    {
+      "name": "m1",
+      "arch": "ARM64",
+      "work": "pg_duckdb · plv8"
+    },
+    {
+      "name": "m3",
+      "arch": "x86_64",
+      "work": "pg_duckdb · pg_lake · duckdb_fdw · libduckdb"
+    },
+    {
+      "name": "m4",
+      "arch": "x86_64",
+      "work": "pg_stat_ch · pg_orca · omnigres"
+    },
+    {
+      "name": "m5",
+      "arch": "ARM64",
+      "work": "pg_lake · pg_stat_ch · duckdb_fdw · pg_ducklake · pg_orca · omnigres · libduckdb"
+    }
+  ],
+  "methodology": [
+    "范围仅限本批 9 个大型非 Rust 单元；Rust/pgrx 与 pg_mooncake 不在本批，PostgreSQL 内核单元另列。",
+    "PG15–19 是目标集合，每个扩展使用实际支持子集。PG14 与 EL8 退出默认目标；保留的历史条件分支不等于纳入本批验证。",
+    "“运行通过”指本批最终包经过构建、payload、调试信息与已列出的针对性运行验证。“支持范围”指保留的支持坐标，本批未重建，不代表实测通过。",
+    "PGXS bitcode 使用与 PostgreSQL LLVM_BINPATH 匹配的 Clang，并核对 reader/JIT 证据；CMake 原生且不产出 bitcode 的单元记录不适用。",
+    "RPM 原生模块检查 debuginfo 与 debugsource，DEB 检查 dbgsym 中的真实 DWARF。仅符号表不算完整调试信息；libduckdb 候选因此 held。pg_ducklake 的内嵌核心沿用 -g1 最小 DWARF，其局部变量/type 调试能力受限，详见单元说明。",
+    "PGEXT 更新仅作用于本批对应 extension/universe 行及字段，保留供应商策略与其他未提交改动。包能力和本地元数据更新不等于公网仓库已发布。",
+    "本批是两种平台的验证，未执行四平台生产矩阵、生产 staging、签名、CDN 发布或 Git push。每项证据保留源归档 SHA、首错、补丁、产物 SHA 与运行覆盖。"
+  ],
+  "units": [
+    {
+      "name": "pg_duckdb",
+      "subtitle": "DuckDB 查询加速",
+      "category": "runtime",
+      "before": "1.2.0",
+      "version": "1.2.1",
+      "status": "runtime",
+      "status_label": "PG15–19 双侧通过",
+      "matrix": {
+        "15": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        },
+        "16": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        },
+        "17": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        },
+        "18": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        },
+        "19": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        }
+      },
+      "decision": "升级至 1.2.1，采用上游 PG19 适配；保留上游固定的 DuckDB 核心，并单独构建私有 curl。",
+      "validation": [
+        "EL9 9.8 ARM64（m1）与Ubuntu 24.04.5 amd64（m3）× PG15–19，共10个坐标完成最终包/debug/运行验收。",
+        "桥接层与DuckDB核心保留完整类型/变量DWARF；逐PG检查bitcode reader、JIT内联、BuildID及实际预加载运行。",
+        "验证真实DuckDB执行计划、PG表扫描/聚合、事务回滚、JSON、Parquet、httpfs HTTP读取，以及上游1.2.0→1.2.1升级脚本。",
+        "30个产物（含10个主包、调试包与5个SRPM）已回收，SHA与builder一致；未执行生产发布。"
+      ],
+      "limits": "仅覆盖EL9 ARM64与Ubuntu24.04 amd64；httpfs测试在隔离实例加载本批unsigned插件，未验证MotherDuck、云认证或任意DuckDB插件混用。pg_mooncake继续Rust冻结。",
+      "patches": [
+        {
+          "name": "pg_duckdb-1.2.1-source-archive.patch",
+          "review": "必要性：完整发布源码归档缺少 Git 工作树，构建应使用已固定版本与子模块内容。范围限定为归档构建和安装过程；删除已被新版本替代的旧补丁。"
+        },
+        {
+          "name": "pg_duckdb-1.2.1-private-curl.patch",
+          "review": "必要性：私有 DuckDB/httpfs 依赖的 curl 版本与系统供应有差异。只处理私有依赖和加载路径，保持功能由上游实现；包依赖与实际运行一起核验。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "pg_duckdb-1.2.1.tar.gz",
+          "sha256": "9d4d6b6eb8100ced1ff82a9e2f641dc3440d2547dd6de2aedeccfdee1af7e3aa",
+          "bytes": 123613011,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/pg_duckdb-1.2.1.tar.gz",
+          "recipe_reference": "pg_duckdb-1.2.1.tar.gz"
+        },
+        {
+          "name": "curl-8.23.0.tar.gz",
+          "sha256": "e3de77cfa6367083c776a26647fc9f633b538c06c3baa73d931a252ac8f72b49",
+          "bytes": 4465093,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/curl-8.23.0.tar.gz",
+          "recipe_reference": "https://curl.se/download/curl-8.23.0.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/patch-review.json",
+          "label": "两补丁审核与三个旧补丁退役依据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/artifacts-manifest.json",
+          "label": "30个最终产物与SHA清单"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/duckdb__pg_duckdb-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/duckdb/pg_duckdb"
+    },
+    {
+      "name": "pg_lake",
+      "subtitle": "湖仓查询与格式转换",
+      "category": "runtime",
+      "before": "3.6.0",
+      "version": "3.7.0",
+      "status": "runtime",
+      "status_label": "PG19 验证通过",
+      "matrix": {
+        "15": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "16": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "17": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "18": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "19": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        }
+      },
+      "decision": "升级至 3.7.0，同步八个 control 扩展与共享运行组件；上游支持 PG16–19，PG15 明确不支持。",
+      "validation": [
+        "EL9 9.8 ARM64、Ubuntu 24.04 amd64：PG19 包、完整 DWARF、RPM debugsource 与私有运行库路径检查通过。",
+        "八个 control 扩展版本核对为 3.7，包版本为 3.7.0；本地 Parquet COPY、HTTP FDW、实际扩展执行与 JIT 验证通过。",
+        "PG16–18 保留上游支持，本批未重建。EL9 这几个版本的 PGXS 同样使用 LLVM21，配方补齐对应工具包依赖。"
+      ],
+      "limits": "pgduck_server、私有 DuckDB 库与扩展模块一起检查。运行验证覆盖本地表、格式读写和相关 SQL；未宣称覆盖所有云存储服务。",
+      "patches": [
+        {
+          "name": "pg_lake-3.7.0-packaging.patch",
+          "review": "重基原有归档构建与私有运行库修复，处理无 .git、libpq 路径及上游内嵌补丁输入。范围为构建和安装，PG19 API 支持来自上游。"
+        },
+        {
+          "name": "pg_lake-3.7.0-brotli-block-switch.patch",
+          "review": "固定的 DuckDB 仍包含 Brotli 1.1.0，保留已存在的上游 decoder 修复。单独 decoder 回归验证修正后的条件；不将未观察到的超时或死循环写成复现。"
+        },
+        {
+          "name": "pg_lake-3.7.0-s3-odr.patch",
+          "review": "本地结构与 httpfs 同名但布局不同会形成 ODR 冲突。只改本地结构名，消除符号冲突，不改变协议或产品行为。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "pg_lake-3.7.0.tar.gz",
+          "sha256": "0e1c4beb2e9f126bdfc449b3f254394534e4070000489cc182ce1c955fb96b4c",
+          "bytes": 110889056,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/pg_lake-3.7.0.tar.gz",
+          "recipe_reference": "pg_lake-3.7.0.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_lake/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_lake/integrator-review.json",
+          "label": "跨 PG LLVM 依赖与旧补丁清理审核"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/Snowflake-Labs__pg_lake-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/Snowflake-Labs/pg_lake"
+    },
+    {
+      "name": "pg_stat_ch",
+      "subtitle": "查询观测 · ClickHouse",
+      "category": "runtime",
+      "before": "0.4.0",
+      "version": "0.4.2",
+      "status": "runtime",
+      "status_label": "PG19 验证通过",
+      "matrix": {
+        "15": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "16": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "17": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "18": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "19": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        }
+      },
+      "decision": "升级至 0.4.2，复用上游已经合入的 PG19 支持；保留静态依赖的完整调试信息。",
+      "validation": [
+        "EL9 9.8/aarch64 与 Ubuntu 24.04.5/amd64：PG19.0 主包、debug、安装、preload 与 CREATE EXTENSION 通过。",
+        "两侧独立 ClickHouse 各接收18条事件并核对，上游回归测试分别11/11通过。版本函数为0.4.2；SQL control版本保持上游0.4。",
+        "PG16–18保留上游支持，本批未重建；PG15不支持。上游CMake不产出bitcode，相关LLVM reader检查不适用。",
+        "EL10 Snappy补丁仅通过单对象对照验证；没有宣称EL10完整包通过。"
+      ],
+      "limits": "实际查询事件写入任务独立的 ClickHouse 后核验，不接触现有业务服务。PG15 在上游范围外；全功能监控场景未穷举。",
+      "patches": [
+        {
+          "name": "pg_stat_ch-0.4.2-package-version.patch",
+          "review": "从源码归档构建时缺少 .git；固定包对应的版本标识，避免版本探测失败或失真，不改 SQL 观测逻辑。"
+        },
+        {
+          "name": "pg_stat_ch-0.4.2-vcpkg-debug-info.patch",
+          "review": "vcpkg 静态依赖的默认 release flags 会丢失 DWARF；只调整依赖构建的调试信息配置。最终检查实际 debug payload。"
+        },
+        {
+          "name": "pg_stat_ch-0.4.2-snappy-avx-header.patch",
+          "review": "保留既有 EL10 专用 Snappy/AVX 头文件适配，仅在对应平台条件下使用；本批 EL9/Ubuntu 验证不冒充 EL10 构建。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "pg_stat_ch-0.4.2.tar.gz",
+          "sha256": "a8688617019180dba8641fdfdc12e5decc2a9e7f71bed155070f76b39b3eba9a",
+          "bytes": 6942421,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/pg_stat_ch-0.4.2.tar.gz",
+          "recipe_reference": "pg_stat_ch-0.4.2.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/result.json",
+          "label": "双平台最终运行与回归回执"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/final-verification.json",
+          "label": "最终输入与补丁一致性核验"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/ClickHouse__pg_stat_ch-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/ClickHouse/pg_stat_ch"
+    },
+    {
+      "name": "pg_orca",
+      "subtitle": "ORCA 查询优化器",
+      "category": "runtime",
+      "before": "1.0.0",
+      "version": "1.1.0",
+      "status": "runtime",
+      "status_label": "PG19 通过 · preview",
+      "matrix": {
+        "15": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "16": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "17": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "18": {
+          "rpm": "supported",
+          "deb": "runtime"
+        },
+        "19": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        }
+      },
+      "decision": "升级至 1.1.0，启用 PG18/19；用两个小补丁解决系统 Xerces 打包和跨翻译单元静态初始化问题。",
+      "validation": [
+        "EL9 9.8/aarch64：PG19.0 主包、debuginfo、debugsource、CREATE EXTENSION 与 ORCA 查询验证通过。",
+        "Ubuntu 24.04.5/amd64：PG18.6、PG19.0 主包与 dbgsym，实际 ORCA 执行计划、JOIN/聚合/LATERAL 与原生规划器结果对照通过。",
+        "DEB 原构建 SSH 包装进程返回 255、日志截断；最终 ninja link、.changes/.buildinfo、已安装 ELF 哈希、运行回执共同确认产物。未把 255 写成构建退出 0。"
+      ],
+      "limits": "上游仍将 PG19 标为 preview。本批验证实际 ORCA 执行计划及 JOIN、聚合、LATERAL 查询结果；通过的查询子集不代表优化器全部功能。",
+      "patches": [
+        {
+          "name": "pg_orca-1.1.0-optional-cpack.patch",
+          "review": "上游 CPack 无条件要求 bundled Xerces，与既有系统库供应策略冲突。新增默认开启的可选开关，原生 RPM/DEB 打包时关闭 CPack，保持上游默认行为。"
+        },
+        {
+          "name": "pg_orca-1.1.0-static-init-order.patch",
+          "review": "EL9 首个包 CREATE EXTENSION 崩溃，gdb 指向跨翻译单元静态初始化顺序。invalid OID 已定义为 0，两处改用字面值比较，消除未初始化对象依赖；保留优化与 LTO。最终包在两平台运行通过。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "pg_orca-1.1.0.tar.gz",
+          "sha256": "48f99ca0929de54fafd52944839787fdc3dd75571a62c88406400f985743bec3",
+          "bytes": 2821439,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/pg_orca-1.1.0.tar.gz",
+          "recipe_reference": "pg_orca-1.1.0.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_orca/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/quantumiodb__pgorca-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/quantumiodb/pgorca"
+    },
+    {
+      "name": "duckdb_fdw",
+      "subtitle": "DuckDB 外部数据包装器",
+      "category": "runtime",
+      "before": "2.0.2 / core 2.0.0",
+      "version": "2.0.2 / core 2.0.1",
+      "status": "runtime",
+      "status_label": "PG19 通过 · 内核升级",
+      "matrix": {
+        "15": {
+          "rpm": "supported",
+          "deb": "runtime"
+        },
+        "16": {
+          "rpm": "supported",
+          "deb": "runtime"
+        },
+        "17": {
+          "rpm": "supported",
+          "deb": "runtime"
+        },
+        "18": {
+          "rpm": "supported",
+          "deb": "runtime"
+        },
+        "19": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        }
+      },
+      "decision": "扩展版本保持 2.0.2，内嵌 DuckDB 升到 2.0.1；修复 PG19 显式头文件依赖与非 unity 编译头文件依赖。",
+      "validation": [
+        "扩展保持2.0.2，内嵌DuckDB升级至2.0.1，包修订为2PGSTY。EL9 9.8 ARM64实测PG19，Ubuntu 24.04.5 amd64实测PG15–19。",
+        "六个坐标的最终主包、真实DWARF、BuildID、LLVM reader与JIT内联均通过；EL9另核验3950个debugsource文件。",
+        "实际文件INSERT、prepared query、DuckDB版本、JSON、ICU、Parquet验证通过。DEB每PG编译前清理桥接对象，解决旧对象跨版本污染。",
+        "Ubuntu最终10个包已回收并逐一校验SHA256，修正发行版后缀与旧debug暂存；保留所有首错及验证脚本修正记录。"
+      ],
+      "limits": "静态核心保留 Parquet、JSON、ICU；真实文件写入、prepared statement、JIT 均单独验证。保留与 pg_duckdb 的同 PG 包冲突约束。原生 GCC LTO 的既有例外与 PGXS LLVM bitcode 分开处理。",
+      "patches": [
+        {
+          "name": "duckdb_fdw-2.0.2-static.patch",
+          "review": "复用既有静态核心与运行保护打包方案，本轮更新嵌入版本/commit。未扩大插件功能范围；保留既有文件写入 LTO 例外，PGXS LLVM 继续启用。"
+        },
+        {
+          "name": "duckdb-2.0.1-nonunity-headers.patch",
+          "review": "非 unity 编译暴露 TupleDataCollection 不完整类型；仅在实际使用处补一个定义头文件。完整核心重建验证充分性。"
+        },
+        {
+          "name": "duckdb_fdw-2.0.2-pg19-headers.patch",
+          "review": "PG19 不再间接包含 GETSTRUCT 定义。仅给 connection.c 添加 access/htup_details.h，修复 Clang 的 undeclared function 错误；完整 bitcode 与运行验证覆盖。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "duckdb_fdw-2.0.2.tar.gz",
+          "sha256": "1ed7935b009211915434fd65083b0562389e3faf1722865f81633d70a0c0fc8b",
+          "bytes": 543476,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/duckdb_fdw-2.0.2.tar.gz",
+          "recipe_reference": "duckdb_fdw-2.0.2.tar.gz"
+        },
+        {
+          "name": "duckdb-2.0.1.tar.gz",
+          "sha256": "1deae9d4917bd069c46c25c6ddbe51a2ef06cc7c12e6a10132af4fa0fb834a14",
+          "bytes": 119467578,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/duckdb-2.0.1.tar.gz",
+          "recipe_reference": "duckdb-2.0.1.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/patch-review.json",
+          "label": "三补丁必要性、充分性与最小范围审核"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/u24-final-validation/result.json",
+          "label": "Ubuntu PG15–19逐坐标安装运行回执"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/el9a-final-validation/result.json",
+          "label": "EL9 ARM64 PG19最终包回执"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/u24-package-receipt.json",
+          "label": "最终产物回收与SHA256校验"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/alitrack__duckdb_fdw-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/alitrack/duckdb_fdw"
+    },
+    {
+      "name": "plv8",
+      "subtitle": "V8 JavaScript 过程语言",
+      "category": "runtime",
+      "before": "3.2.5",
+      "version": "3.2.5 / 2PGSTY",
+      "status": "runtime",
+      "status_label": "PG19 通过 · 有已知限制",
+      "matrix": {
+        "15": {
+          "rpm": "runtime",
+          "deb": "supported"
+        },
+        "16": {
+          "rpm": "runtime",
+          "deb": "supported"
+        },
+        "17": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "18": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "19": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        }
+      },
+      "decision": "上游最新 tag 仍为 3.2.5；完善 V8 构建依赖与调试信息，PGXS bitcode 使用与 PostgreSQL 匹配的 Clang。",
+      "validation": [
+        "EL9 9.8 ARM64实测PG15、16、19；Ubuntu24.04 amd64实测PG19。其余坐标保留支持范围，只做语法检查。",
+        "四个实测坐标的包、完整DWARF、LLVM reader、安装、JS运行及28项上游回归分别通过；真实JIT查询均产生4个函数并启用Inlining/Optimization。",
+        "默认版本选择已验证：清除调用方环境后，两入口均生成PG15–19 control且checkcontrol成功；这不代表全部五个版本已经产包。",
+        "EL9 PG16原始rpmbuild退出码未捕获，保持null；用完整三包、摘要及独立payload/runtime回执确认完成。历史wrapper状态原样保留。"
+      ],
+      "limits": "额外Date→JSONB精度探针在四个实测坐标均复现 .123Z→.122Z。这是上游既有问题，未被28项回归覆盖；本轮没有修复该产品行为。JIT查询通过也不表示plv8的C入口自身被内联。",
+      "patches": [
+        {
+          "name": "plv8-3.2.5-v8-build.patch",
+          "review": "规范旧补丁名称，并让 V8 C/C++ release 构建保留调试 flags；保持上游 V8 源码与功能不变。PG19 不额外添加产品代码补丁。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "plv8-3.2.5.tar.gz",
+          "sha256": "3905f4576d353f5550933d2a80f4b4d9c070b35f516b0c39ef3c927f04e3f40e",
+          "bytes": 39659687,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/plv8-3.2.5.tar.gz",
+          "recipe_reference": "plv8-3.2.5.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/known-issues.json",
+          "label": "Date毫秒精度已知问题及逐坐标复现"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/frozen-files.json",
+          "label": "最终输入冻结与SHA清单"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/hosts/m0/default-pg-selection.json",
+          "label": "默认与显式PG版本选择四项验证"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/plv8__plv8-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/plv8/plv8"
+    },
+    {
+      "name": "pg_ducklake",
+      "subtitle": "DuckLake 数据湖",
+      "category": "blocked",
+      "before": "1.0.3",
+      "version": "1.0.3 / 2PGSTY",
+      "status": "blocked",
+      "status_label": "PG18 通过 · PG19 暂缓",
+      "matrix": {
+        "15": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "16": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "17": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "18": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        },
+        "19": {
+          "rpm": "blocked",
+          "deb": "blocked"
+        }
+      },
+      "decision": "版本保持 1.0.3，整理打包补丁并验证 PG18；正式范围限定 PG15–18，PG19 交由完整上游移植。",
+      "validation": [
+        "Rocky9.8 aarch64 / PG18.7与Ubuntu24.04.5 amd64 / PG18.6均通过最终主包、debug、LLVM reader、安装及5项上游回归。",
+        "保留PG15–18支持范围；PG15–17本轮未重建。PG19已有真实首错与后续后端API审查证据。",
+        "Ubuntu聚合查询SIGSEGV以相同fat objects作对照；仅最终原生链接追加-fno-lto后，重新产包、安装、smoke和5项回归通过。LLVM仍开启，54个bc及index留在主包。",
+        "补丁仅涉及4个上游构建文件，无C++/SQL产品行为变化。两侧同名补丁SHA一致，全部6个包（含SRPM）已回收并独立核验SHA/size。"
+      ],
+      "limits": "PG19涉及Pointer、PlannedStmt.resultRelations、planner/ExplainState、TableAM、syscache和缺少PG19 deparser，超出低复杂度打包修复范围。内嵌core沿用-g1最小DWARF，只有函数/行表等信息，不宣称完整局部变量/type调试；bridge保留发行版-g。LTO对照确认敏感性，未证明GCC编译器缺陷。",
+      "patches": [
+        {
+          "name": "pg_ducklake-1.0.3-packaged-build.patch",
+          "review": "规范打包补丁名称，集中归档构建及私有运行组件适配；不把 PG19 的多处 API 移植塞入包装补丁。最终 PG18 包和运行验证作为接受依据。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "pg_ducklake-1.0.3.tar.gz",
+          "sha256": "bfa39e08ea772ba5aa44ceea81a081578a03238c659ca3ba2ebfa6b466f1d635",
+          "bytes": 130789092,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/pg_ducklake-1.0.3.tar.gz",
+          "recipe_reference": "pg_ducklake-1.0.3.tar.gz"
+        },
+        {
+          "name": "CRoaring-4.7.1-amalgamation.tar.gz",
+          "sha256": "6338062be71b5ce50cbfcbab429d4ea45b8803dae79d012fbd3e472494c6d9fd",
+          "bytes": 220205,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/CRoaring-4.7.1-amalgamation.tar.gz",
+          "recipe_reference": "CRoaring-4.7.1-amalgamation.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/integrator-review.json",
+          "label": "最终独立补丁审查"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/runtime-incident.json",
+          "label": "Ubuntu聚合崩溃、同输入对照与最终包修复"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/final-package-validation.json",
+          "label": "最终包与运行验证绑定"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/freeze.json",
+          "label": "输入、产物及证据冻结"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/relytcloud__pg_ducklake-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/relytcloud/pg_ducklake"
+    },
+    {
+      "name": "omnigres",
+      "subtitle": "Omni 扩展组件集合",
+      "category": "blocked",
+      "before": "20260212",
+      "version": "20260212",
+      "status": "blocked",
+      "status_label": "PG18 通过 · PG19 暂缓",
+      "matrix": {
+        "15": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "16": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "17": {
+          "rpm": "supported",
+          "deb": "supported"
+        },
+        "18": {
+          "rpm": "runtime",
+          "deb": "runtime"
+        },
+        "19": {
+          "rpm": "blocked",
+          "deb": "blocked"
+        }
+      },
+      "decision": "保留已确认的整体快照和各组件版本；补丁仅规范命名。PG18 两侧验证通过，PG19 暂缓。",
+      "validation": [
+        "EL9 ARM64、Ubuntu 24.04 amd64 的 PG18 包均已安装并通过真实 DWARF 检查。",
+        "在独立集群中预加载 omni--0.2.14，验证 omni、omni_sql、omni_regex、omni_json、omni_csv，并创建 omni_httpc 及其依赖。SQL parser、正则、JSON 更新、CSV 精确行值断言通过。",
+        "PG19 的 planner 首错与试探性适配后的 deparser 错误链留存；试探补丁未进入正式配方。"
+      ],
+      "limits": "试探性转发 ExplainState 后继续出现 ALTER_SUBSCRIPTION_REFRESH 与 ClusterStmt/T_ClusterStmt 移除错误。需完整移植 hook API 与 SQL deparser。只验证所列核心组件，不冒充全部 Omni 组件的回归。",
+      "patches": [
+        {
+          "name": "omnigres-20260212-packaging.patch",
+          "review": "纯重命名，RPM/DEB 与原补丁内容 SHA256 完全一致。既有 C++/walker/HTTP 兼容代码原样保留；未新增 SQL 迁移功能。PG19 实验只留在研究证据中，未进入正式配方。"
+        }
+      ],
+      "sources": [
+        {
+          "name": "omnigres-20260212.tar.gz",
+          "sha256": "5bbf3a13ac66af84b15202ad98551f87e4cabe32ba511c4a47dbe86d90f9ccca",
+          "bytes": 74801507,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/omnigres-20260212.tar.gz",
+          "recipe_reference": "omnigres-20260212.tar.gz"
+        },
+        {
+          "name": "wheel-0.45.1-py3-none-any.whl",
+          "sha256": "708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248",
+          "bytes": 72494,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/wheel-0.45.1-py3-none-any.whl",
+          "scope": "DEB isolated Python build input"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/omnigres/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/omnigres__omnigres-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/omnigres/omnigres"
+    },
+    {
+      "name": "libduckdb",
+      "subtitle": "独立 DuckDB C API 运行库",
+      "category": "held",
+      "before": "1.5.5",
+      "version": "1.5.6 · held",
+      "status": "held",
+      "status_label": "候选 held · 缺少 DWARF",
+      "matrix": {
+        "15": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "16": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "17": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "18": {
+          "rpm": "na",
+          "deb": "na"
+        },
+        "19": {
+          "rpm": "na",
+          "deb": "na"
+        }
+      },
+      "decision": "沿 1.5 维护线准备 1.5.6 官方预编译候选；两架构打包和 C API 运行通过，完整调试信息验收未通过，保持 held。",
+      "validation": [
+        "EL9 ARM64 和 Ubuntu 24.04 amd64 的官方 1.5.6 预编译库均完成候选打包、payload、架构与 C API 运行验证。",
+        "官方 ELF 与生成的调试包没有完整 DWARF，且没有真实 debugsource；因此完整调试验收失败，保留候选。",
+        "保留官方预编译供应路径，不擅自替换全部消费者，也不把候选写成生产可发布的版本。"
+      ],
+      "limits": "当前没有必须使用这份系统库重建的消费者。DuckDB 全局最新为 2.0.1，但不自动替换各扩展的固定核心。官方 ELF 缺 DWARF，符号包不能替代完整 debuginfo/debugsource。",
+      "patches": [],
+      "sources": [
+        {
+          "name": "libduckdb-1.5.6-arm64.tar.gz",
+          "sha256": "8e2a9ba9c89ecd97b3ad8db603d19a76df31838b360fd7d5f49dcfb4d4571e21",
+          "bytes": 20826231,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/libduckdb-1.5.6-arm64.tar.gz",
+          "recipe_reference": "libduckdb-1.5.6-arm64.tar.gz"
+        },
+        {
+          "name": "libduckdb-1.5.6-amd64.tar.gz",
+          "sha256": "e2808f21fe4e6fc51550e40c3d2869dbb38afe32059376307af1c5bb4b9b072e",
+          "bytes": 23140932,
+          "archive": "/Users/vonng/pgsty/repo/ext/src/libduckdb-1.5.6-amd64.tar.gz",
+          "recipe_reference": "libduckdb-1.5.6-amd64.tar.gz"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/libduckdb/result.json",
+          "label": "完整单元结果、首错与验证证据"
+        },
+        {
+          "path": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream/duckdb__duckdb-summary.json",
+          "label": "官方 release / tag 核验缓存"
+        }
+      ],
+      "upstream_url": "https://github.com/duckdb/duckdb"
+    }
+  ],
+  "commits": [
+    {
+      "unit": "libduckdb",
+      "repository": "rpm",
+      "commit": "7e2ccac012d540ae9483531f0e9bec94ce868430",
+      "files": [
+        "rpmbuild/SPECS/libduckdb.spec"
+      ],
+      "candidate": "held_full_dwarf_unavailable"
+    },
+    {
+      "unit": "libduckdb",
+      "repository": "deb",
+      "commit": "fc03e125affc6d8b06764d2f0d889270b3ca5c34",
+      "files": [
+        "debbuild/libduckdb/Makefile",
+        "debbuild/libduckdb/debian/changelog",
+        "debbuild/libduckdb/debian/control",
+        "debbuild/libduckdb/debian/rules"
+      ],
+      "candidate": "held_full_dwarf_unavailable"
+    },
+    {
+      "unit": "omnigres",
+      "repository": "rpm",
+      "commit": "7f4bd1fba9aac193e41ef845ec7b31d7b852f6fe",
+      "files": [
+        "rpmbuild/SPECS/omnigres.spec",
+        "rpmbuild/SPECS/patches/omnigres-20260212.patch",
+        "rpmbuild/SPECS/patches/omnigres-20260212-packaging.patch"
+      ]
+    },
+    {
+      "unit": "omnigres",
+      "repository": "deb",
+      "commit": "a1949b50db9416bd3401d877ca72b883da1e76f6",
+      "files": [
+        "debbuild/omnigres/Makefile",
+        "debbuild/omnigres/debian/changelog",
+        "debbuild/omnigres/debian/pgversions",
+        "debbuild/omnigres/patches/omnigres-20260212.patch",
+        "debbuild/omnigres/patches/omnigres-20260212-packaging.patch"
+      ]
+    },
+    {
+      "unit": "pg_orca",
+      "repository": "rpm",
+      "commit": "2373ec2af2262363159c110bc6d71ab957ec5574",
+      "files": [
+        "rpmbuild/Makefile",
+        "rpmbuild/SPECS/patches/pg_orca-1.1.0-optional-cpack.patch",
+        "rpmbuild/SPECS/patches/pg_orca-1.1.0-static-init-order.patch",
+        "rpmbuild/SPECS/pg_orca.spec"
+      ]
+    },
+    {
+      "unit": "pg_orca",
+      "repository": "deb",
+      "commit": "dc18517b8f43b02061ea2c37b604fd89920cfc95",
+      "files": [
+        "debbuild/pg_orca/Makefile",
+        "debbuild/pg_orca/debian/changelog",
+        "debbuild/pg_orca/debian/control.in",
+        "debbuild/pg_orca/debian/patches/pg_orca-1.1.0-optional-cpack.patch",
+        "debbuild/pg_orca/debian/patches/pg_orca-1.1.0-static-init-order.patch",
+        "debbuild/pg_orca/debian/patches/series",
+        "debbuild/pg_orca/debian/pgversions",
+        "debbuild/pg_orca/debian/rules"
+      ]
+    },
+    {
+      "unit": "pg_lake",
+      "repository": "rpm",
+      "commit": "b227a38463e33e0277046fa2814613ad1e429c1a",
+      "files": [
+        "rpmbuild/Makefile",
+        "rpmbuild/SPECS/patches/pg_lake-3.6.0-brotli-1.1.1.patch",
+        "rpmbuild/SPECS/patches/pg_lake-3.6.0-s3-odr.patch",
+        "rpmbuild/SPECS/patches/pg_lake-3.6.0.patch",
+        "rpmbuild/SPECS/patches/pg_lake-3.7.0-brotli-block-switch.patch",
+        "rpmbuild/SPECS/patches/pg_lake-3.7.0-packaging.patch",
+        "rpmbuild/SPECS/patches/pg_lake-3.7.0-s3-odr.patch",
+        "rpmbuild/SPECS/pg_lake.spec"
+      ]
+    },
+    {
+      "unit": "pg_lake",
+      "repository": "deb",
+      "commit": "6906bd6fe970b972c513b2f0eade165a091ca744",
+      "files": [
+        "debbuild/pg_lake/Makefile",
+        "debbuild/pg_lake/README.md",
+        "debbuild/pg_lake/debian/changelog",
+        "debbuild/pg_lake/debian/pgversions",
+        "debbuild/pg_lake/debian/postgresql-19-pg-lake.lintian-overrides",
+        "debbuild/pg_lake/debian/rules",
+        "debbuild/pg_lake/patches/pg_lake-3.6.0-brotli-1.1.1.patch",
+        "debbuild/pg_lake/patches/pg_lake-3.6.0-s3-odr.patch",
+        "debbuild/pg_lake/patches/pg_lake-3.6.0.patch",
+        "debbuild/pg_lake/patches/pg_lake-3.7.0-brotli-block-switch.patch",
+        "debbuild/pg_lake/patches/pg_lake-3.7.0-packaging.patch",
+        "debbuild/pg_lake/patches/pg_lake-3.7.0-s3-odr.patch",
+        "debbuild/pg_lake/prepare.sh"
+      ]
+    },
+    {
+      "unit": "duckdb_fdw",
+      "repository": "rpm",
+      "commit": "7dc205cf2ea6e43907992460c473a9f98f247ada",
+      "files": [
+        "rpmbuild/Makefile",
+        "rpmbuild/SPECS/duckdb_fdw.spec",
+        "rpmbuild/SPECS/patches/duckdb_fdw-2.0.2-static.patch",
+        "rpmbuild/SPECS/patches/duckdb-2.0.1-nonunity-headers.patch",
+        "rpmbuild/SPECS/patches/duckdb_fdw-2.0.2-pg19-headers.patch"
+      ]
+    },
+    {
+      "unit": "pg_stat_ch",
+      "repository": "rpm",
+      "commit": "22dc982106fda792426c35af767ad50de69bb9f9",
+      "files": [
+        "rpmbuild/SPECS/patches/pg_stat_ch-0.4.0.patch",
+        "rpmbuild/SPECS/pg_stat_ch.spec",
+        "rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-package-version.patch",
+        "rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-snappy-avx-header.patch",
+        "rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-vcpkg-debug-info.patch",
+        "rpmbuild/Makefile"
+      ]
+    },
+    {
+      "unit": "pg_stat_ch",
+      "repository": "deb",
+      "commit": "fa309c236bbd2a848528336ce14ea5642588f179",
+      "files": [
+        "debbuild/pg_stat_ch/Makefile",
+        "debbuild/pg_stat_ch/debian/changelog",
+        "debbuild/pg_stat_ch/debian/control.in",
+        "debbuild/pg_stat_ch/debian/pgversions",
+        "debbuild/pg_stat_ch/debian/rules",
+        "debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.0.patch",
+        "debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.2-package-version.patch",
+        "debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.2-vcpkg-debug-info.patch"
+      ]
+    },
+    {
+      "unit": "duckdb_fdw",
+      "repository": "deb",
+      "commit": "8ce14c6d58a55b9c59c7548d841f0649dd0ca2a1",
+      "files": [
+        "debbuild/duckdb_fdw/Makefile",
+        "debbuild/duckdb_fdw/debian/changelog",
+        "debbuild/duckdb_fdw/debian/control.in",
+        "debbuild/duckdb_fdw/debian/patches/duckdb_fdw-2.0.2-static.patch",
+        "debbuild/duckdb_fdw/debian/patches/series",
+        "debbuild/duckdb_fdw/debian/pgversions",
+        "debbuild/duckdb_fdw/debian/rules",
+        "debbuild/duckdb_fdw/debian/patches/duckdb-2.0.1-nonunity-headers.patch",
+        "debbuild/duckdb_fdw/debian/patches/duckdb_fdw-2.0.2-pg19-headers.patch"
+      ]
+    },
+    {
+      "unit": "pg_duckdb",
+      "repository": "rpm",
+      "commit": "a4dbeb3573b90f1e6faaaca1323603b036aa79f5",
+      "files": [
+        "doc/pg_duckdb.md",
+        "rpmbuild/SPECS/patches/pg_duckdb-1.1.1-install-order.patch",
+        "rpmbuild/SPECS/patches/pg_duckdb-1.2.0-el8-httpfs-cflags.patch",
+        "rpmbuild/SPECS/patches/pg_duckdb-1.2.0-source-build.patch",
+        "rpmbuild/SPECS/pg_duckdb.md",
+        "rpmbuild/SPECS/pg_duckdb.spec",
+        "rpmbuild/SPECS/patches/pg_duckdb-1.2.1-private-curl.patch",
+        "rpmbuild/SPECS/patches/pg_duckdb-1.2.1-source-archive.patch",
+        "rpmbuild/Makefile"
+      ]
+    },
+    {
+      "unit": "pg_duckdb",
+      "repository": "deb",
+      "commit": "f99c0a8673dd499284bb269791196eaabc5ebf6c",
+      "files": [
+        "debbuild/pg_duckdb/Makefile",
+        "debbuild/pg_duckdb/README.md",
+        "debbuild/pg_duckdb/debian/changelog",
+        "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.1.1-install-order.patch",
+        "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.0-source-build.patch",
+        "debbuild/pg_duckdb/debian/patches/series",
+        "debbuild/pg_duckdb/debian/pgversions",
+        "debbuild/pg_duckdb/debian/rules",
+        "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.1-private-curl.patch",
+        "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.1-source-archive.patch"
+      ]
+    },
+    {
+      "unit": "plv8",
+      "repository": "rpm",
+      "commit": "61cf454ee6d2ff4cbb015f6dc9640843f29e79bf",
+      "files": [
+        "rpmbuild/SPECS/plv8.spec",
+        "rpmbuild/SPECS/patches/plv8-3.2.5-v8-build.patch",
+        "rpmbuild/SPECS/patches/plv8-3.2.5.patch",
+        "rpmbuild/Makefile"
+      ]
+    },
+    {
+      "unit": "plv8",
+      "repository": "deb",
+      "commit": "dfd009ef08e58ae393ed282fb67be1d02bbfc2b0",
+      "files": [
+        "debbuild/plv8/Makefile",
+        "debbuild/plv8/debian/changelog",
+        "debbuild/plv8/debian/control.in",
+        "debbuild/plv8/debian/pgversions",
+        "debbuild/plv8/debian/rules",
+        "debbuild/plv8/patches/plv8-3.2.5-v8-build.patch",
+        "debbuild/plv8/patches/plv8-3.2.5.patch"
+      ]
+    },
+    {
+      "unit": "pg_ducklake",
+      "repository": "rpm",
+      "commit": "f699c298fb10896f23ad2fc77c78697924886cf7",
+      "files": [
+        "rpmbuild/SPECS/patches/pg_ducklake-1.0.3.patch",
+        "rpmbuild/SPECS/pg_ducklake.spec",
+        "rpmbuild/SPECS/patches/pg_ducklake-1.0.3-packaged-build.patch"
+      ]
+    },
+    {
+      "unit": "pg_ducklake",
+      "repository": "deb",
+      "commit": "d086ef4f8c9fd70616b7b14b26649ec44d0dc4f9",
+      "files": [
+        "debbuild/pg_ducklake/Makefile",
+        "debbuild/pg_ducklake/debian/changelog",
+        "debbuild/pg_ducklake/debian/control",
+        "debbuild/pg_ducklake/debian/control.in",
+        "debbuild/pg_ducklake/debian/pgversions",
+        "debbuild/pg_ducklake/debian/rules",
+        "debbuild/pg_ducklake/patches/pg_ducklake-1.0.3.patch",
+        "debbuild/pg_ducklake/prepare.sh",
+        "debbuild/pg_ducklake/patches/pg_ducklake-1.0.3-packaged-build.patch"
+      ]
+    }
+  ],
+  "metadata": {
+    "status": "applied",
+    "rows": 108,
+    "fields": 490,
+    "rows_per_table": 54,
+    "units": 8,
+    "receipt": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/metadata/final-execution/execution-20261121T183008-8b07ca9b/apply-result.json",
+    "journal": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/metadata/final-execution/execution-20261121T183008-8b07ca9b/journal.json",
+    "reconciliation": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/metadata/final-execution/execution-20261121T183008-8b07ca9b/post-commit-reconciliation.json",
+    "database": {
+      "port": "5432",
+      "user": "postgres",
+      "database": "data",
+      "read_only": "off",
+      "system_identifier": "7637324916256241865"
+    },
+    "counts": {
+      "extension": {
+        "rows": 54,
+        "fields": 260,
+        "csv_before_sha256": "6b08e59067410760675bb7b852ff7bf9cbe187a17328bf97e13daec68aad9221",
+        "csv_preview_sha256": "1d8a7205dc209f66eb0136250297a012493c4c4ad7f4cfc0dc0c9f4da825728f",
+        "untouched_bytes_preserved": true
+      },
+      "universe": {
+        "rows": 54,
+        "fields": 230,
+        "csv_before_sha256": "b79ec5165266cd8313a5fb574230ef8c003784b7844f3d87d3d4b36dc255a5b1",
+        "csv_preview_sha256": "6bde12374f6dff6edfe8a7123776ba7b9f29bd2510043068bedbec9b1828fa5e",
+        "untouched_bytes_preserved": true
+      }
+    },
+    "unrelated_csv_bytes_preserved": true,
+    "git_commit": "PGEXT existing unrelated modifications preserved; exact DB/CSV delta applied without staging or bulk dump"
+  },
+  "metadata_evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/metadata"
+}

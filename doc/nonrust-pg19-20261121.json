@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-21T14:13:30.137847+08:00",
+  "updated_at": "2026-11-21T18:35+08:00",
   "status": "completed-with-recorded-deferrals",
   "completion": {
     "finished_at": "2026-11-21T03:39:24.370878+08:00",
@@ -79,7 +79,7 @@
     "active": 376,
     "kernel-deferred": 18,
     "rust-excluded": 75,
-    "heavy-deferred": 9
+    "heavy-reviewed": 9
   },
   "units": [
     {
@@ -6638,7 +6638,7 @@
     },
     {
       "unit": "duckdb_fdw",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/duckdb_fdw.spec",
       "deb": "debbuild/duckdb_fdw",
       "initial_rpm_versions": [
@@ -6657,44 +6657,96 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
           "2.0.2"
         ],
-        "deb_version": "2.0.2-1PGSTY",
+        "deb_version": "2.0.2-2PGSTY",
         "deb_pgversions": [
           "15",
           "16",
           "17",
-          "18"
+          "18",
+          "19"
         ]
       },
-      "other_pg_builds": [],
-      "pilot_builds": [],
+      "other_pg_builds": [
+        {
+          "pg": 15,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json"
+        },
+        {
+          "pg": 16,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json"
+        },
+        {
+          "pg": 17,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json"
+        },
+        {
+          "pg": 18,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json"
+        }
+      ],
+      "pilot_builds": [
+        {
+          "pg": 19,
+          "side": "rpm",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json"
+        },
+        {
+          "pg": 19,
+          "side": "deb",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json"
+        }
+      ],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "runtime",
+        "reason": "扩展版本保持 2.0.2，内嵌 DuckDB 升到 2.0.1；修复 PG19 显式头文件依赖与非 unity 编译头文件依赖。",
+        "execution_order": 4,
+        "limits": "静态核心保留 Parquet、JSON、ICU；真实文件写入、prepared statement、JIT 均单独验证。保留与 pg_duckdb 的同 PG 包冲突约束。原生 GCC LTO 的既有例外与 PGXS LLVM bitcode 分开处理。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "v2.0.2",
-        "cached_url": "https://github.com/alitrack/duckdb_fdw/releases/tag/v2.0.2"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/alitrack/duckdb_fdw",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "2.0.2"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            15,
+            16,
+            17,
+            18,
+            19
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
@@ -6704,7 +6756,8 @@
             15,
             16,
             17,
-            18
+            18,
+            19
           ]
         }
       },
@@ -6713,23 +6766,118 @@
         "rpm": [
           {
             "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/duckdb_fdw-2.0.2-static.patch",
-            "sha256": "c538e8254b3d57f30e3f992ec9d8a005ec48c7d2c5c9314b7ab54283a6202173",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "sha256": "39c336854c8cac832c5a15d06c7432c89e98547975e561a20e1aae98f3bd2489",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
+          },
+          {
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/duckdb-2.0.1-nonunity-headers.patch",
+            "sha256": "c714876353c4bc3721b6fbad5cffdea9b63f9defb7bf087bc2e4c56521bff6fc",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
+          },
+          {
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/duckdb_fdw-2.0.2-pg19-headers.patch",
+            "sha256": "3d7137d88bdf65e4f9f69ad7f15994b3aa9fff8575b98f821e0c6a11bc0eb368",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           }
         ],
         "deb": [
           {
             "file": "/Users/vonng/pgsty/deb/debbuild/duckdb_fdw/debian/patches/duckdb_fdw-2.0.2-static.patch",
-            "sha256": "c538e8254b3d57f30e3f992ec9d8a005ec48c7d2c5c9314b7ab54283a6202173",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "sha256": "39c336854c8cac832c5a15d06c7432c89e98547975e561a20e1aae98f3bd2489",
+            "scope": "recipe declaration controls application"
+          },
+          {
+            "file": "/Users/vonng/pgsty/deb/debbuild/duckdb_fdw/debian/patches/duckdb-2.0.1-nonunity-headers.patch",
+            "sha256": "c714876353c4bc3721b6fbad5cffdea9b63f9defb7bf087bc2e4c56521bff6fc",
+            "scope": "recipe declaration controls application"
+          },
+          {
+            "file": "/Users/vonng/pgsty/deb/debbuild/duckdb_fdw/debian/patches/duckdb_fdw-2.0.2-pg19-headers.patch",
+            "sha256": "3d7137d88bdf65e4f9f69ad7f15994b3aa9fff8575b98f821e0c6a11bc0eb368",
+            "scope": "recipe declaration controls application"
           }
         ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "静态核心保留 Parquet、JSON、ICU；真实文件写入、prepared statement、JIT 均单独验证。保留与 pg_duckdb 的同 PG 包冲突约束。原生 GCC LTO 的既有例外与 PGXS LLVM bitcode 分开处理。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/duckdb_fdw/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "supported",
+            "deb": "runtime"
+          },
+          "16": {
+            "rpm": "supported",
+            "deb": "runtime"
+          },
+          "17": {
+            "rpm": "supported",
+            "deb": "runtime"
+          },
+          "18": {
+            "rpm": "supported",
+            "deb": "runtime"
+          },
+          "19": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          }
+        },
+        "sources": [
+          {
+            "name": "duckdb_fdw-2.0.2.tar.gz",
+            "sha256": "1ed7935b009211915434fd65083b0562389e3faf1722865f81633d70a0c0fc8b",
+            "bytes": 543476,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/duckdb_fdw-2.0.2.tar.gz",
+            "recipe_reference": "duckdb_fdw-2.0.2.tar.gz"
+          },
+          {
+            "name": "duckdb-2.0.1.tar.gz",
+            "sha256": "1deae9d4917bd069c46c25c6ddbe51a2ef06cc7c12e6a10132af4fa0fb834a14",
+            "bytes": 119467578,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/duckdb-2.0.1.tar.gz",
+            "recipe_reference": "duckdb-2.0.1.tar.gz"
+          }
+        ],
+        "validation": [
+          "扩展保持2.0.2，内嵌DuckDB升级至2.0.1，包修订为2PGSTY。EL9 9.8 ARM64实测PG19，Ubuntu 24.04.5 amd64实测PG15–19。",
+          "六个坐标的最终主包、真实DWARF、BuildID、LLVM reader与JIT内联均通过；EL9另核验3950个debugsource文件。",
+          "实际文件INSERT、prepared query、DuckDB版本、JSON、ICU、Parquet验证通过。DEB每PG编译前清理桥接对象，解决旧对象跨版本污染。",
+          "Ubuntu最终10个包已回收并逐一校验SHA256，修正发行版后缀与旧debug暂存；保留所有首错及验证脚本修正记录。"
+        ],
+        "commits": [
+          {
+            "unit": "duckdb_fdw",
+            "repository": "rpm",
+            "commit": "7dc205cf2ea6e43907992460c473a9f98f247ada",
+            "files": [
+              "rpmbuild/Makefile",
+              "rpmbuild/SPECS/duckdb_fdw.spec",
+              "rpmbuild/SPECS/patches/duckdb_fdw-2.0.2-static.patch",
+              "rpmbuild/SPECS/patches/duckdb-2.0.1-nonunity-headers.patch",
+              "rpmbuild/SPECS/patches/duckdb_fdw-2.0.2-pg19-headers.patch"
+            ]
+          },
+          {
+            "unit": "duckdb_fdw",
+            "repository": "deb",
+            "commit": "8ce14c6d58a55b9c59c7548d841f0649dd0ca2a1",
+            "files": [
+              "debbuild/duckdb_fdw/Makefile",
+              "debbuild/duckdb_fdw/debian/changelog",
+              "debbuild/duckdb_fdw/debian/control.in",
+              "debbuild/duckdb_fdw/debian/patches/duckdb_fdw-2.0.2-static.patch",
+              "debbuild/duckdb_fdw/debian/patches/series",
+              "debbuild/duckdb_fdw/debian/pgversions",
+              "debbuild/duckdb_fdw/debian/rules",
+              "debbuild/duckdb_fdw/debian/patches/duckdb-2.0.1-nonunity-headers.patch",
+              "debbuild/duckdb_fdw/debian/patches/duckdb_fdw-2.0.2-pg19-headers.patch"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "edtf_postgres",
@@ -12815,7 +12963,7 @@
     },
     {
       "unit": "libduckdb",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/libduckdb.spec",
       "deb": "debbuild/libduckdb",
       "initial_rpm_versions": [
@@ -12836,43 +12984,50 @@
         "rpm": {
           "status": "not-applicable",
           "local_recipe_integrated": false,
-          "nominal_pg19_job_status": "heavy-deferred"
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/libduckdb/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
           "status": "not-applicable",
           "local_recipe_integrated": false,
-          "nominal_pg19_job_status": "heavy-deferred"
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/libduckdb/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
-          "1.5.5"
+          "1.5.6"
         ],
-        "deb_version": "1.5.5-1PGSTY"
+        "deb_version": "1.5.6-1PGSTY",
+        "deb_pgversions": []
       },
       "other_pg_builds": [],
       "pilot_builds": [],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
+        "action": "held",
+        "reason": "沿 1.5 维护线准备 1.5.6 官方预编译候选；两架构打包和 C API 运行通过，完整调试信息验收未通过，保持 held。",
         "execution_order": 4,
-        "pg19": "not-applicable"
+        "limits": "当前没有必须使用这份系统库重建的消费者。DuckDB 全局最新为 2.0.1，但不自动替换各扩展的固定核心。官方 ELF 缺 DWARF，符号包不能替代完整 debuginfo/debugsource。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "1.5.6 / 2.0.0",
-        "cached_url": "https://github.com/duckdb/duckdb/releases/tag/v2.0.0"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/duckdb/duckdb",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "1.5.6"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "existing recipe; no supplier takeover",
           "pg_dimension": false,
-          "requested_pilot": "el9a/aarch64"
+          "requested_pilot": "el9a/aarch64",
+          "recipe_pg": null
         },
         "deb": {
           "supplier_policy": "existing recipe; no supplier takeover",
           "pg_dimension": false,
-          "requested_pilot": "u24/amd64"
+          "requested_pilot": "u24/amd64",
+          "recipe_pg": null
         }
       },
       "build_history": [],
@@ -12880,7 +13035,78 @@
         "rpm": [],
         "deb": []
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "当前没有必须使用这份系统库重建的消费者。DuckDB 全局最新为 2.0.1，但不自动替换各扩展的固定核心。官方 ELF 缺 DWARF，符号包不能替代完整 debuginfo/debugsource。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/libduckdb/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "16": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "17": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "18": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "19": {
+            "rpm": "na",
+            "deb": "na"
+          }
+        },
+        "sources": [
+          {
+            "name": "libduckdb-1.5.6-arm64.tar.gz",
+            "sha256": "8e2a9ba9c89ecd97b3ad8db603d19a76df31838b360fd7d5f49dcfb4d4571e21",
+            "bytes": 20826231,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/libduckdb-1.5.6-arm64.tar.gz",
+            "recipe_reference": "libduckdb-1.5.6-arm64.tar.gz"
+          },
+          {
+            "name": "libduckdb-1.5.6-amd64.tar.gz",
+            "sha256": "e2808f21fe4e6fc51550e40c3d2869dbb38afe32059376307af1c5bb4b9b072e",
+            "bytes": 23140932,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/libduckdb-1.5.6-amd64.tar.gz",
+            "recipe_reference": "libduckdb-1.5.6-amd64.tar.gz"
+          }
+        ],
+        "validation": [
+          "EL9 ARM64 和 Ubuntu 24.04 amd64 的官方 1.5.6 预编译库均完成候选打包、payload、架构与 C API 运行验证。",
+          "官方 ELF 与生成的调试包没有完整 DWARF，且没有真实 debugsource；因此完整调试验收失败，保留候选。",
+          "保留官方预编译供应路径，不擅自替换全部消费者，也不把候选写成生产可发布的版本。"
+        ],
+        "commits": [
+          {
+            "unit": "libduckdb",
+            "repository": "rpm",
+            "commit": "7e2ccac012d540ae9483531f0e9bec94ce868430",
+            "files": [
+              "rpmbuild/SPECS/libduckdb.spec"
+            ],
+            "candidate": "held_full_dwarf_unavailable"
+          },
+          {
+            "unit": "libduckdb",
+            "repository": "deb",
+            "commit": "fc03e125affc6d8b06764d2f0d889270b3ca5c34",
+            "files": [
+              "debbuild/libduckdb/Makefile",
+              "debbuild/libduckdb/debian/changelog",
+              "debbuild/libduckdb/debian/control",
+              "debbuild/libduckdb/debian/rules"
+            ],
+            "candidate": "held_full_dwarf_unavailable"
+          }
+        ]
+      }
     },
     {
       "unit": "libfq",
@@ -16945,7 +17171,7 @@
     },
     {
       "unit": "omnigres",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/omnigres.spec",
       "deb": "debbuild/omnigres",
       "initial_rpm_versions": [
@@ -16964,12 +17190,16 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "complex-port-deferred",
+          "local_recipe_integrated": false,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/omnigres/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "complex-port-deferred",
+          "local_recipe_integrated": false,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/omnigres/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
@@ -16978,38 +17208,57 @@
         ],
         "deb_version": "20260212-1PGSTY",
         "deb_pgversions": [
-          "14",
           "15",
           "16",
           "17",
           "18"
         ]
       },
-      "other_pg_builds": [],
+      "other_pg_builds": [
+        {
+          "pg": 18,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/omnigres/result.json"
+        },
+        {
+          "pg": 18,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/omnigres/result.json"
+        }
+      ],
       "pilot_builds": [],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "blocked",
+        "reason": "保留已确认的整体快照和各组件版本；补丁仅规范命名。PG18 两侧验证通过，PG19 暂缓。",
+        "execution_order": 4,
+        "limits": "试探性转发 ExplainState 后继续出现 ALTER_SUBSCRIPTION_REFRESH 与 ClusterStmt/T_ClusterStmt 移除错误。需完整移植 hook API 与 SQL deparser。只验证所列核心组件，不冒充全部 Omni 组件的回归。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "无可比较正式标签",
-        "cached_url": "https://github.com/omnigres/omnigres/commit/4f03ed48fdee1f4c7b9bccccf20a643cdae1f371"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/omnigres/omnigres",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "20260212"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            15,
+            16,
+            17,
+            18
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "u24/amd64",
           "recipe_pg": [
-            14,
             15,
             16,
             17,
@@ -17021,31 +17270,97 @@
       "recipe_patches": {
         "rpm": [
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/omnigres-20260212.patch",
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/omnigres-20260212-packaging.patch",
             "sha256": "81ded4a2545b821fbe55d40e20d2380fded7de28974344c8f36d443fccf064fd",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           },
           {
             "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/omnigres-el8-compat.patch",
             "sha256": "8a1b33104b6e4de2440a53f75d2cdaf5aa099049b280797d2c665eaff487dcbc",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           }
         ],
         "deb": [
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/omnigres/patches/omnigres-20260212.patch",
+            "file": "/Users/vonng/pgsty/deb/debbuild/omnigres/patches/omnigres-20260212-packaging.patch",
             "sha256": "81ded4a2545b821fbe55d40e20d2380fded7de28974344c8f36d443fccf064fd",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "scope": "recipe declaration controls application"
           }
         ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "试探性转发 ExplainState 后继续出现 ALTER_SUBSCRIPTION_REFRESH 与 ClusterStmt/T_ClusterStmt 移除错误。需完整移植 hook API 与 SQL deparser。只验证所列核心组件，不冒充全部 Omni 组件的回归。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/omnigres/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "16": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "17": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "18": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          },
+          "19": {
+            "rpm": "blocked",
+            "deb": "blocked"
+          }
+        },
+        "sources": [
+          {
+            "name": "omnigres-20260212.tar.gz",
+            "sha256": "5bbf3a13ac66af84b15202ad98551f87e4cabe32ba511c4a47dbe86d90f9ccca",
+            "bytes": 74801507,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/omnigres-20260212.tar.gz",
+            "recipe_reference": "omnigres-20260212.tar.gz"
+          },
+          {
+            "name": "wheel-0.45.1-py3-none-any.whl",
+            "sha256": "708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248",
+            "bytes": 72494,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/wheel-0.45.1-py3-none-any.whl",
+            "scope": "DEB isolated Python build input"
+          }
+        ],
+        "validation": [
+          "EL9 ARM64、Ubuntu 24.04 amd64 的 PG18 包均已安装并通过真实 DWARF 检查。",
+          "在独立集群中预加载 omni--0.2.14，验证 omni、omni_sql、omni_regex、omni_json、omni_csv，并创建 omni_httpc 及其依赖。SQL parser、正则、JSON 更新、CSV 精确行值断言通过。",
+          "PG19 的 planner 首错与试探性适配后的 deparser 错误链留存；试探补丁未进入正式配方。"
+        ],
+        "commits": [
+          {
+            "unit": "omnigres",
+            "repository": "rpm",
+            "commit": "7f4bd1fba9aac193e41ef845ec7b31d7b852f6fe",
+            "files": [
+              "rpmbuild/SPECS/omnigres.spec",
+              "rpmbuild/SPECS/patches/omnigres-20260212.patch",
+              "rpmbuild/SPECS/patches/omnigres-20260212-packaging.patch"
+            ]
+          },
+          {
+            "unit": "omnigres",
+            "repository": "deb",
+            "commit": "a1949b50db9416bd3401d877ca72b883da1e76f6",
+            "files": [
+              "debbuild/omnigres/Makefile",
+              "debbuild/omnigres/debian/changelog",
+              "debbuild/omnigres/debian/pgversions",
+              "debbuild/omnigres/patches/omnigres-20260212.patch",
+              "debbuild/omnigres/patches/omnigres-20260212-packaging.patch"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "omnisketch",
@@ -28427,7 +28742,7 @@
     },
     {
       "unit": "pg_duckdb",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/pg_duckdb.spec",
       "deb": "debbuild/pg_duckdb",
       "initial_rpm_versions": [
@@ -28446,56 +28761,131 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
-          "1.2.0"
+          "1.2.1"
         ],
-        "deb_version": "1.2.0-1PGSTY",
+        "deb_version": "1.2.1-1PGSTY",
         "deb_pgversions": [
-          "14",
           "15",
           "16",
           "17",
-          "18"
+          "18",
+          "19"
         ]
       },
-      "other_pg_builds": [],
-      "pilot_builds": [],
+      "other_pg_builds": [
+        {
+          "pg": 15,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 15,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 16,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 16,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 17,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 17,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 18,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 18,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        }
+      ],
+      "pilot_builds": [
+        {
+          "pg": 19,
+          "side": "rpm",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        },
+        {
+          "pg": 19,
+          "side": "deb",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json"
+        }
+      ],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "runtime",
+        "reason": "升级至 1.2.1，采用上游 PG19 适配；保留上游固定的 DuckDB 核心，并单独构建私有 curl。",
+        "execution_order": 4,
+        "limits": "仅覆盖EL9 ARM64与Ubuntu24.04 amd64；httpfs测试在隔离实例加载本批unsigned插件，未验证MotherDuck、云认证或任意DuckDB插件混用。pg_mooncake继续Rust冻结。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "v1.2.0",
-        "cached_url": "https://github.com/duckdb/pg_duckdb/releases/tag/v1.2.0"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/duckdb/pg_duckdb",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "1.2.1"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            15,
+            16,
+            17,
+            18,
+            19
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "u24/amd64",
           "recipe_pg": [
-            14,
             15,
             16,
             17,
-            18
+            18,
+            19
           ]
         }
       },
@@ -28503,42 +28893,118 @@
       "recipe_patches": {
         "rpm": [
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_duckdb-1.2.0-source-build.patch",
-            "sha256": "4ae3f6aaffc4e89a8ff9d77d1cd3376f4cd088ec70c924ce504e2ddb237c5105",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_duckdb-1.2.1-source-archive.patch",
+            "sha256": "55e66f2f919fcf78d721a6919b60a5e4db7592de3b485e76a616f69972b27043",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           },
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_duckdb-1.2.0-el8-httpfs-cflags.patch",
-            "sha256": "6ff8b11551186bbb15bfc84a200242ec55357a67d84c664206c39efecf1a9971",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_duckdb-1.2.1-private-curl.patch",
+            "sha256": "6780c50618e328ace579d80c670218849e515b38ad7c98017a9ba433dd1323a9",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           }
         ],
         "deb": [
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_duckdb/debian/patches/pg_duckdb-1.1.1-install-order.patch",
-            "sha256": "ea707591ffaea3398aeb2b3dc7ac45d46085f99143dec544fb0b4c4446e86b07",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.1-source-archive.patch",
+            "sha256": "55e66f2f919fcf78d721a6919b60a5e4db7592de3b485e76a616f69972b27043",
+            "scope": "recipe declaration controls application"
           },
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.0-source-build.patch",
-            "sha256": "4ae3f6aaffc4e89a8ff9d77d1cd3376f4cd088ec70c924ce504e2ddb237c5105",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.1-private-curl.patch",
+            "sha256": "6780c50618e328ace579d80c670218849e515b38ad7c98017a9ba433dd1323a9",
+            "scope": "recipe declaration controls application"
           }
         ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "仅覆盖EL9 ARM64与Ubuntu24.04 amd64；httpfs测试在隔离实例加载本批unsigned插件，未验证MotherDuck、云认证或任意DuckDB插件混用。pg_mooncake继续Rust冻结。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_duckdb/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          },
+          "16": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          },
+          "17": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          },
+          "18": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          },
+          "19": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          }
+        },
+        "sources": [
+          {
+            "name": "pg_duckdb-1.2.1.tar.gz",
+            "sha256": "9d4d6b6eb8100ced1ff82a9e2f641dc3440d2547dd6de2aedeccfdee1af7e3aa",
+            "bytes": 123613011,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/pg_duckdb-1.2.1.tar.gz",
+            "recipe_reference": "pg_duckdb-1.2.1.tar.gz"
+          },
+          {
+            "name": "curl-8.23.0.tar.gz",
+            "sha256": "e3de77cfa6367083c776a26647fc9f633b538c06c3baa73d931a252ac8f72b49",
+            "bytes": 4465093,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/curl-8.23.0.tar.gz",
+            "recipe_reference": "https://curl.se/download/curl-8.23.0.tar.gz"
+          }
+        ],
+        "validation": [
+          "EL9 9.8 ARM64（m1）与Ubuntu 24.04.5 amd64（m3）× PG15–19，共10个坐标完成最终包/debug/运行验收。",
+          "桥接层与DuckDB核心保留完整类型/变量DWARF；逐PG检查bitcode reader、JIT内联、BuildID及实际预加载运行。",
+          "验证真实DuckDB执行计划、PG表扫描/聚合、事务回滚、JSON、Parquet、httpfs HTTP读取，以及上游1.2.0→1.2.1升级脚本。",
+          "30个产物（含10个主包、调试包与5个SRPM）已回收，SHA与builder一致；未执行生产发布。"
+        ],
+        "commits": [
+          {
+            "unit": "pg_duckdb",
+            "repository": "rpm",
+            "commit": "a4dbeb3573b90f1e6faaaca1323603b036aa79f5",
+            "files": [
+              "doc/pg_duckdb.md",
+              "rpmbuild/SPECS/patches/pg_duckdb-1.1.1-install-order.patch",
+              "rpmbuild/SPECS/patches/pg_duckdb-1.2.0-el8-httpfs-cflags.patch",
+              "rpmbuild/SPECS/patches/pg_duckdb-1.2.0-source-build.patch",
+              "rpmbuild/SPECS/pg_duckdb.md",
+              "rpmbuild/SPECS/pg_duckdb.spec",
+              "rpmbuild/SPECS/patches/pg_duckdb-1.2.1-private-curl.patch",
+              "rpmbuild/SPECS/patches/pg_duckdb-1.2.1-source-archive.patch",
+              "rpmbuild/Makefile"
+            ]
+          },
+          {
+            "unit": "pg_duckdb",
+            "repository": "deb",
+            "commit": "f99c0a8673dd499284bb269791196eaabc5ebf6c",
+            "files": [
+              "debbuild/pg_duckdb/Makefile",
+              "debbuild/pg_duckdb/README.md",
+              "debbuild/pg_duckdb/debian/changelog",
+              "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.1.1-install-order.patch",
+              "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.0-source-build.patch",
+              "debbuild/pg_duckdb/debian/patches/series",
+              "debbuild/pg_duckdb/debian/pgversions",
+              "debbuild/pg_duckdb/debian/rules",
+              "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.1-private-curl.patch",
+              "debbuild/pg_duckdb/debian/patches/pg_duckdb-1.2.1-source-archive.patch"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "pg_ducklake",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/pg_ducklake.spec",
       "deb": "debbuild/pg_ducklake",
       "initial_rpm_versions": [
@@ -28557,52 +29023,75 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "complex-port-deferred",
+          "local_recipe_integrated": false,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "complex-port-deferred",
+          "local_recipe_integrated": false,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
           "1.0.3"
         ],
-        "deb_version": "1.0.3-1PGSTY",
+        "deb_version": "1.0.3-2PGSTY",
         "deb_pgversions": [
-          "14",
           "15",
           "16",
           "17",
           "18"
         ]
       },
-      "other_pg_builds": [],
+      "other_pg_builds": [
+        {
+          "pg": 18,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/result.json"
+        },
+        {
+          "pg": 18,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/result.json"
+        }
+      ],
       "pilot_builds": [],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "blocked",
+        "reason": "版本保持 1.0.3，整理打包补丁并验证 PG18；正式范围限定 PG15–18，PG19 交由完整上游移植。",
+        "execution_order": 4,
+        "limits": "PG19涉及Pointer、PlannedStmt.resultRelations、planner/ExplainState、TableAM、syscache和缺少PG19 deparser，超出低复杂度打包修复范围。内嵌core沿用-g1最小DWARF，只有函数/行表等信息，不宣称完整局部变量/type调试；bridge保留发行版-g。LTO对照确认敏感性，未证明GCC编译器缺陷。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "v1.0.3",
-        "cached_url": "https://github.com/relytcloud/pg_ducklake/releases/tag/v1.0.3"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/relytcloud/pg_ducklake",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "1.0.3"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            15,
+            16,
+            17,
+            18
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "u24/amd64",
           "recipe_pg": [
-            14,
             15,
             16,
             17,
@@ -28614,31 +29103,97 @@
       "recipe_patches": {
         "rpm": [
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_ducklake-1.0.3.patch",
-            "sha256": "e4b7793a2c2af1277169d9e450ad09760eef5bbe83cdeb982285aa75740b09f1",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_ducklake-1.0.3-packaged-build.patch",
+            "sha256": "5f181c5297b6b0dced2317a6acfa44bb967275658d67d789ef2e724dbb9c160e",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           }
         ],
         "deb": [
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_ducklake/patches/pg_ducklake-1.0.2.patch",
-            "sha256": "bb3647dc091513c9b4308392a8c520af847af48ae5eaebb6f3d349e0db4de05b",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
-          },
-          {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_ducklake/patches/pg_ducklake-1.0.3.patch",
-            "sha256": "6e7d55a6bf03b3c77e4f36441042b47592d9f9be8d12b66389186e7bb8e0eb2f",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_ducklake/patches/pg_ducklake-1.0.3-packaged-build.patch",
+            "sha256": "5f181c5297b6b0dced2317a6acfa44bb967275658d67d789ef2e724dbb9c160e",
+            "scope": "recipe declaration controls application"
           }
         ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "PG19涉及Pointer、PlannedStmt.resultRelations、planner/ExplainState、TableAM、syscache和缺少PG19 deparser，超出低复杂度打包修复范围。内嵌core沿用-g1最小DWARF，只有函数/行表等信息，不宣称完整局部变量/type调试；bridge保留发行版-g。LTO对照确认敏感性，未证明GCC编译器缺陷。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_ducklake/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "16": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "17": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "18": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          },
+          "19": {
+            "rpm": "blocked",
+            "deb": "blocked"
+          }
+        },
+        "sources": [
+          {
+            "name": "pg_ducklake-1.0.3.tar.gz",
+            "sha256": "bfa39e08ea772ba5aa44ceea81a081578a03238c659ca3ba2ebfa6b466f1d635",
+            "bytes": 130789092,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/pg_ducklake-1.0.3.tar.gz",
+            "recipe_reference": "pg_ducklake-1.0.3.tar.gz"
+          },
+          {
+            "name": "CRoaring-4.7.1-amalgamation.tar.gz",
+            "sha256": "6338062be71b5ce50cbfcbab429d4ea45b8803dae79d012fbd3e472494c6d9fd",
+            "bytes": 220205,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/CRoaring-4.7.1-amalgamation.tar.gz",
+            "recipe_reference": "CRoaring-4.7.1-amalgamation.tar.gz"
+          }
+        ],
+        "validation": [
+          "Rocky9.8 aarch64 / PG18.7与Ubuntu24.04.5 amd64 / PG18.6均通过最终主包、debug、LLVM reader、安装及5项上游回归。",
+          "保留PG15–18支持范围；PG15–17本轮未重建。PG19已有真实首错与后续后端API审查证据。",
+          "Ubuntu聚合查询SIGSEGV以相同fat objects作对照；仅最终原生链接追加-fno-lto后，重新产包、安装、smoke和5项回归通过。LLVM仍开启，54个bc及index留在主包。",
+          "补丁仅涉及4个上游构建文件，无C++/SQL产品行为变化。两侧同名补丁SHA一致，全部6个包（含SRPM）已回收并独立核验SHA/size。"
+        ],
+        "commits": [
+          {
+            "unit": "pg_ducklake",
+            "repository": "rpm",
+            "commit": "f699c298fb10896f23ad2fc77c78697924886cf7",
+            "files": [
+              "rpmbuild/SPECS/patches/pg_ducklake-1.0.3.patch",
+              "rpmbuild/SPECS/pg_ducklake.spec",
+              "rpmbuild/SPECS/patches/pg_ducklake-1.0.3-packaged-build.patch"
+            ]
+          },
+          {
+            "unit": "pg_ducklake",
+            "repository": "deb",
+            "commit": "d086ef4f8c9fd70616b7b14b26649ec44d0dc4f9",
+            "files": [
+              "debbuild/pg_ducklake/Makefile",
+              "debbuild/pg_ducklake/debian/changelog",
+              "debbuild/pg_ducklake/debian/control",
+              "debbuild/pg_ducklake/debian/control.in",
+              "debbuild/pg_ducklake/debian/pgversions",
+              "debbuild/pg_ducklake/debian/rules",
+              "debbuild/pg_ducklake/patches/pg_ducklake-1.0.3.patch",
+              "debbuild/pg_ducklake/prepare.sh",
+              "debbuild/pg_ducklake/patches/pg_ducklake-1.0.3-packaged-build.patch"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "pg_durable",
@@ -35138,7 +35693,7 @@
     },
     {
       "unit": "pg_lake",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/pg_lake.spec",
       "deb": "debbuild/pg_lake",
       "initial_rpm_versions": [
@@ -35157,43 +35712,69 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_lake/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_lake/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
-          "3.6.0"
+          "3.7.0"
         ],
-        "deb_version": "3.6.0-1PGSTY",
+        "deb_version": "3.7.0-1PGSTY",
         "deb_pgversions": [
           "16",
           "17",
-          "18"
+          "18",
+          "19"
         ]
       },
       "other_pg_builds": [],
-      "pilot_builds": [],
+      "pilot_builds": [
+        {
+          "pg": 19,
+          "side": "rpm",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_lake/result.json"
+        },
+        {
+          "pg": 19,
+          "side": "deb",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_lake/result.json"
+        }
+      ],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "runtime",
+        "reason": "升级至 3.7.0，同步八个 control 扩展与共享运行组件；上游支持 PG16–19，PG15 明确不支持。",
+        "execution_order": 4,
+        "limits": "pgduck_server、私有 DuckDB 库与扩展模块一起检查。运行验证覆盖本地表、格式读写和相关 SQL；未宣称覆盖所有云存储服务。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "v3.6.2",
-        "cached_url": "https://github.com/Snowflake-Labs/pg_lake/releases/tag/v3.6.2"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/Snowflake-Labs/pg_lake",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "3.7.0"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            16,
+            17,
+            18,
+            19
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
@@ -35202,7 +35783,8 @@
           "recipe_pg": [
             16,
             17,
-            18
+            18,
+            19
           ]
         }
       },
@@ -35210,80 +35792,118 @@
       "recipe_patches": {
         "rpm": [
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_lake-3.6.0.patch",
-            "sha256": "bb5ed4ea9b165f5413a782da097e2883ad451c55d77662298ece2211b0bb154c",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_lake-3.7.0-packaging.patch",
+            "sha256": "73ee6bf08f316a075e926992bc74152da8a4cf258caacf5ceeb30d804b5f1df9",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           },
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_lake-3.6.0-brotli-1.1.1.patch",
-            "sha256": "570b2a849d12b4ae76e73367f5d5f225f98cb121e9dd222033abe1905d0c7861",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_lake-3.7.0-brotli-block-switch.patch",
+            "sha256": "5900d29e07088e950b41ecf2a9a52bc7b98919d7ff405f45ce3ae92725b66e1b",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           },
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_lake-3.6.0-s3-odr.patch",
-            "sha256": "986e9ebd43c84431294ef13b2f68fc593ef716630677b2e7fdecff89ac7c7596",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_lake-3.7.0-s3-odr.patch",
+            "sha256": "9a9c58e952e232468e1dd58c448de8bf0cf7f64ab14f68e3376513e0617f4264",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           }
         ],
         "deb": [
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.5.1.patch",
-            "sha256": "016207149144dda49d20da1167ab212fe89cc3b94bf411a775f726a868c6341e",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.7.0-packaging.patch",
+            "sha256": "73ee6bf08f316a075e926992bc74152da8a4cf258caacf5ceeb30d804b5f1df9",
+            "scope": "recipe declaration controls application"
           },
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.5.10.patch",
-            "sha256": "21b061739a804c01c3bb6d7a74bf1d27a4bc0f73f1ed2d2f71234ef17bbac07f",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.7.0-brotli-block-switch.patch",
+            "sha256": "5900d29e07088e950b41ecf2a9a52bc7b98919d7ff405f45ce3ae92725b66e1b",
+            "scope": "recipe declaration controls application"
           },
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.5.3.patch",
-            "sha256": "016207149144dda49d20da1167ab212fe89cc3b94bf411a775f726a868c6341e",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
-          },
-          {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.5.9.patch",
-            "sha256": "ec529cde268bcd11f5fbf017ba7be1a203200972322f2cea6f3da4f2cbbf8ea3",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
-          },
-          {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.6.0-brotli-1.1.1.patch",
-            "sha256": "570b2a849d12b4ae76e73367f5d5f225f98cb121e9dd222033abe1905d0c7861",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
-          },
-          {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.6.0-s3-odr.patch",
-            "sha256": "986e9ebd43c84431294ef13b2f68fc593ef716630677b2e7fdecff89ac7c7596",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
-          },
-          {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.6.0.patch",
-            "sha256": "bb5ed4ea9b165f5413a782da097e2883ad451c55d77662298ece2211b0bb154c",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_lake/patches/pg_lake-3.7.0-s3-odr.patch",
+            "sha256": "9a9c58e952e232468e1dd58c448de8bf0cf7f64ab14f68e3376513e0617f4264",
+            "scope": "recipe declaration controls application"
           }
         ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "pgduck_server、私有 DuckDB 库与扩展模块一起检查。运行验证覆盖本地表、格式读写和相关 SQL；未宣称覆盖所有云存储服务。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_lake/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "16": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "17": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "18": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "19": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          }
+        },
+        "sources": [
+          {
+            "name": "pg_lake-3.7.0.tar.gz",
+            "sha256": "0e1c4beb2e9f126bdfc449b3f254394534e4070000489cc182ce1c955fb96b4c",
+            "bytes": 110889056,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/pg_lake-3.7.0.tar.gz",
+            "recipe_reference": "pg_lake-3.7.0.tar.gz"
+          }
+        ],
+        "validation": [
+          "EL9 9.8 ARM64、Ubuntu 24.04 amd64：PG19 包、完整 DWARF、RPM debugsource 与私有运行库路径检查通过。",
+          "八个 control 扩展版本核对为 3.7，包版本为 3.7.0；本地 Parquet COPY、HTTP FDW、实际扩展执行与 JIT 验证通过。",
+          "PG16–18 保留上游支持，本批未重建。EL9 这几个版本的 PGXS 同样使用 LLVM21，配方补齐对应工具包依赖。"
+        ],
+        "commits": [
+          {
+            "unit": "pg_lake",
+            "repository": "rpm",
+            "commit": "b227a38463e33e0277046fa2814613ad1e429c1a",
+            "files": [
+              "rpmbuild/Makefile",
+              "rpmbuild/SPECS/patches/pg_lake-3.6.0-brotli-1.1.1.patch",
+              "rpmbuild/SPECS/patches/pg_lake-3.6.0-s3-odr.patch",
+              "rpmbuild/SPECS/patches/pg_lake-3.6.0.patch",
+              "rpmbuild/SPECS/patches/pg_lake-3.7.0-brotli-block-switch.patch",
+              "rpmbuild/SPECS/patches/pg_lake-3.7.0-packaging.patch",
+              "rpmbuild/SPECS/patches/pg_lake-3.7.0-s3-odr.patch",
+              "rpmbuild/SPECS/pg_lake.spec"
+            ]
+          },
+          {
+            "unit": "pg_lake",
+            "repository": "deb",
+            "commit": "6906bd6fe970b972c513b2f0eade165a091ca744",
+            "files": [
+              "debbuild/pg_lake/Makefile",
+              "debbuild/pg_lake/README.md",
+              "debbuild/pg_lake/debian/changelog",
+              "debbuild/pg_lake/debian/pgversions",
+              "debbuild/pg_lake/debian/postgresql-19-pg-lake.lintian-overrides",
+              "debbuild/pg_lake/debian/rules",
+              "debbuild/pg_lake/patches/pg_lake-3.6.0-brotli-1.1.1.patch",
+              "debbuild/pg_lake/patches/pg_lake-3.6.0-s3-odr.patch",
+              "debbuild/pg_lake/patches/pg_lake-3.6.0.patch",
+              "debbuild/pg_lake/patches/pg_lake-3.7.0-brotli-block-switch.patch",
+              "debbuild/pg_lake/patches/pg_lake-3.7.0-packaging.patch",
+              "debbuild/pg_lake/patches/pg_lake-3.7.0-s3-odr.patch",
+              "debbuild/pg_lake/prepare.sh"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "pg_later",
@@ -38782,7 +39402,7 @@
     },
     {
       "unit": "pg_orca",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/pg_orca.spec",
       "deb": "debbuild/pg_orca",
       "initial_rpm_versions": [
@@ -38801,57 +39421,180 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_orca/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_orca/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
-          "1.0.0"
+          "1.1.0"
         ],
-        "deb_version": "1.0.0-1PGSTY",
+        "deb_version": "1.1.0-1PGSTY",
         "deb_pgversions": [
-          "18"
+          "18",
+          "19"
         ]
       },
-      "other_pg_builds": [],
-      "pilot_builds": [],
+      "other_pg_builds": [
+        {
+          "pg": 18,
+          "side": "deb",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_orca/result.json"
+        }
+      ],
+      "pilot_builds": [
+        {
+          "pg": 19,
+          "side": "rpm",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_orca/result.json"
+        },
+        {
+          "pg": 19,
+          "side": "deb",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_orca/result.json"
+        }
+      ],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "runtime",
+        "reason": "升级至 1.1.0，启用 PG18/19；用两个小补丁解决系统 Xerces 打包和跨翻译单元静态初始化问题。",
+        "execution_order": 4,
+        "limits": "上游仍将 PG19 标为 preview。本批验证实际 ORCA 执行计划及 JOIN、聚合、LATERAL 查询结果；通过的查询子集不代表优化器全部功能。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "1.1.0",
-        "cached_url": "https://github.com/quantumiodb/pgorca/releases/tag/v1.1.0"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/quantumiodb/pgorca",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "1.1.0"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            18,
+            19
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "u24/amd64",
           "recipe_pg": [
-            18
+            18,
+            19
           ]
         }
       },
       "build_history": [],
       "recipe_patches": {
-        "rpm": [],
-        "deb": []
+        "rpm": [
+          {
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_orca-1.1.0-optional-cpack.patch",
+            "sha256": "4aa21445a7901715d2e7ddaef6ea8315e4a391930c7227fcb0033c1e5b274bba",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
+          },
+          {
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_orca-1.1.0-static-init-order.patch",
+            "sha256": "7da44640c9f22ad289266ec7876f980098d1c83dfa0e2a7b75c9734acda67c3c",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
+          }
+        ],
+        "deb": [
+          {
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_orca/debian/patches/pg_orca-1.1.0-optional-cpack.patch",
+            "sha256": "4aa21445a7901715d2e7ddaef6ea8315e4a391930c7227fcb0033c1e5b274bba",
+            "scope": "recipe declaration controls application"
+          },
+          {
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_orca/debian/patches/pg_orca-1.1.0-static-init-order.patch",
+            "sha256": "7da44640c9f22ad289266ec7876f980098d1c83dfa0e2a7b75c9734acda67c3c",
+            "scope": "recipe declaration controls application"
+          }
+        ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "上游仍将 PG19 标为 preview。本批验证实际 ORCA 执行计划及 JOIN、聚合、LATERAL 查询结果；通过的查询子集不代表优化器全部功能。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_orca/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "16": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "17": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "18": {
+            "rpm": "supported",
+            "deb": "runtime"
+          },
+          "19": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          }
+        },
+        "sources": [
+          {
+            "name": "pg_orca-1.1.0.tar.gz",
+            "sha256": "48f99ca0929de54fafd52944839787fdc3dd75571a62c88406400f985743bec3",
+            "bytes": 2821439,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/pg_orca-1.1.0.tar.gz",
+            "recipe_reference": "pg_orca-1.1.0.tar.gz"
+          }
+        ],
+        "validation": [
+          "EL9 9.8/aarch64：PG19.0 主包、debuginfo、debugsource、CREATE EXTENSION 与 ORCA 查询验证通过。",
+          "Ubuntu 24.04.5/amd64：PG18.6、PG19.0 主包与 dbgsym，实际 ORCA 执行计划、JOIN/聚合/LATERAL 与原生规划器结果对照通过。",
+          "DEB 原构建 SSH 包装进程返回 255、日志截断；最终 ninja link、.changes/.buildinfo、已安装 ELF 哈希、运行回执共同确认产物。未把 255 写成构建退出 0。"
+        ],
+        "commits": [
+          {
+            "unit": "pg_orca",
+            "repository": "rpm",
+            "commit": "2373ec2af2262363159c110bc6d71ab957ec5574",
+            "files": [
+              "rpmbuild/Makefile",
+              "rpmbuild/SPECS/patches/pg_orca-1.1.0-optional-cpack.patch",
+              "rpmbuild/SPECS/patches/pg_orca-1.1.0-static-init-order.patch",
+              "rpmbuild/SPECS/pg_orca.spec"
+            ]
+          },
+          {
+            "unit": "pg_orca",
+            "repository": "deb",
+            "commit": "dc18517b8f43b02061ea2c37b604fd89920cfc95",
+            "files": [
+              "debbuild/pg_orca/Makefile",
+              "debbuild/pg_orca/debian/changelog",
+              "debbuild/pg_orca/debian/control.in",
+              "debbuild/pg_orca/debian/patches/pg_orca-1.1.0-optional-cpack.patch",
+              "debbuild/pg_orca/debian/patches/pg_orca-1.1.0-static-init-order.patch",
+              "debbuild/pg_orca/debian/patches/series",
+              "debbuild/pg_orca/debian/pgversions",
+              "debbuild/pg_orca/debian/rules"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "pg_orphaned",
@@ -46445,7 +47188,7 @@
     },
     {
       "unit": "pg_stat_ch",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/pg_stat_ch.spec",
       "deb": "debbuild/pg_stat_ch",
       "initial_rpm_versions": [
@@ -46464,43 +47207,69 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
-          "0.4.0"
+          "0.4.2"
         ],
-        "deb_version": "0.4.0-1PGSTY",
+        "deb_version": "0.4.2-1PGSTY",
         "deb_pgversions": [
           "16",
           "17",
-          "18"
+          "18",
+          "19"
         ]
       },
       "other_pg_builds": [],
-      "pilot_builds": [],
+      "pilot_builds": [
+        {
+          "pg": 19,
+          "side": "rpm",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/result.json"
+        },
+        {
+          "pg": 19,
+          "side": "deb",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/result.json"
+        }
+      ],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "runtime",
+        "reason": "升级至 0.4.2，复用上游已经合入的 PG19 支持；保留静态依赖的完整调试信息。",
+        "execution_order": 4,
+        "limits": "实际查询事件写入任务独立的 ClickHouse 后核验，不接触现有业务服务。PG15 在上游范围外；全功能监控场景未穷举。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "v0.4.2",
-        "cached_url": "https://github.com/ClickHouse/pg_stat_ch/releases/tag/v0.4.2"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/ClickHouse/pg_stat_ch",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "0.4.2"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            16,
+            17,
+            18,
+            19
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
@@ -46509,7 +47278,8 @@
           "recipe_pg": [
             16,
             17,
-            18
+            18,
+            19
           ]
         }
       },
@@ -46517,31 +47287,107 @@
       "recipe_patches": {
         "rpm": [
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_stat_ch-0.4.0.patch",
-            "sha256": "8167191cab55d33bae3f5b0ebd07922f3a7dc860c4bed02dd7f14a8eac19e0ee",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-package-version.patch",
+            "sha256": "463827f6de0b8cafc36388fca5877a4e54bbbae7b393e7305c4c9bf832a40e54",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
+          },
+          {
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-vcpkg-debug-info.patch",
+            "sha256": "3bdc56bdcb4299e33c2341e147e5d7aa01ec8e665c502eeee8c84d9bc2ee3171",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
+          },
+          {
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-snappy-avx-header.patch",
+            "sha256": "edf1e988b7ffe0f10803498eaa89c8c4e326a68acaf329e4f413991bb5e057e2",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           }
         ],
         "deb": [
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.0.patch",
-            "sha256": "7be8bcd8f45525689efb1039257c2d59f26cd6ddacba6f6329e3e8947789383c",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.2-package-version.patch",
+            "sha256": "463827f6de0b8cafc36388fca5877a4e54bbbae7b393e7305c4c9bf832a40e54",
+            "scope": "recipe declaration controls application"
           },
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/pg_stat_ch/tools/vcpkg-u26a-cwd-stable-workdir.patch",
-            "sha256": "16f500dff4c97a2ea94b90b71780b37118dedbee62402f68f9c5f08dd55bfcd2",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.2-vcpkg-debug-info.patch",
+            "sha256": "3bdc56bdcb4299e33c2341e147e5d7aa01ec8e665c502eeee8c84d9bc2ee3171",
+            "scope": "recipe declaration controls application"
           }
         ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "实际查询事件写入任务独立的 ClickHouse 后核验，不接触现有业务服务。PG15 在上游范围外；全功能监控场景未穷举。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/pg_stat_ch/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "na",
+            "deb": "na"
+          },
+          "16": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "17": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "18": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "19": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          }
+        },
+        "sources": [
+          {
+            "name": "pg_stat_ch-0.4.2.tar.gz",
+            "sha256": "a8688617019180dba8641fdfdc12e5decc2a9e7f71bed155070f76b39b3eba9a",
+            "bytes": 6942421,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/pg_stat_ch-0.4.2.tar.gz",
+            "recipe_reference": "pg_stat_ch-0.4.2.tar.gz"
+          }
+        ],
+        "validation": [
+          "EL9 9.8/aarch64 与 Ubuntu 24.04.5/amd64：PG19.0 主包、debug、安装、preload 与 CREATE EXTENSION 通过。",
+          "两侧独立 ClickHouse 各接收18条事件并核对，上游回归测试分别11/11通过。版本函数为0.4.2；SQL control版本保持上游0.4。",
+          "PG16–18保留上游支持，本批未重建；PG15不支持。上游CMake不产出bitcode，相关LLVM reader检查不适用。",
+          "EL10 Snappy补丁仅通过单对象对照验证；没有宣称EL10完整包通过。"
+        ],
+        "commits": [
+          {
+            "unit": "pg_stat_ch",
+            "repository": "rpm",
+            "commit": "22dc982106fda792426c35af767ad50de69bb9f9",
+            "files": [
+              "rpmbuild/SPECS/patches/pg_stat_ch-0.4.0.patch",
+              "rpmbuild/SPECS/pg_stat_ch.spec",
+              "rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-package-version.patch",
+              "rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-snappy-avx-header.patch",
+              "rpmbuild/SPECS/patches/pg_stat_ch-0.4.2-vcpkg-debug-info.patch",
+              "rpmbuild/Makefile"
+            ]
+          },
+          {
+            "unit": "pg_stat_ch",
+            "repository": "deb",
+            "commit": "fa309c236bbd2a848528336ce14ea5642588f179",
+            "files": [
+              "debbuild/pg_stat_ch/Makefile",
+              "debbuild/pg_stat_ch/debian/changelog",
+              "debbuild/pg_stat_ch/debian/control.in",
+              "debbuild/pg_stat_ch/debian/pgversions",
+              "debbuild/pg_stat_ch/debian/rules",
+              "debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.0.patch",
+              "debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.2-package-version.patch",
+              "debbuild/pg_stat_ch/patches/pg_stat_ch-0.4.2-vcpkg-debug-info.patch"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "pg_stat_monitor",
@@ -68476,7 +69322,7 @@
     },
     {
       "unit": "plv8",
-      "scope": "heavy-deferred",
+      "scope": "heavy-reviewed",
       "rpm": "rpmbuild/SPECS/plv8.spec",
       "deb": "debbuild/plv8",
       "initial_rpm_versions": [
@@ -68495,56 +69341,95 @@
       },
       "pg19": {
         "rpm": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         },
         "deb": {
-          "status": "heavy-deferred",
-          "local_recipe_integrated": false
+          "status": "functional-passed",
+          "local_recipe_integrated": true,
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json",
+          "validation_scope": "heavy follow-up representative platforms; see per-major matrix"
         }
       },
       "current_recipe": {
         "rpm_versions": [
           "3.2.5"
         ],
-        "deb_version": "3.2.5-1PGSTY",
+        "deb_version": "3.2.5-2PGSTY",
         "deb_pgversions": [
-          "14",
           "15",
           "16",
           "17",
-          "18"
+          "18",
+          "19"
         ]
       },
-      "other_pg_builds": [],
-      "pilot_builds": [],
+      "other_pg_builds": [
+        {
+          "pg": 15,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json"
+        },
+        {
+          "pg": 16,
+          "side": "rpm",
+          "status": "runtime",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json"
+        }
+      ],
+      "pilot_builds": [
+        {
+          "pg": 19,
+          "side": "rpm",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json"
+        },
+        {
+          "pg": 19,
+          "side": "deb",
+          "status": "functional-passed",
+          "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json"
+        }
+      ],
       "decision": {
-        "action": "defer-heavy-or-provider",
-        "reason": "Heavy component or custom PostgreSQL provider is outside this batch.",
-        "execution_order": 4
+        "action": "runtime",
+        "reason": "上游最新 tag 仍为 3.2.5；完善 V8 构建依赖与调试信息，PGXS bitcode 使用与 PostgreSQL 匹配的 Clang。",
+        "execution_order": 4,
+        "limits": "额外Date→JSONB精度探针在四个实测坐标均复现 .123Z→.122Z。这是上游既有问题，未被28项回归覆盖；本轮没有修复该产品行为。JIT查询通过也不表示plv8的C入口自身被内联。"
       },
       "upstream_check": {
-        "status": "excluded-this-batch",
-        "cached_version": "v3.2.5",
-        "cached_url": "https://github.com/plv8/plv8/tree/v3.2.5"
+        "status": "checked-official-release-or-tags",
+        "checked_at": "2026-11-21T18:35+08:00",
+        "source": "https://github.com/plv8/plv8",
+        "evidence": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/upstream",
+        "selected_recipe_version": "3.2.5"
       },
       "recipe_scope": {
         "rpm": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "el9a/aarch64",
-          "recipe_pg": null
+          "recipe_pg": [
+            15,
+            16,
+            17,
+            18,
+            19
+          ]
         },
         "deb": {
           "supplier_policy": "PIGSTY",
           "pg_dimension": true,
           "requested_pilot": "u24/amd64",
           "recipe_pg": [
-            14,
             15,
             16,
             17,
-            18
+            18,
+            19
           ]
         }
       },
@@ -68552,24 +69437,89 @@
       "recipe_patches": {
         "rpm": [
           {
-            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/plv8-3.2.5.patch",
-            "sha256": "39e8a663043cae0fea0caf09c3b60cad4660a71856e2a1513381baa7beede735",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "spec-declared (conditionals may apply)"
+            "file": "/Users/vonng/pgsty/rpm/rpmbuild/SPECS/patches/plv8-3.2.5-v8-build.patch",
+            "sha256": "cebac47652eeb2f09239a1ed323c5b37e8c13669747715a198b75ec3eb2765b5",
+            "scope": "spec conditionals apply; EL8/EL10-only paths not verified by this EL9 pilot"
           }
         ],
         "deb": [
           {
-            "file": "/Users/vonng/pgsty/deb/debbuild/plv8/patches/plv8-3.2.5.patch",
-            "sha256": "39e8a663043cae0fea0caf09c3b60cad4660a71856e2a1513381baa7beede735",
-            "changed_in_this_task": false,
-            "pg19_named": false,
-            "scope": "recipe patch file (series/Makefile controls application)"
+            "file": "/Users/vonng/pgsty/deb/debbuild/plv8/patches/plv8-3.2.5-v8-build.patch",
+            "sha256": "cebac47652eeb2f09239a1ed323c5b37e8c13669747715a198b75ec3eb2765b5",
+            "scope": "recipe declaration controls application"
           }
         ]
       },
-      "runtime_scope": "Each runtime receipt records its exact package SHA256 and coverage; a passing subset is not a complete product validation."
+      "runtime_scope": "额外Date→JSONB精度探针在四个实测坐标均复现 .123Z→.122Z。这是上游既有问题，未被28项回归覆盖；本轮没有修复该产品行为。JIT查询通过也不表示plv8的C入口自身被内联。",
+      "scope_at_initial_audit": "heavy-deferred",
+      "heavy_followup": {
+        "result": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/plv8/result.json",
+        "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+        "matrix": {
+          "15": {
+            "rpm": "runtime",
+            "deb": "supported"
+          },
+          "16": {
+            "rpm": "runtime",
+            "deb": "supported"
+          },
+          "17": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "18": {
+            "rpm": "supported",
+            "deb": "supported"
+          },
+          "19": {
+            "rpm": "runtime",
+            "deb": "runtime"
+          }
+        },
+        "sources": [
+          {
+            "name": "plv8-3.2.5.tar.gz",
+            "sha256": "3905f4576d353f5550933d2a80f4b4d9c070b35f516b0c39ef3c927f04e3f40e",
+            "bytes": 39659687,
+            "archive": "/Users/vonng/pgsty/repo/ext/src/plv8-3.2.5.tar.gz",
+            "recipe_reference": "plv8-3.2.5.tar.gz"
+          }
+        ],
+        "validation": [
+          "EL9 9.8 ARM64实测PG15、16、19；Ubuntu24.04 amd64实测PG19。其余坐标保留支持范围，只做语法检查。",
+          "四个实测坐标的包、完整DWARF、LLVM reader、安装、JS运行及28项上游回归分别通过；真实JIT查询均产生4个函数并启用Inlining/Optimization。",
+          "默认版本选择已验证：清除调用方环境后，两入口均生成PG15–19 control且checkcontrol成功；这不代表全部五个版本已经产包。",
+          "EL9 PG16原始rpmbuild退出码未捕获，保持null；用完整三包、摘要及独立payload/runtime回执确认完成。历史wrapper状态原样保留。"
+        ],
+        "commits": [
+          {
+            "unit": "plv8",
+            "repository": "rpm",
+            "commit": "61cf454ee6d2ff4cbb015f6dc9640843f29e79bf",
+            "files": [
+              "rpmbuild/SPECS/plv8.spec",
+              "rpmbuild/SPECS/patches/plv8-3.2.5-v8-build.patch",
+              "rpmbuild/SPECS/patches/plv8-3.2.5.patch",
+              "rpmbuild/Makefile"
+            ]
+          },
+          {
+            "unit": "plv8",
+            "repository": "deb",
+            "commit": "dfd009ef08e58ae393ed282fb67be1d02bbfc2b0",
+            "files": [
+              "debbuild/plv8/Makefile",
+              "debbuild/plv8/debian/changelog",
+              "debbuild/plv8/debian/control.in",
+              "debbuild/plv8/debian/pgversions",
+              "debbuild/plv8/debian/rules",
+              "debbuild/plv8/patches/plv8-3.2.5-v8-build.patch",
+              "debbuild/plv8/patches/plv8-3.2.5.patch"
+            ]
+          }
+        ]
+      }
     },
     {
       "unit": "plx",
@@ -83201,9 +84151,9 @@
       "not-applicable": 41,
       "rust-excluded": 71,
       "smoke-passed": 21,
-      "functional-passed": 19,
-      "heavy-deferred": 8,
+      "functional-passed": 25,
       "regression-passed": 13,
+      "complex-port-deferred": 2,
       "partial-regression-passed": 4,
       "functional-failed": 1,
       "regression-failed": 2,
@@ -83212,30 +84162,33 @@
       "provider-deferred": 1,
       "vendor-package-available": 2,
       "partial-regression-reviewed": 1,
-      "upstream-unsupported": 1
+      "upstream-unsupported": 1,
+      "no-local-recipe": 28
     },
     "deb": {
       "payload-passed": 219,
       "not-tested-pg19-deferred": 1,
       "not-applicable": 41,
       "regression-reviewed-differences": 2,
+      "no-local-recipe": 50,
       "rust-excluded": 70,
       "upstream-unsupported": 2,
-      "functional-passed": 22,
-      "heavy-deferred": 9,
+      "functional-passed": 28,
       "smoke-passed": 18,
       "regression-passed": 14,
+      "complex-port-deferred": 2,
       "partial-regression-passed": 5,
       "build-failed": 20,
       "functional-failed": 1,
       "regression-failed": 2,
       "vendor-package-available": 1,
+      "heavy-deferred": 1,
       "rust-successor-deferred": 1
     }
   },
   "pg19_recipe_enabled_counts": {
-    "rpm": 288,
-    "deb": 280
+    "rpm": 294,
+    "deb": 286
   },
   "upstream_status_counts": {
     "verified-release-or-tag": 293,
@@ -87197,5 +88150,22 @@
       "universe": 42
     },
     "changed_in_spec_review": false
+  },
+  "heavy_followup": {
+    "finished_at": "2026-11-21T18:35+08:00",
+    "source_units": 9,
+    "pg19_verified_both_sides": 6,
+    "deferred_pg19": [
+      "pg_ducklake",
+      "omnigres"
+    ],
+    "held_candidate": [
+      "libduckdb"
+    ],
+    "report": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/nonrust-heavy-final-report.html",
+    "matrix": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/report/summary.json",
+    "commits": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/commits.json",
+    "metadata": "/Users/vonng/pgsty/artifacts/nonrust-heavy-20261121/metadata",
+    "initial_phase_metrics_note": "Top-level build_attempts/package_manifests and completion retain the earlier non-heavy phase receipts. This follow-up has separate per-unit receipts and final artifact manifests."
   }
 }

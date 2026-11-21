@@ -615,7 +615,7 @@ numeral:
 	./build numeral 15 16 17 18 19
 
 pg_rational:
-	./build pg_rational 14 15 16 17 18
+	./build pg_rational 15 16 17 18 19
 
 pgmp:
 	./build pgmp 14 15 16 17 18

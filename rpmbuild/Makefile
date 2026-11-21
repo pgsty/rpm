@@ -823,7 +823,7 @@ count_distinct:
 	./build count_distinct 15 16 17 18 19
 
 omnisketch:
-	./build omnisketch 14 15 16 17 18
+	./build omnisketch 15 16 17 18 19
 
 ddsketch:
 	./build ddsketch 15 16 17 18 19

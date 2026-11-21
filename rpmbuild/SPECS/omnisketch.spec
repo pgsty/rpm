@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	OmniSketch, a data structure for on-line aggregation of data into appro
 License:	PostgreSQL
 URL:		https://github.com/tvondra/omnisketch
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        omnisketch-1.0.2-pg19-headers.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27 xxhash-devel
 %if %llvm
@@ -43,6 +44,7 @@ Wieger R. Punter, Odysseas Papapetrou, Minos Garofalakis; Proc. {VLDB} Endow. Vo
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -65,6 +67,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.0.2-1PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.0.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

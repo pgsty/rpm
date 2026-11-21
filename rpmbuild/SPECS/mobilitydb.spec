@@ -9,25 +9,26 @@
 %global proj_package proj96
 %endif
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:mobilitydb only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:mobilitydb only supports PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.3.1
-Release:        2PGSTY%{?dist}
+Version:        1.3.2
+Release:        1PGSTY%{?dist}
 Summary:        Geospatial trajectory data management and analysis platform
 # MobilityDB is PostgreSQL-licensed; the shared library embeds GPL-2.0-or-later
 # PostGIS liblwgeom/libpgcommon objects, as documented by debian/copyright.
 License:        PostgreSQL AND GPL-2.0-or-later
 URL:            https://mobilitydb.com/
 Source0:        %{sname}-%{version}.tar.gz
-# https://github.com/MobilityDB/MobilityDB/archive/refs/tags/v1.3.1.tar.gz
+# https://github.com/MobilityDB/MobilityDB/archive/refs/tags/v1.3.2.tar.gz
 
 # Rebased PGDG/Debian mobilitydb 1.3.0-2 patches, in their original order.
 Patch0:         mobilitydb-1.3.1.patch
 # Upstream fix for in-place mutation of stored geometry inputs.
-Patch1:         mobilitydb-1.3.1-preserve-geometry-input.patch
+Patch1:         mobilitydb-1.3.2-preserve-geometry-input.patch
+Patch2:         mobilitydb-1.3.2-pg19-headers.patch
 
 # Debian limits builds to 64-bit little-endian architectures. These are the two
 # such architectures in the PGSTY RPM matrix.
@@ -89,6 +90,10 @@ DESTDIR=%{buildroot} cmake --install build
 %{pginstdir}/share/extension/mobilitydb_datagen--*.sql
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.3.2-1PGSTY
+- Update to 1.3.2 and retain the validated packaging fixes
+- Include explicit math and heap tuple declarations for PostgreSQL 19
+
 * Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 1.3.1-2PGSTY
 - Rebuild with the PostGIS 3.7 runtime dependency.
 - Match GEOS and PROJ to the PostGIS provider on each EL major.

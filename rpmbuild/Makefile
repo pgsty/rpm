@@ -696,7 +696,7 @@ pgproto:
 	./build pgproto 14 15 16 17 18
 
 pgjq:
-	./build pgjq 14 15 16 17
+	./build pgjq 15 16 17
 
 pgjwt:
 	./build pgjwt 14 15 16 17 18

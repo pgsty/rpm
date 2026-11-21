@@ -1255,7 +1255,7 @@ documentdb15:  # explicit PG15 extension-only build
 	./build documentdb 15
 
 pg_projection:
-	./build pg_projection 14 15 16 17 18
+	./build pg_projection 15 16 17 18 19
 
 session_variable:
 	./build session_variable 14 15 16 17 18

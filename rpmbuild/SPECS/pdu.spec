@@ -7,8 +7,8 @@
 %global buildsrc PDU-PostgreSQLDataUnloader-%{commit}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:PDU supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:PDU supports PostgreSQL 15 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}

@@ -1347,7 +1347,7 @@ neon:
 	./build neon 17
 
 pdu:
-	./build pdu 14 15 16 17 18
+	./build pdu 15 16 17 18
 
 pgdog:			# rust 1.96.1, pinned Git dependency vendor
 	cp -f SPECS/patches/pgdog-0.1.63.patch SOURCES/pgdog-0.1.63.patch

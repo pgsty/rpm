@@ -299,7 +299,7 @@ encsearch:               # rust pgrx 0.19.3, upstream tested PG17
 	./build encsearch 17
 
 pg_lease:                # pure SQL, upstream testing release
-	./build pg_lease 14 15 16 17 18
+	./build pg_lease 15 16 17 18 19
 
 pg_icu_parser:
 	./build pg_icu_parser 15 16 17 18 19

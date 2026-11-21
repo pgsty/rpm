@@ -886,7 +886,7 @@ pg_random:
 	./build pg_random 14 15 16 17 18
 
 pg_base36:
-	./build pg_base36 14 15 16 17 18
+	./build pg_base36 15 16 17 18 19
 
 pg_base62:
 	./build pg_base62 14 15 16 17 18

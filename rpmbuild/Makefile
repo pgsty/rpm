@@ -754,7 +754,7 @@ pg_statviz:
 	./build pg_statviz 14 15 16 17 18
 
 pg_relation_sql:
-	./build pg_relation_sql 14 15 16 17 18
+	./build pg_relation_sql 15 16 17 18 19
 
 ddl_historization:
 	./build ddl_historization 15 16 17 18 19

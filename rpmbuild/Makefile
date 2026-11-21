@@ -1308,7 +1308,7 @@ pgclone:
 	./build pgclone 15 16 17 18 19
 
 pgcopydb:
-	./build pgcopydb 14 15 16 17 18
+	./build pgcopydb 15 16 17 18 19
 
 pgmqtt:			# rust pgrx 0.19.2; SQL extension 0.4.1
 	./build pgmqtt 14 15 16 17 18

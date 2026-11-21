@@ -724,7 +724,7 @@ pgpcre:
 	fi
 
 re2:
-	./build re2 16 17 18
+	./build re2 16 17 18 19
 
 icu_ext:
 	./build icu_ext 15 16 17 18 19

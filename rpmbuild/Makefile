@@ -1221,7 +1221,7 @@ pg_redis_pubsub:
 	./build pg_redis_pubsub 14 15 16 17 18
 
 kafka_fdw:
-	./build kafka_fdw 14 15 16 17 18
+	./build kafka_fdw 15 16 17 18 19
 
 firebird_fdw:
 	./build firebird_fdw 15 16 17 18 19

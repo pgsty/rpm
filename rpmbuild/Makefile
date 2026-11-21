@@ -1508,7 +1508,7 @@ pg_living_assertions:
 	./build pg_living_assertions 14 15 16 17 18
 
 pg_grammar_guard:
-	./build pg_grammar_guard 14 15 16 17 18
+	./build pg_grammar_guard 15 16 17 18 19
 
 jev:
 	./build jev 15 16 17 19

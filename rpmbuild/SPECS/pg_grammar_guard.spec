@@ -1,8 +1,8 @@
 %global sname pg_grammar_guard
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_grammar_guard supports PostgreSQL 14-18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_grammar_guard supports PostgreSQL 15-19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

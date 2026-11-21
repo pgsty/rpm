@@ -730,7 +730,7 @@ icu_ext:
 	./build icu_ext 15 16 17 18 19
 
 pgqr:
-	./build pgqr 14 15 16 17 18
+	./build pgqr 15 16 17 18 19
 
 pg_envvar:
 	./build pg_envvar 15 16 17 18 19

@@ -880,7 +880,7 @@ pg_arraymath:
 	./build pg_arraymath 15 16 17 18 19
 
 pg_math:
-	./build pg_math 14 15 16 17 18
+	./build pg_math 15 16 17 18 19
 
 pg_random:
 	./build pg_random 14 15 16 17 18

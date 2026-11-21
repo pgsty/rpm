@@ -1,8 +1,8 @@
 %global pname omnigres
 %global sname omnigres
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pgmajorversion must be one of 14, 15, 16, 17, or 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:pgmajorversion must be one of 15, 16, 17, or 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -12,7 +12,7 @@ Summary:	Postgres as a Platform
 License:	Apache-2.0
 URL:		https://github.com/omnigres/omnigres
 Source0:	omnigres-%{version}.tar.gz
-Patch0:		omnigres-20260212.patch
+Patch0:		omnigres-20260212-packaging.patch
 Patch1:		omnigres-el8-compat.patch
 BuildRequires:	pgdg-srpm-macros >= 1.0.27 cmake flex bison nmap-ncat make
 BuildRequires:	postgresql%{pgmajorversion}-server postgresql%{pgmajorversion}-devel postgresql%{pgmajorversion}-contrib postgresql%{pgmajorversion}-plpython3
@@ -68,6 +68,10 @@ cp -a pg%{pgmajorversion}/packaged/extension/* %{buildroot}%{pginstdir}/share/ex
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 20260212-1PGSTY
+- Restrict builds to PostgreSQL 15-18; PG19 deparser port is pending
+- Give the existing packaging patch a descriptive name without changing it
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 20260212-1PGSTY
 - Update to the 2026-02-12 upstream snapshot
 - Preserve and migrate omni_httpc 0.1.10 installations safely

@@ -588,7 +588,7 @@ asn1oid:
 	./build asn1oid 15 16 17 18 19
 
 pg_roaringbitmap:
-	./build pg_roaringbitmap 14 15 16 17 18
+	./build pg_roaringbitmap 15 16 17 18 19
 
 pgfaceting:
 	./build pgfaceting 14 15 16 17 18

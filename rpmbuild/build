@@ -19,8 +19,8 @@ SOURCES_DIR="${PROG_DIR}/SOURCES"
 # Usage
 #--------------------------------------------------------------#
 # build <extension> [debug|dbg] [versions...]
-# ./build pg_roaringbitmap         14 15 16 17 18
-# ./build pgjwt            debug   14 15 16 17 18
+# ./build pg_roaringbitmap         15 16 17 18 19
+# ./build pgjwt            debug   15 16 17 18 19
 
 #--------------------------------------------------------------#
 # Log Util
@@ -150,11 +150,11 @@ fi
 
 VERSIONS=""
 if [ $# -eq 0 ]; then
-    VERSIONS="14 15 16 17 18"
+    VERSIONS="15 16 17 18 19"
 else
 
     # Validate versions
-    VALID_VERSIONS="14 15 16 17 18"
+    VALID_VERSIONS="15 16 17 18 19"
     for arg in "$@"; do
         found=false
         for ver in ${VALID_VERSIONS}; do

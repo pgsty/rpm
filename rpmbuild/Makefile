@@ -90,13 +90,13 @@ pg_task:
 	./build pg_task 15 16 17 18 19
 
 pg_later:       # rust pgrx 0.19.2
-	./build pg_later 14 15 16 17 18
+	./build pg_later 15 16 17 18
 
 pg_background:
 	./build pg_background 15 16 17 18 19
 
 pg_when:        # rust pgrx 0.19.2
-	./build pg_when 14 15 16 17 18
+	./build pg_when 15 16 17 18
 
 pg_stl:
 	./build pg_stl 16 17 18 19
@@ -168,10 +168,10 @@ geoip:
 	./build geoip 15 16 17 18 19
 
 pg_polyline:    # rust pgrx 0.19.2
-	./build pg_polyline 14 15 16 17 18
+	./build pg_polyline 15 16 17 18
 
 pg_eviltransform:	# rust pgrx 0.19.2
-	./build pg_eviltransform 14 15 16 17 18
+	./build pg_eviltransform 15 16 17 18
 
 pg_geohash:
 	./build pg_geohash 15 16 17 18 19
@@ -183,7 +183,7 @@ pghydro:
 	./build pghydro 15 16 17 18 19
 
 pg_tzf:         # rust pgrx 0.19.2
-	./build pg_tzf 14 15 16 17 18
+	./build pg_tzf 15 16 17 18
 
 
 ###############################################################
@@ -193,34 +193,34 @@ pgvector:  # skip, handled by pgdg
 	./build pgvector 15 16 17 18 19
 
 vchord:    # rust pgrx 0.19.3
-	./build vchord 14 15 16 17 18
+	./build vchord 15 16 17 18
 
 pgvectorscale:  # rust pgrx 0.19.2
-	./build pgvectorscale 14 15 16 17 18
+	./build pgvectorscale 15 16 17 18
 
 pg_vectorsearch:  # upstream alpha, PostgreSQL 18/19 validated
 	./build pg_vectorsearch 18 19
 
 pg_turbovec:	# rust pgrx 0.19.3, Rust 1.96+
-	./build pg_turbovec 14 15 16 17 18
+	./build pg_turbovec 15 16 17 18
 
 pg_vectorize:	# rust pgrx 0.19.2; SQL extension 0.23.0
-	./build pg_vectorize 14 15 16 17 18
+	./build pg_vectorize 15 16 17 18
 
 pg_similarity:	# covered by pgdg
 	./build pg_similarity 15 16 17 18 19
 
 pg_rrf:			# rust pgrx 0.19.2
-	./build pg_rrf 14 15 16 17 18
+	./build pg_rrf 15 16 17 18
 
 smlar:          # break for pg18, fixed
 	./build smlar 15 16 17 18 19
 
 pg_summarize:	# rust pgrx 0.19.2 (forked)
-	./build pg_summarize 14 15 16 17 18
+	./build pg_summarize 15 16 17 18
 
 pg_tiktoken:	# rust pgrx 0.19.2
-	./build pg_tiktoken 14 15 16 17 18
+	./build pg_tiktoken 15 16 17 18
 
 pg_tiktoken_c:
 	./build pg_tiktoken_c 15 16 17 18 19
@@ -229,7 +229,7 @@ pg4ml:
 	./build pg4ml 15 16 17 18 19
 
 pgml:			# rust pgrx 0.12.9 (obsolete)
-	./build pgml 14 15 16 17
+	./build pgml 15 16 17
 
 pgmnemo:
 	./build pgmnemo 17 18 19
@@ -269,13 +269,13 @@ pg_jieba:
 	./build pg_jieba 15 16 17 18 19
 
 pg_bestmatch:		# rust pgrx 0.19.2
-	./build pg_bestmatch 14 15 16 17 18
+	./build pg_bestmatch 15 16 17 18
 
 vchord_bm25:		# rust pgrx 0.19.3
-	./build vchord_bm25 14 15 16 17 18
+	./build vchord_bm25 15 16 17 18
 
 pg_tokenizer:		# rust pgrx 0.19.3
-	./build pg_tokenizer 14 15 16 17 18
+	./build pg_tokenizer 15 16 17 18
 
 pg_biscuit:
 	./build pg_biscuit 16 17 18 19
@@ -317,7 +317,7 @@ acdat:
 	./build acdat 15 16 17 18 19
 
 pg_pinyin:			# rust pgrx 0.19.2
-	./build pg_pinyin 14 15 16 17 18
+	./build pg_pinyin 15 16 17 18
 
 pg_kazsearch:		# rust pgrx 0.19.2
 	./build pg_kazsearch 16 17 18
@@ -335,7 +335,7 @@ citus:
 	./build citus 15 16 17 18
 
 hydra:
-	./build hydra 14 15 16 #17 not ready yet
+	./build hydra 15 16 #17 not ready yet
 
 # DuckDB family platform policy:
 # - pg_duckdb and pg_mooncake remain EL8/EL9/EL10 capable.
@@ -344,13 +344,13 @@ hydra:
 # - pg_ducklake is EL9+ until its EL8/GCC8 filesystem path is fixed and tested.
 #pg_analytics:   # download, obsolete
 pg_duckdb:
-	./build pg_duckdb 14 15 16 17 18
+	./build pg_duckdb 15 16 17 18
 
 pg_lake:                 # EL9+ only: bundled DuckDB requires system OpenSSL 3
 	./build pg_lake 16 17 18
 
 pg_mooncake:
-	./build pg_mooncake 14 15 16 17 18
+	./build pg_mooncake 15 16 17 18
 
 storage_engine:
 	./build storage_engine 15 16 17 18 19
@@ -362,10 +362,10 @@ duckdb_fdw:
 	./build duckdb_fdw 15 16 17 18
 
 pg_parquet:			# rust pgrx 0.19.3
-	./build pg_parquet 14 15 16 17 18
+	./build pg_parquet 15 16 17 18
 
 pg_ducklake:             # EL9+ only: EL8/GCC8 filesystem support is unverified
-	./build pg_ducklake 14 15 16 17 18
+	./build pg_ducklake 15 16 17 18
 
 # pg_fkpart
 pg_kpart:
@@ -399,7 +399,7 @@ onesparse:
 	./build onesparse 18 19
 
 pggraph:		# rust pgrx 0.19.2, installs graph extension
-	./build pggraph 14 15 16 17 18
+	./build pggraph 15 16 17 18
 
 pgcontext:		# rust pgrx 0.19.2, clean-install only; PG17/18
 	./build pgcontext 17 18
@@ -408,10 +408,10 @@ pgzint:			# deferred: active EL repos do not provide Zint 2.14+
 	@echo "pgzint is deferred; zint-devel 2.14 or newer is unavailable in active EL repos"
 
 pgrdf:			# rust pgrx 0.19.3
-	./build pgrdf 14 15 16 17 18
+	./build pgrdf 15 16 17 18
 
 pgwasm:		# rust pgrx 0.19.2, Wasmtime 44
-	./build pgwasm 14 15 16 17 18
+	./build pgwasm 15 16 17 18
 
 pgmq:
 	./build pgmq 15 16 17 18 19
@@ -457,16 +457,16 @@ pg_ttl_index:
 	./build pg_ttl_index 15 16 17 18 19
 
 pg_graphql:		# rust pgrx 0.19.3
-	./build pg_graphql 14 15 16 17 18
+	./build pg_graphql 15 16 17 18
 
 pg_jsonschema:	# rust pgrx 0.19.2
-	./build pg_jsonschema 14 15 16 17 18
+	./build pg_jsonschema 15 16 17 18
 
 jsonschema:		# rust pgrx 0.19.3, distinct from pg_jsonschema
-	./build jsonschema 14 15 16 17 18
+	./build jsonschema 15 16 17 18
 
 pg_mentat:		# rust pgrx 0.19.3
-	./build pg_mentat 14 15 16 17 18
+	./build pg_mentat 15 16 17 18
 
 #jsquery:
 #pg_hint_plan
@@ -495,7 +495,7 @@ pg_local_cache:	# shared_preload_libraries
 	./build pg_local_cache 15 16 17 18 19
 
 pg_durable:		# rust pgrx 0.19.3, shared_preload_libraries
-	./build pg_durable 14 15 16 17 18
+	./build pg_durable 15 16 17 18
 
 pgs3:			# rust pgrx 0.19.2, shared_preload_libraries
 	./build pgs3 17 18
@@ -517,7 +517,7 @@ rdkit:
 
 # omnigres
 omnigres:
-	./build omnigres 14 15 16 17 18
+	./build omnigres 15 16 17 18
 
 ###############################################################
 #                       Category: LANG                        #
@@ -526,7 +526,7 @@ pg_tle:
 	./build pg_tle 15 16 17 18 19
 
 plv8:
-	./build plv8 14 15 16 17 18
+	./build plv8 15 16 17 18
 
 plruby:
 	./build plruby 15 16 17 18
@@ -538,7 +538,7 @@ plx:
 	./build plx 15 16 17 18 19
 
 plprql: 		# rust pgrx 0.19.2
-	./build plprql 14 15 16 17 18
+	./build plprql 15 16 17 18
 
 plpgsql_check:
 	./build plpgsql_check 15 16 17 18 19
@@ -579,7 +579,7 @@ pgpdf: 		# covered by PGDG
 	./build pgpdf 15 16 17 18 19
 
 pglite_fusion:	# rust pgrx 0.19.2
-	./build pglite_fusion 14 15 16 17 18
+	./build pglite_fusion 15 16 17 18
 
 md5hash:
 	./build md5hash 15 16 17 18 19
@@ -702,7 +702,7 @@ pgjwt:
 	./build pgjwt 15 16 17 18 19
 
 pg_smtp_client:		# rust pgrx
-	./build pg_smtp_client 14 15 16 17 18
+	./build pg_smtp_client 15 16 17 18
 
 pg_html5_email_address:
 	./build pg_html5_email_address 15 16 17 18 19
@@ -742,7 +742,7 @@ external_file:
 	./build external_file 15 16 17 18 19
 
 pg_render:		# rust pgrx 0.19.2
-	./build pg_render 14 15 16 17 18
+	./build pg_render 15 16 17 18
 
 cat_tools:
 	./build cat_tools 15 16 17 18 19
@@ -791,10 +791,10 @@ pgsparql:
 #                       Category: FUNC                        #
 ###############################################################
 pg_idkit:			# rust pgrx 0.19.2
-	./build pg_idkit 14 15 16 17 18
+	./build pg_idkit 15 16 17 18
 
 pgx_ulid:			# rust pgrx 0.19.2
-	./build pgx_ulid  14 15 16 17 18
+	./build pgx_ulid 15 16 17 18
 
 pg_uuid_v8:
 	./build pg_uuid_v8 15 16 17 18 19
@@ -811,7 +811,7 @@ sequential_uuids:
 	./build sequential_uuids 15 16 17 18 19
 
 pg_typeid:
-	./build pg_typeid 14 15 16 17 18
+	./build pg_typeid 15 16 17 18
 
 quantile:
 	./build quantile 15 16 17 18 19
@@ -892,7 +892,7 @@ pg_base62:
 	./build pg_base62 15 16 17 18 19
 
 pg_base58:		# rust pgrx 0.19.2
-	./build pg_base58 14 15 16 17 18
+	./build pg_base58 15 16 17 18
 
 pg_financial:
 	./build pg_financial 15 16 17 18 19
@@ -901,7 +901,7 @@ pg_accumulator:
 	./build pg_accumulator 15 16 17 18 19
 
 pg_convert:		# rust pgrx 0.19.2
-	./build pg_convert 14 15 16 17 18
+	./build pg_convert 15 16 17 18
 
 parray_gin:
 	./build parray_gin 15 16 17 18 19
@@ -952,13 +952,13 @@ ddlx:			# fix pgdg 18 missing
 	./build pg_ddlx 15 16 17 18 19
 
 pglinter:
-	./build pglinter 14 15 16 17 18
+	./build pglinter 15 16 17 18
 
 pgdd:			# rust pgrx 0.19.2
-	./build pgdd 14 15 16 17 18
+	./build pgdd 15 16 17 18
 
 pg_strict:		# rust pgrx 0.19.2
-	./build pg_strict 14 15 16 17 18
+	./build pg_strict 15 16 17 18
 
 preprepare:
 	./build preprepare 15 16 17 18 19
@@ -1086,7 +1086,7 @@ toastinfo:
 	./build toastinfo 15 16 17 18 19
 
 pg_explain_ui:		# rust pgrx 0.19.2
-	./build pg_explain_ui 14 15 16 17 18
+	./build pg_explain_ui 15 16 17 18
 
 pg_describe:
 	./build pg_describe 17 18 19
@@ -1138,7 +1138,7 @@ pg_vault_tde:	# shared_preload_libraries, PostgreSQL 17+, EL9/EL10 only
 	./build pg_vault_tde 17 18
 
 pg_session_jwt:		# rust pgrx 0.19.2
-	./build pg_session_jwt 14 15 16 17 18
+	./build pg_session_jwt 15 16 17 18
 
 pg_oidc_validator_rust:	# rust pgrx 0.19.2, PostgreSQL 18 OAuth validator
 	./build pg_oidc_validator_rust 18
@@ -1147,13 +1147,13 @@ pg_oidc_validator:	# C++23, PostgreSQL 18 OAuth validator
 	./build pg_oidc_validator 18
 
 pg_anon:			# rust pgrx 0.19.3
-	./build pg_anon 14 15 16 17 18
+	./build pg_anon 15 16 17 18
 
 pgsmcrypto:			# rust pgrx 0.19.2
-	./build pgsmcrypto 14 15 16 17 18
+	./build pgsmcrypto 15 16 17 18
 
 pg_enigma:			# rust pgrx 0.19.2
-	./build pg_enigma 14 15 16 17 18
+	./build pg_enigma 15 16 17 18
 
 pg_auditor:
 	./build pg_auditor 15 16 17 18 19
@@ -1174,7 +1174,7 @@ pg_command_fw:		# rust pgrx 0.19.2
 	./build pg_command_fw 15 16 17 18
 
 block_copy_command:	# rust pgrx 0.19.2
-	./build block_copy_command 14 15 16 17 18
+	./build block_copy_command 15 16 17 18
 
 sslutils:
 	./build sslutils 15 16 17 18 19
@@ -1200,13 +1200,13 @@ pgspider_ext:
 #hdfs_fdw
 
 wrappers:			# rust pgrx 0.19.3
-	./build wrappers 14 15 16 17 18
+	./build wrappers 15 16 17 18
 
 sqlite_fdw:
 	./build sqlite_fdw 15 16 17 18 19
 
 etcd_fdw:			# rust pgrx 0.19.2
-	./build etcd_fdw 14 15 16 17 18
+	./build etcd_fdw 15 16 17 18
 
 rdf_fdw:
 	./build rdf_fdw 15 16 17 18 19
@@ -1292,7 +1292,6 @@ db_migrator:
 	./build db_migrator 15 16 17 18 19
 
 libpgfeutils:	# require perl(FindBin)
-	./build libpgfeutils14 14
 	./build libpgfeutils15 15
 	./build libpgfeutils16 16
 	./build libpgfeutils17 17
@@ -1311,7 +1310,7 @@ pgcopydb:
 	./build pgcopydb 15 16 17 18 19
 
 pgmqtt:			# rust pgrx 0.19.2; SQL extension 0.4.1
-	./build pgmqtt 14 15 16 17 18
+	./build pgmqtt 15 16 17 18
 
 decoder_raw:
 	./build decoder_raw 15 16 17 18 19
@@ -1516,7 +1515,7 @@ jev:
 kafgres:
 	./build kafgres 16
 
-# New extension batch: shared pinned sources, PG14-18 where supported.
+# New extension batch: shared pinned sources, PG15-19 where supported.
 
 .PHONY: vgram pg_money edtf_postgres libx509pq \
         pg_statvfs pg_json_diff pgtelemetry pgexporter_ext \
@@ -1527,10 +1526,10 @@ vgram:
 	./build vgram 15 16 17 18 19
 
 pg_money:
-	./build pg_money 14 15 16 17 18
+	./build pg_money 15 16 17 18
 
 edtf_postgres:
-	./build edtf_postgres 14 15 16 17 18
+	./build edtf_postgres 15 16 17 18
 
 libx509pq:
 	./build libx509pq 15 16 17 18 19
@@ -1566,7 +1565,7 @@ addressing_dictionary:
 	./build addressing_dictionary 15 16 17 18 19
 
 pg_statkit:
-	./build pg_statkit 14 15 16 17
+	./build pg_statkit 15 16 17
 
 colnames:
 	./build colnames 15 16 17 18 19

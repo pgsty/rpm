@@ -8,7 +8,7 @@
 # License   :   Apache-2.0
 #==============================================================#
 
-ACTIVE_PG_VERSIONS := 18 17 16 15 14
+ACTIVE_PG_VERSIONS := 19 18 17 16 15
 
 setup:
 	@echo "# Install pgext in the Linux builder, or use ../docker build images"
@@ -17,7 +17,7 @@ setup:
 	@echo "pgext env spec"
 	@echo "pgext env rust"
 	@echo "pgext env pgrx"
-	@echo "pgext pkg <name...> --pg 18"
+	@echo "pgext pkg <name...> --pg 19"
 
 # Specs and build helpers are synchronized separately from sources and build
 # products.  Keep remote build roots free of local staging and output files.
@@ -29,28 +29,22 @@ SPEC_RSYNC_ARGS := -az \
 #                      Prepare Environment                    #
 ###############################################################
 pm:   specm   srcm
-p8:   spec8   src8
 p9:   spec9   src9    
 p10:  spec10  src10   
-p8a:  spec8a  src8a   
 p9a:  spec9a  src9a   
 p10a: spec10a src10a
 
 ###############################################################
 #                      Push SPEC to Remote                    #
 ###############################################################
-spec: spec8 spec9 spec10 spec8a spec9a spec10a
+spec: spec9 spec10 spec9a spec10a
 specm:
 	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ meta:~/rpmbuild/
-spec8:
-	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el8:~/rpmbuild/
 spec9:
 	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el9:~/rpmbuild/
 spec10:
 	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el10:~/rpmbuild/
 
-spec8a:
-	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el8a:~/rpmbuild/
 spec9a:
 	rsync $(SPEC_RSYNC_ARGS) rpmbuild/ el9a:~/rpmbuild/
 spec10a:
@@ -60,18 +54,14 @@ spec10a:
 #                      Push SRC to Remote                     #
 ###############################################################
 # Update remote source tarball
-src: src8 src9 src10 src8a src9a src10a
+src: src9 src10 src9a src10a
 srcm:
 	rsync -avz src/ meta:~/ext/src/
-src8:
-	rsync -avz src/ el8:~/rpmbuild/SOURCES/
 src9:
 	rsync -avz src/ el9:~/rpmbuild/SOURCES/
 src10:
 	rsync -avz src/ el10:~/rpmbuild/SOURCES/
 
-src8a:
-	rsync -avz src/ el8a:~/rpmbuild/SOURCES/
 src9a:
 	rsync -avz src/ el9a:~/rpmbuild/SOURCES/
 src10a:
@@ -82,26 +72,22 @@ src10a:
 ###############################################################
 yum-new: yum-clean yum-init
 yum-init:
-	mkdir -p yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64  yum/meta
-	mkdir -p yum/el8.aarch64 yum/el9.aarch64 yum/el10.aarch64
+	mkdir -p yum/el9.x86_64 yum/el10.x86_64 yum/meta
+	mkdir -p yum/el9.aarch64 yum/el10.aarch64
 yum-clean:
-	rm -rf   yum/el8.x86_64  yum/el9.x86_64  yum/el10.x86_64
-	rm -rf   yum/el8.aarch64 yum/el9.aarch64 yum/el10.aarch64
-yum-pull: yum8 yum9 yum10 yum8a yum9a yum10a
-pullx: yum8  yum9  yum10
-pulla: yum8a yum9a yum10a
+	rm -rf yum/el9.x86_64 yum/el10.x86_64
+	rm -rf yum/el9.aarch64 yum/el10.aarch64
+yum-pull: yum9 yum10 yum9a yum10a
+pullx: yum9 yum10
+pulla: yum9a yum10a
 
 yumm:
 	rsync -avc meta:~/rpmbuild/RPMS/x86_64/  yum/meta/
 	rsync -avc meta:~/rpmbuild/RPMS/aarch64/ yum/meta/
-yum8:
-	rsync -avc el8:~/rpmbuild/RPMS/x86_64/   yum/el8.x86_64/
 yum9:
 	rsync -avc el9:~/rpmbuild/RPMS/x86_64/   yum/el9.x86_64/
 yum10:
 	rsync -avc el10:~/rpmbuild/RPMS/x86_64/  yum/el10.x86_64/
-yum8a:
-	rsync -avc el8a:~/rpmbuild/RPMS/aarch64/  yum/el8.aarch64/
 yum9a:
 	rsync -avc el9a:~/rpmbuild/RPMS/aarch64/  yum/el9.aarch64/
 yum10a:
@@ -139,10 +125,10 @@ upload:
 #                         Inventory                           #
 ###############################################################
 .PHONY: setup \
-	pm p8 p9 p10 p8a p9a p10a \
-	spec specm spec8 spec9 spec10 spec8a spec9a spec10a \
-	src srcm src8 src9 src10 src8a src9a src10a \
+	pm p9 p10 p9a p10a \
+	spec specm spec9 spec10 spec9a spec10a \
+	src srcm src9 src10 src9a src10a \
 	yum-new yum-init yum-clean yum-pull pullx pulla \
-	yumm yum8 yum9 yum10 yum8a yum9a yum10a \
+	yumm yum9 yum10 yum9a yum10a \
 	pg_ttl_index pgfincore etcd_fdw \
 	u up a apply d destory out ssh rs upload

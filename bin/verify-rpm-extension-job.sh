@@ -28,7 +28,7 @@ SPEC_TOPDIR=$(cd -P "$SPEC_DIR/.." && pwd)
 # The package template must contain a literal token.
 # shellcheck disable=SC2016
 [[ "$PACKAGE_TEMPLATE" == *'$v'* ]] || die 'package template must contain literal $v'
-[[ "$PG" =~ ^(14|15|16|17|18)$ ]] || die "unsupported PostgreSQL major: $PG"
+[[ "$PG" =~ ^(15|16|17|18|19)$ ]] || die "unsupported PostgreSQL major: $PG"
 case "$EXPECTED_ARCH" in
     x86_64|aarch64) ;;
     *) die "unsupported expected architecture: $EXPECTED_ARCH" ;;

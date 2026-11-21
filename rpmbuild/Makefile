@@ -1545,7 +1545,7 @@ pgtelemetry:
 	./build pgtelemetry 14 15 16 17 18
 
 pgexporter_ext:
-	./build pgexporter_ext 14 15 16 17 18
+	./build pgexporter_ext 15 16 17 18 19
 
 plphp:
 	./build plphp 14 15 16 17 18

@@ -1012,7 +1012,7 @@ pg_policy:
 	./build pg_policy 14 15 16 17 18
 
 pg_drop_events:
-	./build pg_drop_events 14 15 16 17 18
+	./build pg_drop_events 15 16 17 18 19
 
 table_log:
 	./build table_log 14 15 16 17 18

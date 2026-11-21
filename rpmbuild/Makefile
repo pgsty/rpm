@@ -820,7 +820,7 @@ lower_quantile:
 	./build lower_quantile 14 15 16 17 18
 
 count_distinct:
-	./build count_distinct 14 15 16 17 18
+	./build count_distinct 15 16 17 18 19
 
 omnisketch:
 	./build omnisketch 14 15 16 17 18

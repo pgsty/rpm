@@ -1015,7 +1015,7 @@ pg_drop_events:
 	./build pg_drop_events 15 16 17 18 19
 
 table_log:
-	./build table_log 14 15 16 17 18
+	./build table_log 15 16 17 18 19
 
 ###############################################################
 #                       Category: STAT                         #

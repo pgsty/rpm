@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-15
 
 Name:		libpgfeutils15
-Version:	15.19
+Version:	15.20
 Release:	1PGSTY%{?dist}
 # The payload is a static archive; keep its DWARF in the archive itself.
 %global __brp_strip_static_archive %{nil}
@@ -35,6 +35,9 @@ install -p -m 0644 src/fe_utils/libpgfeutils.a %{buildroot}%{pginstdir}/lib/libp
 %{pginstdir}/lib/libpgfeutils.a
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 15.20-1PGSTY
+- Update the static build input to PostgreSQL 15.20; retain archive DWARF.
+
 * Sat Sep 05 2026 Vonng <rh@vonng.com> - 15.19-1PGSTY
 - Rebuild from PostgreSQL 15.19 and retain static archive debug information
 - Require the FindBin module without forcing a Perl module stream upgrade

@@ -949,7 +949,7 @@ pg_cooldown:
 	./build pg_cooldown 15 16 17 18 19
 
 ddlx:			# fix pgdg 18 missing
-	./build pg_ddlx 14 15 16 17 18
+	./build pg_ddlx 15 16 17 18 19
 
 pglinter:
 	./build pglinter 14 15 16 17 18

@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.31
+Version:	0.32
 Release:	1PGSTY%{?dist}
 Summary:	DDL eXtractor functions for PostgreSQL (ddlx)
 License:	PostgreSQL
@@ -40,6 +40,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{?_smp_mflags} install DESTDI
 %doc %{pginstdir}/doc/extension/README-%{sname}.md
 
 %changelog
+* Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 0.32-1PGSTY
+- Update to upstream 0.32.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.31-1PGSTY
 - Update to 0.31
 

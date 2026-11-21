@@ -868,7 +868,7 @@ argm:
 #extra_window_functions
 
 floatvec:
-	./build floatvec 14 15 16 17 18
+	./build floatvec 15 16 17 18 19
 
 aggs_for_vecs:
 	./build aggs_for_vecs 15 16 17 18 19

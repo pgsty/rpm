@@ -1569,6 +1569,6 @@ pg_statkit:
 	./build pg_statkit 14 15 16 17
 
 colnames:
-	./build colnames 14 15 16 17 18
+	./build colnames 15 16 17 18 19
 
 .PHONY: pg_nanotime pg_tre

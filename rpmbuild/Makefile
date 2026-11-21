@@ -223,7 +223,7 @@ pg_tiktoken:	# rust pgrx 0.19.2
 	./build pg_tiktoken 14 15 16 17 18
 
 pg_tiktoken_c:
-	./build pg_tiktoken_c 14 15 16 17 18
+	./build pg_tiktoken_c 15 16 17 18 19
 
 pg4ml:
 	./build pg4ml 15 16 17 18 19

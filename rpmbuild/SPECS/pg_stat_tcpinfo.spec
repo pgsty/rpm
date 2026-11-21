@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
 %{error:pg_stat_tcpinfo is packaged for PostgreSQL 14, 15, 16, 17, 18}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif

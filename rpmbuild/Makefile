@@ -1095,7 +1095,7 @@ pg_relusage:
 	./build pg_relusage 15 16 17 18 19
 
 pg_stat_tcpinfo:
-	./build pg_stat_tcpinfo 14 15 16 17 18
+	./build pg_stat_tcpinfo 15 16 17 18 19
 
 pagevis:
 	./build pagevis 15 16 17 18 19

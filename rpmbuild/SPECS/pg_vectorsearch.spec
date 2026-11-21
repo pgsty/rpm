@@ -14,15 +14,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.1.0
+Version:        0.2.0
 Release:        1PGSTY%{?dist}
 Summary:        Approximate nearest neighbor search with the PRISM index
 License:        PostgreSQL
 URL:            https://github.com/timescale/pg_vectorsearch
 Source0:        https://github.com/timescale/pg_vectorsearch/releases/download/v%{version}/%{sname}-%{version}.tar.gz
-Patch0:         pg_vectorsearch-0.1.0-rpath.patch
-Patch1:         pg_vectorsearch-0.1.0-clang15-atomics.patch
-Patch2:         pg_vectorsearch-0.1.0-llvm15-ifunc.patch
+Patch0:         pg_vectorsearch-0.2.0-rpath.patch
+Patch1:         pg_vectorsearch-0.2.0-clang15-atomics.patch
+Patch2:         pg_vectorsearch-0.2.0-llvm15-ifunc.patch
 
 %if 0%{?rhel} == 8
 # EL8 ships GCC 8 and Meson 0.58. Use a supported compiler and a pinned,
@@ -83,7 +83,7 @@ import json
 from pathlib import Path
 
 root = Path.cwd()
-module = 'pg_vectorsearch-' + (root / 'VERSION').read_text().strip()
+module = 'pg_vectorsearch'
 targets = json.loads((root / 'builddir/meson-info/intro-targets.json').read_text())
 selected = [target for target in targets if target['name'] in ('vs_pg', module)]
 assert len(selected) == 2, 'expected the PostgreSQL core library and extension'
@@ -128,7 +128,7 @@ DESTDIR=%{buildroot} %{pgvs_meson} install -C builddir --no-rebuild
 # The regression helper is test-only and must never enter the runtime RPM.
 %{__rm} -f %{buildroot}%{pginstdir}/lib/pgvs_test_helpers.so
 # find-debuginfo scans executable ELF files; the packaged library remains 0644.
-chmod 0755 %{buildroot}%{pginstdir}/lib/%{pname}-%{version}.so
+chmod 0755 %{buildroot}%{pginstdir}/lib/%{pname}.so
 %{__make} -f Makefile.llvm install-bitcode \
     PG_CONFIG=%{pginstdir}/bin/pg_config LLVM_BINPATH=/usr/bin \
     DESTDIR=%{buildroot} %{with_llvm_arg}
@@ -136,16 +136,21 @@ chmod 0755 %{buildroot}%{pginstdir}/lib/%{pname}-%{version}.so
 %files
 %license LICENSE
 %doc README.md CHANGELOG.md docs/tuning.md docs/maintenance.md
-%attr(0644,root,root) %{pginstdir}/lib/%{pname}-%{version}.so
+%attr(0644,root,root) %{pginstdir}/lib/%{pname}.so
 %{pginstdir}/share/extension/%{pname}.control
-%{pginstdir}/share/extension/%{pname}--%{version}.control
-%{pginstdir}/share/extension/%{pname}--%{version}.sql
+%{pginstdir}/share/extension/%{pname}--*.sql
 %if %llvm
-%{pginstdir}/lib/bitcode/%{pname}-%{version}/
-%{pginstdir}/lib/bitcode/%{pname}-%{version}.index.bc
+%{pginstdir}/lib/bitcode/%{pname}/
+%{pginstdir}/lib/bitcode/%{pname}.index.bc
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.2.0-1PGSTY
+- Update to upstream 0.2.0 for PostgreSQL 18 and 19.
+- Follow the upstream unversioned library name and include its SQL upgrade script.
+- Rebase RPATH and LLVM 15 compatibility patches without disabling native SIMD.
+- Upstream requires PRISM indexes to be rebuilt after upgrading from 0.1.0.
+
 * Thu Oct 15 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Support EL8 with GCC Toolset 13 and pinned build-only Meson 0.63.3
 - Keep atomic function pointer initialization compatible with Clang 15

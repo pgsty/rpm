@@ -1,8 +1,8 @@
 %global sname jev
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 17
-%{error:jev supports PostgreSQL 14-17}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:jev supports PostgreSQL 15-19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

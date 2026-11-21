@@ -1536,7 +1536,7 @@ libx509pq:
 	./build libx509pq 15 16 17 18 19
 
 pg_statvfs:
-	./build pg_statvfs 14 15 16 17 18
+	./build pg_statvfs 15 16 17 18 19
 
 pg_json_diff:
 	./build pg_json_diff 15 16 17 18 19

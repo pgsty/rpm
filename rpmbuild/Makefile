@@ -353,7 +353,7 @@ pg_mooncake:
 	./build pg_mooncake 14 15 16 17 18
 
 storage_engine:
-	./build storage_engine 15 16 17 18
+	./build storage_engine 15 16 17 18 19
 
 pg_clickhouse:
 	./build pg_clickhouse 15 16 17 18 19

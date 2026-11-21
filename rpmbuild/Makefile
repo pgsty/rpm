@@ -1286,7 +1286,7 @@ logical_ddl:
 	./build logical_ddl 15 16 17 18 19
 
 pg_failover_slots:
-	./build pg_failover_slots 14 15 16 17 18
+	./build pg_failover_slots 15 16 17 18
 
 db_migrator:
 	./build db_migrator 15 16 17 18 19

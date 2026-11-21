@@ -428,7 +428,7 @@ pgmb:
 	./build pgmb 15 16 17 18 19
 
 ulak:
-	./build ulak 14 15 16 17 18
+	./build ulak 15 16 17 18 19
 
 fsm_core:
 	./build fsm_core 15 16 17 18 19

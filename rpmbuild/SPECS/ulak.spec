@@ -18,20 +18,21 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.2.0
-Release:	1PGSTY%{?dist}
+Version:	0.3.0
+Release:        1PGSTY%{?dist}
 Summary:	Transactional outbox extension with background-worker delivery
 License:	Apache-2.0
 URL:		https://github.com/zeybek/ulak
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:		ulak-0.2.0.patch
-#           https://github.com/zeybek/ulak/archive/refs/tags/v0.2.0.tar.gz
+Patch0:		ulak-0.3.0-hiredis-keepalive.patch
+Patch1:        ulak-0.3.0-pg19-compat.patch
+#           https://github.com/zeybek/ulak/archive/refs/tags/v0.3.0.tar.gz
 #           Built with HTTP, Kafka, MQTT, Redis, and AMQP dispatchers on EL9; upstream NATS support is left disabled because cnats packages are unavailable in the builder repos
 
 BuildRequires:	gcc
@@ -54,16 +55,15 @@ Requires:	postgresql%{pgmajorversion}-server
 %description
 ulak implements the transactional outbox pattern inside PostgreSQL, committing
 messages atomically with business transactions and delivering them
-asynchronously from background workers. This package enables the HTTP, Kafka,
-MQTT, and AMQP dispatchers on all EL builders. Redis Streams support stays
-enabled on EL9+ where the packaged hiredis headers include TLS support;
-EL8 falls back to the other dispatchers because EPEL's hiredis 0.13 headers do
-not ship `hiredis_ssl.h`. Upstream NATS support remains disabled until cnats
-development packages are available in the build environment.
+asynchronously from background workers. This package enables HTTP, Kafka,
+MQTT, Redis and AMQP dispatchers on the supported EL9/EL10 builders.
+Upstream NATS support remains disabled until cnats development packages
+are available in the build environment.
 
 %prep
 %setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
+%patch -P 1 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} ENABLE_KAFKA=1 ENABLE_MQTT=1 %{?redis_make_flags} ENABLE_AMQP=1 %{?_smp_mflags}
@@ -86,6 +86,11 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} ENABLE_KAFKA=1 ENABLE_MQT
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
+- Update to upstream 0.3.0.
+- Adapt PostgreSQL 19 numeric error handling and retain the EL9 hiredis fix.
+- Drop the unused compatibility branch for libcurl older than 7.66.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
 - Update to 0.2.0
 

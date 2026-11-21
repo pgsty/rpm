@@ -11,9 +11,9 @@ Source0:        lagraph-%{version}.tar.gz
 BuildRequires:  cmake >= 3.23
 BuildRequires:  gcc
 BuildRequires:  make
-BuildRequires:  graphblas-devel = 10.5.2-1PGSTY%{?dist}
+BuildRequires:  graphblas-devel = 10.5.3-1PGSTY%{?dist}
 
-Requires:       graphblas%{?_isa} >= 10.5.2
+Requires:       graphblas%{?_isa} >= 10.5.3
 
 %description
 LAGraph is a library plus test harness for collecting graph algorithms that
@@ -23,7 +23,7 @@ liblagraphx.so.1.
 %package devel
 Summary:        Development files for LAGraph
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       graphblas-devel >= 10.5.2
+Requires:       graphblas-devel >= 10.5.3
 
 %description devel
 Headers, pkg-config metadata, and CMake package files for LAGraph.
@@ -67,6 +67,9 @@ DESTDIR=%{buildroot} cmake --install build
 %{_libdir}/cmake/LAGraph/*
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.2.2-1PGSTY
+- Rebuild against GraphBLAS 10.5.3 and matching LAGraph inputs.
+
 * Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.2.2-1PGSTY
 - Rebuild against GraphBLAS 10.5.2 with matching headers and shared libraries.
 - Keep revision 1 because LAGraph 1.2.2 has not been published.

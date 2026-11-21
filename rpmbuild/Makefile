@@ -736,7 +736,7 @@ pg_envvar:
 	./build pg_envvar 14 15 16 17 18
 
 pg_byteamagic:
-	./build pg_byteamagic 14 15 16 17 18
+	./build pg_byteamagic 15 16 17 18 19
 
 external_file:
 	./build external_file 15 16 17 18 19

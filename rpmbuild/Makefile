@@ -982,7 +982,7 @@ pg_kv:			# rust pgrx 0.19.3, shared-memory cache
 	./build pg_kv 15 16 17 18
 
 pg_orphaned:
-	./build pg_orphaned 14 15 16 17 18
+	./build pg_orphaned 15 16 17 18 19
 
 pg_crash:
 	./build pg_crash 15 16 17 18 19

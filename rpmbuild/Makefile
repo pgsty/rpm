@@ -174,7 +174,7 @@ pg_eviltransform:	# rust pgrx 0.19.2
 	./build pg_eviltransform 14 15 16 17 18
 
 pg_geohash:
-	./build pg_geohash 14 15 16 17 18
+	./build pg_geohash 15 16 17 18 19
 
 mobilitydb:
 	./build mobilitydb 15 16 17 18 19

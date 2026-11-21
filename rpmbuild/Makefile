@@ -690,7 +690,7 @@ pg_retry:
 	./build pg_retry 17 18
 
 pg_protobuf:
-	./build pg_protobuf 14 15 16 17 18
+	./build pg_protobuf 15 16 17 18 19
 
 pgproto:
 	./build pgproto 14 15 16 17 18

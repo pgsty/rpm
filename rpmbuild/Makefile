@@ -287,7 +287,7 @@ textsearch_intl:
 	./build textsearch_intl 14 15 16 17 18
 
 pg_tre:
-	./build pg_tre 17 18
+	./build pg_tre 17 18 19
 
 pg_table_range:          # rust pgrx 0.18.1
 	./build pg_table_range 16 17 18

@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pg_tre is packaged for PostgreSQL 17 and 18}
+%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
+%{error:pg_tre is packaged for PostgreSQL 17 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -20,14 +20,14 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        4.6.2
+Version:        4.6.4
 Release:        1PGSTY%{?dist}
 Summary:        Native index access method for approximate regular expressions
 License:        MIT AND BSD-2-Clause
 URL:            https://codeberg.org/gregburd/pg_tre
 Source0:        %{sname}-%{version}.tar.gz
 # Complete upstream release archive, including the pinned TRE and Lime sources:
-# https://github.com/gburd/pg_tre/releases/download/v4.6.2/pg_tre-4.6.2.tar.gz
+# https://api.pgxn.org/dist/pg_tre/4.6.4/pg_tre-4.6.4.zip (normalized with GNU tar)
 Patch0:         pg-tre-4.6.2-build-flags.patch
 
 BuildRequires:  gcc make git autoconf automake libtool gettext-devel m4
@@ -73,6 +73,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?pgxs_rpath_arg} instal
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 4.6.4-1PGSTY
+- Update to upstream 4.6.4 with PostgreSQL 19 support
+- Use the complete PGXN source archive with pinned TRE and Lime
+
 * Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 4.6.2-1PGSTY
 - Update to upstream 4.6.2 with the sparsemap cursor fix.
 - Retain the build flags patch for the vendored TRE and Lime sources.

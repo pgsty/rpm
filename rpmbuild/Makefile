@@ -1563,7 +1563,7 @@ pg_lexo:
 	./build pg_lexo 16 17 18
 
 addressing_dictionary:
-	./build addressing_dictionary 14 15 16 17 18
+	./build addressing_dictionary 15 16 17 18 19
 
 pg_statkit:
 	./build pg_statkit 14 15 16 17

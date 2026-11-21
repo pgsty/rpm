@@ -2,8 +2,8 @@
 %global sname addressing_dictionary
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:addressing_dictionary only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:addressing_dictionary only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

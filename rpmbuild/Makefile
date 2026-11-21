@@ -699,7 +699,7 @@ pgjq:
 	./build pgjq 15 16 17
 
 pgjwt:
-	./build pgjwt 14 15 16 17 18
+	./build pgjwt 15 16 17 18 19
 
 pg_smtp_client:		# rust pgrx
 	./build pg_smtp_client 14 15 16 17 18

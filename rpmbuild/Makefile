@@ -841,7 +841,7 @@ pg_integrity_checksums:  # SQL extension, unrelated to the pg_checksums utility
 	./build pg_integrity_checksums 14 15 16 17 18
 
 oai_fdw:
-	./build oai_fdw 14 15 16 17 18
+	./build oai_fdw 15 16 17 18 19
 
 .PHONY: pg_agent_gate pg_integrity_checksums oai_fdw
 

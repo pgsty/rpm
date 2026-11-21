@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	A PostgreSQL extension for storing point cloud (LIDAR) data
 License:	BSD-3-Clause
 URL:		https://github.com/pgpointcloud/pointcloud
 Source0:	pointcloud-%{version}.tar.gz
+Patch0:        pointcloud-1.2.5-pg19-compat.patch
 #           https://github.com/pgpointcloud/pointcloud/archive/refs/tags/v1.2.5.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -40,6 +41,7 @@ See https://pgpointcloud.github.io/pointcloud/ for more information.
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 %set_build_flags
@@ -64,6 +66,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.2.5-1PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2.5-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

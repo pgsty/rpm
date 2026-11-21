@@ -760,7 +760,7 @@ ddl_historization:
 	./build ddl_historization 14 15 16 17 18
 
 data_historization:
-	./build data_historization 14 15 16 17 18
+	./build data_historization 15 16 17 18 19
 
 pg_schedoc:
 	./build pg_schedoc 14 15 16 17 18

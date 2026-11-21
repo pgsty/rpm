@@ -159,7 +159,7 @@ h3-pg:         # recipe validation; reuse PGDG on active EL platforms
 # ogr_fdw
 
 q3c:
-	./build q3c 14 15 16 17 18
+	./build q3c 15 16 17 18 19
 
 qdgc:
 	./build qdgc 14 15 16 17 18

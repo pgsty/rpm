@@ -396,7 +396,7 @@ age:
 	./build age 18
 
 onesparse:
-	./build onesparse 18
+	./build onesparse 18 19
 
 pggraph:		# rust pgrx 0.19.2, installs graph extension
 	./build pggraph 14 15 16 17 18

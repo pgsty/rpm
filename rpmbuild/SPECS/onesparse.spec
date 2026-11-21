@@ -12,12 +12,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
-%if 0%{?pgmajorversion} != 18
+%if 0%{?pgmajorversion} != 18 && 0%{?pgmajorversion} != 19
 %{error:onesparse only supports PostgreSQL 18}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -33,7 +33,7 @@ Patch0:		onesparse-1.0.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc pkgconf-pkg-config
-BuildRequires:	graphblas-devel = 10.5.2-1PGSTY%{?dist}
+BuildRequires:	graphblas-devel = 10.5.3-1PGSTY%{?dist}
 BuildRequires:	lagraph-devel = 1.2.2-1PGSTY%{?dist}
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -41,7 +41,7 @@ BuildRequires:	clang-devel >= 19.0
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
-Requires:	graphblas%{?_isa} >= 10.5.2
+Requires:	graphblas%{?_isa} >= 10.5.3
 Requires:	lagraph%{?_isa} >= 1.2.2
 
 %description
@@ -77,6 +77,9 @@ PATH=%{pginstdir}/bin:$PATH PKG_CONFIG_LIBDIR=%{_libdir}/pkgconfig:%{_datadir}/p
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.0.0-2PGSTY
+- Rebuild against GraphBLAS 10.5.3 and matching LAGraph inputs.
+
 * Tue Nov 03 2026 Vonng <rh@vonng.com> - 1.0.0-2PGSTY
 - Rebuild with GraphBLAS 10.5.2 and the matching LAGraph 1.2.2 build.
 - Include the existing pkg-config path patch in the source RPM.

@@ -603,7 +603,7 @@ pg_xenophile:
 	./build pg_xenophile 14 15 16 17 18
 
 pg_currency:
-	./build pg_currency 14 15 16 17 18
+	./build pg_currency 15 16 17 18 19
 
 pgcollection:
 	./build pgcollection 14 15 16 17 18

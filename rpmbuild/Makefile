@@ -582,7 +582,7 @@ pglite_fusion:	# rust pgrx 0.19.2
 	./build pglite_fusion 14 15 16 17 18
 
 md5hash:
-	./build md5hash 14 15 16 17 18
+	./build md5hash 15 16 17 18 19
 
 asn1oid:
 	./build asn1oid 15 16 17 18 19

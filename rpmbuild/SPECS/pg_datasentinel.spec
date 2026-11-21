@@ -1,3 +1,7 @@
+%if 0%{?pgmajorversion} > 18
+%{error:PostgreSQL 19 is not enabled for this recipe; see the PG19 audit record}
+%endif
+
 %global sname pg_datasentinel
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
@@ -8,7 +12,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -60,6 +64,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.0-1PGSTY
+- Keep PostgreSQL 19 disabled after regression review; omit the unaccepted patch.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

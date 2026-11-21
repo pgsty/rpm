@@ -523,7 +523,7 @@ omnigres:
 #                       Category: LANG                        #
 ###############################################################
 pg_tle:
-	./build pg_tle 14 15 16 17 18
+	./build pg_tle 15 16 17 18 19
 
 plv8:
 	./build plv8 14 15 16 17 18

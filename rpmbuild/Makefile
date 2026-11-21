@@ -597,7 +597,7 @@ pgsphere:
 	./build pgsphere 14 15 16 17 18
 
 pg_country:
-	./build pg_country 14 15 16 17 18
+	./build pg_country 15 16 17 18 19
 
 pg_xenophile:
 	./build pg_xenophile 14 15 16 17 18

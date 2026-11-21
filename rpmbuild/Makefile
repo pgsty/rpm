@@ -651,7 +651,7 @@ pg_rrule:
 	./build pg_rrule 14 15 16 17 18
 
 chkpass:
-	./build chkpass 14 15 16 17 18
+	./build chkpass 15 16 17 18 19
 
 #debversion:
 #timestamp9:

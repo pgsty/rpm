@@ -778,7 +778,7 @@ shacrypt:
 	./build shacrypt 14 15 16 17 18
 
 cryptint:
-	./build cryptint 14 15 16 17 18
+	./build cryptint 15 16 17 18 19
 
 pg_ecdsa:
 	./build pg_ecdsa 14 15 16 17 18

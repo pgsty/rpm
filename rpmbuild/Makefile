@@ -1274,7 +1274,7 @@ pgl_ddl_deploy:
 	./build pgl_ddl_deploy 15 16 17 18 19
 #wal2json
 wal2mongo:
-	./build wal2mongo 14 15 16 17 18
+	./build wal2mongo 15 16 17 18 19
 #decoderbufs
 #repmgr
 #pg_fact_loader

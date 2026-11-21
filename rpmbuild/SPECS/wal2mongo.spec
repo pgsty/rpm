@@ -4,7 +4,7 @@
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -16,6 +16,7 @@ Summary:        Logical decoding output plugin for MongoDB
 License:        Apache-2.0
 URL:            https://github.com/HighgoSoftware/%{sname}
 Source0:        %{sname}-%{version}.tar.gz
+Patch1:        wal2mongo-1.0.7-pg19-compat.patch
 Patch0:         wal2mongo-1.0.7.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
@@ -36,6 +37,8 @@ as MongoDB commands.
 %patch -P 0 -p1
 %endif
 
+%patch -P 1 -p1
+
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
@@ -53,6 +56,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDI
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.0.7-1PGSTY
+- Adapt PostgreSQL 19 APIs with version-conditional compatibility
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.0.7-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

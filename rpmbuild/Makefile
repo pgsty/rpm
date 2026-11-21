@@ -439,7 +439,7 @@ rum:
 
 pg_ai_query:
 	@if [ "$$(rpm -E '%{rhel}')" -ge 9 ]; then \
-		./build pg_ai_query 14 15 16 17 18; \
+		./build pg_ai_query 15 16 17 18; \ 19
 	else \
 		echo "pg_ai_query requires EL9 or newer, skipping EL8"; \
 	fi

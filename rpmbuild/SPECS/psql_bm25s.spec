@@ -2,7 +2,7 @@
 %global sname psql_bm25s
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
+%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
 %{error:psql_bm25s supports PostgreSQL 17-18}
 %endif
 
@@ -17,7 +17,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -29,6 +29,7 @@ Summary:	PostgreSQL extension for BM25-family lexical retrieval
 License:	Apache-2.0
 URL:		https://github.com/Intelligent-Internet/psql_bm25s
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        psql_bm25s-0.4.14-pg19-compat.patch
 #           https://github.com/Intelligent-Internet/psql_bm25s/releases/tag/v0.4.14
 #           Supported upstream CI/release matrix: PostgreSQL 17, 18
 
@@ -50,6 +51,8 @@ interfaces.
 %prep
 %setup -q -n II-42-%{version}
 
+%patch -P 0 -p1
+
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bin/pg_config %{?_smp_mflags}
 
@@ -70,6 +73,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bi
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 0.4.14-1PGSTY
+- Adapt PostgreSQL 19 APIs with version-conditional compatibility
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.4.14-1PGSTY
 - Update to 0.4.14
 

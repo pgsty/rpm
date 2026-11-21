@@ -323,7 +323,7 @@ pg_kazsearch:		# rust pgrx 0.19.2
 	./build pg_kazsearch 16 17 18
 
 psql_bm25s:
-	./build psql_bm25s 17 18
+	./build psql_bm25s 17 18 19
 
 hunspell:
 	./build hunspell 15 16 17 18 19

@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -26,6 +26,7 @@ License:	Apache-2.0 AND BSD-3-Clause
 URL:		https://github.com/pgnodemx/pgnodemx
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pgnodemx-2.0.1.patch
+Patch1:        pgnodemx-2.0.1-pg19-tuplestore.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -42,6 +43,7 @@ Executing role must have been granted pg_monitor membership (pgmonitor for Postg
 %prep
 %setup -q -n %{sname}-%{version}
 %patch -P 0 -p1
+%patch -P 1 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
@@ -63,6 +65,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.0.1-1PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.0.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

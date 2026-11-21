@@ -1,10 +1,29 @@
 # PGSTY RPM Package Builder
 
-Extensions Building Scripts for PostgreSQL 13 - 18 on EL 8/9/10
+Extension build scripts for PostgreSQL 15–19 on EL9/EL10.
 
 - [Pigsty PGSQL Repo](https://pigsty.io/docs/repo/pgsql)
 - [RPM Change Log](https://pigsty.io/docs/repo/pgsql/rpm)
 
+
+## Current build scope
+
+The active targets are PostgreSQL 15–19 and EL9/EL10 on x86_64/aarch64.
+PG19 is enabled per extension after validation; the default target list does
+not imply that every extension supports it. PG14 and EL8 are retired from
+active orchestration. Rust/pgrx recipes are frozen for a separate upgrade batch;
+heavy components and custom PostgreSQL providers have separate dispositions.
+
+The [2026-11-21 audit](doc/nonrust-pg19-20261121.md) and its
+[machine-readable support matrix](doc/nonrust-pg19-20261121.json) record
+upstream checks, actual PG ranges, pilot builds, runtime coverage and deferrals.
+The current pilot platforms are Rocky Linux 9.8/aarch64 and Ubuntu 24.04/amd64;
+these results do not imply a production matrix or a repository publication.
+Historical EL8 build records and Terraform templates remain archival references;
+they are outside the active build matrix.
+
+The [spec and patch review](doc/nonrust-spec-review-20261121.md) records
+necessity, scope, validation limits and the per-extension commits.
 
 ## How to use?
 
@@ -35,8 +54,8 @@ so the automatic split has real DWARF to package.
 
 ## PostGIS and the PGDG GIS stack
 
-`rpmbuild/SPECS/postgis.spec` builds PostGIS 3.7.0 for PostgreSQL 14–18 on
-EL8/EL9/EL10 with `postgis37_<major>` package names. Raster, SFCGAL, topology,
+`rpmbuild/SPECS/postgis.spec` retains the PostGIS 3.7.0 fallback recipe for PostgreSQL 15–18 on
+EL9/EL10 with `postgis37_<major>` package names. Raster, SFCGAL, topology,
 client tools, GUI, utilities, and PDF documentation are retained. LLVM bitcode belongs to the
 main package. Native payloads retain debuginfo and debugsource packages;
 the empty upstream `devel` package is omitted. GDAL's Python tools and
@@ -48,9 +67,11 @@ PostGIS 3.7 no longer ships `address_standardizer` or
 `postgis_tiger_geocoder` in the core source tree. They are built independently
 from their upstream archives as `address_standardizer_<major>` (3.7.0) and
 `postgis_tiger_geocoder_<major>` (2025.2); the Tiger package is limited to
-PostgreSQL 16–18 and is `noarch`.
+PostgreSQL 16–19 and is `noarch`.
 
-The EL9/EL10 build order is:
+PGDG already supplies PostGIS 3.7.0 for PG19 and the current GIS libraries on
+the pilot platforms. Reuse those packages. For a required supplier gap, the
+local fallback recipes have this dependency order:
 
 1. `geos314` 3.14.1, `proj98` 9.8.1, and `sfcgal` 2.2.0.
 2. `libgeotiff17` 1.7.4 and `librttopo` 1.1.0, then `libspatialite50` 5.1.0.
@@ -61,13 +82,11 @@ The EL9/EL10 build order is:
 
 Build and install each library's runtime and development RPMs before
 building its consumers. On EL9/EL10, system dependencies including CGAL,
-Boost, and Arrow come from the builder's OS/EPEL repositories. EL8 follows
-PGDG's compatibility branches: `proj96` 9.6.2, `sfcgal` 1.4.1 and `gdal38`
-3.8.5, with locally built `cgal54` 5.4.2 and `ogdi41` 4.1.1. Build CGAL before
-SFCGAL and OGDI before GDAL. `./dep gdal38 18` enables the EL8 module stream
-providing the utf8proc headers required by EPEL Arrow. The individual
-Makefile targets for these libraries build once; `make postgis` builds
-PostgreSQL 14–18, while `./build postgis 18` selects just PG18.
+Boost, and Arrow come from the builder's OS/EPEL repositories. The legacy
+EL8 compatibility families are retired from active targets. Library targets
+build once; `make postgis` selects the locally supported PostgreSQL 15–18
+range, while `./build postgis 18` selects just PG18. The new GEOS/PROJ parallel
+ABI families and SFCGAL 2.3.0 remain supplied by PGDG on the pilot platforms.
 
 In a disposable pilot builder, exclude these GIS package families from
 remote repositories after staging their build inputs, and install the
@@ -91,7 +110,7 @@ After installing the built RPMs, run `bin/postgis-test.sql` with `psql -f`
 in a disposable database. It creates the four PostGIS 3.7.0 extensions and
 checks GEOS overlay, PROJ transformation, SFCGAL 3D area, GDAL GeoTIFF
 export/import, and topology creation. Run `bin/postgis-split-test.sql` in the
-same database to check address parsing, US standardization, and, on PG16–18,
+same database to check address parsing, US standardization, and, on PG16–19,
 TIGER address normalization and loader SQL generation. A pilot on one builder does not
 validate the other platforms or publish any package.
 

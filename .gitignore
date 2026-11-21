@@ -65,3 +65,6 @@ doc/*
 !doc/pg_mooncake.md
 !doc/vchord-suite.md
 !doc/vchord-suite-qa-20261104.md
+!doc/nonrust-pg19-20261121.md
+!doc/nonrust-pg19-20261121.json
+!doc/nonrust-spec-review-20261121.md

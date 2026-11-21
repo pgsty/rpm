@@ -609,7 +609,7 @@ pgcollection:
 	./build pgcollection 15 16 17 18 19
 
 postbis:
-	./build postbis 14 15 16 17 18
+	./build postbis 15 16 17 18 19
 
 numeral:
 	./build numeral 15 16 17 18 19

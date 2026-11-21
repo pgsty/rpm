@@ -544,7 +544,7 @@ plpgsql_check:
 	./build plpgsql_check 14 15 16 17 18
 
 pg_mockable:
-	./build pg_mockable 14 15 16 17 18
+	./build pg_mockable 15 16 17 18 19
 
 pgsqlmock:
 	./build pgsqlmock 14 15 16 17 18

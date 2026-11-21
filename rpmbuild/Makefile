@@ -547,7 +547,7 @@ pg_mockable:
 	./build pg_mockable 15 16 17 18 19
 
 pgsqlmock:
-	./build pgsqlmock 14 15 16 17 18
+	./build pgsqlmock 15 16 17 18 19
 
 pllua:
 	./build pllua 14 15 16 17 18

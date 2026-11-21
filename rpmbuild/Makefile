@@ -1505,7 +1505,7 @@ macavity:
 	./build macavity 16 17 18 19
 
 pg_living_assertions:
-	./build pg_living_assertions 14 15 16 17 18
+	./build pg_living_assertions 15 16 17 18 19
 
 pg_grammar_guard:
 	./build pg_grammar_guard 15 16 17 18 19

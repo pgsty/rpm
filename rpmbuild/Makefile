@@ -1168,7 +1168,7 @@ pg_snakeoil:
 	./build pg_snakeoil 15 16 17 18 19
 
 pgextwlist:
-	./build pgextwlist 14 15 16 17 18
+	./build pgextwlist 15 16 17 18 19
 
 pg_command_fw:		# rust pgrx 0.19.2
 	./build pg_command_fw 15 16 17 18

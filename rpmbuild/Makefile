@@ -669,7 +669,7 @@ pg_gzip:
 	./build pg_gzip 14 15 16 17 18
 
 pg_bzip:
-	./build pg_bzip 14 15 16 17 18
+	./build pg_bzip 15 16 17 18 19
 
 pg_zstd:
 	./build pg_zstd 14 15 16 17 18

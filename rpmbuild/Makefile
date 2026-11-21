@@ -576,7 +576,7 @@ pg_text_semver:
 pgunit:
 	./build pgunit 14 15 16 17 18
 pgpdf: 		# covered by PGDG
-	./build pgpdf 14 15 16 17 18
+	./build pgpdf 15 16 17 18 19
 
 pglite_fusion:	# rust pgrx 0.19.2
 	./build pglite_fusion 14 15 16 17 18

@@ -1212,7 +1212,7 @@ rdf_fdw:
 	./build rdf_fdw 14 15 16 17 18
 
 nominatim_fdw:
-	./build nominatim_fdw 14 15 16 17 18
+	./build nominatim_fdw 15 16 17 18 19
 
 redis_fdw:
 	./build redis_fdw 14 15 16 17 18

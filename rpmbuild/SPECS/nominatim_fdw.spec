@@ -2,8 +2,8 @@
 %global sname nominatim_fdw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:nominatim_fdw only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:nominatim_fdw only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -17,7 +17,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif

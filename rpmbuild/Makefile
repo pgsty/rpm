@@ -991,7 +991,7 @@ pg_cheat_funcs:
 	./build pg_cheat_funcs 15 16 17 18
 
 pg_fio:
-	./build pg_fio 14 15 16 17 18
+	./build pg_fio 15 16 17 18 19
 
 pg_qos:
 	./build pg_qos 15 16 17 18

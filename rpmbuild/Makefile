@@ -1317,7 +1317,7 @@ decoder_raw:
 	./build decoder_raw 15 16 17 18 19
 
 mimeo:
-	./build mimeo 14 15 16 17 18
+	./build mimeo 15 16 17 18 19
 
 pg_bulkload:
 	./build pg_bulkload 14 15 16 17 18

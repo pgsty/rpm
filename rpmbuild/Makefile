@@ -633,7 +633,7 @@ hashtypes:
 	./build hashtypes 15 16 17 18 19
 
 pg_uri:
-	./build pg_uri 14 15 16 17 18
+	./build pg_uri 15 16 17 18 19
 
 pg_emailaddr:
 	./build pg_emailaddr 15 16 17 18 19

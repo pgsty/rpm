@@ -471,7 +471,7 @@ pg_mentat:		# rust pgrx 0.19.3
 #jsquery:
 #pg_hint_plan
 index_advisor:
-	./build index_advisor 14 15 16 17 18
+	./build index_advisor 15 16 17 18 19
 
 pg_plan_filter:
 	./build pg_plan_filter 14 15 16 17 18

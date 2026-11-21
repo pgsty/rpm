@@ -13,19 +13,19 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2
+Version:	1.2_20261118
 Release:	1PGSTY%{?dist}
 Summary:	Full text search capability with create 2-gram (bigram) index.
 License:	PostgreSQL
 URL:		https://github.com/pgbigm/pg_bigm
-Source0:	pg_bigm-%{version}-20250903.tar.gz
-#           https://github.com/pgbigm/pg_bigm/archive/refs/tags/v1.2-20250903.tar.gz
+Source0:	pg_bigm-1.2-20261118.tar.gz
+#           https://github.com/pgbigm/pg_bigm/archive/refs/tags/v1.2-20261118.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -42,7 +42,7 @@ pg_bigm is released under the PostgreSQL License, a liberal Open Source license,
  similar to the BSD or MIT licenses.
 
 %prep
-%setup -q -n pg_bigm-1.2-20250903
+%setup -q -n pg_bigm-1.2-20261118
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
@@ -63,6 +63,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.2_20261118-1PGSTY
+- Update to upstream v1.2-20261118 with PostgreSQL 19 support
+- Include the release date in Version, matching the PGDG package convention
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

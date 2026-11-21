@@ -480,7 +480,7 @@ pg_variables:
 	./build pg_variables 14 15 16 17 18
 
 imgsmlr:
-	./build imgsmlr 14 15 16 17 18
+	./build imgsmlr 15 16 17 18 19
 
 pg_ivm:
 	./build pg_ivm 14 15 16 17 18

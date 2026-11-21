@@ -14,7 +14,7 @@
 %global _docdir_fmt %{name}
 
 Name:           haproxy
-Version:        3.4.7
+Version:        3.4.8
 Release:        1PGSTY%{?dist}
 Summary:        HAProxy reverse proxy for high availability environments
 
@@ -203,6 +203,9 @@ fi
 %doc CHANGELOG doc/* examples/
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 3.4.8-1PGSTY
+- Update to the latest 3.4 maintenance release
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 3.4.7-1PGSTY
 - Update to upstream 3.4.7.
 

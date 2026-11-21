@@ -808,7 +808,7 @@ pg_hashids:
 	./build pg_hashids 15 16 17 18 19
 
 sequential_uuids:
-	./build sequential_uuids 14 15 16 17 18
+	./build sequential_uuids 15 16 17 18 19
 
 pg_typeid:
 	./build pg_typeid 14 15 16 17 18

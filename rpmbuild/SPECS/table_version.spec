@@ -2,21 +2,12 @@
 %global sname table_version
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%ifarch ppc64 ppc64le s390 s390x armv7hl
- %if 0%{?rhel} && 0%{?rhel} == 7
-  %{!?llvm:%global llvm 0}
- %else
-  %{!?llvm:%global llvm 1}
- %endif
-%else
- %{!?llvm:%global llvm 1}
-%endif
-
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.11.1
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL table versioning management software
 
+BuildArch:      noarch
 License:	BSD-3-Clause
 URL:		https://github.com/linz/postgresql-tableversion
 Source0:	postgresql-tableversion-%{version}.tar.gz
@@ -57,6 +48,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/bin/table_version-loader
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.11.1-1PGSTY
+- Mark the SQL and shell payload as architecture independent
+
 * Mon Feb 09 2026 Vonng <rh@vonng.com> - 1.11.1-1PIGSTY
 - Align helper artifact install locations with PGDG packaging (avoid /usr/local conflicts)
 * Fri Feb 21 2025 Vonng <rh@vonng.com> - 1.11.0-1PIGSTY

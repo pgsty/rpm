@@ -99,7 +99,7 @@ pg_when:        # rust pgrx 0.19.2
 	./build pg_when 14 15 16 17 18
 
 pg_stl:
-	./build pg_stl 16 17 18
+	./build pg_stl 16 17 18 19
 
 cron_utils:
 	./build cron_utils 15 16 17 18 19

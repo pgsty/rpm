@@ -863,7 +863,7 @@ first_last_agg:
 	./build first_last_agg 14 15 16 17 18
 
 argm:
-	./build argm 14 15 16 17 18
+	./build argm 15 16 17 18 19
 
 #extra_window_functions
 

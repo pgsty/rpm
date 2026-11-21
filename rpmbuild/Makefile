@@ -147,7 +147,7 @@ ogdi41:
 	./build ogdi41 18
 
 gdal38:
-	./build gdal38 18
+	@echo "gdal38: retired with EL8; no active build target"
 
 gdal313:
 	./build gdal313 18

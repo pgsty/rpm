@@ -1077,7 +1077,7 @@ pgnodemx:
 	./build pgnodemx 14 15 16 17 18
 
 pg_sqlog:
-	./build pg_sqlog 14 15 16 17 18
+	./build pg_sqlog 15 16 17 18 19
 
 pgmeminfo:
 	./build pgmeminfo 14 15 16 17 18

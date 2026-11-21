@@ -705,7 +705,7 @@ pg_smtp_client:		# rust pgrx
 	./build pg_smtp_client 14 15 16 17 18
 
 pg_html5_email_address:
-	./build pg_html5_email_address 14 15 16 17 18
+	./build pg_html5_email_address 15 16 17 18 19
 
 url_encode:
 	./build url_encode 14 15 16 17 18

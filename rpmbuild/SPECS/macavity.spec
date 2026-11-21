@@ -1,13 +1,13 @@
 %global sname macavity
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:macavity supports PostgreSQL 16-18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:macavity supports PostgreSQL 16-19}
 %endif
 
 %{!?llvm:%global llvm 1}
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -19,6 +19,7 @@ Summary:        Deterministic fault injection for PostgreSQL test clusters
 License:        MIT
 URL:            https://github.com/CrystallineCore/Macavity
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:        macavity-0.2.0-pg19-headers.patch
 # Upstream tag source: https://codeload.github.com/CrystallineCore/Macavity/tar.gz/refs/tags/v0.2.0
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -36,6 +37,7 @@ only for development and disposable test clusters.
 
 %prep
 %setup -q -n macavity-0.2.0
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} DOCS=
@@ -55,6 +57,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.2.0-1PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 0.2.0-1PGSTY
 - Update to upstream 0.2.0
 - Keep the PGXN testing status and disposable-cluster scope

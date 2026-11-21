@@ -1,17 +1,21 @@
 %global sname pg_stat_monitor
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_stat_monitor is packaged for PostgreSQL 15 through 19}
+%endif
+
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Summary:	PostgreSQL Query Performance Monitoring Tool
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.4.0
+Version:	2.4.1
 Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/percona/%{sname}
@@ -76,6 +80,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.4.1-1PGSTY
+- Update to upstream 2.4.1.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 2.4.0-1PGSTY
 - Update to 2.4.0
 

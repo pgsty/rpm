@@ -1045,7 +1045,7 @@ pg_stat_backtrace:
 	./build pg_stat_backtrace 15 16 17 18 19
 
 pg_stat_monitor:
-	./build pg_stat_monitor 18 # fix the missing pgdg
+	./build pg_stat_monitor 18 19 # fix the missing pgdg 19
 
 pg_store_plans:
 	./build pg_store_plans 14 15 16 17 18

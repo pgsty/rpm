@@ -1180,7 +1180,7 @@ sslutils:
 	./build sslutils 14 15 16 17 18
 
 pg_noset:
-	./build pg_noset 14 15 16 17 18
+	./build pg_noset 15 16 17 18 19
 
 ###############################################################
 #                       Category: FDW                         #

@@ -41,7 +41,7 @@ Summary:	A PostgreSQL extension that adds native support for unsigned integers a
 License:	PostgreSQL
 URL:		https://github.com/pg-uint/pg-uint128
 Source0:	pg-uint128-%{version}.tar.gz
-Patch0:        pg_uint128-1.3.0-pg19-compat.patch
+Patch0:        pg_uint128-1.3.0-pg19-int8-datum.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if 0%{?rhel} == 8
@@ -91,6 +91,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{pgxs_rpath_arg} %{pgxs_
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.3.0-1PGSTY
 - Update to upstream 1.3.0.
 - Use upstream operator fixes; retire the superseded 1.2.0 backports.
+- Preserve signed 8-bit Datum conversions on PostgreSQL 19.
 
 * Fri Nov 20 2026 Vonng <rh@vonng.com> - 1.2.0-2PGSTY
 - Remove invalid arithmetic commutators rejected by PostgreSQL security updates

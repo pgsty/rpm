@@ -1028,7 +1028,7 @@ pg_profile:
 #pg_qualstats
 #pg_track_settings
 pg_wait_sampling:
-	./build pg_wait_sampling 14 15 16 17 18
+	./build pg_wait_sampling 15 16 17 18 19
 pg_flight_recorder:
 	./build pg_flight_recorder 15 16 17 18 19
 

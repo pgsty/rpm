@@ -435,7 +435,7 @@ fsm_core:
 
 #hll:
 rum:
-	./build rum 16 17 18
+	./build rum 16 17 18 19
 
 pg_ai_query:
 	@if [ "$$(rpm -E '%{rhel}')" -ge 9 ]; then \

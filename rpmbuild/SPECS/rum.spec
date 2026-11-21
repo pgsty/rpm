@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	RUM access method - inverted index with additional information in posti
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        rum-1.3.15-pg19-compat.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -47,6 +48,8 @@ RUM solves two problems that GIN has:
 %prep
 %setup -q -n %{sname}-%{version}
 
+%patch -P 0 -p1
+
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
@@ -67,6 +70,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.3.15-1PGSTY
+- Adapt PostgreSQL 19 APIs with version-conditional compatibility
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.3.15-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

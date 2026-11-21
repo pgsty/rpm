@@ -532,7 +532,7 @@ plruby:
 	./build plruby 14 15 16 17 18
 
 pljs:
-	./build pljs 14 15 16 17 18
+	./build pljs 15 16 17 18
 
 plx:
 	./build plx 14 15 16 17 18

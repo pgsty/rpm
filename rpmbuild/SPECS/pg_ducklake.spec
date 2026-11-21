@@ -10,21 +10,21 @@
 %{error:pg_ducklake 1.0.3 is currently supported on EL9 and later; EL8 GCC8 filesystem compatibility is not validated}
 %endif
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_ducklake 1.0.3 only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:pg_ducklake 1.0.3 only supports PostgreSQL 15 through 18}
 %endif
 
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg CLANG='$(LLVM_BINPATH)/clang'
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.3
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	DuckLake lakehouse extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/relytcloud/pg_ducklake
@@ -39,7 +39,7 @@ Source0:	%{sname}-%{version}.tar.gz
 # Upstream v1.0.3 CI pins vcpkg 84bab45d, whose roaring port is 4.5.0.
 # Keep Pigsty's already-validated 4.7.1; CRoaring 5 is a separate major upgrade.
 Source1:	CRoaring-4.7.1-amalgamation.tar.gz
-Patch0:		pg_ducklake-1.0.3.patch
+Patch0:		pg_ducklake-1.0.3-packaged-build.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc gcc-c++ make cmake ninja-build patch pkgconf-pkg-config ccache
@@ -48,6 +48,10 @@ BuildRequires:	openssl-devel libcurl-devel lz4-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
+%if 0%{?rhel} == 9
+# PGDG EL9 PGXS selects the parallel LLVM 21 reader/toolchain.
+BuildRequires:	clang21 llvm21
+%endif
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
@@ -58,6 +62,8 @@ DuckDB and Parquet files. It requires shared_preload_libraries = 'pg_ducklake'
 before CREATE EXTENSION.
 
 %prep
+echo "bfa39e08ea772ba5aa44ceea81a081578a03238c659ca3ba2ebfa6b466f1d635  %{SOURCE0}" | sha256sum -c -
+echo "6338062be71b5ce50cbfcbab429d4ea45b8803dae79d012fbd3e472494c6d9fd  %{SOURCE1}" | sha256sum -c -
 %setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
 tar -xzf %{SOURCE1}
@@ -79,6 +85,10 @@ pg_cxxflags="${CXXFLAGS//-flto=auto/-flto}"
 duckdb_cflags="${CFLAGS//-flto=auto/-flto=1} -g1"
 duckdb_cxxflags="${CXXFLAGS//-flto=auto/-flto=1} -g1"
 duckdb_ldflags="${LDFLAGS//-flto=auto/-flto=1}"
+# PGXS also adds LTO through CFLAGS; a plain -flto does not bound its workers.
+if [[ "$CFLAGS $CXXFLAGS $LDFLAGS" == *-flto* ]]; then
+	duckdb_ldflags="$duckdb_ldflags -flto=1"
+fi
 croaring_prefix="$(pwd)/.croaring"
 croaring_src="$(pwd)/CRoaring-4.7.1"
 mkdir -p "$croaring_prefix/include/roaring" "$croaring_prefix/lib/cmake/roaring" "$croaring_src/build"
@@ -129,7 +139,7 @@ cp -a duckdb/third_party/libpg_query/include/parser/gram.hpp \
 	"$debug_pgquery_dir/grammar/grammar_out.hpp"
 
 # generate_grammar.py renames grammar_out.cpp to src_backend_parser_gram.cpp,
-# then replaces an include and the yynerrs assignment.  In the bundled 1.0.2
+# then replaces an include and the yynerrs assignment.  In the bundled 1.0.3
 # parser both include spellings are absent, so that replacement is a no-op;
 # only the single yynerrs edit must be reversed to reproduce the pre-rename
 # Bison output referenced by its own DWARF line table.
@@ -147,6 +157,10 @@ pg_cxxflags="${CXXFLAGS//-flto=auto/-flto}"
 duckdb_cflags="${CFLAGS//-flto=auto/-flto=1} -g1"
 duckdb_cxxflags="${CXXFLAGS//-flto=auto/-flto=1} -g1"
 duckdb_ldflags="${LDFLAGS//-flto=auto/-flto=1}"
+# PGXS also adds LTO through CFLAGS; a plain -flto does not bound its workers.
+if [[ "$CFLAGS $CXXFLAGS $LDFLAGS" == *-flto* ]]; then
+	duckdb_ldflags="$duckdb_ldflags -flto=1"
+fi
 %{__rm} -rf %{buildroot}
 CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pginstdir}/bin/pg_config \
 	CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
@@ -166,6 +180,13 @@ CMAKE_PREFIX_PATH="$(pwd)/.croaring" PATH=%{pginstdir}/bin:$PATH PG_CONFIG=%{pgi
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.0.3-2PGSTY
+- Repair and document the packaged-source build patch; verify source checksums.
+- Order LLVM objects after upstream patches and isolate bundled libpq configure flags.
+- Explicitly bound final-link LTO workers when PGXS contributes distribution CFLAGS.
+- Match the bitcode compiler to the PGXS LLVM reader; require the EL9 parallel tools.
+- Retire PostgreSQL 14; retain PostgreSQL 15-18 after the PG19 API audit.
+
 * Tue Oct 27 2026 Vonng <rh@vonng.com> - 1.0.3-1PGSTY
 - Update to pg_ducklake 1.0.3 with the bundled source manifest.
 - Build only the bundled static archives used by the PostgreSQL module.

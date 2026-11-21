@@ -1,8 +1,8 @@
 %global pname pgsodium
 %global sname pgsodium
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pgsodium supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pgsodium supports PostgreSQL 15 through 19}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -16,7 +16,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif

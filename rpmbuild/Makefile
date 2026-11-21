@@ -1126,7 +1126,7 @@ pgsodium-libsodium:
 	./build pgsodium-libsodium 18
 
 pgsodium:
-	./build pgsodium 14 15 16 17 18
+	./build pgsodium 15 16 17 18 19
 
 column_encrypt:
 	./build column_encrypt 15 16 17 18 19

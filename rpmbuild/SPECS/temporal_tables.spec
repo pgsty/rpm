@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	System-period temporal tables for PostgreSQL
 License:	BSD-2-Clause
 URL:		https://github.com/arkhipov/%{sname}
 Source0:	temporal_tables-%{version}.tar.gz
+Patch0:        temporal_tables-1.2.2-pg19-hash-allocator.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -42,6 +43,7 @@ as transaction-time).
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -63,6 +65,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.2.2-1PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

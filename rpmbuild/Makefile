@@ -79,7 +79,7 @@ periods:
 	./build periods 15 16 17 18 19
 
 temporal_tables:
-	./build temporal_tables 14 15 16 17 18
+	./build temporal_tables 15 16 17 18 19
 
 emaj:
 	./build emaj 15 16 17 18 19

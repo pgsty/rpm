@@ -714,7 +714,7 @@ pgsql_tweaks:
 	./build pgsql_tweaks 14 15 16 17 18
 
 pg_extra_time:
-	./build pg_extra_time 14 15 16 17 18
+	./build pg_extra_time 15 16 17 18 19
 
 pgpcre:
 	@if [ "$$(rpm -E '%{rhel}')" -lt 10 ]; then \

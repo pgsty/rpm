@@ -12,12 +12,12 @@
  %{!?llvm:%global llvm 1}
 %endif
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_kpart 1.0 supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_kpart 1.0 supports PostgreSQL 15 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -29,6 +29,7 @@ Summary:        Reject full partition scans that omit the partition key
 License:        ISC
 URL:            https://github.com/hexacluster/pg_kpart
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:        pg_kpart-1.0-pg19-planner-hook.patch
 #               https://github.com/hexacluster/pg_kpart/archive/refs/tags/v1.0.tar.gz
 
 BuildRequires:  gcc
@@ -49,6 +50,8 @@ module in pg_extension.
 
 %prep
 %setup -q -n %{sname}-%{version}
+
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
@@ -72,6 +75,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.0-1PGSTY
+- Adapt PostgreSQL 19 APIs while preserving earlier PostgreSQL paths
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

@@ -369,7 +369,7 @@ pg_ducklake:             # EL9+ only: EL8/GCC8 filesystem support is unverified
 
 # pg_fkpart
 pg_kpart:
-	./build pg_kpart 14 15 16 17 18
+	./build pg_kpart 15 16 17 18 19
 
 pg_partman:
 	./build pg_partman 14 15 16 17 18

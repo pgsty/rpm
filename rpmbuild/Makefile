@@ -1218,7 +1218,7 @@ redis_fdw:
 	./build redis_fdw 14 15 16 17 18
 
 pg_redis_pubsub:
-	./build pg_redis_pubsub 14 15 16 17 18
+	./build pg_redis_pubsub 15 16 17 18 19
 
 kafka_fdw:
 	./build kafka_fdw 15 16 17 18 19

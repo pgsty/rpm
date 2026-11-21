@@ -711,7 +711,7 @@ url_encode:
 	./build url_encode 14 15 16 17 18
 
 pgsql_tweaks:
-	./build pgsql_tweaks 14 15 16 17 18
+	./build pgsql_tweaks 15 16 17 18 19
 
 pg_extra_time:
 	./build pg_extra_time 15 16 17 18 19

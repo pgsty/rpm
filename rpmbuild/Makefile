@@ -805,7 +805,7 @@ permuteseq:
 	./build permuteseq 15 16 17 18 19
 
 pg_hashids:
-	./build pg_hashids 14 15 16 17 18
+	./build pg_hashids 15 16 17 18 19
 
 sequential_uuids:
 	./build sequential_uuids 14 15 16 17 18

@@ -1539,7 +1539,7 @@ pg_statvfs:
 	./build pg_statvfs 14 15 16 17 18
 
 pg_json_diff:
-	./build pg_json_diff 14 15 16 17 18
+	./build pg_json_diff 15 16 17 18 19
 
 pgtelemetry:
 	./build pgtelemetry 14 15 16 17 18

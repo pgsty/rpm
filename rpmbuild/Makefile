@@ -708,7 +708,7 @@ pg_html5_email_address:
 	./build pg_html5_email_address 15 16 17 18 19
 
 url_encode:
-	./build url_encode 14 15 16 17 18
+	./build url_encode 15 16 17 18 19
 
 pgsql_tweaks:
 	./build pgsql_tweaks 15 16 17 18 19

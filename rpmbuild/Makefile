@@ -970,7 +970,7 @@ pg_upless:
 	./build pg_upless 15 16 17 18 19
 
 pgcozy:
-	./build pgcozy 14 15 16 17 18
+	./build pgcozy 15 16 17 18 19
 
 pg_try_cast:
 	./build pg_try_cast 16 17 18 19

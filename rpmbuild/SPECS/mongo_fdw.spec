@@ -9,7 +9,7 @@
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -21,9 +21,11 @@ License:	PostgreSQL AND LGPL-3.0-only
 Summary:	PostgreSQL foreign data wrapper for MongoDB
 URL:		https://github.com/EnterpriseDB/%{sname}
 Source0:	%{sname}-REL-%{relver}.tar.gz
-Source1:	%{sname}-config.h
+Patch0:		mongo_fdw-5.5.3-system-libraries.patch
+Patch1:		mongo_fdw-5.5.3-pg19-compat.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel
+BuildRequires:	json-c-devel pkgconfig
 
 %if 0%{?suse_version} >= 1499
 Requires:		libsnappy1 libbson-1_0-0 libmongoc-1_0-0
@@ -49,9 +51,13 @@ This PostgreSQL extension implements a Foreign Data Wrapper (FDW) for MongoDB.
 
 %prep
 %setup -q -n %{sname}-REL-%{relver}
+patch -p1 --fuzz=0 < %{PATCH0}
+
+%patch -P 1 -p1
 
 %build
-sh autogen.sh
+# Use the packaged MongoDB and JSON libraries; autogen.sh downloads and
+# installs additional libraries outside the RPM buildroot.
 
 %if 0%{?fedora} || 0%{?rhel} >= 8
 sed -i "s:^\(PG_CPPFLAGS.*\):\1 -I/usr/include/json-c -fPIC:g" Makefile
@@ -84,12 +90,18 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} -f Makefile USE_PGXS=1 %{
 %{pginstdir}/share/extension/%{sname}.control
 
 %if %llvm
-   %{pginstdir}/lib/bitcode/%{sname}*.bc
-   %{pginstdir}/lib/bitcode/%{sname}/*.bc
-   %{pginstdir}/lib/bitcode/%{sname}/json-c/*.bc
+%{pginstdir}/lib/bitcode/%{sname}.index.bc
+%{pginstdir}/lib/bitcode/%{sname}/
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 5.5.3-1PGSTY
+- Support PostgreSQL 19 compilation and preserve legacy MongoDB JSON output.
+
+* Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 5.5.3-1PGSTY
+- Use system MongoDB and JSON libraries without autogen network downloads.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - %{mongofdwmajver}.%{mongofdwmidver}.%{mongofdwminver}-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

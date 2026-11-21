@@ -1533,7 +1533,7 @@ edtf_postgres:
 	./build edtf_postgres 14 15 16 17 18
 
 libx509pq:
-	./build libx509pq 14 15 16 17 18
+	./build libx509pq 15 16 17 18 19
 
 pg_statvfs:
 	./build pg_statvfs 14 15 16 17 18

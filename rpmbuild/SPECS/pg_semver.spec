@@ -1,16 +1,17 @@
 %global sname semver
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Summary:	A semantic version data type for PostgreSQL
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.42.0
+Version:	0.43.0
 Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 Source0:	pg-semver-%{version}.tar.gz
@@ -34,11 +35,11 @@ Versioning 2.0.0 Specification.
 %setup -q -n pg-%{sname}-%{version}
 
 %build
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} LLVM_BINPATH=%{llvm_binpath} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{buildroot} %{?_smp_mflags} install
+USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} LLVM_BINPATH=%{llvm_binpath} DESTDIR=%{buildroot} %{?_smp_mflags} install
 
 %files
 %defattr(644,root,root,755)
@@ -54,6 +55,10 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
 %endif
 
 %changelog
+* Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 0.43.0-1PGSTY
+- Update to upstream 0.43.0.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+
 * Sun Oct 11 2026 Vonng <rh@vonng.com> - 0.42.0-1PGSTY
 - Update to 0.42.0
 - Align the bitcode file list with the upstream module layout

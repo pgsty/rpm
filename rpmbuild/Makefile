@@ -568,7 +568,7 @@ pg_prefix:
 	./build pg_prefix 15 16 17 18 19
 
 pg_semver:
-	./build pg_semver 14 15 16 17 18
+	./build pg_semver 15 16 17 18 19
 
 pg_text_semver:
 	./build pg_text_semver 14 15 16 17 18

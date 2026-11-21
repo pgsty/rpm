@@ -12,7 +12,7 @@
 # /usr/pgsql-NN paths; retain ELF build-id notes but do not package the links.
 
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_lake 3.6.0 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
+%{error:pg_lake 3.7.0 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
 %endif
 
 # The bundled runtimes are private implementation details.  Do not let their
@@ -21,8 +21,8 @@
 %global __provides_exclude_from ^%{pginstdir}/lib/pg_lake/.*\\.so.*$
 %global __requires_exclude ^(libduckdb\\.so|libavro\\.so\\.24).*$
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_lake 3.6.0 only supports PostgreSQL 16 through 18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:pg_lake 3.7.0 only supports PostgreSQL 16 through 19}
 %endif
 
 %{!?llvm:%global llvm 1}
@@ -34,7 +34,7 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        3.6.0
+Version:        3.7.0
 Release:	1PGSTY%{?dist}
 Summary:        PostgreSQL lakehouse extensions powered by DuckDB
 License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND ICU AND ISC AND PostgreSQL AND Unicode-3.0 AND Zlib AND curl AND OpenSSL AND LicenseRef-TPC-EULA-2.2
@@ -42,13 +42,17 @@ URL:            https://github.com/Snowflake-Labs/pg_lake
 # Repacked upstream release with the pinned Avro, DuckDB, and duckdb-postgres
 # submodules required by the build.
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pg_lake-3.6.0.patch
-# Retain the upstream 3.5.10 Brotli fix missing from the 3.6.0 source.
-Patch1:         pg_lake-3.6.0-brotli-1.1.1.patch
+Patch0:         pg_lake-3.7.0-packaging.patch
+# Retain the upstream 3.5.10 Brotli fix still absent from the 3.7.0 source.
+Patch1:         pg_lake-3.7.0-brotli-block-switch.patch
 # Avoid a distinct httpfs type with the same C++ name during LTO.
-Patch2:         pg_lake-3.6.0-s3-odr.patch
+Patch2:         pg_lake-3.7.0-s3-odr.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel
+%if 0%{?pgmajorversion} >= 19
+# PG19 splits the frontend support archives used by pgduck_server from -devel.
+BuildRequires:  postgresql%{pgmajorversion}-static
+%endif
 BuildRequires:  pgdg-srpm-macros >= 1.0.27
 BuildRequires:  autoconf automake binutils bison ca-certificates cmake curl
 BuildRequires:  diffutils file flex gcc gcc-c++ git jq libtool make sed ccache
@@ -66,6 +70,10 @@ BuildRequires:  zlib-devel
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
+%if 0%{?rhel} == 9
+# Supported PGDG majors on EL9 record llvm21/bin in PGXS.
+BuildRequires:  llvm21 clang21
+%endif
 %endif
 
 Requires:       postgresql%{pgmajorversion}-server
@@ -112,9 +120,7 @@ sed -i 's/\r$//' .rpm-licenses/duckdb-third_party-miniz-LICENSE
 
 %build
 %set_build_flags
-# vcpkg dependencies and the bundled DuckDB keep function and line-table DWARF
-# only (-g1).  PGXS modules ignore these environment variables and keep -g.
-export CFLAGS="$CFLAGS -g1" CXXFLAGS="$CXXFLAGS -g1"
+# Preserve distribution debug and hardening flags in all bundled dependencies.
 VCPKG_ROOT="$HOME/.cache/pg_lake/vcpkg-%{vcpkg_version}"
 # Key the vcpkg binary cache by the build flags so that a flag change never
 # reuses dependency archives built with different debug information.
@@ -158,7 +164,6 @@ done
 %install
 rm -rf %{buildroot}
 %set_build_flags
-export CFLAGS="$CFLAGS -g1" CXXFLAGS="$CXXFLAGS -g1"
 mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/include
 
 VCPKG_ROOT="$HOME/.cache/pg_lake/vcpkg-%{vcpkg_version}"
@@ -194,13 +199,14 @@ VCPKG_HOST_TRIPLET="$VCPKG_HOST_TRIPLET" \
 VCPKG_DEFAULT_BINARY_CACHE="$VCPKG_BINARY_CACHE" \
 CCACHE_DIR="$HOME/.cache/pg_lake/ccache" \
 CCACHE_COMPILERCHECK=content \
-CCACHE_MAXSIZE=16G \
+CCACHE_MAXSIZE="${CCACHE_MAXSIZE:-6G}" \
 PG_LAKE_GIT_VERSION="v%{version}" \
 PG_LAKE_DELTA_SUPPORT=0 \
 PGCOMPAT_BUILD_CONFIG=Release \
 DUCKDB_BUILD_USE_CACHE=0 \
 %{__make} -j%{pg_lake_build_jobs} %{with_llvm_arg} \
     NCORES=%{pg_lake_build_jobs} \
+    CLANG='$(LLVM_BINPATH)/clang' \
     PG_CONFIG=%{pginstdir}/bin/pg_config \
     PG_LIBDIR=%{pginstdir}/lib \
     CPPFLAGS="$PG_CPPFLAGS $PG_LAKE_PREFIX_MAP" \
@@ -232,7 +238,7 @@ done
 
 # DuckDB's generated parser retains #line paths rooted at the CMake build
 # directory.  Upstream removes that transient source alias before RPM's
-# find-debuginfo pass, which otherwise leaves 46 parser sources out of the
+# find-debuginfo pass, which otherwise leaves parser sources out of the
 # debugsource package.  Recreate the alias from this release's vendored
 # libpg_query sources.  grammar_out.cpp is the exact pre-postprocessing form
 # of the shipped src_backend_parser_gram.cpp: upstream's generator performs
@@ -241,6 +247,9 @@ pg_query_source=duckdb_pglake/duckdb/third_party/libpg_query
 pg_query_debug_alias=duckdb_pglake/build/release/third_party/libpg_query/third_party/libpg_query
 mkdir -p "$pg_query_debug_alias"
 cp -a "$pg_query_source/grammar" "$pg_query_debug_alias/"
+# The generated header is renamed without changes by generate_grammar.py.
+cp "$pg_query_source/include/parser/gram.hpp" \
+   "$pg_query_debug_alias/grammar/grammar_out.hpp"
 cp -a "$pg_query_source/scan.l" \
       "$pg_query_source/src_backend_parser_scan.cpp" \
       "$pg_query_debug_alias/"
@@ -357,6 +366,14 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
+- Update to pg_lake 3.7.0 with unchanged pinned DuckDB and Avro sources.
+- Rebase archive/private-library packaging and retain scoped Brotli/ODR fixes.
+- Enable PostgreSQL 19 using the upstream compatibility implementation.
+- Preserve full distribution DWARF in bundled libraries and use PGXS LLVM tools.
+- Require the PG19 static frontend support archives for pgduck_server.
+- Retain the generated parser header in the RPM debugsource package.
+
 * Thu Nov 05 2026 Vonng <rh@vonng.com> - 3.6.0-1PGSTY
 - Update to upstream 3.6.0 with pinned DuckDB 1.5.6 and httpfs.
 - Rebase private-library packaging; retain PostgreSQL 16 through 18.

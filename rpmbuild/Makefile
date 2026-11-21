@@ -784,7 +784,7 @@ pg_ecdsa:
 	./build pg_ecdsa 15 16 17 18 19
 
 pgsparql:
-	./build pgsparql 14 15 16 17 18
+	./build pgsparql 15 16 17 18 19
 
 
 ###############################################################

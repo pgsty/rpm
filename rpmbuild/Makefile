@@ -1042,7 +1042,7 @@ pg_stat_ch:
 	./build pg_stat_ch 16 17 18
 
 pg_stat_backtrace:
-	./build pg_stat_backtrace 14 15 16 17 18
+	./build pg_stat_backtrace 15 16 17 18 19
 
 pg_stat_monitor:
 	./build pg_stat_monitor 18 # fix the missing pgdg

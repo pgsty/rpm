@@ -1132,7 +1132,7 @@ column_encrypt:
 	./build column_encrypt 15 16 17 18 19
 
 pg_vault:
-	./build pg_vault 14 15 16 17 18
+	./build pg_vault 15 16 17 18 19
 
 pg_vault_tde:	# shared_preload_libraries, PostgreSQL 17+, EL9/EL10 only
 	./build pg_vault_tde 17 18

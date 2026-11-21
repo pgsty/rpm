@@ -739,7 +739,7 @@ pg_byteamagic:
 	./build pg_byteamagic 14 15 16 17 18
 
 external_file:
-	./build external_file 14 15 16 17 18
+	./build external_file 15 16 17 18 19
 
 pg_render:		# rust pgrx 0.19.2
 	./build pg_render 14 15 16 17 18

@@ -1243,8 +1243,8 @@ pg_dbms_metadata: # EL8 aarch64 PG15/18 gaps
 pgmemcache:    # EL8 aarch64 gap only
 	./build pgmemcache 14 15
 
-dbt2:          # EL8 x86_64/aarch64 gap only
-	./build dbt2 17 18
+dbt2:          # recipe validation; reuse PGDG on active EL platforms
+	./build dbt2 17 18 19
 
 documentdb:
 	bash bin/documentdb.sh documentdb-1.0-0.tar.gz intelrdfpmath-applied-2.0u3-1.tar.gz

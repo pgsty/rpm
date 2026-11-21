@@ -492,7 +492,7 @@ pg_trickle:		# rust pgrx 0.19.3, PG18 only
 	./build pg_trickle 18
 
 pg_local_cache:	# shared_preload_libraries
-	./build pg_local_cache 14 15 16 17 18
+	./build pg_local_cache 15 16 17 18 19
 
 pg_durable:		# rust pgrx 0.19.3, shared_preload_libraries
 	./build pg_durable 14 15 16 17 18

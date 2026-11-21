@@ -2,8 +2,8 @@
 %global sname pg_local_cache
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_local_cache only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_local_cache only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -17,7 +17,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -29,6 +29,7 @@ Summary:	Transaction-aware cache for PostgreSQL primary-key reads
 License:	MIT
 URL:		https://github.com/profundium/pg_local_cache
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        pg_local_cache-3.1.0-pg19-compat.patch
 #           official v3.1.0 release tarball
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -50,6 +51,8 @@ and PostgreSQL restarted before its cache workers can be used.
 %prep
 %setup -q -n %{sname}-%{version}
 
+%patch -P 0 -p1
+
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
@@ -70,6 +73,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 3.1.0-1PGSTY
+- Adapt PostgreSQL 19 APIs with version-conditional compatibility
+
 * Fri Oct 09 2026 Maxim Bronnikov <bronnikovmr@gmail.com> - 3.1.0-1PGSTY
 - Update to 3.1.0 (RESP-only API, native TLS; requires openssl)
 

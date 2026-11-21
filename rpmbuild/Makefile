@@ -474,7 +474,7 @@ index_advisor:
 	./build index_advisor 15 16 17 18 19
 
 pg_plan_filter:
-	./build pg_plan_filter 14 15 16 17 18
+	./build pg_plan_filter 15 16 17 18 19
 
 pg_variables:
 	./build pg_variables 14 15 16 17 18

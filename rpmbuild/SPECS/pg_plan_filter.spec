@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	Filter statements by their execution plans.
 License:	PostgreSQL
 URL:		https://github.com/pgexperts/pg_plan_filter
 Source0:	pg_plan_filter-%{version}.tar.gz
+Patch0:        pg_plan_filter-1.0.0-pg19-planner-hook.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -40,6 +41,8 @@ raising an error if the criteria are violated. This allows administrators to pre
 
 %prep
 %setup -q -n %{sname}-%{version}
+
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -58,6 +61,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.0.0-1PGSTY
+- Adapt PostgreSQL 19 APIs while preserving earlier PostgreSQL paths
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

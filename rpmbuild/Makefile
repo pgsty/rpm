@@ -126,7 +126,7 @@ proj96:
 	./build proj96 18
 
 cgal54:
-	./build cgal54 18
+	@echo "cgal54: retired with EL8; no active build target"
 
 proj98:
 	./build proj98 18

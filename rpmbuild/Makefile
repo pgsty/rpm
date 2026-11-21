@@ -550,7 +550,7 @@ pgsqlmock:
 	./build pgsqlmock 15 16 17 18 19
 
 pllua:
-	./build pllua 14 15 16 17 18
+	./build pllua 15 16 17 18
 
 # plprofiler
 # plsh

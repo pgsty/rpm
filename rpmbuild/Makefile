@@ -928,7 +928,7 @@ pgautofailover:
 # pgpool:
 
 pg_query_rewrite:
-	./build pg_query_rewrite 14 15 16 17 18
+	./build pg_query_rewrite 15 16 17 18
 
 pg_column_tetris:
 	./build pg_column_tetris 15 16 17 18 19

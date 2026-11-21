@@ -12,8 +12,8 @@
  %{!?llvm:%global llvm 1}
 %endif
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_query_rewrite supports PostgreSQL 14-18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:pg_query_rewrite supports PostgreSQL 15-18}
 %endif
 
 %if %llvm

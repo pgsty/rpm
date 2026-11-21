@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pg_nanotime is packaged for PostgreSQL 17 through 18}
+%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
+%{error:pg_nanotime is packaged for PostgreSQL 17 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -20,6 +20,7 @@ Summary:        Nanosecond-precision timestamp types and clocks for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/bunko666-cloud/pg_nanotime
 Source0:        %{pname}-%{version}.tar.gz
+Patch0:        pg_nanotime-0.3.0-pg19-tuple-header.patch
 # https://api.github.com/repos/bunko666-cloud/pg_nanotime/tarball/v0.3.0
 # Normalize the official tag archive root with GNU tar.
 
@@ -37,6 +38,7 @@ clock functions, and monotonic clocks for PostgreSQL 17 and 18.
 
 %prep
 %setup -q -n %{pname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -58,6 +60,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Tue Oct 27 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
 - Update pg_nanotime to 0.3.0 with range and multirange support.
 

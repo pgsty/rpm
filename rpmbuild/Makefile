@@ -232,7 +232,7 @@ pgml:			# rust pgrx 0.12.9 (obsolete)
 	./build pgml 14 15 16 17
 
 pgmnemo:
-	./build pgmnemo 17 18
+	./build pgmnemo 17 18 19
 
 
 

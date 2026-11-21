@@ -2,8 +2,8 @@
 %global sname postgis_tiger_geocoder
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:postgis_tiger_geocoder is packaged for PostgreSQL 16 through 18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:postgis_tiger_geocoder is packaged for PostgreSQL 16 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

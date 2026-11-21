@@ -116,7 +116,7 @@ address_standardizer:
 	./build address_standardizer 15 16 17 18 19
 
 postgis_tiger_geocoder:
-	./build postgis_tiger_geocoder 16 17 18
+	./build postgis_tiger_geocoder 16 17 18 19
 
 # PGDG-compatible GIS libraries are independent of the PostgreSQL major.
 geos314:

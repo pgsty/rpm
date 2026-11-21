@@ -87,7 +87,7 @@ emaj:
 # table_version (handled by PGDG)
 # pg_cron       (handled by PGDG)
 pg_task:
-	./build pg_task 14 15 16 17 18
+	./build pg_task 15 16 17 18 19
 
 pg_later:       # rust pgrx 0.19.2
 	./build pg_later 14 15 16 17 18

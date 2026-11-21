@@ -1059,7 +1059,7 @@ pg_datasentinel:
 #powa
 
 pgsentinel:
-	./build pgsentinel 14 15 16 17 18
+	./build pgsentinel 15 16 17 18 19
 
 pg_ash:
 	./build pg_ash 15 16 17 18 19

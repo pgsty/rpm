@@ -123,7 +123,7 @@ geos314:
 	./build geos314 18
 
 proj96:
-	./build proj96 18
+	@echo "proj96: retired with EL8; no active build target"
 
 cgal54:
 	@echo "cgal54: retired with EL8; no active build target"

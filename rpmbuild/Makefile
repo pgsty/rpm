@@ -766,7 +766,7 @@ pg_schedoc:
 	./build pg_schedoc 14 15 16 17 18
 
 pg_isok:
-	./build pg_isok 14 15 16 17 18
+	./build pg_isok 15 16 17 18 19
 
 pg_hashlib:
 	./build pg_hashlib 15 16 17 18 19

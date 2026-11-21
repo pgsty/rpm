@@ -5,8 +5,8 @@
 %global gitdate 20241205
 %global shortcommit 18eb9a4
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:ddl_historization supports PostgreSQL 14 through 18 in Pigsty}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:ddl_historization supports PostgreSQL 15 through 19 in Pigsty}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}

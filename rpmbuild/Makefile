@@ -757,7 +757,7 @@ pg_relation_sql:
 	./build pg_relation_sql 14 15 16 17 18
 
 ddl_historization:
-	./build ddl_historization 14 15 16 17 18
+	./build ddl_historization 15 16 17 18 19
 
 data_historization:
 	./build data_historization 15 16 17 18 19

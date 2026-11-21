@@ -1,11 +1,11 @@
-%global source0_sha256 184e34ed2d9b51879b682b5b15205e2b9d677c60280e3cb453be8f520d04e293
+%global source0_sha256 fe3d623600a1c046b4668feec097c507b4ae52f20c1fc7f1ebd384c07a165e77
 %global valkey_modules_abi 1
 %global valkey_modules_dir %{_libdir}/valkey/modules
 
 %bcond_without tests
 
 Name:           valkey
-Version:        9.1.3
+Version:        9.1.4
 Release:        1PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
@@ -294,6 +294,9 @@ exit 0
 %{_rpmmacrodir}/macros.valkey
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 9.1.4-1PGSTY
+- Update to the latest 9.1 maintenance release
+
 * Tue Nov 03 2026 Ruohang Feng <rh@vonng.com> - 9.1.3-1PGSTY
 - Update to upstream security release 9.1.3.
 - Fix GHSA-f4q9-j22m-xqq9 in Cluster Pub/Sub message construction.

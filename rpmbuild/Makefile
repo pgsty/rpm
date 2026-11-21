@@ -802,7 +802,7 @@ pg_uuid_v8:
 #pg_uuidv7
 
 permuteseq:
-	./build permuteseq 14 15 16 17 18
+	./build permuteseq 15 16 17 18 19
 
 pg_hashids:
 	./build pg_hashids 14 15 16 17 18

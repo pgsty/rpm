@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	PostgreSQL extension for scalable pseudo-random permutations of sequenc
 License:	PostgreSQL
 URL:		https://github.com/dverite/permuteseq
 Source0:	permuteseq-%{version}.tar.gz
+Patch0:        permuteseq-1.2.2-pg19-tuple-header.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
@@ -41,6 +42,7 @@ The series of numbers are made unique with a secret key and reproducible with th
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
@@ -59,6 +61,9 @@ PATH=%{pginstdir}/bin:$PATH make %{with_llvm_arg} USE_PGXS=1 install DESTDIR=%{b
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.2.2-1PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

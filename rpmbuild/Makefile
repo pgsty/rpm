@@ -1092,7 +1092,7 @@ pg_describe:
 	./build pg_describe 17 18 19
 
 pg_relusage:
-	./build pg_relusage 14 15 16 17 18
+	./build pg_relusage 15 16 17 18 19
 
 pg_stat_tcpinfo:
 	./build pg_stat_tcpinfo 14 15 16 17 18

@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -36,7 +36,7 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pg_relusage is a PostgreSQL extension which allows one to discover
-and log the relations used in SQL statements. This package supports PostgreSQL 14 through 18.
+and log the relations used in SQL statements. This package supports PostgreSQL 15 through 18.
 
 %prep
 %setup -q -n %{sname}-%{version}

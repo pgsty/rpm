@@ -681,7 +681,7 @@ pg_net:
 	./build pg_net 14 15 16 17 18
 
 pg_csv:
-	./build pg_csv 14 15 16 17 18
+	./build pg_csv 15 16 17 18 19
 
 pg_curl:
 	./build pg_curl 14 15 16 17 18

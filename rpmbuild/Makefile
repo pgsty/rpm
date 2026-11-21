@@ -1065,7 +1065,7 @@ pg_ash:
 	./build pg_ash 15 16 17 18 19
 
 system_stats:
-	./build system_stats 14 15 16 17 18
+	./build system_stats 15 16 17 18 19
 
 fbsql:
 	./build fbsql 16 17 18 19

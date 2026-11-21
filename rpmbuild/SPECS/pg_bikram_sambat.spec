@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -23,7 +23,7 @@ Version:	0.1.0
 Release:	1PGSTY%{?dist}
 Summary:	Bikram Sambat date type and conversion functions
 License:	PostgreSQL
-URL:		https://github.com/LeohangRai/pg_bikram_sambat
+URL:            https://pgxn.org/dist/pg_bikram_sambat/
 Source0:	%{sname}-%{version}.tar.gz
 #           normalized from https://api.pgxn.org/dist/pg_bikram_sambat/0.1.0/pg_bikram_sambat-0.1.0.zip
 

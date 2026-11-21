@@ -645,7 +645,7 @@ pg_duration:
 	./build pg_duration 17 18
 
 pg_bikram_sambat:
-	./build pg_bikram_sambat 14 15 16 17 18
+	./build pg_bikram_sambat 15 16 17 18 19
 
 pg_rrule:
 	./build pg_rrule 14 15 16 17 18

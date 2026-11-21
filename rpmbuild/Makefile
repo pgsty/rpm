@@ -344,7 +344,7 @@ hydra:
 # - pg_ducklake is EL9+ until its EL8/GCC8 filesystem path is fixed and tested.
 #pg_analytics:   # download, obsolete
 pg_duckdb:
-	./build pg_duckdb 15 16 17 18
+	./build pg_duckdb 15 16 17 18 19
 
 pg_lake:                 # EL9+ only: bundled DuckDB requires system OpenSSL 3
 	./build pg_lake 16 17 18 19

@@ -1156,7 +1156,7 @@ pg_enigma:			# rust pgrx 0.19.2
 	./build pg_enigma 14 15 16 17 18
 
 pg_auditor:
-	./build pg_auditor 14 15 16 17 18
+	./build pg_auditor 15 16 17 18 19
 
 pgcryptokey:
 	./build pgcryptokey 14 15 16 17 18

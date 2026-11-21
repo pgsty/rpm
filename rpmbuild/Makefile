@@ -390,7 +390,7 @@ pg_strom:                    # EL10 x86_64 / PostgreSQL 14 gap
 ###############################################################
 
 pg_lion:
-	./build pg_lion 16 17 18
+	./build pg_lion 16 17 18 19
 
 age:
 	./build age 18

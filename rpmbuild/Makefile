@@ -997,7 +997,7 @@ pg_qos:
 	./build pg_qos 15 16 17 18 19
 
 pgtt:
-	./build pgtt 14 15 16 17 18
+	./build pgtt 15 16 17 18 19
 
 pg_pathcheck:	# preload-only diagnostics module for PG17/18
 	./build pg_pathcheck 17 18

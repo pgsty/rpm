@@ -1,30 +1,32 @@
 %global pname duckdb_fdw
 %global sname duckdb_fdw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global duckdb_version 2.0.0
+%global duckdb_version 2.0.1
 %{!?duckdb_core_jobs:%global duckdb_core_jobs 2}
 %{!?llvm:%global llvm 1}
 
 # Upstream 2.0.2 uses boolVal/makeBoolean, which PG14 does not provide.
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:duckdb_fdw 2.0.2 currently targets PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:duckdb_fdw 2.0.2 currently targets PostgreSQL 15 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg CLANG='$(LLVM_BINPATH)/clang'
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        2.0.2
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        DuckDB foreign data wrapper with an embedded DuckDB engine
 License:        MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND Zlib AND Unicode-DFS-2015
 URL:            https://github.com/alitrack/duckdb_fdw
 Source0:        duckdb_fdw-%{version}.tar.gz
 Source1:        duckdb-%{duckdb_version}.tar.gz
 Patch0:         duckdb_fdw-2.0.2-static.patch
+Patch1:         duckdb-2.0.1-nonunity-headers.patch
+Patch2:         duckdb_fdw-2.0.2-pg19-headers.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc gcc-c++ make cmake ninja-build python3
@@ -38,6 +40,10 @@ BuildRequires:  gcc-toolset-15-gcc-c++ gcc-toolset-15-annobin-plugin-gcc
 %if %llvm
 BuildRequires:  llvm-devel >= 19.0
 BuildRequires:  clang-devel >= 19.0
+%if 0%{?rhel} == 9
+# PGDG EL9 uses the parallel LLVM 21 toolchain.
+BuildRequires:  clang21 llvm21
+%endif
 %endif
 Requires:       postgresql%{pgmajorversion}-server
 # Keep DuckDB's public symbols available to dynamic plugins. This does not
@@ -55,11 +61,13 @@ or switching packages; a package replacement cannot unload existing libraries.
 %prep
 # Official release tag archives; do not substitute the old 2.0.1 snapshot.
 echo '1ed7935b009211915434fd65083b0562389e3faf1722865f81633d70a0c0fc8b  %{SOURCE0}' | sha256sum -c -
-echo '7e89053255046bfb26afbd7f524a2fb84df7dbef496aa911ea35e4a1182fdc00  %{SOURCE1}' | sha256sum -c -
+echo '1deae9d4917bd069c46c25c6ddbe51a2ef06cc7c12e6a10132af4fa0fb834a14  %{SOURCE1}' | sha256sum -c -
 %setup -q -n duckdb_fdw-%{version}
 mkdir duckdb
 tar -xf %{SOURCE1} -C duckdb --strip-components=1
-%patch -P 0 -p1
+%patch -P 0 -p1 -F0
+%patch -P 1 -p1 -F0
+%patch -P 2 -p1 -F0
 
 %build
 %set_build_flags
@@ -92,6 +100,12 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{fdw_cc_arg} %{with_llvm_arg} install DES
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 2.0.2-2PGSTY
+- Rebuild with DuckDB 2.0.1 and enable PostgreSQL 19
+- Include the tuple collection definition required by non-unity compilation
+- Include the tuple header used by PG19 user-mapping lookups
+- Match the PGXS LLVM producer and reader; preserve debug and runtime guards
+
 * Sat Oct 24 2026 Vonng <rh@vonng.com> - 2.0.2-1PGSTY
 - Package the official duckdb_fdw 2.0.2 release with DuckDB 2.0.0 PIC archives
 - Remove pg_duckdb headers and shared runtime dependencies

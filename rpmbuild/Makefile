@@ -359,7 +359,7 @@ pg_clickhouse:
 	./build pg_clickhouse 15 16 17 18 19
 
 duckdb_fdw:
-	./build duckdb_fdw 15 16 17 18
+	./build duckdb_fdw 15 16 17 18 19
 
 pg_parquet:			# rust pgrx 0.19.3
 	./build pg_parquet 15 16 17 18

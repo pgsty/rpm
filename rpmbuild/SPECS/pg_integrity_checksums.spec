@@ -3,25 +3,25 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_integrity_checksums is packaged for PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_integrity_checksums is packaged for PostgreSQL 15 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.2.0
+Version:        2.9.1
 Release:        1PGSTY%{?dist}
 Summary:        Physical and logical data checksums for PostgreSQL
 License:        MIT
 URL:            https://github.com/VictorNagibator/pg_integrity_checksums
 Source0:        %{sname}-%{version}.tar.gz
-# Official archive: https://github.com/VictorNagibator/pg_integrity_checksums/archive/refs/tags/v2.2.0.tar.gz
-# SHA256: 771d85da3dd8c99f99f6498fa38dc1452233f34973da925cccda7b4144aeaaa1
+# Official archive: https://github.com/VictorNagibator/pg_integrity_checksums/archive/refs/tags/v2.9.1.tar.gz
+# SHA256: 775e21219fe2e35b7018fa7636adcd52928cd1eb4b43268a939e3f8059fa0bff
 
 BuildRequires:  gcc make
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -60,6 +60,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.9.1-1PGSTY
+- Update to upstream 2.9.1.
+
 * Tue Nov 10 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1PGSTY
 - Update to 2.2.0 with generic algorithms and parallel 64-bit checksums.
 - Install the upstream 2.1.0 to 2.2.0 upgrade script.

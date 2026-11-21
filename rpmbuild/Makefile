@@ -838,7 +838,7 @@ pg_agent_gate:           # rust pgrx 0.19.3, PostgreSQL 18 only
 	./build pg_agent_gate 18
 
 pg_integrity_checksums:  # SQL extension, unrelated to the pg_checksums utility
-	./build pg_integrity_checksums 14 15 16 17 18
+	./build pg_integrity_checksums 15 16 17 18 19
 
 oai_fdw:
 	./build oai_fdw 15 16 17 18 19

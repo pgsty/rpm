@@ -814,7 +814,7 @@ pg_typeid:
 	./build pg_typeid 14 15 16 17 18
 
 quantile:
-	./build quantile 14 15 16 17 18
+	./build quantile 15 16 17 18 19
 
 lower_quantile:
 	./build lower_quantile 15 16 17 18 19

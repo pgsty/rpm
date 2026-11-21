@@ -425,7 +425,7 @@ pg_warren:                  # rust pgrx 0.19.3
 .PHONY: pg_statecharts pg_warren
 
 pgmb:
-	./build pgmb 14 15 16 17 18
+	./build pgmb 15 16 17 18 19
 
 ulak:
 	./build ulak 14 15 16 17 18

@@ -263,7 +263,7 @@ zhparser:
 	QA_RPATHS=2 ./build zhparser 15 16 17 18 19
 
 pg_cjk_parser:
-	./build pg_cjk_parser 14 15 16 17 18
+	./build pg_cjk_parser 15 16 17 18
 
 pg_jieba:
 	./build pg_jieba 14 15 16 17 18

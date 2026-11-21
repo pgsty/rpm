@@ -2,8 +2,8 @@
 %global sname pg_cjk_parser
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_cjk_parser supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:pg_cjk_parser supports PostgreSQL 15 through 18 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl

@@ -1113,8 +1113,8 @@ pagevis:
 #logerrors
 #set_user
 
-pgaudit:        # Normalize PG14/15 package names; reuse PGDG for PG16-18
-	./build pgaudit 14 15
+pgaudit:        # Normalize PG15 package name; reuse PGDG for PG16-19
+	./build pgaudit 15
 
 credcheck:      # recipe validation; reuse PGDG on active EL platforms
 	./build credcheck 15 16 17 18 19

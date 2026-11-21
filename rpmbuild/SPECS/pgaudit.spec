@@ -3,21 +3,16 @@
 %{!?llvm:%global llvm 1}
 
 # PGDG already uses pgaudit_<pgmajor> for PostgreSQL 16 and newer.
-# Only repackage the PostgreSQL 14/15 branches to normalize their RPM names.
-%if 0%{?pgmajorversion} == 14
-%global pversion 1.6.3
-%global legacy_name pgaudit16_14
-%else
+# Only repackage the PostgreSQL 15 branch to normalize its RPM name.
 %if 0%{?pgmajorversion} == 15
-%global pversion 1.7.1
+%global pversion 1.7.2
 %global legacy_name pgaudit17_15
 %else
-%{error:pgaudit is repackaged only for PostgreSQL 14 and 15; use PGDG for PostgreSQL 16 through 18}
-%endif
+%{error:pgaudit is repackaged only for PostgreSQL 15; use PGDG for PostgreSQL 16 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -29,8 +24,7 @@ Summary:        PostgreSQL session and object audit logging
 License:        PostgreSQL
 URL:            https://www.pgaudit.org
 Source0:        %{sname}-%{version}.tar.gz
-# https://github.com/pgaudit/pgaudit/archive/refs/tags/1.6.3.tar.gz
-# https://github.com/pgaudit/pgaudit/archive/refs/tags/1.7.1.tar.gz
+# https://github.com/pgaudit/pgaudit/archive/refs/tags/1.7.2.tar.gz
 
 BuildRequires:  gcc make openssl-devel krb5-devel
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -70,6 +64,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} USE_PGXS=1 PG_CONFIG=%{pginstdir}/bin/pg_c
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.7.2-1PGSTY
+- Update the PostgreSQL 15 compatibility package to upstream 1.7.2
+- Retire PostgreSQL 14 and retain the PGDG provider for PostgreSQL 16-19
+
 * Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 1.6.3/1.7.1-1PGSTY
 - Package upstream 1.6.3 for PostgreSQL 14 and 1.7.1 for PostgreSQL 15.
 - Use pgaudit_<pgmajor> names and provide the historical PGDG names.

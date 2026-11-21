@@ -636,7 +636,7 @@ pg_uri:
 	./build pg_uri 14 15 16 17 18
 
 pg_emailaddr:
-	./build pg_emailaddr 14 15 16 17 18
+	./build pg_emailaddr 15 16 17 18 19
 
 pg_acl:
 	./build pg_acl 15 16 17 18 19

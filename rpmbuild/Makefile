@@ -1033,7 +1033,7 @@ pg_flight_recorder:
 	./build pg_flight_recorder 15 16 17 18 19
 
 pgmonitor:
-	./build pgmonitor 14 15 16 17 18
+	./build pgmonitor 15 16 17 18 19
 
 pg_tracing:
 	./build pg_tracing 15 16 17 18

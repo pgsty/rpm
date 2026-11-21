@@ -1159,7 +1159,7 @@ pg_auditor:
 	./build pg_auditor 15 16 17 18 19
 
 pgcryptokey:
-	./build pgcryptokey 14 15 16 17 18
+	./build pgcryptokey 15 16 17 18 19
 
 login_hook:
 	./build login_hook 15 16 17 18 19

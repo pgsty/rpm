@@ -988,7 +988,7 @@ pg_crash:
 	./build pg_crash 14 15 16 17 18
 
 pg_cheat_funcs:
-	./build pg_cheat_funcs 14 15 16 17 18
+	./build pg_cheat_funcs 15 16 17 18
 
 pg_fio:
 	./build pg_fio 14 15 16 17 18

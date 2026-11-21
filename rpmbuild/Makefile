@@ -1320,7 +1320,7 @@ mimeo:
 	./build mimeo 15 16 17 18 19
 
 pg_bulkload:
-	./build pg_bulkload 14 15 16 17 18
+	./build pg_bulkload 15 16 17 18
 
 postgresbson:
 	./build postgresbson 14 15 16 17 18

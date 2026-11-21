@@ -2,8 +2,12 @@
 %global sname pgmq
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pgmq is packaged for PostgreSQL 15 through 19}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.13.1
+Version:	1.13.2
 Release:	1PGSTY%{?dist}
 Summary:	A lightweight message queue. Like AWS SQS and RSMQ but on Postgres.
 License:	PostgreSQL
@@ -39,6 +43,9 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.13.2-1PGSTY
+- Update to upstream 1.13.2.
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 1.13.1-1PGSTY
 - Update to upstream 1.13.1.
 

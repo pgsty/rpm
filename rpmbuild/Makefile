@@ -414,7 +414,7 @@ pgwasm:		# rust pgrx 0.19.2, Wasmtime 44
 	./build pgwasm 14 15 16 17 18
 
 pgmq:
-	./build pgmq 14 15 16 17 18
+	./build pgmq 15 16 17 18 19
 
 pg_statecharts:             # pure SQL, includes the optional dev subpackage
 	./build pg_statecharts 16 17 18 19

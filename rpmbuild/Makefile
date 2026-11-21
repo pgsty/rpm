@@ -356,7 +356,7 @@ storage_engine:
 	./build storage_engine 15 16 17 18
 
 pg_clickhouse:
-	./build pg_clickhouse 14 15 16 17 18
+	./build pg_clickhouse 15 16 17 18 19
 
 duckdb_fdw:
 	./build duckdb_fdw 15 16 17 18

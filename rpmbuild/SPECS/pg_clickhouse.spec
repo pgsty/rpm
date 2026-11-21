@@ -4,12 +4,12 @@
 
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_clickhouse is packaged for PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_clickhouse is packaged for PostgreSQL 15 through 19}
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -52,7 +52,7 @@ Features:
 - Query Pushdown: Automatically optimizes queries by pushing them to ClickHouse
 - TPC-H Performance: Achieves substantial speedups on analytical workloads
 - No SQL Rewrites: Use standard PostgreSQL syntax for ClickHouse queries
-- Supports PostgreSQL 14-18 in Pigsty builds and ClickHouse v23+
+- Supports PostgreSQL 15-19 in Pigsty builds and ClickHouse v23+
 
 %prep
 %autosetup -N -n %{sname}-%{version}

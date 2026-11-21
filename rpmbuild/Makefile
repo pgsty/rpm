@@ -1209,7 +1209,7 @@ etcd_fdw:			# rust pgrx 0.19.2
 	./build etcd_fdw 14 15 16 17 18
 
 rdf_fdw:
-	./build rdf_fdw 14 15 16 17 18
+	./build rdf_fdw 15 16 17 18 19
 
 nominatim_fdw:
 	./build nominatim_fdw 15 16 17 18 19

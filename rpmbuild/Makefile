@@ -165,7 +165,7 @@ qdgc:
 	./build qdgc 14 15 16 17 18
 
 geoip:
-	./build geoip 14 15 16 17 18
+	./build geoip 15 16 17 18 19
 
 pg_polyline:    # rust pgrx 0.19.2
 	./build pg_polyline 14 15 16 17 18

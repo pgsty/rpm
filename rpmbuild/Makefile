@@ -1554,7 +1554,7 @@ istore:
 	./build istore 14 15 16 17 18
 
 is_jsonb_valid:
-	./build is_jsonb_valid 14 15 16 17 18
+	./build is_jsonb_valid 15 16 17 18 19
 
 pg_rusage:
 	./build pg_rusage 14 15 16 17 18

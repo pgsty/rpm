@@ -618,7 +618,7 @@ pg_rational:
 	./build pg_rational 15 16 17 18 19
 
 pgmp:
-	./build pgmp 14 15 16 17 18
+	./build pgmp 15 16 17 18 19
 
 pguint:
 	./build pguint 14 15 16 17 18

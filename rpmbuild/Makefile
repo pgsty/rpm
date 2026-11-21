@@ -375,7 +375,7 @@ pg_partman:
 	./build pg_partman 15 16 17 18 19
 
 pg_orca:
-	./build pg_orca 18
+	./build pg_orca 18 19
 
 pg_sorted_heap:
 	./build pg_sorted_heap 16 17 18

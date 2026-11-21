@@ -826,7 +826,7 @@ omnisketch:
 	./build omnisketch 14 15 16 17 18
 
 ddsketch:
-	./build ddsketch 14 15 16 17 18
+	./build ddsketch 15 16 17 18 19
 
 hdr_histogram:
 	./build hdr_histogram 14 15 16 17 18

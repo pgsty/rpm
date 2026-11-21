@@ -266,7 +266,7 @@ pg_cjk_parser:
 	./build pg_cjk_parser 15 16 17 18
 
 pg_jieba:
-	./build pg_jieba 14 15 16 17 18
+	./build pg_jieba 15 16 17 18 19
 
 pg_bestmatch:		# rust pgrx 0.19.2
 	./build pg_bestmatch 14 15 16 17 18

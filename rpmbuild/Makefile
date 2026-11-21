@@ -1224,7 +1224,7 @@ kafka_fdw:
 	./build kafka_fdw 14 15 16 17 18
 
 firebird_fdw:
-	./build firebird_fdw 14 15 16 17 18
+	./build firebird_fdw 15 16 17 18 19
 
 aws_s3:
 	./build aws_s3 15 16 17 18 19

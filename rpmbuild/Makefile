@@ -73,7 +73,7 @@ timescaledb_toolkit:	# rust pgrx 0.19.2, post-install upgrade scripts
 	./build timescaledb_toolkit 16 17 18
 
 pg_timeseries:
-	./build pg_timeseries 14 15 16 17 18
+	./build pg_timeseries 15 16 17 18 19
 
 periods:
 	./build periods 15 16 17 18 19

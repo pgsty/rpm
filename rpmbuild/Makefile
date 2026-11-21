@@ -675,7 +675,7 @@ pg_zstd:
 	./build pg_zstd 14 15 16 17 18
 
 pg_http:
-	./build pg_http 14 15 16 17 18
+	./build pg_http 15 16 17 18 19
 
 pg_net:
 	./build pg_net 14 15 16 17 18

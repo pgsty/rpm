@@ -751,7 +751,7 @@ pg_readme:
 	./build pg_readme 15 16 17 18 19
 
 pg_statviz:
-	./build pg_statviz 14 15 16 17 18
+	./build pg_statviz 15 16 17 18 19
 
 pg_relation_sql:
 	./build pg_relation_sql 15 16 17 18 19

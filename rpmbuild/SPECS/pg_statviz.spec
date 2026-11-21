@@ -2,8 +2,8 @@
 %global sname pg_statviz_extension
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_statviz is packaged for PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_statviz is packaged for PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

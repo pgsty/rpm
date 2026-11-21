@@ -1068,7 +1068,7 @@ system_stats:
 	./build system_stats 14 15 16 17 18
 
 fbsql:
-	./build fbsql 16 17 18
+	./build fbsql 16 17 18 19
 
 pg_meta:
 	./build pg_meta 14 15 16 17 18

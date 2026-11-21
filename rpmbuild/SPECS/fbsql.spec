@@ -2,8 +2,8 @@
 %global sname fbsql
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:fbsql 0.1.0 only supports PostgreSQL 16 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:fbsql 0.1.0 only supports PostgreSQL 16 through 19 in PGSTY builds}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}

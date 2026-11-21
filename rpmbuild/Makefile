@@ -612,7 +612,7 @@ postbis:
 	./build postbis 14 15 16 17 18
 
 numeral:
-	./build numeral 14 15 16 17 18
+	./build numeral 15 16 17 18 19
 
 pg_rational:
 	./build pg_rational 14 15 16 17 18

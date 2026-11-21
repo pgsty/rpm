@@ -4,8 +4,8 @@
 
 %{!?llvm:%global llvm 1}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:plruby 2.5.0 supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:plruby 2.5.0 supports PostgreSQL 15 through 18 in PGSTY builds}
 %endif
 
 %if %llvm

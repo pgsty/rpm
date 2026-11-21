@@ -1080,7 +1080,7 @@ pg_sqlog:
 	./build pg_sqlog 15 16 17 18 19
 
 pgmeminfo:
-	./build pgmeminfo 14 15 16 17 18
+	./build pgmeminfo 15 16 17 18 19
 
 toastinfo:
 	./build toastinfo 14 15 16 17 18

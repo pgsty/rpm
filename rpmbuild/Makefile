@@ -477,7 +477,7 @@ pg_plan_filter:
 	./build pg_plan_filter 15 16 17 18 19
 
 pg_variables:
-	./build pg_variables 14 15 16 17 18
+	./build pg_variables 15 16 17 18
 
 imgsmlr:
 	./build imgsmlr 15 16 17 18 19

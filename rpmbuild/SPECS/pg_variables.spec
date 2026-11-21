@@ -1,6 +1,11 @@
+%if 0%{?pgmajorversion} > 18
+%{error:PostgreSQL 19 is not enabled for this recipe; see the PG19 audit record}
+%endif
+
 %global pname pg_variables
 %global sname pg_variables
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -20,20 +25,37 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.5
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Session variables with various types for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/pg_variables
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:		pg_variables-1.2.5.patch
+Patch1:		pg_variables-1.2.5-composite-datum.patch
 #		https://github.com/postgrespro/pg_variables/archive/refs/tags/v1.2.5.tar.gz
 
-BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
+# New composite datum symbols require the November 2026 security minors.
+%if 0%{?pgmajorversion} == 19
+%global pg_min_version 19.0
+%elif 0%{?pgmajorversion} == 18
+%global pg_min_version 18.7
+%elif 0%{?pgmajorversion} == 17
+%global pg_min_version 17.12
+%elif 0%{?pgmajorversion} == 16
+%global pg_min_version 16.16
+%elif 0%{?pgmajorversion} == 15
+%global pg_min_version 15.20
+%else
+%{error:unsupported PostgreSQL major version}
+%endif
+
+BuildRequires:	postgresql%{pgmajorversion}-devel >= %{pg_min_version} pgdg-srpm-macros >= 1.0.27
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
 %endif
 
-Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-server >= %{pg_min_version}
 
 %description
 The pg_variables module provides functions to work with session-scoped
@@ -42,14 +64,16 @@ optionally participate in transaction semantics.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --forward -f < %{_specdir}/patches/pg_variables-1.2.5.patch
+patch -p1 --fuzz=0 < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH1}
+
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} LLVM_BINPATH=%{llvm_binpath} USE_PGXS=1 %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} LLVM_BINPATH=%{llvm_binpath} USE_PGXS=1 %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -64,6 +88,14 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.2.5-2PGSTY
+- Keep PostgreSQL 19 disabled after regression review; omit the unaccepted patch.
+
+* Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 1.2.5-2PGSTY
+- Preserve composite datum versions when copying stored records.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+- Require PostgreSQL security minors providing the composite datum API.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.2.5-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

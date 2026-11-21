@@ -483,7 +483,7 @@ imgsmlr:
 	./build imgsmlr 15 16 17 18 19
 
 pg_ivm:
-	./build pg_ivm 14 15 16 17 18
+	./build pg_ivm 15 16 17 18 19
 
 pg_incremental:
 	./build pg_incremental 16 17 18 19

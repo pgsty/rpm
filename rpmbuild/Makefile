@@ -1258,7 +1258,7 @@ pg_projection:
 	./build pg_projection 15 16 17 18 19
 
 session_variable:
-	./build session_variable 14 15 16 17 18
+	./build session_variable 15 16 17 18 19
 
 db2fce:
 	./build db2fce 15 16 17 18 19

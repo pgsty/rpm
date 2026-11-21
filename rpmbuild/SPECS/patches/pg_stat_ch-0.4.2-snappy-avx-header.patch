@@ -1,0 +1,19 @@
+Subject: Include Snappy AVX intrinsics on EL10 x86-64-v3
+
+The pinned Snappy port disables BMI2, which hides the normal immintrin.h
+include while the EL10 compiler flags still enable AVX. Apply this patch
+only on EL10; do not change the target ISA or other vcpkg ports.
+
+--- a/triplets/x64-linux-pic.cmake
++++ b/triplets/x64-linux-pic.cmake
+@@ -6,6 +6,10 @@
+ set(VCPKG_C_FLAGS "-fPIC -g")
+ set(VCPKG_BUILD_TYPE release)
+ 
++if(PORT STREQUAL "snappy")
++  set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -include immintrin.h")
++endif()
++
+ # Link OpenSSL dynamically: PG dlopens extensions RTLD_GLOBAL, so SSL-enabled
+ # backends' system libssl.so.3 interposes an embedded copy anyway; dynamic
+ # linkage makes that explicit and leaves CVE patching to distro

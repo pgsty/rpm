@@ -5,8 +5,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %global vcpkg_commit cd61e1e26a038e82d6550a3ebbe0fbbfe7da78e3
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_stat_ch only supports PostgreSQL 16 through 18}
+%if 0%{?rhel} && 0%{?rhel} < 9
+%{error:pg_stat_ch requires EL9 or newer}
+%endif
+
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:pg_stat_ch only supports PostgreSQL 16 through 19}
 %endif
 
 %ifarch aarch64
@@ -18,25 +22,20 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.4.0
-Release:        2PGSTY%{?dist}
+Version:        0.4.2
+Release:        1PGSTY%{?dist}
 Summary:        PostgreSQL query telemetry exporter to ClickHouse
 License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT AND OpenSSL
 URL:            https://github.com/ClickHouse/pg_stat_ch
 Source0:        %{sname}-%{version}.tar.gz
-%if 0%{?rhel} == 8
-# Thrift's generated parser uses --file-prefix-map, absent from EL8 Bison 3.0.
-Source1:        bison-3.8.2.tar.gz
-%endif
-Patch0:         pg_stat_ch-0.4.0.patch
-# Normalized from https://api.pgxn.org/dist/pg_stat_ch/0.4.0/pg_stat_ch-0.4.0.zip
+Patch0:         pg_stat_ch-0.4.2-package-version.patch
+Patch1:         pg_stat_ch-0.4.2-vcpkg-debug-info.patch
+Patch2:         pg_stat_ch-0.4.2-snappy-avx-header.patch
+# Normalized from https://api.pgxn.org/dist/pg_stat_ch/0.4.2/pg_stat_ch-0.4.2.zip
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  bison cmake flex gcc gcc-c++ git make ninja-build openssl-devel
 BuildRequires:  curl zip unzip tar cpio pkgconf-pkg-config perl-core python3
-%if 0%{?rhel} == 8
-BuildRequires:  gcc-toolset-14-gcc-c++ gcc-toolset-14-annobin-plugin-gcc openssl3-devel m4
-%endif
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
@@ -45,20 +44,15 @@ ClickHouse in real time. This package builds the upstream-pinned vcpkg Arrow and
 OpenTelemetry dependency stack for PostgreSQL %{pgmajorversion}.
 
 %prep
-%autosetup -p1 -n %{srcdir}
+%autosetup -N -n %{srcdir}
+%patch -P 0 -p1
+%patch -P 1 -p1
+%if 0%{?rhel} >= 10
+%patch -P 2 -p1
+%endif
 
 %build
 %set_build_flags
-%if 0%{?rhel} == 8
-. /opt/rh/gcc-toolset-14/enable
-BISON_PREFIX="$HOME/.cache/pg_stat_ch/bison-3.8.2"
-if [ ! -x "$BISON_PREFIX/bin/bison" ]; then
-    tar -xzf %{SOURCE1}
-    (cd bison-3.8.2 && ./configure --prefix="$BISON_PREFIX" \
-        && make -j"${CMAKE_BUILD_PARALLEL_LEVEL:-2}" && make install)
-fi
-export PATH="$BISON_PREFIX/bin:$PATH"
-%endif
 VCPKG_ROOT="$HOME/.cache/pg_stat_ch/vcpkg-%{vcpkg_commit}"
 VCPKG_BINARY_CACHE="$HOME/.cache/pg_stat_ch/vcpkg-archives"
 if [ ! -d "$VCPKG_ROOT/.git" ]; then
@@ -94,11 +88,7 @@ DESTDIR=%{buildroot} cmake --install build
 # Cached static libraries retain source paths outside RPM's build directory.
 # Move those paths and the referenced sources under it before find-debuginfo.
 VCPKG_ROOT="$HOME/.cache/pg_stat_ch/vcpkg-%{vcpkg_commit}"
-%if 0%{?rhel} == 8
-DEBUGEDIT=%{_rpmconfigdir}/debugedit
-%else
 DEBUGEDIT=%{_bindir}/debugedit
-%endif
 "$DEBUGEDIT" -b "$VCPKG_ROOT" -d "$PWD/vcpkg-debug" \
   -l vcpkg-debug-sources.list %{buildroot}%{pginstdir}/lib/%{pname}.so
 mkdir -p vcpkg-debug
@@ -124,6 +114,10 @@ test -f %{buildroot}%{pginstdir}/share/extension/%{pname}--0.3--0.4.sql
 %{pginstdir}/share/extension/%{pname}*.sql
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 0.4.2-1PGSTY
+- Update to upstream 0.4.2 and validate its PostgreSQL 19 support
+- Retire EL8 and split package version, dependency debug and EL10 Snappy patches
+
 * Fri Nov 06 2026 Vonng <rh@vonng.com> - 0.4.0-2PGSTY
 - Publish the verified matrix rebuild under a distinct package revision
 

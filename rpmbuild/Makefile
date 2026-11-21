@@ -1071,7 +1071,7 @@ fbsql:
 	./build fbsql 16 17 18 19
 
 pg_meta:
-	./build pg_meta 14 15 16 17 18
+	./build pg_meta 15 16 17 18 19
 
 pgnodemx:
 	./build pgnodemx 14 15 16 17 18

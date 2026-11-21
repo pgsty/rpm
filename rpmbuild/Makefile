@@ -1314,7 +1314,7 @@ pgmqtt:			# rust pgrx 0.19.2; SQL extension 0.4.1
 	./build pgmqtt 14 15 16 17 18
 
 decoder_raw:
-	./build decoder_raw 14 15 16 17 18
+	./build decoder_raw 15 16 17 18 19
 
 mimeo:
 	./build mimeo 14 15 16 17 18

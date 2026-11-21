@@ -591,7 +591,7 @@ pg_roaringbitmap:
 	./build pg_roaringbitmap 15 16 17 18 19
 
 pgfaceting:
-	./build pgfaceting 14 15 16 17 18
+	./build pgfaceting 15 16 17 18 19
 
 pgsphere:
 	./build pgsphere 14 15 16 17 18

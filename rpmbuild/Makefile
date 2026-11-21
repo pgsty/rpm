@@ -513,7 +513,7 @@ inchi:
 	./build inchi 18
 
 rdkit:
-	./build rdkit 14 15 16 17 18
+	./build rdkit 15 16 17 18
 
 # omnigres
 omnigres:

@@ -817,7 +817,7 @@ quantile:
 	./build quantile 14 15 16 17 18
 
 lower_quantile:
-	./build lower_quantile 14 15 16 17 18
+	./build lower_quantile 15 16 17 18 19
 
 count_distinct:
 	./build count_distinct 15 16 17 18 19

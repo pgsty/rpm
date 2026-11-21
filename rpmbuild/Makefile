@@ -860,7 +860,7 @@ datasketches:
 #tdigest
 
 first_last_agg:
-	./build first_last_agg 14 15 16 17 18
+	./build first_last_agg 15 16 17 18 19
 
 argm:
 	./build argm 15 16 17 18 19

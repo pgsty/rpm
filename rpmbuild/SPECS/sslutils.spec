@@ -1,8 +1,8 @@
 %global pname sslutils
 %global sname sslutils
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:sslutils 1.4.1 supports PostgreSQL 14 through 18 in Pigsty builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:sslutils supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -16,19 +16,18 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.1
+Version:	1.4.2
 Release:	1PGSTY%{?dist}
 Summary:	A Postgres extension for managing SSL certificates through SQL.
 License:	PostgreSQL
 URL:		https://github.com/EnterpriseDB/sslutils
 Source0:	sslutils-%{version}.tar.gz
-Patch0:		sslutils-1.4.1.patch
 
 BuildRequires:	gcc make openssl-devel
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -45,7 +44,6 @@ functions to Postgres, for use by the Postgres Enterprise Manager server.
 
 %prep
 %setup -q -n %{sname}-%{version}
-patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -79,6 +77,11 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflag
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.4.2-1PGSTY
+- Update to upstream 1.4.2 and target PostgreSQL 15 through 19.
+- Install upstream SQL and security fixes without the superseded 1.4.1 patch.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 1.4.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

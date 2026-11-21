@@ -1177,7 +1177,7 @@ block_copy_command:	# rust pgrx 0.19.2
 	./build block_copy_command 14 15 16 17 18
 
 sslutils:
-	./build sslutils 14 15 16 17 18
+	./build sslutils 15 16 17 18 19
 
 pg_noset:
 	./build pg_noset 15 16 17 18 19

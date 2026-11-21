@@ -1360,7 +1360,7 @@ neon:
 	rpmbuild -ba SPECS/neon.spec
 
 pg_adhoc:
-	./build pg_adhoc 18
+	./build pg_adhoc 18 19
 pg_filedump: pg_adhoc
 
 ###############################################################

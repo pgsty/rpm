@@ -13,6 +13,11 @@ Source0:	pg_filedump-REL_19_0.tar.gz
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 Requires:	%{sname}%{?_isa} = %{version}-%{release}
 
+# PGDG split frontend archives out of -devel starting with PostgreSQL 19.
+%if 0%{?pgmajorversion} >= 19
+BuildRequires: postgresql%{pgmajorversion}-static
+%endif
+
 %description
 pg_adhoc collects standalone PostgreSQL diagnostic utilities. The current
 component is pg_filedump, a low-level PostgreSQL data-file inspection tool.

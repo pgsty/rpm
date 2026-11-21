@@ -852,7 +852,7 @@ pgxicor:
 	./build pgxicor 14 15 16 17 18
 
 pg_weighted_statistics:
-	./build pg_weighted_statistics 14 15 16 17 18
+	./build pg_weighted_statistics 15 16 17 18 19
 
 datasketches:
 	./build datasketches 15 16 17 18 19

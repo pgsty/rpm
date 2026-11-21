@@ -574,7 +574,7 @@ pg_text_semver:
 	./build pg_text_semver 15 16 17 18 19
 
 pgunit:
-	./build pgunit 14 15 16 17 18
+	./build pgunit 15 16 17 18 19
 pgpdf: 		# covered by PGDG
 	./build pgpdf 15 16 17 18 19
 

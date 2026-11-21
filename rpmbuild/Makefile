@@ -1261,7 +1261,7 @@ session_variable:
 	./build session_variable 14 15 16 17 18
 
 db2fce:
-	./build db2fce 14 15 16 17 18
+	./build db2fce 15 16 17 18 19
 
 spat:
 	./build spat 17

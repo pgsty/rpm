@@ -4,7 +4,7 @@
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -16,6 +16,7 @@ Release:	4PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/pgspider/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
+Patch2:        sqlite_fdw-2.5.0-pg19-compat.patch
 Patch0:		sqlite_fdw-2.5.0-pg18.patch
 Patch1:		sqlite_fdw-2.5.0-el8-sqlite.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel
@@ -49,6 +50,10 @@ This PostgreSQL extension is a Foreign Data Wrapper for SQLite.
 %patch -P 1 -p1
 %endif
 
+%if 0%{?pgmajorversion} >= 19
+%patch -P 2 -p1
+%endif
+
 %build
 USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
 
@@ -72,6 +77,9 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflag
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 2.5.0-4PGSTY
+- Adapt PostgreSQL 19 APIs with version-conditional compatibility
+
 * Fri Nov 06 2026 Vonng <rh@vonng.com> - 2.5.0-4PGSTY
 - Publish the verified matrix rebuild above the released 3PIGSTY revision
 

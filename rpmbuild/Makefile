@@ -889,7 +889,7 @@ pg_base36:
 	./build pg_base36 15 16 17 18 19
 
 pg_base62:
-	./build pg_base62 14 15 16 17 18
+	./build pg_base62 15 16 17 18 19
 
 pg_base58:		# rust pgrx 0.19.2
 	./build pg_base58 14 15 16 17 18

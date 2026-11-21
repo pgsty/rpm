@@ -2,20 +2,31 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:timescaledb 2.31.0 only supports PostgreSQL 16 through 18}
+%{error:timescaledb 2.32.1 only supports PostgreSQL 16 through 18}
 %endif
 
 Summary:	PostgreSQL based time-series database
 Name:		%{sname}-tsl_%{pgmajorversion}
-Version:	2.31.0
-Release:	1PGSTY%{?dist}
+Version:	2.32.1
+Release:        1PGSTY%{?dist}
 License:	Apache-2.0 AND LicenseRef-Timescale AND PostgreSQL
 Source0:	%{sname}-%{version}.tar.gz
 URL:		https://github.com/timescale/timescaledb
-BuildRequires:	postgresql%{pgmajorversion}-devel
+# New composite datum symbols require the November 2026 security minors.
+%if 0%{?pgmajorversion} == 18
+%global pg_min_version 18.7
+%elif 0%{?pgmajorversion} == 17
+%global pg_min_version 17.12
+%elif 0%{?pgmajorversion} == 16
+%global pg_min_version 16.16
+%else
+%{error:unsupported PostgreSQL major version}
+%endif
+
+BuildRequires:	postgresql%{pgmajorversion}-devel >= %{pg_min_version}
 BuildRequires:	openssl-devel
 BuildRequires:	cmake >= 3.15
-Requires:	postgresql%{pgmajorversion}-server
+Requires:	postgresql%{pgmajorversion}-server >= %{pg_min_version}
 Conflicts:	%{sname}_%{pgmajorversion}
 
 %description
@@ -57,6 +68,13 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.32.1-1PGSTY
+- Update to upstream 2.32.1.
+
+* Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 2.32.0-1PGSTY
+- Update to upstream 2.32.0.
+- Require PostgreSQL security minors providing the composite datum API.
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 2.31.0-1PGSTY
 - Update to upstream 2.31.0.
 

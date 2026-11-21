@@ -162,7 +162,7 @@ q3c:
 	./build q3c 15 16 17 18 19
 
 qdgc:
-	./build qdgc 14 15 16 17 18
+	./build qdgc 15 16 17 18 19
 
 geoip:
 	./build geoip 15 16 17 18 19

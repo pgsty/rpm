@@ -2,8 +2,8 @@
 %global sname qdgc
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:qdgc only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:qdgc only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -43,5 +43,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %{pginstdir}/share/extension/%{pname}_postgis--*.sql
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-1PGSTY
+- Target PostgreSQL 15 through 19; retain the PGXN extension release.
+- GitHub v1.0.0 belongs to the older grid generator, not this extension.
+
 * Mon Jul 27 2026 Vonng <rh@vonng.com> - 0.1.0-1PIGSTY
 - Add RPM package for upstream PGXN 0.1.0

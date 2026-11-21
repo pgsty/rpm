@@ -284,7 +284,7 @@ pg_textsearch:
 	./build pg_textsearch 17 18 19
 
 textsearch_intl:
-	./build textsearch_intl 14 15 16 17 18
+	./build textsearch_intl 15 16 17 18 19
 
 pg_tre:
 	./build pg_tre 17 18 19

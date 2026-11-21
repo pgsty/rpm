@@ -2,22 +2,25 @@
 %global sname biscuit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:pg_biscuit is packaged for PostgreSQL 16 through 19}
+%endif
+
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	3.1.0
+Version:	3.1.1
 Release:	1PGSTY%{?dist}
 Summary:	IAM-LIKE pattern matching with bitmap indexing
 License:	MIT
 URL:		https://github.com/CrystallineCore/Biscuit
 Source0:	Biscuit-%{version}.tar.gz
-Patch0:		biscuit-3.1.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -36,15 +39,6 @@ queries with leading wildcards like '%%pattern%%'.
 
 %prep
 %setup -q -n Biscuit-%{version}
-%patch -P 0 -p1
-sed -i '1i .DEFAULT_GOAL := all' Makefile
-# PostgreSQL packages on EL9 x86_64 inject -flto=auto through pg_config,
-# which trips gcc's LTO jobserver path for this PGXS build.
-%ifarch x86_64
-%if 0%{?rhel} == 9
-sed -i '/^[[:space:]]*-fPIC$/a override CFLAGS += -fno-lto' Makefile
-%endif
-%endif
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} PG_CONFIG=%{pginstdir}/bin/pg_config
@@ -65,6 +59,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install P
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 3.1.1-1PGSTY
+- Update to upstream 3.1.1.
+- Install only the SQL payload selected by the upstream Makefile.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 3.1.0-1PGSTY
 - Update to 3.1.0
 - Enable LLVM by default on EL9 x86_64 after validating PostgreSQL 16-18

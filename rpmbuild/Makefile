@@ -278,7 +278,7 @@ pg_tokenizer:		# rust pgrx 0.19.3
 	./build pg_tokenizer 14 15 16 17 18
 
 pg_biscuit:
-	./build pg_biscuit 16 17 18
+	./build pg_biscuit 16 17 18 19
 
 pg_textsearch:
 	./build pg_textsearch 17 18

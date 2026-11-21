@@ -1129,7 +1129,7 @@ pgsodium:
 	./build pgsodium 14 15 16 17 18
 
 column_encrypt:
-	./build column_encrypt 14 15 16 17 18
+	./build column_encrypt 15 16 17 18 19
 
 pg_vault:
 	./build pg_vault 14 15 16 17 18

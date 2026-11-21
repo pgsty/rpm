@@ -4,13 +4,13 @@
 %{!?llvm:%global llvm 1}
 %{!?runselftest:%global runselftest 0}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:address_standardizer is packaged for PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:address_standardizer is packaged for PostgreSQL 15 through 19}
 %endif
 
 # Propagate %%llvm into PGXS so disabling LLVM also disables bitcode generation.
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif

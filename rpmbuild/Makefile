@@ -113,7 +113,7 @@ postgis:
 	./build postgis 14 15 16 17 18
 
 address_standardizer:
-	./build address_standardizer 14 15 16 17 18
+	./build address_standardizer 15 16 17 18 19
 
 postgis_tiger_geocoder:
 	./build postgis_tiger_geocoder 16 17 18

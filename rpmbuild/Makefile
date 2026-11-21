@@ -305,7 +305,7 @@ pg_icu_parser:
 	./build pg_icu_parser 14 15 16 17 18
 
 pg_fts:
-	./build pg_fts 17 18
+	./build pg_fts 17 18 19
 
 lead:           # upstream snapshot, SQL extension tin, rust pgrx 0.19.1
 	./build lead 17 18

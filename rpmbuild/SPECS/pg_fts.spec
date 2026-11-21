@@ -1,9 +1,10 @@
 %global pname pg_fts
 %global sname pg_fts
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global llvm_binpath /usr/bin
 
-%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pg_fts only supports PostgreSQL 17 and 18}
+%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
+%{error:pg_fts only supports PostgreSQL 17 through 19}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -17,19 +18,19 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.16.0
+Version:	1.18.0
 Release:	1PGSTY%{?dist}
 Summary:	Full-text search with BM25 ranking for PostgreSQL
 License:	PostgreSQL AND MIT
 URL:		https://codeberg.org/gregburd/pg_fts
 Source0:	%{sname}-%{version}.tar.gz
-#           https://codeberg.org/gregburd/pg_fts/archive/v1.16.0.tar.gz
+#           https://codeberg.org/gregburd/pg_fts/archive/v1.18.0.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -49,11 +50,11 @@ access method, and boolean, phrase, NEAR, prefix, fuzzy, and regex queries.
 %setup -q -n %{sname}-%{version}
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} LLVM_BINPATH=%{llvm_binpath} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} LLVM_BINPATH=%{llvm_binpath} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE
@@ -67,6 +68,13 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.18.0-1PGSTY
+- Update to upstream 1.18.0 with PostgreSQL 19 support
+
+* Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 1.17.0-1PGSTY
+- Update to upstream 1.17.0.
+- Use the installed LLVM tool directory for PGXS bitcode indexing.
+
 * Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 1.16.0-1PGSTY
 - Update to upstream 1.16.0 and preserve the complete SQL upgrade chain.
 

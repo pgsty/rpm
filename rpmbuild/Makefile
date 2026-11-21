@@ -943,7 +943,7 @@ pg_roast:
 	./build pg_roast 15 16 17 18 19
 
 pgfincore:
-	./build pgfincore 14 15 16 17 18
+	./build pgfincore 15 16 17 18 19
 
 pg_cooldown:
 	./build pg_cooldown 15 16 17 18 19

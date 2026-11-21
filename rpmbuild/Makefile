@@ -849,7 +849,7 @@ vasco:
 	./build vasco 14 15 16 17 18
 
 pgxicor:
-	./build pgxicor 14 15 16 17 18
+	./build pgxicor 15 16 17 18 19
 
 pg_weighted_statistics:
 	./build pg_weighted_statistics 15 16 17 18 19

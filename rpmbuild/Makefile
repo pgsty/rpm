@@ -1009,7 +1009,7 @@ pg_savior:		# breaks on pg18 (fixed)
 	./build pg_savior 14 15 16 17 18
 
 pg_policy:
-	./build pg_policy 14 15 16 17 18
+	./build pg_policy 15 16 17 18 19
 
 pg_drop_events:
 	./build pg_drop_events 15 16 17 18 19

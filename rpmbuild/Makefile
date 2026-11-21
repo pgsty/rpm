@@ -1089,7 +1089,7 @@ pg_explain_ui:		# rust pgrx 0.19.2
 	./build pg_explain_ui 14 15 16 17 18
 
 pg_describe:
-	./build pg_describe 17 18
+	./build pg_describe 17 18 19
 
 pg_relusage:
 	./build pg_relusage 14 15 16 17 18

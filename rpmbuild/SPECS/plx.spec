@@ -9,7 +9,7 @@
 %endif
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
-%{error:plx 2.0.1 supports PostgreSQL 15 through 19 in PGSTY builds}
+%{error:plx 3.1.0 supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %if %llvm
@@ -19,13 +19,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.0.1
+Version:        3.1.0
 Release:        1PGSTY%{?dist}
 Summary:        Transpile multiple procedural dialects to PL/pgSQL
 License:        MIT
 URL:            https://github.com/commandprompt/plx
 Source0:        %{sname}-%{version}.tar.gz
-#               https://github.com/commandprompt/plx/archive/refs/tags/v2.0.1.tar.gz
+#               https://github.com/commandprompt/plx/archive/refs/tags/v3.1.0.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -39,7 +39,7 @@ Requires:       postgresql%{pgmajorversion}-server
 %description
 plx is a dialect-pluggable procedural language extension. It transpiles
 functions written in Ruby, PHP, JavaScript, TypeScript, Python, Go, COBOL,
-Oracle PL/SQL, or Transact-SQL syntax into PL/pgSQL at CREATE FUNCTION time.
+Oracle PL/SQL, Transact-SQL, Lua, or C# syntax into PL/pgSQL at CREATE FUNCTION time.
 
 %prep
 %setup -q -n %{sname}-%{version}
@@ -67,6 +67,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PG_CONFIG=%{pginstdir}/bi
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 3.1.0-1PGSTY
+- Update to upstream 3.1.0, including the Lua and C# dialects.
+- Install the upstream 2.0.0 to 3.0.0 to 3.1.0 SQL upgrade chain.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.0.1-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

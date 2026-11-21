@@ -154,8 +154,8 @@ gdal313:
 
 # pgroutine
 # pointcloud
-h3-pg:         # EL8 x86_64 gap only
-	./build h3-pg 17 18
+h3-pg:         # recipe validation; reuse PGDG on active EL platforms
+	./build h3-pg 17 18 19
 # ogr_fdw
 
 q3c:

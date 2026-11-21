@@ -661,7 +661,7 @@ chkpass:
 #                       Category: UTIL                        #
 ###############################################################
 pg_opencc:
-	./build pg_opencc 14 15 16 17 18
+	./build pg_opencc 15 16 17 18 19
 
 .PHONY: pg_opencc
 

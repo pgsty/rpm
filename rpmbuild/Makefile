@@ -1083,7 +1083,7 @@ pgmeminfo:
 	./build pgmeminfo 15 16 17 18 19
 
 toastinfo:
-	./build toastinfo 14 15 16 17 18
+	./build toastinfo 15 16 17 18 19
 
 pg_explain_ui:		# rust pgrx 0.19.2
 	./build pg_explain_ui 14 15 16 17 18

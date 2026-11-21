@@ -855,7 +855,7 @@ pg_weighted_statistics:
 	./build pg_weighted_statistics 14 15 16 17 18
 
 datasketches:
-	./build datasketches 14 15 16 17 18
+	./build datasketches 15 16 17 18 19
 
 #tdigest
 

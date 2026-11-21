@@ -5,8 +5,8 @@
 %global corebuildsrc apache-datasketches-cpp-%{core_version}-src
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:datasketches supports PostgreSQL 14 through 18 in Pigsty}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:datasketches supports PostgreSQL 15 through 19 in Pigsty}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -20,7 +20,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -36,6 +36,7 @@ Source0:	apache-datasketches-postgresql-%{version}-src.tar.gz
 Source1:	apache-datasketches-cpp-%{core_version}-src.tar.gz
 #		https://downloads.apache.org/datasketches/cpp/5.2.0/apache-datasketches-cpp-5.2.0-src.zip
 Patch0:		datasketches-1.7.0-core-5.2.0.patch
+Patch1:        datasketches-1.7.0-pg19-datum-pointers.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc-c++
@@ -59,6 +60,7 @@ counting, quantiles, histograms, and heavy-hitter analysis.
 cd %{_builddir}
 tar -xf %{SOURCE1}
 patch -d %{buildsrc} -p1 --fuzz=0 < %{PATCH0}
+patch -d %{buildsrc} -p1 --fuzz=0 < %{PATCH1}
 
 %build
 cd %{_builddir}/%{buildsrc}
@@ -95,6 +97,9 @@ install -m 644 %{_builddir}/%{corebuildsrc}/NOTICE %{buildroot}%{_docdir}/%{name
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.7.0-2PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.7.0-2PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

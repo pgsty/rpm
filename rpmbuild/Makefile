@@ -797,7 +797,7 @@ pgx_ulid:			# rust pgrx 0.19.2
 	./build pgx_ulid  14 15 16 17 18
 
 pg_uuid_v8:
-	./build pg_uuid_v8 14 15 16 17 18
+	./build pg_uuid_v8 15 16 17 18 19
 
 #pg_uuidv7
 

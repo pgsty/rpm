@@ -2,6 +2,10 @@
 %global sname pgclone
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pgclone is packaged for PostgreSQL 15 through 19}
+%endif
+
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
   %{!?llvm:%global llvm 0}
@@ -13,20 +17,20 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	4.4.2
+Version:	4.9.0
 Release:	1PGSTY%{?dist}
 Summary:	Clone PostgreSQL databases, schemas, and tables across environments
 License:	PostgreSQL
 URL:		https://github.com/valehdba/pgclone
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pgclone/4.4.2/pgclone-4.4.2.zip
-#           Supported: PostgreSQL 14, 15, 16, 17, 18
+Patch0:        pgclone-4.9.0-pg19-lsyscache.patch
+# Official source: https://github.com/valehdba/pgclone/archive/refs/tags/v4.9.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -42,6 +46,7 @@ tables, and functions between PostgreSQL instances directly from SQL.
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -70,6 +75,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 4.9.0-1PGSTY
+- Update to upstream 4.9.0.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 4.4.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

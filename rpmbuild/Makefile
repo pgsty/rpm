@@ -1305,7 +1305,7 @@ pgactive:
 	./build pgactive 15 16 17 18 19
 
 pgclone:
-	./build pgclone 14 15 16 17 18
+	./build pgclone 15 16 17 18 19
 
 pgcopydb:
 	./build pgcopydb 14 15 16 17 18

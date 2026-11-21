@@ -1036,7 +1036,7 @@ pgmonitor:
 	./build pgmonitor 14 15 16 17 18
 
 pg_tracing:
-	./build pg_tracing 14 15 16 17 18
+	./build pg_tracing 15 16 17 18
 
 pg_stat_ch:
 	./build pg_stat_ch 16 17 18

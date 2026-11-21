@@ -775,7 +775,7 @@ pg_xxhash:
 	./build pg_xxhash 15 16 17 18 19
 
 shacrypt:
-	./build shacrypt 14 15 16 17 18
+	./build shacrypt 15 16 17 18 19
 
 cryptint:
 	./build cryptint 15 16 17 18 19

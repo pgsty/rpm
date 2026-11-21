@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -27,6 +27,7 @@ URL:		https://github.com/amutu/zhparser/
 Source0:	zhparser-%{version}.tar.gz
 #           https://github.com/amutu/zhparser/archive/refs/tags/V2.2.tar.gz
 Patch0:		zhparser-2.3-scws-paths.patch
+Patch1:        zhparser-2.3-pg19-lsyscache.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	scws
@@ -42,7 +43,10 @@ zhparser is a PostgreSQL extension for full-text search of Chinese language (Man
 It implements a Chinese language parser base on the Simple Chinese Word Segmentation(SCWS).
 
 %prep
-%autosetup -p1 -n %{sname}-%{version}
+%setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
+# Preserve the CRLF line endings in the upstream C source.
+patch --binary -p1 --fuzz=0 < %{PATCH1}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} SCWS_INCLUDEDIR=%{_includedir}/scws SCWS_LIBDIR=%{_libdir}
@@ -65,6 +69,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.3-1PGSTY
+- Add PostgreSQL 19 compilation compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 2.3-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

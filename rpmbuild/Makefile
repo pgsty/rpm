@@ -260,7 +260,7 @@ scws-install:
 	sudo yum remove -y scws || /bin/true
 	sudo rpm -ivh ~/rpmbuild/RPMS/$(ARCH)/scws-1.2.3-1PGSTY.el*.$(ARCH).rpm
 zhparser:
-	QA_RPATHS=2 ./build zhparser 14 15 16 17 18
+	QA_RPATHS=2 ./build zhparser 15 16 17 18 19
 
 pg_cjk_parser:
 	./build pg_cjk_parser 14 15 16 17 18

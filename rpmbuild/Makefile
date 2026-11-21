@@ -1030,7 +1030,7 @@ pg_profile:
 pg_wait_sampling:
 	./build pg_wait_sampling 14 15 16 17 18
 pg_flight_recorder:
-	./build pg_flight_recorder 15 16 17 18
+	./build pg_flight_recorder 15 16 17 18 19
 
 pgmonitor:
 	./build pgmonitor 14 15 16 17 18

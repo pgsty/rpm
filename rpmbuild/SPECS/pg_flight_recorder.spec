@@ -1,8 +1,8 @@
 %global pname pg_flight_recorder
 %global sname pg_flight_recorder
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:pg_flight_recorder supports PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_flight_recorder supports PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}

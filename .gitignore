@@ -71,3 +71,4 @@ doc/*
 
 # Lightweight heavy-extension follow-up matrix; binaries/logs stay outside the repo.
 !doc/nonrust-heavy-20261121.json
+!doc/pg_tre-4.6.5-validation.md

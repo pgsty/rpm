@@ -20,15 +20,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        4.6.4
+Version:        4.6.5
 Release:        1PGSTY%{?dist}
 Summary:        Native index access method for approximate regular expressions
 License:        MIT AND BSD-2-Clause
 URL:            https://codeberg.org/gregburd/pg_tre
 Source0:        %{sname}-%{version}.tar.gz
 # Complete upstream release archive, including the pinned TRE and Lime sources:
-# https://api.pgxn.org/dist/pg_tre/4.6.4/pg_tre-4.6.4.zip (normalized with GNU tar)
-Patch0:         pg-tre-4.6.2-build-flags.patch
+# https://api.pgxn.org/dist/pg_tre/4.6.5/pg_tre-4.6.5.zip (normalized with GNU tar)
+Patch0:         pg_tre-4.6.5-build-flags.patch
 
 BuildRequires:  gcc make git autoconf automake libtool gettext-devel m4
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -73,6 +73,10 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?pgxs_rpath_arg} instal
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 4.6.5-1PGSTY
+- Update to upstream 4.6.5 for PostgreSQL 17 through 19.
+- Rebase the vendored build flags patch with a canonical extension filename.
+
 * Sat Nov 21 2026 Vonng <rh@vonng.com> - 4.6.4-1PGSTY
 - Update to upstream 4.6.4 with PostgreSQL 19 support
 - Use the complete PGXN source archive with pinned TRE and Lime

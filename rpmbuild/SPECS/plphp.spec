@@ -2,8 +2,8 @@
 %global sname plphp
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:plphp only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:plphp only supports PostgreSQL 15 through 18 in PGSTY builds}
 %endif
 
 %{!?llvm:%global llvm 1}
@@ -20,6 +20,7 @@ Summary:        PHP procedural language for PostgreSQL
 License:        PostgreSQL
 URL:            https://github.com/commandprompt/plPHP
 Source0:        plphp-2.6.tar.gz
+Patch0:        plphp-2.6-pg19-tuplestore.patch
 # Source: https://codeload.github.com/commandprompt/plPHP/tar.gz/plphp-2.6
 # SHA256: 73717c319f34e3e7dbb1e14adf2aff40b17aa63c75a45739b91253c5c1003927
 
@@ -36,6 +37,8 @@ PHP procedural language for PostgreSQL.
 
 %prep
 %setup -q -n plPHP-plphp-2.6
+
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PHP_LIBDIR=%{_libdir} PHP_LIBNAME=php %{?_smp_mflags}
@@ -55,5 +58,8 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PHP_LIBDIR=%{_libdir} PHP
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 2.6-1PGSTY
+- Adapt PostgreSQL 19 APIs with version-conditional compatibility
+
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 2.6-1PGSTY
 - Initial RPM package for the EL9 aarch64 pilot

@@ -2,8 +2,8 @@
 %global sname pg_vectorsearch
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} != 18
-%{error:pg_vectorsearch currently supports PostgreSQL 18 only}
+%if 0%{?pgmajorversion} != 18 && 0%{?pgmajorversion} != 19
+%{error:pg_vectorsearch currently supports PostgreSQL 18 and 19}
 %endif
 
 %{!?llvm:%global llvm 1}

@@ -13,7 +13,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -25,6 +25,7 @@ Summary:	sha1, md5 and other data types for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/adjust/hashtypes/
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:        hashtypes-0.1.5-pg19-varlena.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -39,6 +40,7 @@ Custom data types to store SHA-1, SHA-2, MD5, CRC32, etc in PostgreSQL without t
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -60,6 +62,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.5-1PGSTY
+- Add PostgreSQL 19 header and type compatibility.
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.1.5-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

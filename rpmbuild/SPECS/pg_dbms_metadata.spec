@@ -3,7 +3,7 @@
 
 Summary:	PostgreSQL extension compatible with Oracle DBMS_METADATA
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0.0
+Version:	1.1.0
 Release:	1PGSTY%{?dist}
 License:	PostgreSQL
 URL:		https://github.com/HexaCluster/%{sname}
@@ -40,6 +40,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %{pginstdir}/share/extension/%{sname}.control
 
 %changelog
+* Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 1.1.0-1PGSTY
+- Update to upstream 1.1.0.
+
 * Wed Jul 22 2026 Vonng <rh@vonng.com> - 1.0.0-2PIGSTY
 - Rebuild EL8 aarch64 package for PostgreSQL 18
 

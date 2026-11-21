@@ -2,8 +2,8 @@
 %global sname plpgsql_check
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:plpgsql_check only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:plpgsql_check only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -17,13 +17,13 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.10.16
+Version:	2.11.0
 Release:	1PGSTY%{?dist}
 Summary:	Additional tools for PL/pgSQL function validation
 License:	MIT
@@ -66,6 +66,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.11.0-1PGSTY
+- Update to upstream 2.11.0.
+
 * Tue Oct 27 2026 Ruohang Feng <rh@vonng.com> - 2.10.16-1PGSTY
 - Update to upstream 2.10.16.
 

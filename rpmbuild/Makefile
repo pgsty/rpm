@@ -541,7 +541,7 @@ plprql: 		# rust pgrx 0.19.2
 	./build plprql 14 15 16 17 18
 
 plpgsql_check:
-	./build plpgsql_check 14 15 16 17 18
+	./build plpgsql_check 15 16 17 18 19
 
 pg_mockable:
 	./build pg_mockable 15 16 17 18 19

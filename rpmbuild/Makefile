@@ -994,7 +994,7 @@ pg_fio:
 	./build pg_fio 15 16 17 18 19
 
 pg_qos:
-	./build pg_qos 15 16 17 18
+	./build pg_qos 15 16 17 18 19
 
 pgtt:
 	./build pgtt 14 15 16 17 18

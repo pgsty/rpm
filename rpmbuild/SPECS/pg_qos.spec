@@ -14,7 +14,7 @@
 %endif
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -26,6 +26,7 @@ Summary:	QoS resource governor extension for PostgreSQL
 License:	GPL-3.0-only
 URL:		https://github.com/appstonia/pg_qos
 Source0:	pg_qos-%{version}.tar.gz
+Patch0:        pg_qos-1.1.0-pg19-compat.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -43,6 +44,8 @@ limits per role and database.
 
 %prep
 %setup -q -n %{sname}-%{version}
+
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -63,6 +66,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.1.0-1PGSTY
+- Adapt PostgreSQL 19 APIs while preserving earlier PostgreSQL paths
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.1.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

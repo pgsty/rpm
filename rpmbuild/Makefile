@@ -1003,7 +1003,7 @@ pg_pathcheck:	# preload-only diagnostics module for PG17/18
 	./build pg_pathcheck 17 18
 
 pg_disorder:	# test-only session preload module
-	./build pg_disorder 14 15 16 17 18
+	./build pg_disorder 15 16 17 18 19
 
 pg_savior:		# breaks on pg18 (fixed)
 	./build pg_savior 14 15 16 17 18

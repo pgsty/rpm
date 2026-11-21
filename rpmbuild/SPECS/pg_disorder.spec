@@ -2,14 +2,14 @@
 %global sname pg_disorder
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_disorder only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_disorder only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %{!?llvm:%global llvm 1}
 
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif
@@ -21,6 +21,7 @@ Summary:        Perturb unordered SELECT results to expose test failures
 License:        PostgreSQL
 URL:            https://github.com/viralpraxis/pg_disorder
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:        pg_disorder-0.1.0-pg19-compat.patch
 #               normalized from https://api.pgxn.org/dist/pg_disorder/0.1.0/pg_disorder-0.1.0.zip
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -39,6 +40,7 @@ session_preload_libraries and is not intended for production use.
 
 %prep
 %setup -q -n %{sname}-%{version}
+%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} \
@@ -60,6 +62,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Sat Nov 21 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
+- Adapt PostgreSQL 19 APIs with conditional compatibility paths
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

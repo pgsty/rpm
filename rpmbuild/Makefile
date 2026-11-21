@@ -76,7 +76,7 @@ pg_timeseries:
 	./build pg_timeseries 14 15 16 17 18
 
 periods:
-	./build periods 14 15 16 17 18
+	./build periods 15 16 17 18 19
 
 temporal_tables:
 	./build temporal_tables 14 15 16 17 18

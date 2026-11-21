@@ -985,7 +985,7 @@ pg_orphaned:
 	./build pg_orphaned 14 15 16 17 18
 
 pg_crash:
-	./build pg_crash 14 15 16 17 18
+	./build pg_crash 15 16 17 18 19
 
 pg_cheat_funcs:
 	./build pg_cheat_funcs 15 16 17 18

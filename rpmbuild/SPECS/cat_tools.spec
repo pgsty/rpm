@@ -2,8 +2,8 @@
 %global sname cat_tools
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:cat_tools only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:cat_tools only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
@@ -22,7 +22,7 @@ Requires:       postgresql%{pgmajorversion}-server
 %description
 cat_tools provides SQL functions and views for inspecting and working with
 PostgreSQL system catalogs. Version 0.4.0 supports PostgreSQL 12 and later;
-PGSTY packages it for the active PostgreSQL 14 through 18 releases.
+PGSTY packages it for the active PostgreSQL 15 through 18 releases.
 
 %prep
 %setup -q -n %{sname}-%{version}

@@ -326,7 +326,7 @@ psql_bm25s:
 	./build psql_bm25s 17 18
 
 hunspell:
-	./build hunspell 14 15 16 17 18
+	./build hunspell 15 16 17 18 19
 
 ###############################################################
 #                       Category: OLAP                        #

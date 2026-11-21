@@ -2,13 +2,13 @@
 %global sname pg_try_cast
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_try_cast only supports PostgreSQL 16 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:pg_try_cast only supports PostgreSQL 16 through 19 in PGSTY builds}
 %endif
 
 %{!?llvm:%global llvm 1}
 %if %llvm
-%global with_llvm_arg %{nil}
+%global with_llvm_arg LLVM_BINPATH=%{_bindir}
 %else
 %global with_llvm_arg with_llvm=no
 %endif

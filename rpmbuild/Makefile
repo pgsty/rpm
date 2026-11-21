@@ -973,7 +973,7 @@ pgcozy:
 	./build pgcozy 14 15 16 17 18
 
 pg_try_cast:
-	./build pg_try_cast 16 17 18
+	./build pg_try_cast 16 17 18 19
 
 pg_synonym:
 	./build pg_synonym 15 16 17 18 19

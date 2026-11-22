@@ -11,13 +11,15 @@ Extension build scripts for PostgreSQL 15–19 on EL9/EL10.
 The active targets are PostgreSQL 15–19 and EL9/EL10 on x86_64/aarch64.
 PG19 is enabled per extension after validation; the default target list does
 not imply that every extension supports it. PG14 and EL8 are retired from
-active orchestration. Rust/pgrx recipes are frozen for a separate upgrade batch;
-heavy components and custom PostgreSQL providers have separate dispositions.
+active orchestration. The [Rust/pgrx 0.20.0 pilot](doc/rust-pgrx-0.20.0-pilot.md)
+records the lowest and highest PG versions tested per extension on Rocky Linux
+9.9/aarch64 and Ubuntu 24.04/amd64. Heavy components and custom PostgreSQL
+providers have separate build records.
 
 The [2026-11-21 audit](doc/nonrust-pg19-20261121.md) and its
 [machine-readable support matrix](doc/nonrust-pg19-20261121.json) record
 upstream checks, actual PG ranges, pilot builds, runtime coverage and deferrals.
-The current pilot platforms are Rocky Linux 9.8/aarch64 and Ubuntu 24.04/amd64;
+That audit used Rocky Linux 9.8/aarch64 and Ubuntu 24.04/amd64;
 these results do not imply a production matrix or a repository publication.
 Historical EL8 build records and Terraform templates remain archival references;
 they are outside the active build matrix.
@@ -35,7 +37,10 @@ pig build repo
 pig build tool
 pig build spec # <--- get this repo, setup building environment
 pig build rust
-pig build pgrx
+export PATH="$HOME/.cargo/bin:$PATH"
+rustup toolchain install 1.100.0
+export RUSTUP_TOOLCHAIN=1.100.0
+pig build pgrx -v 0.20.0
 
 # then build packages
 pig build pkg timescaledb

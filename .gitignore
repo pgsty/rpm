@@ -75,3 +75,5 @@ doc/*
 !doc/plx-3.1.0-validation.md
 !doc/pg_vectorsearch-0.2.0-validation.md
 !doc/pg_regresql-2.2.0-validation.md
+!doc/rust-pgrx-0.20.0-pilot.md
+!doc/rust-pgrx-0.20.0-pilot.json

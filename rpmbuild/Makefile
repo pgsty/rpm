@@ -30,7 +30,7 @@ spec:
 	pgext env spec
 rust:
 	pgext env rust
-pgrx: pgrx0193
+pgrx: pgrx0200
 pgrx0161:
 	pgext env pgrx -v 0.16.1
 pgrx0170:
@@ -45,20 +45,23 @@ pgrx0192:
 	pgext env pgrx -v 0.19.2
 pgrx0193:
 	pgext env pgrx -v 0.19.3
+pgrx0200:
+	$(HOME)/.cargo/bin/rustup toolchain install 1.100.0
+	RUSTUP_TOOLCHAIN=1.100.0 pgext env pgrx -v 0.20.0
 
 ###############################################################
 #                            Summary                          #
 ###############################################################
 rust1: timescaledb_toolkit pg_polyline pg_tzf
-rust2: vchord pg_summarize pg_tiktoken
-rust3: pg_search vchord_bm25 pg_tokenizer pg_bestmatch
+rust2: pg_summarize pg_tiktoken
+rust3: pg_search pg_bestmatch
 rust4: pglite_fusion pg_graphql pg_jsonschema wrappers
 rust5: pg_parquet pg_render
 rust6: plprql pg_smtp_client pg_idkit pgx_ulid
 rust7: pg_base58 pg_convert pgdd pg_explain_ui
 rust8: pg_session_jwt pg_oidc_validator_rust pg_anon pgsmcrypto pg_enigma
 rust9: pg_pinyin pg_eviltransform pgwasm
-rust10: pg_command_fw pg_trickle pggraph pgcontext pgrdf jsonschema
+rust10: pg_command_fw pg_trickle pggraph pgrdf jsonschema
 rust11: pg_mentat pgs3
 time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background pg_when pg_stl cron_utils pg_extra_time pg_bikram_sambat
 
@@ -1459,7 +1462,7 @@ rm-srpm:
 # even if a file with the same name exists
 
 .PHONY: hdr_histogram pg_improv pg_kv pg_try_cast pg_synonym env setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
-	pgrx0191 pgrx0192 pgrx0193 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
+	pgrx0191 pgrx0192 pgrx0193 pgrx0200 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background address_standardizer postgis_tiger_geocoder \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorsearch pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \

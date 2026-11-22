@@ -537,8 +537,8 @@ pljs:
 plx:
 	./build plx 15 16 17 18 19
 
-plprql: 		# rust pgrx 0.19.2
-	./build plprql 15 16 17 18
+plprql: 		# rust pgrx 0.20.0
+	./build plprql 15 16 17 18 19
 
 plpgsql_check:
 	./build plpgsql_check 15 16 17 18 19

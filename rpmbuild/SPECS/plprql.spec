@@ -2,17 +2,18 @@
 %global sname plprql
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:plprql only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:plprql requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	18.0.2
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Use PRQL in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/kaspermarstal/plprql
 Source0:    plprql-%{version}.tar.gz
+Patch0:         plprql-18.0.2-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -27,7 +28,8 @@ PRQL introduces a pipeline concept (similar to Unix pipes) that transforms data 
 
 %prep
 %setup -q -n %{sname}-%{version}
-# Official upstream release includes pgrx 0.19.2 and its lockfile.
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -36,7 +38,7 @@ WORKSPACE_ROOT=%{_builddir}/%{sname}-%{version}
 cd "$WORKSPACE_ROOT"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -69,6 +71,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 18.0.2-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 18.0.2-1PGSTY
 - Update to 18.0.2
 - Include the upstream license in the binary package

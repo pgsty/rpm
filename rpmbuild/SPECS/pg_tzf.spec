@@ -3,13 +3,13 @@
 %global srcdir pg-tzf-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_tzf only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_tzf requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.3.1
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Fast PG extension to lookup timezone name by GPS coordinates
 License:	MIT AND ODbL-1.0
 URL:		https://github.com/ringsaturn/pg-tzf
@@ -17,6 +17,7 @@ Source0:	pg-tzf-%{version}.tar.gz
 #		https://github.com/ringsaturn/pg-tzf/archive/refs/tags/v0.3.1.tar.gz
 #		v0.3.1 commit 31db8500308f8c01c7b4525da24ba68b9432c4b7
 Patch0:		pg-tzf-0.3.1.patch
+Patch1:         pg-tzf-0.3.1-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -29,13 +30,15 @@ Resolve IANA timezone names from longitude/latitude coordinates in PostgreSQL.
 %setup -q -n %{srcdir}
 patch -p1 --fuzz=0 < %{PATCH0}
 
+%patch -P1 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -71,6 +74,9 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.1-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.3.1-1PGSTY
 - Update to upstream v0.3.1 (31db850) with pgrx 0.19.2 and tzf-rs 1.3.7
 - Build PostgreSQL 14 through 18 with cargo-pgrx 0.19.2

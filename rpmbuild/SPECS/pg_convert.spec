@@ -2,17 +2,18 @@
 %global sname pg_convert
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_convert only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_convert requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	Postgres extension for common conversions when working with spatial data.
 License:	MIT
 URL:		https://github.com/Vonng/%{pname}
 Source0:    %{pname}-%{version}.tar.gz
+Patch0:         pg-convert-0.1.0-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -23,7 +24,8 @@ Convert is a Postgres extension providing common conversion functions, such as m
 
 %prep
 %setup -q -n %{pname}-%{version}
-# The source archive includes the pgrx 0.19.2 dependency update.
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -31,7 +33,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{pname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -62,6 +64,9 @@ cp -a %{_builddir}/%{pname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-4PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

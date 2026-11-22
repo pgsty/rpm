@@ -1568,7 +1568,7 @@ addressing_dictionary:
 	./build addressing_dictionary 15 16 17 18 19
 
 pg_statkit:
-	./build pg_statkit 15 16 17
+	./build pg_statkit 15 16 17 18 19
 
 colnames:
 	./build colnames 15 16 17 18 19

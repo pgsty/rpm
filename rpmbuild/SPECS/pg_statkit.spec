@@ -1,19 +1,20 @@
 %global pname pg_statkit
 %global sname pg_statkit
-%global pgrx_version 0.18.1
+%global pgrx_version 0.20.0
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 17
-%{error:pg_statkit only supports PostgreSQL 14 through 17 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_statkit requires PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        1.1.0
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Descriptive statistics and effect sizes for PostgreSQL
 License:        MIT
 URL:            https://github.com/kirdmi/pg_statkit
 Source0:        pg_statkit-1.1.0.tar.gz
+Patch0:         pg-statkit-1.1.0-pgrx-0.20.0.patch
 # Source: https://codeload.github.com/kirdmi/pg_statkit/tar.gz/v1.1.0
 # SHA256: 2e438bd4e102f38649bec19988a54531bab520de9589e053907311df1ea66979
 
@@ -26,6 +27,8 @@ Descriptive statistics and effect sizes for PostgreSQL.
 
 %prep
 %setup -q -n pg_statkit-1.1.0
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG=2
@@ -55,5 +58,8 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.1.0-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 1.1.0-1PGSTY
 - Initial RPM package with pinned dependencies and native debug packages

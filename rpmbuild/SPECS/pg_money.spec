@@ -1,19 +1,20 @@
 %global pname pg_money
 %global sname pg_money
-%global pgrx_version 0.19.2
+%global pgrx_version 0.20.0
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_money only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_money requires PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.3.0
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Precise currency-aware money types for PostgreSQL
 License:        MIT
 URL:            https://github.com/RustedBytes/pg-money
 Source0:        pg_money-0.3.0.tar.gz
+Patch0:         pg-money-0.3.0-pgrx-0.20.0.patch
 # Source: https://codeload.github.com/RustedBytes/pg-money/tar.gz/v0.3.0
 # SHA256: 2b9c12ab9c17115685983548d211fa618143a70a1e01d08f91636848b5bf469b
 
@@ -26,6 +27,8 @@ Precise currency-aware money types for PostgreSQL.
 
 %prep
 %setup -q -n pg-money-0.3.0
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG=2
@@ -55,5 +58,8 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.3.0-1PGSTY
 - Initial RPM package with pinned dependencies and native debug packages

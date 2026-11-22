@@ -1529,7 +1529,7 @@ vgram:
 	./build vgram 15 16 17 18 19
 
 pg_money:
-	./build pg_money 15 16 17 18
+	./build pg_money 15 16 17 18 19
 
 edtf_postgres:
 	./build edtf_postgres 15 16 17 18 19

@@ -3,14 +3,18 @@
 %global srcdir wrappers-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:wrappers requires PostgreSQL 15 through 19}
+%endif
+
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.6.4
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
 Source0:    wrappers-%{version}.tar.gz
-Patch0:     wrappers-0.6.4-pgrx-0.19.3.patch
+Patch0:     wrappers-0.6.4-pgrx-0.20.0.patch
 #           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -28,7 +32,7 @@ and supports a growing set of FDWs for external services and data platforms.
 
 %prep
 %setup -q -n %{srcdir}
-# Migrate the upstream manifests and lockfile to pgrx 0.19.3.
+# Migrate the upstream manifests and lockfile to pgrx 0.20.0.
 patch --batch --fuzz=0 -p1 < %{PATCH0}
 
 %build
@@ -40,7 +44,7 @@ export CARGO_PROFILE_RELEASE_LTO="${CARGO_PROFILE_RELEASE_LTO:-thin}"
 cd %{_builddir}/%{srcdir}/%{pname}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -87,6 +91,9 @@ export PATH=%{_builddir}/%{srcdir}/.rpm-tools:$PATH
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.6.4-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Tue Oct 27 2026 Vonng <rh@vonng.com> - 0.6.4-1PGSTY
 - Update to wrappers 0.6.4 and migrate the locked build to pgrx 0.19.3.
 

@@ -2,20 +2,21 @@
 %global sname pg_base58
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_base58 only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_base58 requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	2PGSTY%{?dist}
+Release:	5PGSTY%{?dist}
 Summary:	Base58 Encoder/Decoder Extension for PostgreSQL
 License:	MIT
 URL:		https://github.com/Vonng/pg_base58
 Source0:	pg_base58-%{version}.tar.gz
+Patch0:		pg-base58-0.0.1-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:	cargo clang rust rustfmt
+BuildRequires:	cargo clang clang-devel llvm rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
@@ -23,24 +24,24 @@ Base58 Encoder/Decoder Extension for PostgreSQL
 
 %prep
 %setup -q -n %{sname}-%{version}
-# The source archive includes the pgrx 0.19.2 dependency update.
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export PGRX_HOME=%{_builddir}/.pgrx-0192-pg%{pgmajorversion}
+export PGRX_HOME=%{_builddir}/.pgrx-0200-pg%{pgmajorversion}
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo pgrx $PGRX_VERSION is required" >&2
 	exit 1
 fi
 RUST_VERSION=$(rustc --version | awk '{print $2}')
-if [ "$(printf '%s\n' 1.96.0 "$RUST_VERSION" | sort -V | head -1)" != "1.96.0" ]; then
-	echo "Rust 1.96 or newer is required, found $RUST_VERSION" >&2
+if [ "$(printf '%s\n' 1.99.1 "$RUST_VERSION" | sort -V | head -1)" != "1.99.1" ]; then
+	echo "Rust 1.99.1 or newer is required, found $RUST_VERSION" >&2
 	exit 1
 fi
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
@@ -68,6 +69,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.0.1-5PGSTY
+- Rebuild with pgrx 0.20.0 for PostgreSQL 15 through 19.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.0.1-2PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

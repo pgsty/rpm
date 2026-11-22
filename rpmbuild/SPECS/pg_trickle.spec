@@ -3,18 +3,19 @@
 %global srcdir pg-trickle-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} != 18
-%{error:pg_trickle only supports PostgreSQL 18}
+%if 0%{?pgmajorversion} < 18 || 0%{?pgmajorversion} > 19
+%{error:pg_trickle requires PostgreSQL 18 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.108.3
-Release:	1PGSTY%{?dist}
-Summary:	Streaming tables with differential view maintenance for PostgreSQL 18
+Release:	2PGSTY%{?dist}
+Summary:	Streaming tables with differential view maintenance for PostgreSQL %{pgmajorversion}
 License:	Apache-2.0
 URL:		https://github.com/trickle-labs/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pg-trickle-0.108.3.patch
+Patch1:         pg-trickle-0.108.3-pgrx-0.20.0.patch
 #           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.108.3
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -22,25 +23,27 @@ BuildRequires:	cargo clang git rust rustfmt openssl-devel pkgconfig
 Requires:	postgresql%{pgmajorversion}-server
 
 %description
-pg_trickle turns PostgreSQL 18 into a real-time data platform with streaming
+pg_trickle turns PostgreSQL %{pgmajorversion} into a real-time data platform with streaming
 tables and incremental view maintenance, implemented as a pgrx extension.
 Full background scheduler and shared-memory functionality require loading
 pg_trickle through shared_preload_libraries.
-The pg_trickle_dump definition-export tool is installed in the PostgreSQL 18
+The pg_trickle_dump definition-export tool is installed in the PostgreSQL %{pgmajorversion}
 binary directory.
 
 %prep
 %setup -q -n %{srcdir}
 patch -p1 --fuzz=0 < %{PATCH0}
 
+%patch -P1 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_TOOLCHAIN=stable
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -83,6 +86,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.108.3-2PGSTY
+- Rebuild for PostgreSQL 18 through 19 with pgrx 0.20.0.
+
 * Sat Oct 10 2026 Vonng <rh@vonng.com> - 0.108.3-1PGSTY
 - Update to upstream 0.108.3 and rebase the locked pgrx 0.19.3 packaging patch.
 - Align pgrx and cargo-pgrx with the 0.19.3 Docker builder toolchain.

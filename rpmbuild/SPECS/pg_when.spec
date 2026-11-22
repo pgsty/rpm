@@ -1,19 +1,22 @@
 %global pname pg_when
 %global sname pg_when
+%global srcdir pg-when-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_when only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_when requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.10
+Version:	0.1.11
 Release:	1PGSTY%{?dist}
 Summary:	Natural-language timestamp parser for PostgreSQL
 License:	MIT
 URL:		https://github.com/frectonz/pg-when
+# https://github.com/frectonz/pg-when/archive/refs/tags/0.1.11.tar.gz
+# SHA256: 5a89640bbfaa3ab06fccf4c2ccb34865ef1663490c88ad96d1f9d0fa0c8ab5cd
 Source0:	%{sname}-%{version}.tar.gz
-#           normalized from https://api.pgxn.org/dist/pg_when/0.1.10/pg_when-0.1.10.zip
+Patch0:         pg-when-0.1.11-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -25,16 +28,17 @@ inside PostgreSQL. It exposes timestamptz and Unix-epoch helper functions for
 phrases such as "next friday at 8:00 pm in America/New_York".
 
 %prep
-%setup -q -n %{sname}-%{version}
-# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
+%setup -q -n %{srcdir}
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
-cd %{_builddir}/%{sname}-%{version}
+cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -56,11 +60,11 @@ test "$LOCK_SHA256" = "$(sha256sum Cargo.lock | awk '{print $1}')" || {
 %{__mkdir_p} %{buildroot}%{pginstdir}/share/extension
 %{__mkdir_p} %{buildroot}%{_docdir}/%{name}
 %{__mkdir_p} %{buildroot}%{_licensedir}/%{name}
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
-install -m 644 %{_builddir}/%{sname}-%{version}/README.md %{buildroot}%{_docdir}/%{name}/
-install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedir}/%{name}/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so %{buildroot}%{pginstdir}/lib/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
+cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql %{buildroot}%{pginstdir}/share/extension/
+install -m 644 %{_builddir}/%{srcdir}/README.md %{buildroot}%{_docdir}/%{name}/
+install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}/
 
 %files
 %doc %{_docdir}/%{name}/README.md
@@ -71,6 +75,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.1.11-1PGSTY
+- Update to upstream 0.1.11 and build for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.10-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies
 

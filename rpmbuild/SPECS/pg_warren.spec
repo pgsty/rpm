@@ -1,17 +1,18 @@
 %global sname pg_warren
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:pg_warren supports PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_warren requires PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.8.0
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Graph traversal and computation over PostgreSQL tables
 License:        Apache-2.0
 URL:            https://github.com/ExaDev/pg_warren
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:         pg-warren-0.8.0-pgrx-0.20.0.patch
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
 Requires:       postgresql%{pgmajorversion}-server
@@ -24,13 +25,14 @@ through SQL. PostgreSQL 15-16 require preload for the optional shared cache.
 %prep
 %setup -q -n %{sname}-%{version}
 
+%patch -P0 -p1
+
 %build
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-# Builder stable Rust satisfies upstream's Rust 1.97 minimum.
-export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}"
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG=2
 export CARGO_PROFILE_RELEASE_STRIP=none
-test "$(cargo pgrx --version | awk '{print $2}')" = 0.19.3
+test "$(cargo pgrx --version | awk '{print $2}')" = 0.20.0
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 sha256sum Cargo.lock > .cargo-lock.before
 cargo fetch --locked
@@ -55,6 +57,9 @@ install -m 644 package%{pginstdir}/share/extension/pg_warren--*.sql %{buildroot}
 %{pginstdir}/share/extension/pg_warren--*.sql
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.8.0-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Fri Nov 06 2026 Ruohang Feng <rh@vonng.com> - 0.8.0-1PGSTY
 - Package upstream 0.8.0 with pgrx 0.19.3 for PostgreSQL 15-18.
 - Preserve release DWARF and the upstream SQL upgrade scripts.

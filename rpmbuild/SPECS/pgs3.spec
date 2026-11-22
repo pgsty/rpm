@@ -3,17 +3,18 @@
 %global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:pgs3 supports PostgreSQL 17 through 18}
+%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
+%{error:pgs3 requires PostgreSQL 17 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.1.1
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        S3-compatible object storage inside PostgreSQL
 License:        Apache-2.0
 URL:            https://github.com/pgsty/pgs3
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:         pgs3-0.1.1-pgrx-0.20.0.patch
 #               https://github.com/pgsty/pgs3/releases/tag/v0.1.1
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -30,13 +31,15 @@ Full endpoint functionality requires pgs3 in shared_preload_libraries.
 %setup -q -n %{srcdir}
 grep -Eq '^version[[:space:]]*=[[:space:]]*"%{version}"[[:space:]]*$' Cargo.toml
 
+%patch -P0 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -70,6 +73,9 @@ cp -a "$PKGROOT%{pginstdir}/share/extension/%{pname}"--*.sql %{buildroot}%{pgins
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.1-2PGSTY
+- Rebuild for PostgreSQL 17 through 19 with pgrx 0.20.0.
+
 * Thu Sep 03 2026 Vonng <rh@vonng.com> - 0.1.1-1PGSTY
 - Initial RPM release for PostgreSQL 17 through 18
 - Package the canonical upstream v0.1.1 source release

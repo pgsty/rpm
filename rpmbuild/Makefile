@@ -741,8 +741,8 @@ pg_byteamagic:
 external_file:
 	./build external_file 15 16 17 18 19
 
-pg_render:		# rust pgrx 0.19.2
-	./build pg_render 15 16 17 18
+pg_render:		# rust pgrx 0.20.0
+	./build pg_render 15 16 17 18 19
 
 cat_tools:
 	./build cat_tools 15 16 17 18 19

@@ -2,18 +2,19 @@
 %global sname jsonschema
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:jsonschema only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:jsonschema requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.11
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	JSON Schema validation functions for PostgreSQL
 License:	MIT
 URL:		https://github.com/theory/pg-jsonschema-boon
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		jsonschema-0.1.11.patch
+Patch1:         jsonschema-0.1.11-pgrx-0.20.0.patch
 #           normalized from the official v0.1.11 GitHub tag archive
 #           This is distinct from Supabase pg_jsonschema.
 
@@ -30,6 +31,8 @@ extension.
 %setup -q -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
 
+%patch -P1 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
@@ -37,7 +40,7 @@ cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{version}/target}"
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -74,6 +77,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licens
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.11-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Wed Oct 21 2026 Ruohang Feng <rh@vonng.com> - 0.1.11-1PGSTY
 - Update to upstream 0.1.11.
 

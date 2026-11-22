@@ -2,21 +2,21 @@
 %global sname pg_search
 %global srcdir paradedb-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global rust_toolchain stable
-%global pgrx_version 0.19.3
+%global rust_toolchain 1.100.0
+%global pgrx_version 0.20.0
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:pg_search only supports PostgreSQL 15 through 18 in PGSTY builds}
+%{error:pg_search requires PostgreSQL 15 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.26.6
+Version:	0.27.0
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0-or-later
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-# Upstream 0.26.6 already pins pgrx 0.19.3 in its manifests and Cargo.lock.
+# Upstream 0.27.0 already pins pgrx 0.20.0 in its manifests and Cargo.lock.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang curl git rust rustfmt openssl-devel openblas-devel libicu-devel pkgconfig
@@ -104,6 +104,9 @@ cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversio
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.27.0-1PGSTY
+- Update to 0.27.0 and build for PostgreSQL 15 through 18 with pgrx 0.20.0.
+
 * Mon Nov 09 2026 Ruohang Feng <rh@vonng.com> - 0.26.6-1PGSTY
 - Update to upstream 0.26.6 with its locked pgrx 0.19.3 dependency graph.
 - Simplify source inputs and package the upstream license.

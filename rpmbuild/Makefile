@@ -978,8 +978,8 @@ pg_try_cast:
 pg_synonym:
 	./build pg_synonym 15 16 17 18 19
 
-pg_kv:			# rust pgrx 0.19.3, shared-memory cache
-	./build pg_kv 15 16 17 18
+pg_kv:			# rust pgrx 0.20.0, shared-memory cache
+	./build pg_kv 15 16 17 18 19
 
 pg_orphaned:
 	./build pg_orphaned 15 16 17 18 19

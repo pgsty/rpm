@@ -2,17 +2,18 @@
 %global sname pg_kv
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:pg_kv only supports PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_kv requires PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.1.0
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Shared-memory key/value cache, rate limits and sorted sets
 License:        PostgreSQL
 URL:            https://github.com/Murat7Ay/pg_kv
 Source0:        %{sname}-%{version}.tar.gz
+Patch0:         pg-kv-0.1.0-pgrx-0.20.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -27,12 +28,14 @@ This is an early upstream release, not intended for production use.
 %prep
 %setup -q -n %{sname}-%{version}
 
+%patch -P0 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
     echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -65,6 +68,9 @@ cp -a target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension/%{
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Fri Oct 23 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Initial RPM release with pgrx 0.19.3 and locked upstream dependencies
 - Preserve release debug information for debuginfo and debugsource packages

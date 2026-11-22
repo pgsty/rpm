@@ -3,20 +3,19 @@
 %global srcdir kafgres-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} != 16
-%{error:PGSTY builds kafgres 0.3.2 for PostgreSQL 16}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
+%{error:kafgres requires PostgreSQL 15 through 18}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3.2
+Version:	0.3.3
 Release:	1PGSTY%{?dist}
 Summary:        Kafka protocol broker embedded in PostgreSQL
 License:	Elastic-2.0
 URL:		https://github.com/RayElg/kafgres
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.2.tar.gz
-Patch0:		kafgres-0.3.2-pgrx-0.19.3.patch
-# The release targets pgrx 0.16.1; use the locked 0.19.3 dependency update.
+#           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.3.tar.gz
+Patch0:		kafgres-0.3.3-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -40,7 +39,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:${PGRX_BIN_DIR:-$HOME/.cargo/bin}:$PATH
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -77,6 +76,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.3-1PGSTY
+- Update to 0.3.3 and build for PostgreSQL 15 through 18 with pgrx 0.20.0.
+
 * Thu Nov 05 2026 Ruohang Feng <rh@vonng.com> - 0.3.2-1PGSTY
 - Update to upstream 0.3.2 for PostgreSQL 16.
 - Regenerate the pgrx 0.19.3 patch and adapt Utf8Text SQL metadata.

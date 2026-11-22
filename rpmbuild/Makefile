@@ -1516,7 +1516,7 @@ jev:
 	./build jev 15 16 17 19
 
 kafgres:
-	./build kafgres 16
+	./build kafgres 15 16 17 18
 
 # New extension batch: shared pinned sources, PG15-19 where supported.
 

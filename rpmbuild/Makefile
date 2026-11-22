@@ -811,7 +811,7 @@ sequential_uuids:
 	./build sequential_uuids 15 16 17 18 19
 
 pg_typeid:
-	./build pg_typeid 15 16 17 18
+	./build pg_typeid 15 16 17 18 19
 
 quantile:
 	./build quantile 15 16 17 18 19

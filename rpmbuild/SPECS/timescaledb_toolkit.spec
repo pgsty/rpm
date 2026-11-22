@@ -2,19 +2,19 @@
 %global sname timescaledb-toolkit
 %global srcdir timescaledb-toolkit-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:timescaledb_toolkit 1.27 supports PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:timescaledb_toolkit requires PostgreSQL 16 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.27.0
+Version:	1.28.0
 Release:	1PGSTY%{?dist}
 Summary:	Analytical hyperfunctions for PostgreSQL and TimescaleDB
 License:	LicenseRef-Timescale
 URL:		https://github.com/timescale/timescaledb-toolkit
 Source0:	%{sname}-%{version}.tar.gz
-#           https://codeload.github.com/timescale/timescaledb-toolkit/tar.gz/refs/tags/1.27.0
-Patch0:		timescaledb-toolkit-1.27.0.patch
+#           https://codeload.github.com/timescale/timescaledb-toolkit/tar.gz/refs/tags/1.28.0
+Patch0:		timescaledb-toolkit-1.28.0-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt gcc make pkgconfig openssl-devel
@@ -24,7 +24,7 @@ Requires:	postgresql%{pgmajorversion}-server
 TimescaleDB Toolkit provides approximate aggregates, counter and gauge
 analysis, time-weighted averages, state tracking, downsampling, and SQL
 pipeline utilities for PostgreSQL and TimescaleDB. This package supports
-PostgreSQL 15 through 18.
+PostgreSQL 16 through 19.
 
 %prep
 %setup -q -n %{srcdir}
@@ -35,10 +35,10 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_TOOLCHAIN=stable
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_INCREMENTAL=0
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -80,6 +80,9 @@ install -m 644 LICENSE NOTICE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.28.0-1PGSTY
+- Update to 1.28.0 and build for PostgreSQL 16 through 19 with pgrx 0.20.0.
+
 * Thu Nov 05 2026 Vonng <rh@vonng.com> - 1.27.0-1PGSTY
 - Update to upstream 1.27.0 with pgrx 0.19.3 and PostgreSQL 15 through 18
 - Apply the release version to the tagged Cargo metadata before upstream SQL generation

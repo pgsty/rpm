@@ -1,24 +1,22 @@
 %global pname pg_agent_gate
 %global sname pg_agent_gate
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global pgrx_version 0.19.3
+%global pgrx_version 0.20.0
 
-%if 0%{?pgmajorversion} != 18
-%{error:pg_agent_gate is packaged for PostgreSQL 18 only}
+%if 0%{?pgmajorversion} < 18 || 0%{?pgmajorversion} > 19
+%{error:pg_agent_gate requires PostgreSQL 18 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.4.1
+Version:        0.4.3
 Release:        1PGSTY%{?dist}
 Summary:        Server-side SQL proposal and approval gate for agent roles
 License:        Apache-2.0
 URL:            https://github.com/Manuelreyesbravo/pg_agent_gate
 Source0:        %{sname}-%{version}.tar.gz
-# https://github.com/Manuelreyesbravo/pg_agent_gate/archive/refs/tags/v0.4.1.tar.gz
-# SHA256: fae0bff41e71f5f6462745477800c334a7cbf043953aaf862de81dd42076ec36
-# Upstream pins pgrx 0.19.2 but omits Cargo.lock. Use the builder's pgrx 0.19.3
-# with a fixed dependency graph, and explicitly select pg18 instead of pg19.
-Patch0:         pg-agent-gate-0.4.1-pgrx-0.19.3.patch
+# https://github.com/Manuelreyesbravo/pg_agent_gate/archive/refs/tags/v0.4.3.tar.gz
+# SHA256: b5133bbf7094c3887791b43fa6e916f2a335c70f585c05b709f7a85b0dd4aef6
+Patch0:         pg-agent-gate-0.4.3-pgrx-0.20.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -69,6 +67,9 @@ cp -a sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extension/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.4.3-1PGSTY
+- Update to 0.4.3 and build for PostgreSQL 18 through 19 with pgrx 0.20.0.
+
 * Tue Nov 03 2026 Vonng <rh@vonng.com> - 0.4.1-1PGSTY
 - Update to 0.4.1 with agent-role membership escape fixes.
 - Retain the pinned pgrx 0.19.3 dependency graph and full debug output.

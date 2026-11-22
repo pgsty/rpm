@@ -3,18 +3,19 @@
 %global commit 535b53363f8208af139e757e508e66c46309ee29
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pgwasm only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pgwasm requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	WebAssembly component runtime for PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/jnicholls/pgwasm
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pgwasm-0.1.0-runtime-defaults-fix.patch
+Patch1:         pgwasm-0.1.0-pgrx-0.20.0.patch
 # Source0 is the upstream main snapshot at commit 535b53363f8208af139e757e508e66c46309ee29:
 # https://github.com/jnicholls/pgwasm/archive/535b53363f8208af139e757e508e66c46309ee29.tar.gz
 
@@ -31,7 +32,8 @@ default unless a database administrator enables them.
 %prep
 %setup -q -n %{sname}-%{commit}
 patch --batch --fuzz=0 -p1 < %{PATCH0}
-# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
+
+%patch -P1 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -39,7 +41,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -85,6 +87,9 @@ PACKAGE_TARGET="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{commit}/target}"
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies
 

@@ -170,8 +170,8 @@ geoip:
 pg_polyline:    # rust pgrx 0.19.2
 	./build pg_polyline 15 16 17 18
 
-pg_eviltransform:	# rust pgrx 0.19.2
-	./build pg_eviltransform 15 16 17 18
+pg_eviltransform:	# rust pgrx 0.20.0
+	./build pg_eviltransform 15 16 17 18 19
 
 pg_geohash:
 	./build pg_geohash 15 16 17 18 19

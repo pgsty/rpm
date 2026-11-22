@@ -831,8 +831,8 @@ ddsketch:
 hdr_histogram:
 	./build hdr_histogram 15 16 17 18 19
 
-pg_improv:		# rust pgrx 0.19.3, Rust 1.97+
-	./build pg_improv 15 16 17 18
+pg_improv:		# rust pgrx 0.20.0
+	./build pg_improv 15 16 17 18 19
 
 pg_agent_gate:           # rust pgrx 0.20.0
 	./build pg_agent_gate 18 19

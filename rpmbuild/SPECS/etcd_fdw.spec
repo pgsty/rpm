@@ -3,8 +3,8 @@
 %global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:etcd_fdw supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:etcd_fdw requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -17,6 +17,7 @@ Source0:	etcd_fdw-%{version}.tar.gz
 Source1:	wrappers-0.6.2.tar.gz
 #           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.2.tar.gz
 Patch0:		etcd-fdw-0.0.1.patch
+Patch1:         etcd-fdw-0.0.1-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -33,13 +34,15 @@ mkdir -p vendor/wrappers
 tar -C vendor/wrappers --strip-components=1 -xf %{SOURCE1}
 patch -p1 --forward -f < %{PATCH0}
 
+%patch -P1 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -76,6 +79,9 @@ install -m 644 %{_builddir}/%{srcdir}/vendor/wrappers/LICENSE %{buildroot}%{_lic
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.0.1-4PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.0.1-4PGSTY
 - Vendor the formal Supabase Wrappers 0.6.2 source release
 - Rebase the Cybertec cached-plan lifetime fix for Wrappers 0.6.2

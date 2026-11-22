@@ -1208,8 +1208,8 @@ wrappers:			# rust pgrx 0.19.3
 sqlite_fdw:
 	./build sqlite_fdw 15 16 17 18 19
 
-etcd_fdw:			# rust pgrx 0.19.2
-	./build etcd_fdw 15 16 17 18
+etcd_fdw:			# rust pgrx 0.20.0
+	./build etcd_fdw 15 16 17 18 19
 
 rdf_fdw:
 	./build rdf_fdw 15 16 17 18 19

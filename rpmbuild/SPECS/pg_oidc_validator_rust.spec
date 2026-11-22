@@ -3,17 +3,18 @@
 %global commit b65bbbe288f84fab91d58b8304e8a526d1326af5
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} != 18
-%{error:pg_oidc_validator_rust only supports PostgreSQL 18}
+%if 0%{?pgmajorversion} < 18 || 0%{?pgmajorversion} > 19
+%{error:pg_oidc_validator_rust requires PostgreSQL 18 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	2PGSTY%{?dist}
-Summary:	OIDC bearer-token validator for PostgreSQL 18
+Release:	3PGSTY%{?dist}
+Summary:	OIDC bearer-token validator for PostgreSQL
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/UnAfraid/pg_oidc_validator_rust
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:         pg-oidc-validator-rust-0.1.0-pgrx-0.20.0.patch
 # Source0 is the upstream master snapshot at commit b65bbbe288f84fab91d58b8304e8a526d1326af5:
 # https://github.com/UnAfraid/pg_oidc_validator_rust/archive/b65bbbe288f84fab91d58b8304e8a526d1326af5.tar.gz
 
@@ -24,14 +25,15 @@ Requires:	postgresql%{pgmajorversion}-server
 
 %description
 pg_oidc_validator_rust provides an OIDC bearer-token validator module for the
-PostgreSQL 18 OAuth authentication mechanism. It performs OIDC discovery,
+PostgreSQL OAuth authentication mechanism. It performs OIDC discovery,
 fetches the issuer JWKS, validates JWT access tokens, and returns the token
 subject as the authenticated identity. Configure PostgreSQL with
 oauth_validator_libraries = 'oidc_validator' to load the module.
 
 %prep
 %setup -q -n pg_oidc_validator_rust-%{commit}
-# The source archive includes the pgrx 0.19.2 dependency update.
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -39,7 +41,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/pg_oidc_validator_rust-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -50,7 +52,7 @@ LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 PG_CONFIG=%{pginstdir}/bin/pg_config CARGO_NET_OFFLINE=true \
-	cargo build --release --locked --no-default-features --features pg18
+	cargo build --release --locked --no-default-features --features pg%{pgmajorversion}
 LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
 	echo "Cargo.lock changed during cargo build" >&2
@@ -70,6 +72,9 @@ readelf -Ws target/release/lib%{pname}.so | grep -q _PG_oauth_validator_module_i
 %{pginstdir}/lib/%{pname}.so
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-3PGSTY
+- Rebuild for PostgreSQL 18 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.0-2PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

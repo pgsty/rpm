@@ -4,16 +4,17 @@
 %global source_commit 7573fc49a48486b7acc9a1107545b515ef9a83f3
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:stannum only supports PostgreSQL 17 and 18}
+%{error:stannum requires PostgreSQL 17 through 18}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.1.0
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Experimental TINQL text search and BM25 ranking for PostgreSQL
 License:        AGPL-3.0-or-later
 URL:            https://github.com/TeamSpringbird/stannum
 Source0:        stannum-%{version}.tar.gz
+Patch0:         stannum-0.1.0-pgrx-0.20.0.patch
 # Pristine upstream commit archive; the SQL extension version remains 0.1.0.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -30,12 +31,14 @@ required on primary and standby for standby index reads.
 %prep
 %setup -q -n %{sname}-%{source_commit}
 
+%patch -P0 -p1
+
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export PATH=$HOME/.cargo/bin:%{pginstdir}/bin:$PATH
 export CARGO_PROFILE_RELEASE_DEBUG=2
 export CARGO_PROFILE_RELEASE_STRIP=none
-# rust-toolchain.toml selects upstream Rust 1.96.0.
-test "$(cargo pgrx --version | awk '{print $2}')" = 0.19.1
+test "$(cargo pgrx --version | awk '{print $2}')" = 0.20.0
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 sha256sum Cargo.lock > .cargo-lock.before
 CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
@@ -61,6 +64,9 @@ install -m 644 pgstaging%{pginstdir}/share/extension/stannum*.sql %{buildroot}%{
 # cargo-pgrx produces native Rust ELF; there is no PGXS bitcode payload.
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-2PGSTY
+- Rebuild for PostgreSQL 17 through 18 with pgrx 0.20.0.
+
 * Fri Oct 23 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Package the unreleased upstream snapshot 7573fc49a48486b7acc9a1107545b515ef9a83f3 (2026-10-19)
 - Build PostgreSQL 17 and 18 with upstream Rust 1.96.0 and pgrx 0.19.1

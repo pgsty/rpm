@@ -2,17 +2,18 @@
 %global sname pg_strict
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_strict only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_strict requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.5
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	A PostgreSQL extension to prevent dangerous UPDATE and DELETE without WHERE clause
 License:	MIT
 URL:		https://github.com/spa5k/pg_strict
 Source0:    pg_strict-%{version}.tar.gz
+Patch0:         pg-strict-1.0.5-pgrx-0.20.0.patch
 #           https://github.com/spa5k/pg_strict/archive/refs/tags/v1.0.5.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -27,7 +28,8 @@ pg_strict.require_where_on_delete) with three modes: off, warn, and on.
 
 %prep
 %setup -q -n %{sname}-%{version}
-# Source archive includes the shared compatibility fixes and pgrx 0.19.2 lockfile.
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -35,7 +37,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -66,6 +68,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.0.5-4PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 1.0.5-1PGSTY
 - Build with pgrx 0.19.2 from the updated source archive and locked dependencies
 

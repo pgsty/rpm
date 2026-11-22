@@ -702,7 +702,7 @@ pgjwt:
 	./build pgjwt 15 16 17 18 19
 
 pg_smtp_client:		# rust pgrx
-	./build pg_smtp_client 15 16 17 18
+	./build pg_smtp_client 15 16 17 18 19
 
 pg_html5_email_address:
 	./build pg_html5_email_address 15 16 17 18 19

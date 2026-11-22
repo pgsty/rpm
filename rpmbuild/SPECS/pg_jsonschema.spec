@@ -2,8 +2,8 @@
 %global sname pg_jsonschema
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_jsonschema only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_jsonschema requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -13,6 +13,7 @@ Summary:	PostgreSQL extension providing JSON Schema validation
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_jsonschema
 Source0:    pg_jsonschema-%{version}.tar.gz
+Patch0:         pg-jsonschema-0.3.4-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -23,7 +24,8 @@ pg_jsonschema is a PostgreSQL extension adding support for JSON schema validatio
 
 %prep
 %setup -q -n %{sname}-%{version}
-# The source archive includes the pgrx 0.19.2 dependency update.
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -31,7 +33,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -62,6 +64,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.4-4PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Mon Nov 09 2026 Vonng <rh@vonng.com> - 0.3.4-4PGSTY
 - Raise release above published 0.3.4-3PIGSTY packages
 

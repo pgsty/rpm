@@ -2,18 +2,19 @@
 %global sname pg_idkit
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_idkit only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_idkit requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.0
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	pg_idkit is a Postgres extension for generating many popular types of identifiers
 License:	Apache-2.0
 URL:		https://github.com/Vonng/pg_idkit
 Source0:    pg_idkit-%{version}.tar.gz
 Patch0:     pg-idkit-0.4.0-nanoid-fix.patch
+Patch1:         pg-idkit-0.4.0-pgrx-0.20.0.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
 Requires:	postgresql%{pgmajorversion}-server
@@ -25,16 +26,17 @@ uuidv6, uuidv7, nanoid, ksuid, ulid, timeflake, pushid, xid, cuid, cuid2
 %prep
 %setup -q -n %{sname}-%{version}
 patch --batch --fuzz=0 -p1 < %{PATCH0}
-# The source archive includes the pgrx 0.19.2 dependency update.
+
+%patch -P1 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_TOOLCHAIN=stable
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -66,6 +68,9 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.4.0-4PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.4.0-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

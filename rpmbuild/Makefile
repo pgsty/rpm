@@ -316,8 +316,8 @@ stannum:        # upstream snapshot, rust pgrx 0.19.1
 acdat:
 	./build acdat 15 16 17 18 19
 
-pg_pinyin:			# rust pgrx 0.19.2
-	./build pg_pinyin 15 16 17 18
+pg_pinyin:			# rust pgrx 0.20.0
+	./build pg_pinyin 15 16 17 18 19
 
 pg_kazsearch:		# rust pgrx 0.20.0
 	./build pg_kazsearch 16 17 18 19

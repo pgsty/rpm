@@ -2,17 +2,18 @@
 %global sname pg_cardano
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:pg_cardano only supports PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_cardano requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.0
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	Cardano-related tools, including cryptographic functions, address encoding/decoding, and blockchain data processing.
 License:	MIT
 URL:		https://github.com/cardano-community/pg_cardano
 Source0:	pg_cardano-%{version}.tar.gz
+Patch0:         pg-cardano-1.2.0-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -25,7 +26,8 @@ The extension is designed to handle unforeseen errors gracefully, without causin
 
 %prep
 %setup -q -n %{sname}-%{version}
-# The source archive includes the pgrx 0.19.2 dependency update.
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -33,7 +35,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -66,6 +68,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.2.0-4PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

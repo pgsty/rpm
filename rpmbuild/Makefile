@@ -506,7 +506,7 @@ provsql:
 # pgq
 
 pg_cardano:
-	./build pg_cardano 15 16 17 18
+	./build pg_cardano 15 16 17 18 19
 
 # rdkit
 inchi:

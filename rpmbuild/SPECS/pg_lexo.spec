@@ -1,15 +1,15 @@
 %global pname pg_lexo
 %global sname pg_lexo
-%global pgrx_version 0.16.1
+%global pgrx_version 0.20.0
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_lexo only supports PostgreSQL 16 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:pg_lexo requires PostgreSQL 16 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.6.1
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Lexicographic position keys for PostgreSQL
 License:        MIT
 URL:            https://github.com/Blad3Mak3r/pg_lexo
@@ -18,6 +18,7 @@ Source0:        pg_lexo-0.6.1.tar.gz
 # SHA256: a9a7e21538f20199d4cdfb7168c8eb51761464bac38c5b73aa77c8e4c57f65a3
 Source1:        pg_lexo-0.6.1-Cargo.lock
 Patch0:         pg_lexo-0.6.1-ordering.patch
+Patch1:         pg-lexo-0.6.1-pgrx-0.20.0.patch
 # Upstream release v0.6.1 retains Cargo/extension version 0.6.0.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -32,6 +33,8 @@ Lexicographic position keys for PostgreSQL.
 %patch -P 0 -p1
 cp %{SOURCE1} Cargo.lock
 
+%patch -P1 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG=2
 export CARGO_PROFILE_RELEASE_STRIP=none
@@ -42,7 +45,6 @@ test "$CURRENT_PGRX" = "%{pgrx_version}"
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 cargo fetch --locked
-# pgrx 0.16 builds a schema helper that needs normal linker section GC.
 CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config --out-dir %{_builddir}/%{sname}-package
 LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
 test "$LOCK_BEFORE" = "$LOCK_AFTER"
@@ -59,6 +61,9 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.6.1-2PGSTY
+- Rebuild for PostgreSQL 16 through 19 with pgrx 0.20.0.
+
 * Sun Oct 04 2026 Vonng <rh@vonng.com> - 0.6.1-1PGSTY
 - Fix lexo_next and preserve native ordering in lexo_rebalance
 - Initial RPM package with pinned dependencies and native debug packages

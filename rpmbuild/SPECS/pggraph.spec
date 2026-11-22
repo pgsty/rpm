@@ -3,13 +3,13 @@
 %global srcdir pggraph-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pggraph only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pggraph requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.2.1
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Graph database capabilities for PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/evokoa/pggraph
@@ -17,6 +17,7 @@ Source0:	%{sname}-%{version}.tar.gz
 #           normalized from the official GitHub v1.2.1 tag archive
 #           SQL extension payload is named graph.
 Patch0:		pggraph-1.2.1.patch
+Patch1:         pggraph-1.2.1-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -31,14 +32,16 @@ pggraph, while the installed PostgreSQL extension is named graph.
 %setup -q -n %{srcdir}
 patch -p1 --fuzz=0 < %{PATCH0}
 
+%patch -P1 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/graph
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:/usr/bin:$PATH
-export RUSTUP_TOOLCHAIN=stable
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -80,6 +83,9 @@ install -m 644 %{_builddir}/%{srcdir}/NOTICE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.2.1-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Tue Sep 29 2026 Vonng <rh@vonng.com> - 1.2.1-1PGSTY
 - Update to upstream 1.2.1 with pgrx pinned to 0.19.2
 - Preserve the locked dependency graph and debug package payload

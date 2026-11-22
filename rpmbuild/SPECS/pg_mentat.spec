@@ -1,22 +1,21 @@
 %global pname pg_mentat
 %global sname pg_mentat
-%global srcdir %{sname}-%{version}
+%global srcdir mentat
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_mentat supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_mentat requires PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.20.0
+Version:        1.22.0
 Release:        1PGSTY%{?dist}
 Summary:        Datomic-compatible Datalog query engine for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/mentat
 Source0:        %{sname}-%{version}.tar.gz
-#               https://api.pgxn.org/dist/pg_mentat/1.20.0/pg_mentat-1.20.0.zip
-# Official PGXN bundle normalized to tar.gz without changing source contents.
-Patch0:         pg-mentat-1.20.0.patch
+# https://codeberg.org/gregburd/mentat/archive/v1.22.0.tar.gz
+Patch0:         pg-mentat-1.22.0-pgrx-0.20.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -32,13 +31,14 @@ transaction processing through SQL functions.
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -79,6 +79,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.22.0-1PGSTY
+- Update to 1.22.0 and build for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Tue Nov 10 2026 Ruohang Feng <rh@vonng.com> - 1.20.0-1PGSTY
 - Update to 1.20.0, retaining PG14-18 and the locked pgrx 0.19.3 build.
 

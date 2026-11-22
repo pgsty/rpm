@@ -456,8 +456,8 @@ pg_igraph:		# deferred: draft spec kept in SPECS/obsolete
 pg_ttl_index:
 	./build pg_ttl_index 15 16 17 18 19
 
-pg_graphql:		# rust pgrx 0.19.3
-	./build pg_graphql 15 16 17 18
+pg_graphql:		# rust pgrx 0.20.0
+	./build pg_graphql 15 16 17 18 19
 
 pg_jsonschema:	# rust pgrx 0.19.2
 	./build pg_jsonschema 15 16 17 18

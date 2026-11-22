@@ -201,8 +201,8 @@ pgvectorscale:  # rust pgrx 0.19.2
 pg_vectorsearch:  # upstream alpha, PostgreSQL 18/19 validated
 	./build pg_vectorsearch 18 19
 
-pg_turbovec:	# rust pgrx 0.19.3, Rust 1.96+
-	./build pg_turbovec 15 16 17 18
+pg_turbovec:	# rust pgrx 0.20.0
+	./build pg_turbovec 15 16 17 18 19
 
 pg_vectorize:	# rust pgrx 0.19.2; SQL extension 0.23.0
 	./build pg_vectorize 15 16 17 18

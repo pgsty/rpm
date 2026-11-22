@@ -3,20 +3,20 @@
 %global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_turbovec supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_turbovec requires PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.15.0
+Version:        2.16.3
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.15.0.tar.gz
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.16.3.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
-Patch0:         pg-turbovec-2.15.0.patch
+Patch0:         pg-turbovec-2.16.3-pgrx-0.20.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -36,10 +36,10 @@ export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export RUSTUP_TOOLCHAIN=stable
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{srcdir}/target}"
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -85,6 +85,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 2.16.3-1PGSTY
+- Update to 2.16.3 and build for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Thu Oct 29 2026 Ruohang Feng <rh@vonng.com> - 2.15.0-1PGSTY
 - Update to upstream 2.15.0.
 - Fix empty-IVF fallback and reporting; cache query decoding and rotation matrices.

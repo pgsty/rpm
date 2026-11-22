@@ -6,8 +6,8 @@
 %global snapshot_short 99cb61d
 %global source_version 0.0.1+git%{snapshot_date}.%{snapshot_short}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_tiktoken only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_tiktoken requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -18,6 +18,7 @@ License:	Apache-2.0
 URL:		https://github.com/kelvich/pg_tiktoken
 Source0:	%{sname}-%{source_version}.tar.gz
 Patch0:		pg-tiktoken-0.0.1+git20260825.99cb61d.patch
+Patch1:         pg-tiktoken-0.0.1-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang git rust rustfmt
@@ -30,13 +31,15 @@ Postgres extension that does input tokenization using OpenAI's tiktoken.
 %setup -q -n %{sname}-%{source_version}
 patch -p1 --fuzz=0 < %{PATCH0}
 
+%patch -P1 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{source_version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -69,6 +72,9 @@ cp -a %{_builddir}/%{sname}-%{source_version}/target/release/%{pname}-pg%{pgmajo
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.0.1-5.git20260825.99cb61dPGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.1-5.git20260825.99cb61dPGSTY
 - Package upstream main snapshot 99cb61d while keeping extension version 0.0.1
 - Build PostgreSQL 14 through 18 with cargo-pgrx/pgrx 0.19.2

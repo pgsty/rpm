@@ -2,17 +2,18 @@
 %global sname pg_command_fw
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:pg_command_fw only supports PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_command_fw requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.1.0
-Release:	1PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	DDL and utility command firewall for PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/rustwizard/pg_command_fw
 Source0:	%{sname}-%{version}.tar.gz
+Patch0:         pg-command-fw-0.1.0-pgrx-0.20.0.patch
 #           normalized source tarball from the upstream PGXN release archive
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -26,7 +27,8 @@ hooks.
 
 %prep
 %setup -q -n %{sname}-%{version}
-# The source archive includes the pgrx 0.19.2 dependency update.
+
+%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -34,7 +36,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -71,6 +73,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-4PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sun Sep 06 2026 Vonng <rh@vonng.com> - 0.1.0-1PGSTY
 - Build the repacked source and locked dependencies with pgrx 0.19.2
 

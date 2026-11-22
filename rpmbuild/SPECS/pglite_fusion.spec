@@ -2,19 +2,19 @@
 %global sname pglite-fusion
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pglite_fusion only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pglite_fusion requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	0.0.7
+Version:	0.0.8
 Release:	1PGSTY%{?dist}
 Summary:	Embed an SQLite database in your PostgreSQL table. AKA multitenancy has been solved.
 License:	MIT
 URL:		https://github.com/frectonz/%{sname}
 Source0:	%{sname}-%{version}.tar.gz
-#           https://github.com/frectonz/pglite-fusion/archive/refs/tags/0.0.7.tar.gz
-Patch0:		pglite-fusion-0.0.7.patch
+#           https://github.com/frectonz/pglite-fusion/archive/refs/tags/0.0.8.tar.gz
+Patch0:		pglite-fusion-0.0.8-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -33,7 +33,7 @@ export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -44,8 +44,6 @@ LOCK_BEFORE=$(sha256sum Cargo.lock | awk '{print $1}')
 CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true CARGO_NET_GIT_FETCH_WITH_CLI=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
-EXT_DIR=target/release/%{pname}-pg%{pgmajorversion}%{pginstdir}/share/extension
-cp -f sql/%{pname}--*--*.sql "$EXT_DIR/"
 LOCK_AFTER=$(sha256sum Cargo.lock | awk '{print $1}')
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
 	echo "Cargo.lock changed during cargo pgrx package" >&2
@@ -68,6 +66,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.0.8-1PGSTY
+- Update to 0.0.8 and build for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Wed Sep 02 2026 Vonng <rh@vonng.com> - 0.0.7-1PGSTY
 - Update to upstream 0.0.7 and its rusqlite 0.40 runtime
 - Build PostgreSQL 14 through 18 with pgrx and cargo-pgrx 0.19.2

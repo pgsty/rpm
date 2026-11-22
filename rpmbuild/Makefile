@@ -578,8 +578,8 @@ pgunit:
 pgpdf: 		# covered by PGDG
 	./build pgpdf 15 16 17 18 19
 
-pglite_fusion:	# rust pgrx 0.19.2
-	./build pglite_fusion 15 16 17 18
+pglite_fusion:	# rust pgrx 0.20.0
+	./build pglite_fusion 15 16 17 18 19
 
 md5hash:
 	./build md5hash 15 16 17 18 19

@@ -1532,7 +1532,7 @@ pg_money:
 	./build pg_money 15 16 17 18
 
 edtf_postgres:
-	./build edtf_postgres 15 16 17 18
+	./build edtf_postgres 15 16 17 18 19
 
 libx509pq:
 	./build libx509pq 15 16 17 18 19

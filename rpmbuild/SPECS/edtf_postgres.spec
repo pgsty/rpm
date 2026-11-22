@@ -1,35 +1,30 @@
 %global pname edtf_postgres
 %global sname edtf_postgres
-%global pgrx_version 0.19.3
+%global pgrx_version 0.20.0
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:edtf_postgres only supports PostgreSQL 14 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:edtf_postgres requires PostgreSQL 15 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.3.2
+Version:        1.3.5
 Release:        1PGSTY%{?dist}
 Summary:        Extended Date Time Format functions for PostgreSQL
 License:        MIT OR Apache-2.0
 URL:            https://github.com/monumental-archive/edtf
-Source0:        edtf_postgres-1.3.2.tar.gz
-Patch0:         edtf-postgres-1.3.2-pgrx-0.19.3.patch
-# Source: https://codeload.github.com/monumental-archive/edtf/tar.gz/refs/tags/v1.3.2
-# Commit: ef6872859274e67867c623771694960cdeef60a1
-# Repacked with the historical edtf-edtf-postgres-v1.3.2 root and normalized
-# permissions; source contents and executable bits match the upstream tag.
-# SHA256: 139ffd3675a8cbcca780f9c511dcf8b8f3f2e8a3aa46f6c9aade35e7b8ac0cc2
+Source0:        edtf_postgres-%{version}.tar.gz
+Patch0:         edtf-postgres-1.3.5-pgrx-0.20.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:  cargo rust rustfmt clang
+BuildRequires:  cargo rust rustfmt clang clang-devel llvm
 Requires:       postgresql%{pgmajorversion}-server
 
 %description
 Extended Date Time Format functions for PostgreSQL.
 
 %prep
-%setup -q -n edtf-edtf-postgres-v1.3.2
+%setup -q -n edtf-%{version}
 %patch -P0 -p1
 
 %build
@@ -62,6 +57,9 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.3.5-1PGSTY
+- Update to 1.3.5 and build for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Tue Oct 27 2026 Vonng <rh@vonng.com> - 1.3.2-1PGSTY
 - Update edtf_postgres to 1.3.2 and build with pgrx 0.19.3.
 - Install the Apache and MIT license files shipped in the release.

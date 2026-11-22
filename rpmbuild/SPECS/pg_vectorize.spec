@@ -3,17 +3,18 @@
 %global srcdir %{sname}-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_vectorize supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_vectorize requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.27.1
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	The simplest way to orchestrate vector search on Postgres
 License:	PostgreSQL
 URL:		https://github.com/ChuckHend/pg_vectorize
 Source0:	pg_vectorize-%{version}.tar.gz
+Patch0:         pg-vectorize-0.27.1-pgrx-0.20.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -27,13 +28,15 @@ This allows you to do vector search and build LLM applications on existing data 
 %prep
 %setup -q -n %{srcdir}
 
+%patch -P0 -p1
+
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.19.2
+PGRX_VERSION=0.20.0
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -72,6 +75,9 @@ cp -a "$PACKAGE_TARGET/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorv
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.27.1-2PGSTY
+- Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
+
 * Sat Sep 19 2026 Vonng <rh@vonng.com> - 0.27.1-1PGSTY
 - Update to 0.27.1
 - Include the upstream license in the binary package

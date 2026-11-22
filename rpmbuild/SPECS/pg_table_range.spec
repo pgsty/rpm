@@ -1,22 +1,23 @@
 %global pname pg_table_range
 %global sname pg_table_range
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global pgrx_version 0.18.1
+%global pgrx_version 0.20.0
 
-%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 18
-%{error:pg_table_range only supports PostgreSQL 16 through 18}
+%if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
+%{error:pg_table_range requires PostgreSQL 16 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
 Version:        0.1.2
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        Planning-time partition pruning by per-partition data ranges
-License:        MIT AND Unicode-3.0 AND Zlib
+License:        MIT AND Unicode-3.0
 URL:            https://github.com/bitner/pg_table_range
 Source0:        %{sname}-%{version}.tar.gz
-# Upstream omits Cargo.lock; freeze its pinned pgrx 0.18.1 dependency graph.
+# Upstream omits Cargo.lock.
 Patch0:         pg-table-range-0.1.2-lockfile.patch
 Patch1:         pg-table-range-0.1.2-licenses.patch
+Patch2:         pg-table-range-0.1.2-pgrx-0.20.0.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt python3
@@ -34,7 +35,10 @@ may require a higher max_locks_per_transaction setting.
 %patch -P0 -p1
 %patch -P1 -p1
 
+%patch -P2 -p1
+
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 # PGRX_BINDIR permits an isolated matching cargo-pgrx installation.
@@ -50,7 +54,7 @@ CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 # Match the active feature and native target before collecting bundled licenses.
 BUILD_TARGET=$(rustc -vV | sed -n 's/^host: //p')
 cargo metadata --locked --offline --format-version=1 --no-default-features --features pg%{pgmajorversion} --filter-platform "$BUILD_TARGET" > cargo-license-metadata.json
-python3 packaging/collect-licenses.py cargo-license-metadata.json --pg pg%{pgmajorversion} --target "$BUILD_TARGET" --expected-license "MIT AND Unicode-3.0 AND Zlib"
+python3 packaging/collect-licenses.py cargo-license-metadata.json --pg pg%{pgmajorversion} --target "$BUILD_TARGET" --expected-license "MIT AND Unicode-3.0"
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion} --pg-config %{pginstdir}/bin/pg_config
 test "$LOCK_BEFORE" = "$(sha256sum Cargo.lock | awk '{print $1}')"
@@ -72,6 +76,9 @@ cp -a sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extension/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.2-2PGSTY
+- Rebuild for PostgreSQL 16 through 19 with pgrx 0.20.0.
+
 * Fri Oct 23 2026 Vonng <rh@vonng.com> - 0.1.2-1PGSTY
 - Initial RPM release for PostgreSQL 16 through 18
 - Preserve upstream pgrx 0.18.1, migration SQL and full release debug information

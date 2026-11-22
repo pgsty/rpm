@@ -295,8 +295,8 @@ pg_table_range:          # rust pgrx 0.18.1
 codesystem:
 	./build codesystem 15 16 17 18 19
 
-encsearch:               # rust pgrx 0.19.3, upstream tested PG17
-	./build encsearch 17
+encsearch:               # rust pgrx 0.20.0
+	./build encsearch 15 16 17 18 19
 
 pg_lease:                # pure SQL, upstream testing release
 	./build pg_lease 15 16 17 18 19

@@ -17,7 +17,7 @@ Source0:	pg-tzf-%{version}.tar.gz
 #		https://github.com/ringsaturn/pg-tzf/archive/refs/tags/v0.3.1.tar.gz
 #		v0.3.1 commit 31db8500308f8c01c7b4525da24ba68b9432c4b7
 Patch0:		pg-tzf-0.3.1.patch
-Patch1:         pg-tzf-0.3.1-pgrx-0.20.0.patch
+Patch1:         pg-tzf-0.3.1-pgrx-0.20.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -33,12 +33,13 @@ patch -p1 --fuzz=0 < %{PATCH0}
 %patch -P1 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -74,6 +75,9 @@ cp -a %{_builddir}/%{srcdir}/target/release/%{pname}-pg%{pgmajorversion}/usr/pgs
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.3.1-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.1-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

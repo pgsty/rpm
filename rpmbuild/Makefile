@@ -188,7 +188,7 @@ mobilitydb:
 pghydro:
 	./build pghydro 15 16 17 18 19
 
-pg_tzf:         # rust pgrx 0.20.0
+pg_tzf:         # rust pgrx 0.20.1
 	./build pg_tzf 15 16 17 18 19
 
 

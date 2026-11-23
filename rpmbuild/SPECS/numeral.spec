@@ -32,7 +32,7 @@
 
 Name:		%{rpmname}_%{pgmajorversion}
 Version:	1.3
-Release:	6PGSTY%{?dist}
+Release:	7PGSTY%{?dist}
 Summary:	Textual numeric datatypes for PostgreSQL
 License:	GPL-2.0-or-later
 URL:		https://github.com/df7cb/postgresql-numeral
@@ -80,6 +80,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{make_passbyvalue} insta
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.3-7PGSTY
+- Supersede the published split-bitcode build with a distinct RPM release.
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.3-6PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

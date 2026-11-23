@@ -14,7 +14,7 @@ License:	MIT
 URL:		https://github.com/theory/pg-jsonschema-boon
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		jsonschema-0.1.11.patch
-Patch1:         jsonschema-0.1.11-pgrx-0.20.0.patch
+Patch1:         jsonschema-0.1.11-pgrx-0.20.1.patch
 #           normalized from the official v0.1.11 GitHub tag archive
 #           This is distinct from Supabase pg_jsonschema.
 
@@ -34,13 +34,14 @@ patch -p1 --fuzz=0 < %{PATCH0}
 %patch -P1 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{version}/target}"
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -77,6 +78,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE.md %{buildroot}%{_licens
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.1.11-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.11-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

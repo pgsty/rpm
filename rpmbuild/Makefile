@@ -404,7 +404,7 @@ age:
 onesparse:
 	./build onesparse 18 19
 
-pggraph:		# rust pgrx 0.20.0, installs graph extension
+pggraph:		# rust pgrx 0.20.1, installs graph extension
 	./build pggraph 15 16 17 18 19
 
 pgcontext:		# rust pgrx 0.19.2, clean-install only; PG17/18

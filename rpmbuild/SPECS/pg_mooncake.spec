@@ -1,81 +1,65 @@
 %global pname pg_mooncake
 %global sname pg_mooncake
 %global pginstdir /usr/pgsql-%{pgmajorversion}
+%global duckdb_version v2.0.1
 %global cargo_target_dir %{_topdir}/.cache/%{sname}/target
 # debugedit recomputes linker Build-IDs; include the PG package name in its seed.
 %global _find_debuginfo_opts --build-id-seed %{name}-%{version}-%{release}
 %{!?mooncake_jobs:%global mooncake_jobs 4}
-%if 0%{?rhel} == 8
-%global mooncake_python python3.9
-%else
-%global mooncake_python python3
+%if 0%{?rhel} && 0%{?rhel} < 9
+%{error:pg_mooncake requires the pg_duckdb 1.2.1 packages for Enterprise Linux 9 or newer}
 %endif
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_mooncake only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_mooncake only supports PostgreSQL 15 through 19}
 %endif
 
 # RPM's ELF processing removes DuckDB's appended metadata. Restore it only
 # after both find-debuginfo and the distribution's normal brp scripts ran.
 %global __os_install_post %{__os_install_post} \
-for plugin in %{buildroot}%{pginstdir}/share/extension/pg_mooncake/v2.0.0/*/mooncake.duckdb_extension; do \
+for plugin in %{buildroot}%{pginstdir}/share/extension/pg_mooncake/%{duckdb_version}/*/mooncake.duckdb_extension; do \
   if ! tail -c 534 "$plugin" | cmp - %{_builddir}/%{sname}-%{version}/mooncake.footer; then \
     cat %{_builddir}/%{sname}-%{version}/mooncake.footer >> "$plugin"; \
   fi; \
 done
 
 Name:       %{sname}_%{pgmajorversion}
-Version:    0.3.0
+Version:    0.3.3
 Release:    1PGSTY%{?dist}
 Summary:    Real-time columnstore analytics in PostgreSQL
 License:    MIT AND BUSL-1.1
 URL:        https://github.com/pgsty/pg_mooncake
-# v0.3.0 (1a9cbfd65be9a6486d020120acb49ef0c6800d68) plus fetch-deps.sh.
-Source0:    pg_mooncake-%{version}.tar.gz
+Source0:    https://github.com/pgsty/pg_mooncake/releases/download/v%{version}/pg_mooncake-%{version}-source.tar.gz
+Patch0:     pg_mooncake-0.3.3-pgrx-0.20.1.patch
 
 BuildRequires: postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires: cargo rust rustfmt clang-devel llvm-devel
 BuildRequires: gcc gcc-c++ make cmake >= 3.24 ninja-build git python3
 BuildRequires: pkgconfig openssl-devel libcurl-devel lz4-devel protobuf-compiler
-%if 0%{?rhel} == 8
-# The version checks require Python 3.9; DuckDB 2.0 needs newer C++ headers.
-BuildRequires: python39 gcc-toolset-15-gcc-c++ gcc-toolset-15-annobin-plugin-gcc
-%endif
 Requires:   postgresql%{pgmajorversion}-server
-# The bundled DuckDB extension and SQL guard target exactly DuckDB 2.0.0.
-Requires:   pg_duckdb_%{pgmajorversion} = 1.2.0
+Requires:   pg_duckdb_%{pgmajorversion} = 1.2.1
 
 %description
 pg_mooncake adds columnstore tables and real-time replication from PostgreSQL
 heap tables, using Moonlink and DuckDB execution. This PGSTY-maintained fork
-includes a local DuckDB Mooncake extension for pg_duckdb 1.2.0 / DuckDB 2.0.0.
+includes a local DuckDB Mooncake extension for pg_duckdb 1.2.1 / DuckDB 2.0.1.
 
 %prep
 %setup -q -n %{sname}-%{version}
-%if 0%{?rhel} == 8
-sed -i 's/python3/python3.9/g' fetch-deps.sh Makefile
-%endif
-# The small archive deliberately omits dependencies. Fetch only pinned commits.
-./fetch-deps.sh
-printf '54488fa56bffb86a9d9ee47794ba433c10114ea34ba8e995a3a38709943f9784  Cargo.lock\n' | sha256sum -c -
+patch --batch --fuzz=0 -p1 < %{PATCH0}
+echo '09509abae5f4ad2b9ce21cf89a17b407a2013ebf3820e0f9a258b04005d2866d  Cargo.lock' | sha256sum -c -
 
 %build
 %set_build_flags
-%if 0%{?rhel} == 8
-source /opt/rh/gcc-toolset-15/enable
-export CC=/opt/rh/gcc-toolset-15/root/usr/bin/gcc
-export CXX=/opt/rh/gcc-toolset-15/root/usr/bin/g++
-export CFLAGS="$CFLAGS -std=gnu17"
-%endif
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG=2
 export CARGO_PROFILE_RELEASE_STRIP=none
 export CARGO_TARGET_DIR=%{cargo_target_dir}
 export CARGO_BUILD_JOBS=%{mooncake_jobs}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
-export DUCKDB_COMMIT=d54cbbe3df17e8e5ce68312f483b4155836112aa
 export CARGO_NET_GIT_FETCH_WITH_CLI=true
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-%{mooncake_python} scripts/check_versions.py --check-toolchain
+python3 scripts/check_versions.py --check-toolchain
 sha256sum Cargo.lock moonlink/Cargo.lock duckdb_mooncake/moonlink_ffi/Cargo.lock > .cargo-locks.before
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 cargo fetch --locked
@@ -92,26 +76,33 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{pginstdir}
 cp -a package%{pginstdir}/. %{buildroot}%{pginstdir}/
 # find-debuginfo only considers executable ELF files, including this plugin.
-chmod 755 %{buildroot}%{pginstdir}/share/extension/pg_mooncake/v2.0.0/*/mooncake.duckdb_extension
+chmod 755 %{buildroot}%{pginstdir}/share/extension/pg_mooncake/%{duckdb_version}/*/mooncake.duckdb_extension
+install -m 644 sql/%{sname}--*--*.sql %{buildroot}%{pginstdir}/share/extension/
 mkdir -p licenses
 cp LICENSE licenses/pg_mooncake.LICENSE
 cp moonlink/LICENSE licenses/moonlink.LICENSE
 cp duckdb_mooncake/LICENSE licenses/duckdb_mooncake.LICENSE
 
 %check
-for plugin in %{buildroot}%{pginstdir}/share/extension/pg_mooncake/v2.0.0/*/mooncake.duckdb_extension; do
+for plugin in %{buildroot}%{pginstdir}/share/extension/pg_mooncake/%{duckdb_version}/*/mooncake.duckdb_extension; do
     tail -c 534 "$plugin" | cmp - mooncake.footer
 done
 
 %files
 %license licenses/*
-%doc README.md BUILD.md versions.json
+%doc README.md CHANGELOG.md versions.json
 %{pginstdir}/lib/pg_mooncake.so
 %{pginstdir}/share/extension/pg_mooncake.control
 %{pginstdir}/share/extension/pg_mooncake--%{version}.sql
+%{pginstdir}/share/extension/pg_mooncake--*--*.sql
 %{pginstdir}/share/extension/pg_mooncake/
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 0.3.3-1PGSTY
+- Use the upstream source release with pinned submodules for PostgreSQL 15 through 19
+- Update the locked pgrx crates to 0.20.1 and ship the upstream upgrade SQL
+- Package scanner v0.0.5 for pg_duckdb 1.2.1 and DuckDB 2.0.1
+
 * Thu Nov 05 2026 Vonng <rh@vonng.com> - 0.3.0-1PGSTY
 - Switch to the PGSTY fork with pgrx 0.19.3 and pinned source dependencies
 - Package the DuckDB 2.0.0 Mooncake plugin and require pg_duckdb 1.2.0

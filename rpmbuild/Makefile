@@ -355,8 +355,8 @@ pg_duckdb:
 pg_lake:                 # EL9+ only: bundled DuckDB requires system OpenSSL 3
 	./build pg_lake 16 17 18 19
 
-pg_mooncake:
-	./build pg_mooncake 15 16 17 18
+pg_mooncake:		# rust pgrx 0.20.1
+	./build pg_mooncake 15 16 17 18 19
 
 storage_engine:
 	./build storage_engine 15 16 17 18 19

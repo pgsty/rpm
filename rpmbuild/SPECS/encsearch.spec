@@ -1,7 +1,7 @@
 %global pname encsearch
 %global sname encsearch
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global pgrx_version 0.20.0
+%global pgrx_version 0.20.1
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
 %{error:encsearch requires PostgreSQL 15 through 19}
@@ -15,7 +15,7 @@ License:        BSD-3-Clause AND CC0-1.0 AND MIT AND PostgreSQL AND Unicode-3.0
 URL:            https://github.com/lokeshmulpuru/encsearch
 Source0:        %{sname}-%{version}.tar.gz
 Patch0:         encsearch-0.1.1-licenses.patch
-Patch1:         encsearch-0.1.1-pgrx-0.20.0.patch
+Patch1:         encsearch-0.1.1-pgrx-0.20.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt python3
@@ -35,6 +35,7 @@ and their frequencies; consult the upstream security notes before use.
 %patch -P1 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
@@ -70,6 +71,9 @@ cp -a "$PKGDIR/share/extension/"* %{buildroot}%{pginstdir}/share/extension/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.1.1-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.1-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

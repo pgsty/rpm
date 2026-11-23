@@ -3,8 +3,8 @@
 %global srcdir kafgres-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:kafgres requires PostgreSQL 15 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:kafgres requires PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
@@ -16,6 +16,7 @@ URL:		https://github.com/RayElg/kafgres
 Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.3.tar.gz
 Patch0:		kafgres-0.3.3-pgrx-0.20.1.patch
+Patch1:		kafgres-0.3.3-pg19.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -31,6 +32,7 @@ The table engine stores the message log in PostgreSQL tables.
 %prep
 %setup -q -n %{srcdir}
 patch -p1 --fuzz=0 < %{PATCH0}
+patch -p1 --fuzz=0 < %{PATCH1}
 find . -type f -name '._*' -delete
 
 %build
@@ -79,6 +81,7 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %changelog
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.3.3-1PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+- Support PostgreSQL 19 logical decoding, wait sets and segment I/O.
 
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.3-1PGSTY
 - Update to 0.3.3 and build for PostgreSQL 15 through 18 with pgrx 0.20.0.

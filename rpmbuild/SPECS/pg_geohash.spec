@@ -20,7 +20,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	4PGSTY%{?dist}
+Release:	5PGSTY%{?dist}
 Summary:	Geohashing library for HAWQ, Greenplum DB, PostgreSQL
 License:	MIT
 URL:		https://github.com/jistok/pg_geohash
@@ -62,6 +62,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.0-5PGSTY
+- Supersede the published split-bitcode build with a distinct RPM release.
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.0-4PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

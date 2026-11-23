@@ -20,7 +20,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.1.2
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Hydra: Column-oriented Postgres. Add scalable analytics to your project in minutes.
 License:	AGPL-3.0-only AND MIT AND PostgreSQL
 URL:		https://github.com/hydradatabase/columnar
@@ -69,6 +69,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.1.2-2PGSTY
+- Supersede the published split packages for PostgreSQL 15 and 16
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.1.2-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

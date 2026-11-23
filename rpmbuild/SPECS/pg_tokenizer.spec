@@ -3,17 +3,18 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?cargo_target_dir:%global cargo_target_dir %{_builddir}/%{sname}-%{version}/target}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:pg_tokenizer only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_tokenizer only supports PostgreSQL 15 through 19}
 %endif
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	1.1.0
+Version:	1.2.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL tokenizer extension for full-text search
 License:	Apache-2.0
 URL:		https://vchord.pgsty.com/
 Source0:    %{sname}-%{version}.tar.gz
+Patch0:     pg_tokenizer-1.2.0-pgrx-0.20.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang clang-devel rust rustfmt
@@ -25,22 +26,23 @@ A PostgreSQL extension that provides tokenizers for full-text search.
 %prep
 %setup -q -n %{sname}-%{version}
 # GitHub tag archive: https://github.com/pgsty/pg_tokenizer/archive/refs/tags/v%{version}.tar.gz
-# No downstream patch is applied.
+patch --batch --fuzz=0 -p1 < %{PATCH0}
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export CARGO_TARGET_DIR=%{cargo_target_dir}
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=a304d086682fb33d16c8be39bfb756edc43c75e6fc7613793c103b3167e93746
+LOCK_EXPECTED=9e9104a0e4b00d8bbef22dc020cdca16bf0f18e733384db5787322c716c03f4b
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -62,6 +64,7 @@ mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
 cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
 cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
 cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+install -m 644 sql/upgrade/%{pname}--*--*.sql %{buildroot}%{pginstdir}/share/extension/
 
 %files
 %doc README.md
@@ -72,6 +75,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
+- Build upstream 1.2.0 for PostgreSQL 15 through 19
+- Update the locked pgrx and pgrx-tests crates to 0.20.1
+
 * Mon Nov 09 2026 Vonng <rh@vonng.com> - 1.1.0-1PGSTY
 - Update to upstream 1.1.0 with tokenizer permission and cache fixes.
 - Refresh the upstream Cargo.lock checksum and retain pgrx 0.19.3.

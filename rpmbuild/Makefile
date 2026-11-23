@@ -960,7 +960,7 @@ ddlx:			# fix pgdg 18 missing
 pglinter:
 	./build pglinter 15 16 17 18 19
 
-pgdd:			# rust pgrx 0.20.0
+pgdd:			# rust pgrx 0.20.1
 	./build pgdd 15 16 17 18 19
 
 pg_strict:		# rust pgrx 0.20.1

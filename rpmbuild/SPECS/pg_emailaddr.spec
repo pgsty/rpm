@@ -20,7 +20,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0
-Release:	3PGSTY%{?dist}
+Release:	4PGSTY%{?dist}
 Summary:	Email address type for PostgreSQL
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/petere/pgemailaddr
@@ -61,6 +61,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 0-4PGSTY
+- Supersede the published split-bitcode build with a distinct RPM release.
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 0-3PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

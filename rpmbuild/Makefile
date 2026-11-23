@@ -963,7 +963,7 @@ pglinter:
 pgdd:			# rust pgrx 0.20.0
 	./build pgdd 15 16 17 18 19
 
-pg_strict:		# rust pgrx 0.20.0
+pg_strict:		# rust pgrx 0.20.1
 	./build pg_strict 15 16 17 18 19
 
 preprepare:

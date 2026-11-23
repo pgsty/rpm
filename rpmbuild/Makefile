@@ -413,7 +413,7 @@ pgcontext:		# rust pgrx 0.19.2, clean-install only; PG17/18
 pgzint:			# deferred: active EL repos do not provide Zint 2.14+
 	@echo "pgzint is deferred; zint-devel 2.14 or newer is unavailable in active EL repos"
 
-pgrdf:			# rust pgrx 0.20.0
+pgrdf:			# rust pgrx 0.20.1
 	./build pgrdf 15 16 17 18 19
 
 pgwasm:		# rust pgrx 0.20.0, Wasmtime 44

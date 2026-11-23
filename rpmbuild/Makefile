@@ -494,7 +494,7 @@ pg_ivm:
 pg_incremental:
 	./build pg_incremental 16 17 18 19
 
-pg_trickle:		# rust pgrx 0.20.0
+pg_trickle:		# rust pgrx 0.20.1
 	./build pg_trickle 18 19
 
 pg_local_cache:	# shared_preload_libraries

@@ -15,7 +15,7 @@ License:	Apache-2.0
 URL:		https://github.com/trickle-labs/pg-trickle
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pg-trickle-0.108.3.patch
-Patch1:         pg-trickle-0.108.3-pgrx-0.20.0.patch
+Patch1:         pg-trickle-0.108.3-pgrx-0.20.1.patch
 #           https://github.com/trickle-labs/pg-trickle/releases/tag/v0.108.3
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -43,7 +43,7 @@ cd %{_builddir}/%{srcdir}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -86,6 +86,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.108.3-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.108.3-2PGSTY
 - Rebuild for PostgreSQL 18 through 19 with pgrx 0.20.0.
 

@@ -1318,7 +1318,7 @@ pgclone:
 pgcopydb:
 	./build pgcopydb 15 16 17 18 19
 
-pgmqtt:			# rust pgrx 0.20.0; SQL extension 0.4.1
+pgmqtt:			# rust pgrx 0.20.1; SQL extension 0.4.1
 	./build pgmqtt 15 16 17 18 19
 
 decoder_raw:

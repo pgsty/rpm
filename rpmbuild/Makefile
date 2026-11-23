@@ -75,7 +75,7 @@ time: timescaledb timescaledb_toolkit pg_timeseries periods temporal_tables emaj
 timescaledb:
 	./build timescaledb 16 17 18
 
-timescaledb_toolkit:	# rust pgrx 0.20.0, post-install upgrade scripts
+timescaledb_toolkit:	# rust pgrx 0.20.1, post-install upgrade scripts
 	./build timescaledb_toolkit 16 17 18 19
 
 pg_timeseries:

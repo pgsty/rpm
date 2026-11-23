@@ -14,7 +14,7 @@ License:	LicenseRef-Timescale
 URL:		https://github.com/timescale/timescaledb-toolkit
 Source0:	%{sname}-%{version}.tar.gz
 #           https://codeload.github.com/timescale/timescaledb-toolkit/tar.gz/refs/tags/1.28.0
-Patch0:		timescaledb-toolkit-1.28.0-pgrx-0.20.0.patch
+Patch0:		timescaledb-toolkit-1.28.0-pgrx-0.20.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt gcc make pkgconfig openssl-devel
@@ -38,7 +38,7 @@ export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_INCREMENTAL=0
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -80,6 +80,9 @@ install -m 644 LICENSE NOTICE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 1.28.0-1PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.28.0-1PGSTY
 - Update to 1.28.0 and build for PostgreSQL 16 through 19 with pgrx 0.20.0.
 

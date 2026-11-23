@@ -14,7 +14,7 @@ Summary:	OIDC bearer-token validator for PostgreSQL
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/UnAfraid/pg_oidc_validator_rust
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:         pg-oidc-validator-rust-0.1.0-pgrx-0.20.0.patch
+Patch0:         pg-oidc-validator-rust-0.1.0-pgrx-0.20.1.patch
 # Source0 is the upstream master snapshot at commit b65bbbe288f84fab91d58b8304e8a526d1326af5:
 # https://github.com/UnAfraid/pg_oidc_validator_rust/archive/b65bbbe288f84fab91d58b8304e8a526d1326af5.tar.gz
 
@@ -36,12 +36,13 @@ oauth_validator_libraries = 'oidc_validator' to load the module.
 %patch -P0 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/pg_oidc_validator_rust-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -72,6 +73,9 @@ readelf -Ws target/release/lib%{pname}.so | grep -q _PG_oauth_validator_module_i
 %{pginstdir}/lib/%{pname}.so
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-3PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-3PGSTY
 - Rebuild for PostgreSQL 18 through 19 with pgrx 0.20.0.
 

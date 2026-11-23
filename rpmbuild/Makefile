@@ -1149,7 +1149,7 @@ pg_vault_tde:	# shared_preload_libraries, PostgreSQL 17+, EL9/EL10 only
 pg_session_jwt:		# rust pgrx 0.20.0
 	./build pg_session_jwt 15 16 17 18 19
 
-pg_oidc_validator_rust:	# rust pgrx 0.20.0, PostgreSQL OAuth validator
+pg_oidc_validator_rust:	# rust pgrx 0.20.1, PostgreSQL OAuth validator
 	./build pg_oidc_validator_rust 18 19
 
 pg_oidc_validator:	# C++23, PostgreSQL 18 OAuth validator

@@ -15,6 +15,9 @@ Source0:        %{sname}-%{version}.tar.gz
 
 BuildRequires:  gcc make pgdg-srpm-macros >= 1.0.27
 BuildRequires:  postgresql%{pgmajorversion}-devel
+%if 0%{?pgmajorversion} >= 19
+BuildRequires:  postgresql%{pgmajorversion}-static
+%endif
 BuildRequires:  gc-devel ncurses-devel numactl-devel
 BuildRequires:  libedit-devel readline-devel
 BuildRequires:  libselinux-devel libxslt-devel

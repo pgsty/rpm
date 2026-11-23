@@ -367,7 +367,7 @@ pg_clickhouse:
 duckdb_fdw:
 	./build duckdb_fdw 15 16 17 18 19
 
-pg_parquet:			# rust pgrx 0.20.0
+pg_parquet:			# rust pgrx 0.20.1
 	./build pg_parquet 15 16 17 18 19
 
 pg_ducklake:             # EL9+ only: EL8/GCC8 filesystem support is unverified

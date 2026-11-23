@@ -295,7 +295,7 @@ textsearch_intl:
 pg_tre:
 	./build pg_tre 17 18 19
 
-pg_table_range:          # rust pgrx 0.20.0
+pg_table_range:          # rust pgrx 0.20.1
 	./build pg_table_range 16 17 18 19
 
 codesystem:

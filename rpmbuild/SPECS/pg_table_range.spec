@@ -1,7 +1,7 @@
 %global pname pg_table_range
 %global sname pg_table_range
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global pgrx_version 0.20.0
+%global pgrx_version 0.20.1
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
 %{error:pg_table_range requires PostgreSQL 16 through 19}
@@ -17,7 +17,7 @@ Source0:        %{sname}-%{version}.tar.gz
 # Upstream omits Cargo.lock.
 Patch0:         pg-table-range-0.1.2-lockfile.patch
 Patch1:         pg-table-range-0.1.2-licenses.patch
-Patch2:         pg-table-range-0.1.2-pgrx-0.20.0.patch
+Patch2:         pg-table-range-0.1.2-pgrx-0.20.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt python3
@@ -76,6 +76,9 @@ cp -a sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extension/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.1.2-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.2-2PGSTY
 - Rebuild for PostgreSQL 16 through 19 with pgrx 0.20.0.
 

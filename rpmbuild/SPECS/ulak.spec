@@ -30,7 +30,11 @@ Summary:	Transactional outbox extension with background-worker delivery
 License:	Apache-2.0
 URL:		https://github.com/zeybek/ulak
 Source0:	%{sname}-%{version}.tar.gz
+%if 0%{?rhel} == 8
+Patch0:         ulak-0.2.0.patch
+%else
 Patch0:		ulak-0.3.0-hiredis-keepalive.patch
+%endif
 Patch1:        ulak-0.3.0-pg19-compat.patch
 #           https://github.com/zeybek/ulak/archive/refs/tags/v0.3.0.tar.gz
 #           Built with HTTP, Kafka, MQTT, Redis, and AMQP dispatchers on EL9; upstream NATS support is left disabled because cnats packages are unavailable in the builder repos
@@ -86,6 +90,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} ENABLE_KAFKA=1 ENABLE_MQT
 %endif
 
 %changelog
+* Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
+- Use the existing curl_multi_wait compatibility patch on EL8.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
 - Update to upstream 0.3.0.
 - Adapt PostgreSQL 19 numeric error handling and retain the EL9 hiredis fix.

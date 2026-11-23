@@ -14,7 +14,7 @@ Summary:	Postgres Foreign Data Wrappers by Supabase
 License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
 Source0:    wrappers-%{version}.tar.gz
-Patch0:     wrappers-0.6.4-pgrx-0.20.0.patch
+Patch0:     wrappers-0.6.4-pgrx-0.20.1.patch
 #           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -32,10 +32,11 @@ and supports a growing set of FDWs for external services and data platforms.
 
 %prep
 %setup -q -n %{srcdir}
-# Migrate the upstream manifests and lockfile to pgrx 0.20.0.
+# Migrate the upstream manifests and lockfile to pgrx 0.20.1.
 patch --batch --fuzz=0 -p1 < %{PATCH0}
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 %set_build_flags
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
@@ -44,7 +45,7 @@ export CARGO_PROFILE_RELEASE_LTO="${CARGO_PROFILE_RELEASE_LTO:-thin}"
 cd %{_builddir}/%{srcdir}/%{pname}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -91,6 +92,9 @@ export PATH=%{_builddir}/%{srcdir}/.rpm-tools:$PATH
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.6.4-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.6.4-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

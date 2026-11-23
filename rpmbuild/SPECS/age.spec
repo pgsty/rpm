@@ -24,7 +24,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.8.0
-Release:	1PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Graph Processing & Analytics for Relational Databases for PostgreSQL %{pgmajorversion}
 License:	Apache-2.0
 URL:		https://github.com/apache/age
@@ -69,6 +69,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.8.0-2PGSTY
+- Supersede the published split build with bitcode in the main package
+
 * Fri Sep 04 2026 Vonng <rh@vonng.com> - 1.8.0-1PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

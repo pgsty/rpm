@@ -17,6 +17,7 @@ Source0:	%{sname}-%{version}.tar.gz
 #           https://gitlab.com/dalibo/postgresql_anonymizer/-/archive/3.3.2/postgresql_anonymizer-3.3.2.tar.gz
 Patch0:		pg-anon-3.3.2-lock-version.patch
 Patch1:         pg-anon-3.3.2-pgrx-0.20.1.patch
+Patch2:         pg-anon-3.3.2-sql-order.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -32,6 +33,7 @@ PostgreSQL database.
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %patch -P1 -p1
+%patch -P2 -p1
 
 %build
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
@@ -80,6 +82,9 @@ cp -a %{_builddir}/%{srcdir}/data/fr_FR %{buildroot}%{pginstdir}/share/extension
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Nov 24 2026 Ruohang Feng <rh@vonng.com> - 3.3.2-2PGSTY
+- Order generated SQL so the anon schema is trusted before masking policies use it.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 3.3.2-2PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

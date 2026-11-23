@@ -15,7 +15,7 @@ License:	Elastic-2.0
 URL:		https://github.com/RayElg/kafgres
 Source0:	%{sname}-%{version}.tar.gz
 #           https://github.com/RayElg/kafgres/archive/refs/tags/0.3.3.tar.gz
-Patch0:		kafgres-0.3.3-pgrx-0.20.0.patch
+Patch0:		kafgres-0.3.3-pgrx-0.20.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -34,12 +34,13 @@ patch -p1 --fuzz=0 < %{PATCH0}
 find . -type f -name '._*' -delete
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{srcdir}/extension
 export PATH=%{pginstdir}/bin:${PGRX_BIN_DIR:-$HOME/.cargo/bin}:$PATH
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -76,6 +77,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.3.3-1PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.3-1PGSTY
 - Update to 0.3.3 and build for PostgreSQL 15 through 18 with pgrx 0.20.0.
 

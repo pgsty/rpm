@@ -503,7 +503,7 @@ pg_local_cache:	# shared_preload_libraries
 pg_durable:		# rust pgrx 0.20.1, shared_preload_libraries
 	./build pg_durable 15 16 17 18 19
 
-pgs3:			# rust pgrx 0.20.0, shared_preload_libraries
+pgs3:			# rust pgrx 0.20.1, shared_preload_libraries
 	./build pgs3 17 18 19
 
 provsql:

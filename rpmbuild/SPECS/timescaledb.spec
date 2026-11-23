@@ -15,12 +15,12 @@ URL:		https://github.com/timescale/timescaledb
 # New composite datum symbols require the November 2026 security minors.
 %if 0%{?pgmajorversion} == 18
 %global pg_min_version 18.7
-%elif 0%{?pgmajorversion} == 17
+%endif
+%if 0%{?pgmajorversion} == 17
 %global pg_min_version 17.12
-%elif 0%{?pgmajorversion} == 16
+%endif
+%if 0%{?pgmajorversion} == 16
 %global pg_min_version 16.16
-%else
-%{error:unsupported PostgreSQL major version}
 %endif
 
 BuildRequires:	postgresql%{pgmajorversion}-devel >= %{pg_min_version}
@@ -70,6 +70,7 @@ rm -rf %{buildroot}%{pginstdir}/lib/pgxs/src/test/perl/
 %changelog
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.32.1-1PGSTY
 - Update to upstream 2.32.1.
+- Use PG version conditionals supported by EL8 RPM.
 
 * Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 2.32.0-1PGSTY
 - Update to upstream 2.32.0.

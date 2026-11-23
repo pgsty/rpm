@@ -15,7 +15,7 @@ License:	BSD-3-Clause
 URL:		https://github.com/jnicholls/pgwasm
 Source0:	%{sname}-%{version}.tar.gz
 Patch0:		pgwasm-0.1.0-runtime-defaults-fix.patch
-Patch1:         pgwasm-0.1.0-pgrx-0.20.0.patch
+Patch1:         pgwasm-0.1.0-pgrx-0.20.1.patch
 # Source0 is the upstream main snapshot at commit 535b53363f8208af139e757e508e66c46309ee29:
 # https://github.com/jnicholls/pgwasm/archive/535b53363f8208af139e757e508e66c46309ee29.tar.gz
 
@@ -36,12 +36,13 @@ patch --batch --fuzz=0 -p1 < %{PATCH0}
 %patch -P1 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{commit}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -87,6 +88,9 @@ PACKAGE_TARGET="${CARGO_TARGET_DIR:-%{_builddir}/%{sname}-%{commit}/target}"
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

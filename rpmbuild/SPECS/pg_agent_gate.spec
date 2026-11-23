@@ -1,7 +1,7 @@
 %global pname pg_agent_gate
 %global sname pg_agent_gate
 %global pginstdir /usr/pgsql-%{pgmajorversion}
-%global pgrx_version 0.20.0
+%global pgrx_version 0.20.1
 
 %if 0%{?pgmajorversion} < 18 || 0%{?pgmajorversion} > 19
 %{error:pg_agent_gate requires PostgreSQL 18 through 19}
@@ -16,7 +16,7 @@ URL:            https://github.com/Manuelreyesbravo/pg_agent_gate
 Source0:        %{sname}-%{version}.tar.gz
 # https://github.com/Manuelreyesbravo/pg_agent_gate/archive/refs/tags/v0.4.3.tar.gz
 # SHA256: b5133bbf7094c3887791b43fa6e916f2a335c70f585c05b709f7a85b0dd4aef6
-Patch0:         pg-agent-gate-0.4.3-pgrx-0.20.0.patch
+Patch0:         pg-agent-gate-0.4.3-pgrx-0.20.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -34,6 +34,7 @@ Optional bound assertions use the separate pg_living_assertions extension.
 patch -p1 --fuzz=0 < %{PATCH0}
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
@@ -67,6 +68,9 @@ cp -a sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extension/
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.4.3-1PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.4.3-1PGSTY
 - Update to 0.4.3 and build for PostgreSQL 18 through 19 with pgrx 0.20.0.
 

@@ -840,7 +840,7 @@ hdr_histogram:
 pg_improv:		# rust pgrx 0.20.0
 	./build pg_improv 15 16 17 18 19
 
-pg_agent_gate:           # rust pgrx 0.20.0
+pg_agent_gate:           # rust pgrx 0.20.1
 	./build pg_agent_gate 18 19
 
 pg_integrity_checksums:  # SQL extension, unrelated to the pg_checksums utility

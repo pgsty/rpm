@@ -906,7 +906,7 @@ pg_financial:
 pg_accumulator:
 	./build pg_accumulator 15 16 17 18 19
 
-pg_convert:		# rust pgrx 0.20.0
+pg_convert:		# rust pgrx 0.20.1
 	./build pg_convert 15 16 17 18 19
 
 parray_gin:

@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?cargo_target_dir:%global cargo_target_dir %{_builddir}/%{sname}-%{version}/target}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:vchord_bm25 only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:vchord_bm25 only supports PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.1.0
+Version:	1.2.0
 Release:	1PGSTY%{?dist}
 Summary:	Native BM25 Ranking Index in PostgreSQL
 License:	AGPL-3.0-only
@@ -32,19 +32,20 @@ and a new index format that is not compatible with upstream 0.3.0 indexes.
 # No downstream patch is applied.
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/vchord_bm25-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export CARGO_TARGET_DIR=%{cargo_target_dir}
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=7b5c0ced620a2361ea1ad1adbd92529bd2d371b6259fdf263e24ef0c9d2cb9a8
+LOCK_EXPECTED=55bff64dbfffe27d8321de90c8709ed27b1b65adcbf3c071e773745b53227205
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -81,6 +82,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
+- Build upstream 1.2.0 for PostgreSQL 15 through 19 with pgrx 0.20.1
+- Include the upstream 1.1.0 to 1.2.0 upgrade script
+
 * Mon Nov 09 2026 Vonng <rh@vonng.com> - 1.1.0-1PGSTY
 - Update to upstream 1.1.0 with the Block-WAND score-bound correction.
 - Refresh the upstream Cargo.lock checksum and retain pgrx 0.19.3.

@@ -316,7 +316,7 @@ pg_fts:
 lead:           # upstream snapshot, SQL extension tin, rust pgrx 0.20.1
 	./build lead 17 18
 
-stannum:        # upstream snapshot, rust pgrx 0.20.0
+stannum:        # upstream snapshot, rust pgrx 0.20.1
 	./build stannum 17 18
 
 acdat:

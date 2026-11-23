@@ -245,7 +245,7 @@ pgmnemo:
 ###############################################################
 #                       Category: FTS                         #
 ###############################################################
-pg_search:      # rust pgrx 0.20.0, OpenBLAS
+pg_search:      # rust pgrx 0.20.1, OpenBLAS
 	./build pg_search 15 16 17 18
 
 # Groonga is independent of the PostgreSQL major; build it once per EL/architecture.

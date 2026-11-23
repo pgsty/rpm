@@ -471,7 +471,7 @@ pg_jsonschema:	# rust pgrx 0.20.1
 jsonschema:		# rust pgrx 0.20.1, distinct from pg_jsonschema
 	./build jsonschema 15 16 17 18 19
 
-pg_mentat:		# rust pgrx 0.20.0
+pg_mentat:		# rust pgrx 0.20.1
 	./build pg_mentat 15 16 17 18 19
 
 #jsquery:

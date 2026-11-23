@@ -425,7 +425,7 @@ pgmq:
 pg_statecharts:             # pure SQL, includes the optional dev subpackage
 	./build pg_statecharts 16 17 18 19
 
-pg_warren:                  # rust pgrx 0.20.0
+pg_warren:                  # rust pgrx 0.20.1
 	./build pg_warren 15 16 17 18 19
 
 .PHONY: pg_statecharts pg_warren

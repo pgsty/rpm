@@ -12,7 +12,7 @@ Summary:        Graph traversal and computation over PostgreSQL tables
 License:        Apache-2.0
 URL:            https://github.com/ExaDev/pg_warren
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:         pg-warren-0.8.0-pgrx-0.20.0.patch
+Patch0:         pg-warren-0.8.0-pgrx-0.20.1.patch
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
 Requires:       postgresql%{pgmajorversion}-server
@@ -32,7 +32,7 @@ export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG=2
 export CARGO_PROFILE_RELEASE_STRIP=none
-test "$(cargo pgrx --version | awk '{print $2}')" = 0.20.0
+test "$(cargo pgrx --version | awk '{print $2}')" = 0.20.1
 cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 sha256sum Cargo.lock > .cargo-lock.before
 cargo fetch --locked
@@ -57,6 +57,9 @@ install -m 644 package%{pginstdir}/share/extension/pg_warren--*.sql %{buildroot}
 %{pginstdir}/share/extension/pg_warren--*.sql
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.8.0-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.8.0-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

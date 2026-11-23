@@ -1,6 +1,6 @@
 %global pname pg_money
 %global sname pg_money
-%global pgrx_version 0.20.0
+%global pgrx_version 0.20.1
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
@@ -14,7 +14,7 @@ Summary:        Precise currency-aware money types for PostgreSQL
 License:        MIT
 URL:            https://github.com/RustedBytes/pg-money
 Source0:        pg_money-0.3.0.tar.gz
-Patch0:         pg-money-0.3.0-pgrx-0.20.0.patch
+Patch0:         pg-money-0.3.0-pgrx-0.20.1.patch
 # Source: https://codeload.github.com/RustedBytes/pg-money/tar.gz/v0.3.0
 # SHA256: 2b9c12ab9c17115685983548d211fa618143a70a1e01d08f91636848b5bf469b
 
@@ -31,6 +31,7 @@ Precise currency-aware money types for PostgreSQL.
 %patch -P0 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG=2
 export CARGO_PROFILE_RELEASE_STRIP=none
 export CARGO_BUILD_JOBS=4
@@ -58,6 +59,9 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

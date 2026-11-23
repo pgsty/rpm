@@ -37,15 +37,20 @@ Patch1:		pg_variables-1.2.5-composite-datum.patch
 # New composite datum symbols require the November 2026 security minors.
 %if 0%{?pgmajorversion} == 19
 %global pg_min_version 19.0
-%elif 0%{?pgmajorversion} == 18
+%endif
+%if 0%{?pgmajorversion} == 18
 %global pg_min_version 18.7
-%elif 0%{?pgmajorversion} == 17
+%endif
+%if 0%{?pgmajorversion} == 17
 %global pg_min_version 17.12
-%elif 0%{?pgmajorversion} == 16
+%endif
+%if 0%{?pgmajorversion} == 16
 %global pg_min_version 16.16
-%elif 0%{?pgmajorversion} == 15
+%endif
+%if 0%{?pgmajorversion} == 15
 %global pg_min_version 15.20
-%else
+%endif
+%if 0%{?pgmajorversion} < 15
 %{error:unsupported PostgreSQL major version}
 %endif
 
@@ -90,6 +95,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} LLVM_BINPATH=%{llvm_binpa
 %changelog
 * Sat Nov 21 2026 Vonng <rh@vonng.com> - 1.2.5-2PGSTY
 - Keep PostgreSQL 19 disabled after regression review; omit the unaccepted patch.
+- Use PostgreSQL version conditionals supported by EL8 RPM.
 
 * Thu Nov 19 2026 Ruohang Feng <rh@vonng.com> - 1.2.5-2PGSTY
 - Preserve composite datum versions when copying stored records.

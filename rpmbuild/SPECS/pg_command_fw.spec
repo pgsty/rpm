@@ -13,7 +13,7 @@ Summary:	DDL and utility command firewall for PostgreSQL
 License:	BSD-3-Clause
 URL:		https://github.com/rustwizard/pg_command_fw
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:         pg-command-fw-0.1.0-pgrx-0.20.0.patch
+Patch0:         pg-command-fw-0.1.0-pgrx-0.20.1.patch
 #           normalized source tarball from the upstream PGXN release archive
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -31,12 +31,13 @@ hooks.
 %patch -P0 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 cd %{_builddir}/%{sname}-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -73,6 +74,9 @@ install -m 644 %{_builddir}/%{sname}-%{version}/LICENSE %{buildroot}%{_licensedi
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-4PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-4PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

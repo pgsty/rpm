@@ -1179,7 +1179,7 @@ pg_snakeoil:
 pgextwlist:
 	./build pgextwlist 15 16 17 18 19
 
-pg_command_fw:		# rust pgrx 0.20.0
+pg_command_fw:		# rust pgrx 0.20.1
 	./build pg_command_fw 15 16 17 18 19
 
 block_copy_command:	# rust pgrx 0.20.1

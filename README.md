@@ -11,10 +11,11 @@ Extension build scripts for PostgreSQL 15–19 on EL9/EL10.
 The active targets are PostgreSQL 15–19 and EL9/EL10 on x86_64/aarch64.
 PG19 is enabled per extension after validation; the default target list does
 not imply that every extension supports it. PG14 and EL8 are retired from
-active orchestration. The [Rust/pgrx 0.20.0 pilot](doc/rust-pgrx-0.20.0-pilot.md)
+active orchestration. The [Rust/pgrx 0.20.1 pilot](doc/rust-pgrx-0.20.1-pilot.md)
 records the lowest and highest PG versions tested per extension on Rocky Linux
-9.9/aarch64 and Ubuntu 24.04/amd64. Heavy components and custom PostgreSQL
-providers have separate build records.
+9.9/aarch64 and Ubuntu 24.04/amd64, including PG19 patches and the first
+errors for extensions awaiting upstream changes. Heavy components and custom
+PostgreSQL providers have separate build records.
 
 The [2026-11-21 audit](doc/nonrust-pg19-20261121.md) and its
 [machine-readable support matrix](doc/nonrust-pg19-20261121.json) record

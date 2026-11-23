@@ -77,3 +77,5 @@ doc/*
 !doc/pg_regresql-2.2.0-validation.md
 !doc/rust-pgrx-0.20.0-pilot.md
 !doc/rust-pgrx-0.20.0-pilot.json
+!doc/rust-pgrx-0.20.1-pilot.md
+!doc/rust-pgrx-0.20.1-pilot.json

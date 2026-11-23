@@ -20,7 +20,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0
-Release:	2PGSTY%{?dist}
+Release:	3PGSTY%{?dist}
 Summary:	PostgreSQL extension for an effective similarity search
 License:	LicenseRef-Upstream-No-License
 URL:		https://github.com/jirutka/smlar
@@ -60,6 +60,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.0-3PGSTY
+- Supersede the published split-bitcode build with a distinct RPM release.
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.0-2PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

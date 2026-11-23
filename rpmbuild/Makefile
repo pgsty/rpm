@@ -465,7 +465,7 @@ pg_ttl_index:
 pg_graphql:		# rust pgrx 0.20.1
 	./build pg_graphql 15 16 17 18 19
 
-pg_jsonschema:	# rust pgrx 0.20.0
+pg_jsonschema:	# rust pgrx 0.20.1
 	./build pg_jsonschema 15 16 17 18 19
 
 jsonschema:		# rust pgrx 0.20.1, distinct from pg_jsonschema

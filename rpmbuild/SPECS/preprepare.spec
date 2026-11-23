@@ -20,7 +20,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.9
-Release:	2PGSTY%{?dist}
+Release:	3PGSTY%{?dist}
 Summary:	PostgreSQL prepare statements made pooling friendly
 License:	PostgreSQL
 URL:		https://github.com/dimitri/preprepare
@@ -59,6 +59,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 0.9-3PGSTY
+- Supersede the published split-bitcode build with a distinct RPM release.
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 0.9-2PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

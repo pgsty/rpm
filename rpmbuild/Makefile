@@ -1182,7 +1182,7 @@ pgextwlist:
 pg_command_fw:		# rust pgrx 0.20.0
 	./build pg_command_fw 15 16 17 18 19
 
-block_copy_command:	# rust pgrx 0.20.0
+block_copy_command:	# rust pgrx 0.20.1
 	./build block_copy_command 15 16 17 18 19
 
 sslutils:

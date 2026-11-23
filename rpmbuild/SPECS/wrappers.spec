@@ -3,6 +3,12 @@
 %global srcdir wrappers-%{version}
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
+%ifarch x86_64
+%if 0%{?rhel} >= 9
+%global patch_cityhash 1
+%endif
+%endif
+
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
 %{error:wrappers requires PostgreSQL 15 through 19}
 %endif
@@ -15,10 +21,15 @@ License:	Apache-2.0
 URL:		https://github.com/supabase/wrappers
 Source0:    wrappers-%{version}.tar.gz
 Patch0:     wrappers-0.6.4-pgrx-0.20.1.patch
+Patch1:     wrappers-0.6.4-cityhash-linkage.patch
 #           https://github.com/supabase/wrappers/archive/refs/tags/v0.6.4.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	clang
+BuildRequires:	binutils
+%if 0%{?patch_cityhash}
+BuildRequires:	python3
+%endif
 %if 0%{?rhel} == 8
 BuildRequires:	file
 %endif
@@ -56,6 +67,17 @@ cargo fetch --locked
 LOCK_FILE=../Cargo.lock
 LOCK_SHA256=$(sha256sum "$LOCK_FILE" | awk '{print $1}')
 
+%if 0%{?patch_cityhash}
+set -o pipefail
+CITYHASH_MANIFEST=$(cargo metadata --locked --offline --format-version=1 \
+    --filter-platform "$(rustc -vV | sed -n 's/^host: //p')" \
+    --no-default-features --features pg%{pgmajorversion},clickhouse_fdw |
+    python3 -c 'import json, sys; crate, = [p for p in json.load(sys.stdin)["packages"] if p["name"] == "clickhouse-rs-cityhash-sys" and p["version"] == "0.1.2"]; print(crate["manifest_path"])')
+cp -R "$(dirname "$CITYHASH_MANIFEST")" ../pgsty-cityhash
+patch --batch --fuzz=0 -d ../pgsty-cityhash -p1 < %{PATCH1}
+sed -i '1i paths = ["pgsty-cityhash"]' ../.cargo/config.toml
+%endif
+
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
 CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion},all_fdws --pg-config %{pginstdir}/bin/pg_config
 test "$LOCK_SHA256" = "$(sha256sum "$LOCK_FILE" | awk '{print $1}')" || {
@@ -84,6 +106,12 @@ chmod 755 %{_builddir}/%{srcdir}/.rpm-tools/file
 export PATH=%{_builddir}/%{srcdir}/.rpm-tools:$PATH
 %endif
 
+%check
+nm -D --undefined-only %{buildroot}%{pginstdir}/lib/%{pname}-%{version}.so > wrappers.undefined
+if grep 'CityHash' wrappers.undefined >&2; then
+    exit 1
+fi
+
 %files
 %license LICENSE
 %{pginstdir}/lib/%{pname}-%{version}.so
@@ -94,6 +122,7 @@ export PATH=%{_builddir}/%{srcdir}/.rpm-tools:$PATH
 %changelog
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.6.4-2PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+- Fix ClickHouse CityHash linkage on EL9 and EL10 x86_64 with SSE4.2.
 
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.6.4-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.

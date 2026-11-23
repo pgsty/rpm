@@ -210,7 +210,7 @@ pg_vectorsearch:  # upstream alpha, PostgreSQL 18/19 validated
 pg_turbovec:	# rust pgrx 0.20.1
 	./build pg_turbovec 15 16 17 18 19
 
-pg_vectorize:	# rust pgrx 0.20.0; SQL extension 0.23.0
+pg_vectorize:	# rust pgrx 0.20.1; SQL extension 0.23.0
 	./build pg_vectorize 15 16 17 18 19
 
 pg_similarity:	# covered by pgdg

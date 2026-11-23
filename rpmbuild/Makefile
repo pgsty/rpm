@@ -799,7 +799,7 @@ pgsparql:
 pg_idkit:			# rust pgrx 0.20.1
 	./build pg_idkit 15 16 17 18 19
 
-pgx_ulid:			# rust pgrx 0.20.0
+pgx_ulid:			# rust pgrx 0.20.1
 	./build pgx_ulid 15 16 17 18 19
 
 pg_uuid_v8:

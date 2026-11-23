@@ -33,19 +33,23 @@ Requires:	postgresql%{pgmajorversion}-server
 BuildRequires: postgresql15-devel >= 15.20
 BuildRequires: libpgfeutils15 >= 15.20
 Requires: postgresql15-server >= 15.20
-%elif 0%{?pgmajorversion} == 16
+%endif
+%if 0%{?pgmajorversion} == 16
 BuildRequires: postgresql16-devel >= 16.16
 BuildRequires: libpgfeutils16 >= 16.16
 Requires: postgresql16-server >= 16.16
-%elif 0%{?pgmajorversion} == 17
+%endif
+%if 0%{?pgmajorversion} == 17
 BuildRequires: postgresql17-devel >= 17.12
 BuildRequires: libpgfeutils17 >= 17.12
 Requires: postgresql17-server >= 17.12
-%elif 0%{?pgmajorversion} == 18
+%endif
+%if 0%{?pgmajorversion} == 18
 BuildRequires: postgresql18-devel >= 18.7
 BuildRequires: libpgfeutils18 >= 18.7
 Requires: postgresql18-server >= 18.7
-%elif 0%{?pgmajorversion} == 19
+%endif
+%if 0%{?pgmajorversion} == 19
 BuildRequires: postgresql19-devel >= 19.0
 BuildRequires: postgresql19-static >= 19.0
 Requires: postgresql19-server >= 19.0
@@ -85,6 +89,7 @@ USE_PGXS=1 PATH=%{pginstdir}/bin/:$PATH %{__make} %{with_llvm_arg} DESTDIR=%{bui
 %changelog
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.1.10-1PGSTY
 - Update to 2.1.10; use upstream control and shared-memory offset fixes.
+- Use PG version conditionals supported by EL8 RPM.
 
 * Fri Nov 06 2026 Vonng <rh@vonng.com> - 2.1.9-1PGSTY
 - Fix byte offsets in shared lock state allocation

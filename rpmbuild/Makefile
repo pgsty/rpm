@@ -894,7 +894,7 @@ pg_base36:
 pg_base62:
 	./build pg_base62 15 16 17 18 19
 
-pg_base58:		# rust pgrx 0.20.0
+pg_base58:		# rust pgrx 0.20.1
 	./build pg_base58 15 16 17 18 19
 
 pg_financial:

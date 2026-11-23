@@ -13,7 +13,7 @@ Summary:	Use PRQL in PostgreSQL
 License:	Apache-2.0
 URL:		https://github.com/kaspermarstal/plprql
 Source0:    plprql-%{version}.tar.gz
-Patch0:         plprql-18.0.2-pgrx-0.20.0.patch
+Patch0:         plprql-18.0.2-pgrx-0.20.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt
@@ -32,13 +32,14 @@ PRQL introduces a pipeline concept (similar to Unix pipes) that transforms data 
 %patch -P0 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 WORKSPACE_ROOT=%{_builddir}/%{sname}-%{version}
 cd "$WORKSPACE_ROOT"
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 
-PGRX_VERSION=0.20.0
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
@@ -71,6 +72,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 18.0.2-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 18.0.2-2PGSTY
 - Rebuild for PostgreSQL 15 through 19 with pgrx 0.20.0.
 

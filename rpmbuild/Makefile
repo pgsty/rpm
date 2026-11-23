@@ -198,8 +198,8 @@ pg_tzf:         # rust pgrx 0.20.1
 pgvector:  # skip, handled by pgdg
 	./build pgvector 15 16 17 18 19
 
-vchord:    # rust pgrx 0.19.3
-	./build vchord 15 16 17 18
+vchord:    # rust pgrx 0.20.1
+	./build vchord 15 16 17 18 19
 
 pgvectorscale:  # rust pgrx 0.19.2
 	./build pgvectorscale 15 16 17 18

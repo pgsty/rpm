@@ -3,12 +3,12 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 %{!?cargo_target_dir:%global cargo_target_dir %{_builddir}/%{sname}-%{version}/target}
 
-%if 0%{?pgmajorversion} < 14 || 0%{?pgmajorversion} > 18
-%{error:vchord only supports PostgreSQL 14 through 18}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:vchord only supports PostgreSQL 15 through 19}
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.3.0
+Version:	1.4.0
 Release:	1PGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0-only
@@ -25,12 +25,13 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 %prep
 %setup -q -n vchord-%{version}
 # GitHub tag archive: https://github.com/pgsty/vchord/archive/refs/tags/%{version}.tar.gz
-# Tag commit: 1b35b7a0bc9a71bc82aa4c3396c5545da062d050
-# Source SHA256: 097cf21776d6bce4c62c85193e8627d9422d3af9a25e871dc809315fc0310cf4
+# Tag commit: 59386918f5aa0f1cbd6edb66a4d59e7dcc4b028b
+# Source SHA256: 8018e0c17e856e03db9a15543123bf045da53a6fb04c6e56484c084f2273f9c9
 # No downstream patch is applied.
 
 %build
 %set_build_flags
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
 # The ARM64 SIMD C shim requires Clang >= 16 or GCC >= 14. Use Clang for
@@ -82,13 +83,13 @@ cd %{_builddir}/vchord-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export CARGO_TARGET_DIR=%{cargo_target_dir}
 
-PGRX_VERSION=0.19.3
+PGRX_VERSION=0.20.1
 CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
 if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=f785b8189d9609ea3df07008d3e84232bf46413035c6c988e21bd2f45ef8687c
+LOCK_EXPECTED=f4451474b3e10c1a608a3d41bda21a68056700f3703ca21fa0fb9e7039bcc314
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -125,6 +126,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.4.0-1PGSTY
+- Build upstream 1.4.0 for PostgreSQL 15 through 19 with pgrx 0.20.1
+- Include the upstream 1.3.0 to 1.4.0 upgrade script
+
 * Tue Nov 10 2026 Vonng <rh@vonng.com> - 1.3.0-1PGSTY
 - https://github.com/pgsty/vchord/releases/tag/1.3.0
 - Refresh locked dependencies and ship the upstream 1.2.0 to 1.3.0 upgrade SQL

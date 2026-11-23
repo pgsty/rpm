@@ -3,8 +3,8 @@
 %global commit e3ed2f4ce1388167b0254a0c0c706a61d0a37d83
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 18
-%{error:lead requires PostgreSQL 17 through 18}
+%if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
+%{error:lead requires PostgreSQL 17 through 19}
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
@@ -15,6 +15,7 @@ License:        AGPL-3.0-or-later
 URL:            https://github.com/planetscale/lead
 Source0:        %{sname}-%{version}.tar.gz
 Patch0:         lead-1.0.6-pgrx-0.20.1.patch
+Patch1:         lead-1.0.6-pg19.patch
 # Untagged upstream snapshot; the official commit archive is kept unchanged.
 # https://codeload.github.com/planetscale/lead/tar.gz/e3ed2f4ce1388167b0254a0c0c706a61d0a37d83
 
@@ -33,6 +34,7 @@ This package contains an untagged upstream source snapshot.
 %setup -q -n %{sname}-%{commit}
 
 %patch -P0 -p1
+%patch -P1 -p1
 
 %build
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
@@ -76,6 +78,7 @@ install -m 644 "$PKGDIR%{pginstdir}/share/extension/%{pname}"--*.sql %{buildroot
 %changelog
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 1.0.6-2PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+- Bind search arrays through the PostgreSQL 19 base relation planner hook.
 
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 1.0.6-2PGSTY
 - Rebuild for PostgreSQL 17 through 18 with pgrx 0.20.0.

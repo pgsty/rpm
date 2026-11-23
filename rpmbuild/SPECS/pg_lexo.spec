@@ -1,6 +1,6 @@
 %global pname pg_lexo
 %global sname pg_lexo
-%global pgrx_version 0.20.0
+%global pgrx_version 0.20.1
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
@@ -18,7 +18,7 @@ Source0:        pg_lexo-0.6.1.tar.gz
 # SHA256: a9a7e21538f20199d4cdfb7168c8eb51761464bac38c5b73aa77c8e4c57f65a3
 Source1:        pg_lexo-0.6.1-Cargo.lock
 Patch0:         pg_lexo-0.6.1-ordering.patch
-Patch1:         pg-lexo-0.6.1-pgrx-0.20.0.patch
+Patch1:         pg-lexo-0.6.1-pgrx-0.20.1.patch
 # Upstream release v0.6.1 retains Cargo/extension version 0.6.0.
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -36,6 +36,7 @@ cp %{SOURCE1} Cargo.lock
 %patch -P1 -p1
 
 %build
+export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG=2
 export CARGO_PROFILE_RELEASE_STRIP=none
 export CARGO_BUILD_JOBS=4
@@ -61,6 +62,9 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.6.1-2PGSTY
+- Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
+
 * Sun Nov 22 2026 Ruohang Feng <rh@vonng.com> - 0.6.1-2PGSTY
 - Rebuild for PostgreSQL 16 through 19 with pgrx 0.20.0.
 

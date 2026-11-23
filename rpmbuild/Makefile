@@ -216,7 +216,7 @@ pg_vectorize:	# rust pgrx 0.20.0; SQL extension 0.23.0
 pg_similarity:	# covered by pgdg
 	./build pg_similarity 15 16 17 18 19
 
-pg_rrf:			# rust pgrx 0.20.0
+pg_rrf:			# rust pgrx 0.20.1
 	./build pg_rrf 15 16 17 18 19
 
 smlar:          # break for pg18, fixed

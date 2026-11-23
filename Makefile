@@ -16,7 +16,7 @@ setup:
 	@echo "pgext env tool"
 	@echo "pgext env spec"
 	@echo "pgext env rust"
-	@echo "pgext env pgrx"
+	@echo "make -C ~/rpmbuild pgrx"
 	@echo "pgext pkg <name...> --pg 19"
 
 # Specs and build helpers are synchronized separately from sources and build

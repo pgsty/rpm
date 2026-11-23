@@ -30,7 +30,7 @@ spec:
 	pgext env spec
 rust:
 	pgext env rust
-pgrx: pgrx0200
+pgrx: pgrx0201
 pgrx0161:
 	pgext env pgrx -v 0.16.1
 pgrx0170:
@@ -48,6 +48,9 @@ pgrx0193:
 pgrx0200:
 	$(HOME)/.cargo/bin/rustup toolchain install 1.100.0
 	RUSTUP_TOOLCHAIN=1.100.0 pgext env pgrx -v 0.20.0
+pgrx0201:
+	$(HOME)/.cargo/bin/rustup toolchain install 1.100.0
+	RUSTUP_TOOLCHAIN=1.100.0 pgext env pgrx -v 0.20.1
 
 ###############################################################
 #                            Summary                          #
@@ -1462,7 +1465,7 @@ rm-srpm:
 # even if a file with the same name exists
 
 .PHONY: hdr_histogram pg_improv pg_kv pg_try_cast pg_synonym env setup repo tool spec rust pgrx pgrx0161 pgrx0170 pgrx0180 pgrx0181 \
-	pgrx0191 pgrx0192 pgrx0193 pgrx0200 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
+	pgrx0191 pgrx0192 pgrx0193 pgrx0200 pgrx0201 rust1 rust2 rust3 rust4 rust5 rust6 rust7 rust8 rust9 rust10 rust11 time haproxy redis valkey timescaledb \
 	timescaledb_toolkit pg_timeseries periods temporal_tables emaj pg_task pg_later pg_background address_standardizer postgis_tiger_geocoder \
 	pg_when pg_stl cron_utils q3c qdgc geoip pg_polyline pg_eviltransform pg_geohash pghydro pg_tzf pgvector \
 	vchord pgvectorscale pg_vectorsearch pg_vectorize pg_similarity pg_rrf smlar pg_summarize pg_tiktoken pg_tiktoken_c pg4ml \

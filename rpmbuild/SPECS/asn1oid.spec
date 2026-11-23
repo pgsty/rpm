@@ -20,7 +20,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.6
-Release:	2PGSTY%{?dist}
+Release:	3PGSTY%{?dist}
 Summary:	ASN.1 OID datatype for PostgreSQL
 License:	GPL-3.0-or-later
 URL:		https://github.com/df7cb/pgsql-asn1oid
@@ -59,6 +59,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.6-3PGSTY
+- Supersede the published split-bitcode build with a distinct RPM release.
+
 * Fri Aug 14 2026 Vonng <rh@vonng.com> - 1.6-2PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

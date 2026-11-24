@@ -8,7 +8,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.4.0
+Version:	1.5.0
 Release:	1PGSTY%{?dist}
 Summary:	Scalable, Fast, and Disk-friendly Vector search in Postgres, the Successor of pgvecto.rs.
 License:	AGPL-3.0-only
@@ -25,8 +25,8 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 %prep
 %setup -q -n vchord-%{version}
 # GitHub tag archive: https://github.com/pgsty/vchord/archive/refs/tags/%{version}.tar.gz
-# Tag commit: 59386918f5aa0f1cbd6edb66a4d59e7dcc4b028b
-# Source SHA256: 8018e0c17e856e03db9a15543123bf045da53a6fb04c6e56484c084f2273f9c9
+# Tag commit: 68886c5590de12f756dc8161f71e20552b05900e
+# Source SHA256: 38c3beb9b7577c9846b025ef715534ca5b6956b7ff87f6caee05724422bf700d
 # No downstream patch is applied.
 
 %build
@@ -34,10 +34,9 @@ VectorChord (vchord) is a PostgreSQL extension designed for scalable, high-perfo
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
 export CARGO_PROFILE_RELEASE_STRIP="${CARGO_PROFILE_RELEASE_STRIP:-none}"
-# The ARM64 SIMD C shim requires Clang >= 16 or GCC >= 14. Use Clang for
-# every target so the same compiler path is used on EL8, EL9, and EL10.
+# The ARM64 SIMD C shim requires Clang >= 16 or GCC >= 14.
 CLANG_BIN=
-for candidate in clang-21 clang-20 clang-19 clang-18 clang-17 clang-16 clang; do
+for candidate in clang-23 clang-22 clang-21 clang-20 clang-19 clang-18 clang-17 clang-16 clang; do
 	if command -v "$candidate" >/dev/null 2>&1; then
 		CLANG_BIN=$(command -v "$candidate")
 		break
@@ -59,7 +58,7 @@ if [ "$CLANG_MAJOR" -lt 16 ]; then
 	exit 1
 fi
 CLANGXX_BIN=
-for candidate in clang++-21 clang++-20 clang++-19 clang++-18 clang++-17 clang++-16 clang++; do
+for candidate in clang++-23 clang++-22 clang++-21 clang++-20 clang++-19 clang++-18 clang++-17 clang++-16 clang++; do
 	if command -v "$candidate" >/dev/null 2>&1; then
 		CLANGXX_BIN=$(command -v "$candidate")
 		break
@@ -68,11 +67,13 @@ done
 if [ -z "$CLANGXX_BIN" ]; then
 	CLANGXX_BIN="$CLANG_BIN"
 fi
-export CC="$CLANG_BIN"
+export CC="$CLANG_BIN" CLANG_PATH="$CLANG_BIN" CLANG_NO_DEFAULT_CONFIG=1
 export CXX="$CLANGXX_BIN"
 CLANG_LIB="$($CLANG_BIN -print-file-name=libclang.so)"
 if [ -f "$CLANG_LIB" ]; then
 	export LIBCLANG_PATH="$(cd "$(dirname "$CLANG_LIB")" && pwd -P)"
+elif [ -d "/usr/lib/llvm-$CLANG_MAJOR/lib" ]; then
+	export LIBCLANG_PATH="/usr/lib/llvm-$CLANG_MAJOR/lib"
 fi
 %if 0%{?rhel} >= 10
 export CFLAGS=$(echo "${CFLAGS:-}" | sed -e 's/-flto=auto//g' -e 's/-flto[^ ]*//g' -e 's/-ffat-lto-objects//g')
@@ -83,39 +84,25 @@ cd %{_builddir}/vchord-%{version}
 export PATH=%{pginstdir}/bin:$HOME/.cargo/bin:$PATH
 export CARGO_TARGET_DIR=%{cargo_target_dir}
 
-PGRX_VERSION=0.20.1
-CURRENT_PGRX=$(cargo pgrx --version 2>/dev/null | awk '{print $2}')
-if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
-	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
-	exit 1
-fi
-LOCK_EXPECTED=f4451474b3e10c1a608a3d41bda21a68056700f3703ca21fa0fb9e7039bcc314
+LOCK_EXPECTED=faf0b707aba2572d5f9569fcfe955901f332a9d812742ea17f8c13b4ad15172d
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
 	exit 1
 fi
-cargo pgrx init --pg%{pgmajorversion}=%{pginstdir}/bin/pg_config --no-run
 CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --locked
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,--no-gc-sections"
-CARGO_NET_GIT_FETCH_WITH_CLI=true CARGO_NET_OFFLINE=true cargo pgrx package -v --no-default-features --features pg%{pgmajorversion},simd/init --pg-config %{pginstdir}/bin/pg_config
+PG_CONFIG=%{pginstdir}/bin/pg_config CARGO_NET_OFFLINE=true make build
 LOCK_AFTER=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_AFTER" ]; then
-	echo "Cargo.lock changed during cargo pgrx package" >&2
+	echo "Cargo.lock changed during the build" >&2
 	exit 1
 fi
-EXT_DIR=%{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension
-cp -f sql/upgrade/%{pname}--*.sql ${EXT_DIR}/
-cp -f sql/install/%{pname}--%{version}.sql ${EXT_DIR}/%{pname}--%{version}.sql
-grep -q "default_version = '%{version}'" ${EXT_DIR}/%{pname}.control
-test -f ${EXT_DIR}/%{pname}--%{version}.sql
+grep -q "default_version = '%{version}'" build/sharedir/extension/vchord.control
+test -f build/sharedir/extension/vchord--1.4.0--%{version}.sql
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}%{pginstdir}/lib %{buildroot}%{pginstdir}/share/extension
-cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/lib/%{pname}.so                  %{buildroot}%{pginstdir}/lib/
-cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}.control %{buildroot}%{pginstdir}/share/extension/
-cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversion}/share/extension/%{pname}*.sql    %{buildroot}%{pginstdir}/share/extension/
+PG_CONFIG=%{pginstdir}/bin/pg_config make DESTDIR=%{buildroot} install
 
 %files
 %doc README.md
@@ -126,6 +113,10 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Tue Nov 24 2026 Vonng <rh@vonng.com> - 1.5.0-1PGSTY
+- Build the upstream 1.5.0 release with xtask for PostgreSQL 15 through 19
+- https://github.com/pgsty/vchord/releases/tag/1.5.0
+
 * Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.4.0-1PGSTY
 - Build upstream 1.4.0 for PostgreSQL 15 through 19 with pgrx 0.20.1
 - Include the upstream 1.3.0 to 1.4.0 upgrade script

@@ -10,7 +10,7 @@
 %{!?duckdb_core_jobs:%global duckdb_core_jobs 2}
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
-%{error:pg_duckdb 1.2.1 is packaged for PostgreSQL 15 through 19}
+%{error:pg_duckdb is packaged for PostgreSQL 15 through 19}
 %endif
 
 %if 0%{?rhel} && 0%{?rhel} < 9
@@ -26,7 +26,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.1
+Version:	1.2.2
 Release:	1PGSTY%{?dist}
 Summary:	DuckDB-powered Postgres for high performance apps & analytics.
 License:	MIT
@@ -38,8 +38,8 @@ Source0:	%{sname}-%{version}.tar.gz
 Source1:	https://curl.se/download/curl-8.23.0.tar.gz
 %endif
 # Source archive includes DuckDB 8d78114e90a53823803660bf821f6073ac87da8c.
-Patch0:		pg_duckdb-1.2.1-source-archive.patch
-Patch1:		pg_duckdb-1.2.1-private-curl.patch
+Patch0:		pg_duckdb-%{version}-source-archive.patch
+Patch1:		pg_duckdb-%{version}-private-curl.patch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc gcc-c++ make cmake >= 3.18 ninja-build python3 git pkgconfig
 BuildRequires:	libcurl-devel lz4-devel openssl-devel
@@ -49,10 +49,6 @@ BuildRequires:	patchelf
 %if %llvm
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
-%if 0%{?rhel} == 9
-# PGDG EL9 PGXS uses the parallel LLVM21 toolchain.
-BuildRequires:	clang21 llvm21
-%endif
 %endif
 
 Requires:	postgresql%{pgmajorversion}-server
@@ -68,6 +64,17 @@ pg_duckdb was developed in collaboration with our partners, Hydra and MotherDuck
 %autosetup -a 1 -p1 -n %{sname}-%{version}
 %else
 %autosetup -p1 -n %{sname}-%{version}
+%endif
+
+%if %llvm
+# PGDG records the LLVM installation used for this PostgreSQL build in PGXS.
+# Its major can differ from the distribution's current default.
+%generate_buildrequires
+pgxs=$(%{pginstdir}/bin/pg_config --pgxs)
+llvm_bin=$(sed -n 's/^LLVM_BINPATH[[:space:]]*=[[:space:]]*//p' "$(dirname "$pgxs")/../Makefile.global")
+test -n "$llvm_bin"
+echo "$llvm_bin/clang"
+echo "$llvm_bin/llvm-lto"
 %endif
 
 %build
@@ -100,12 +107,8 @@ CFLAGS="$DUCKDB_CFLAGS" LDFLAGS="$DUCKDB_LDFLAGS" \
 if test -f .pgsty-curl/lib/libcurl.a; then
   DUCKDB_CMAKE_FLAGS="$DUCKDB_CMAKE_FLAGS -DCURL_ROOT=$PWD/.pgsty-curl -DCURL_USE_STATIC_LIBS=ON"
 fi
-# DuckDB itself has no PostgreSQL-major input.  Reuse its build tree only
-# inside this platform's RPM topdir, keyed by the complete source archive,
-# compiler identity, distribution flags, and DuckDB build controls.  Copy the
-# cache into the real source tree: DuckDB's CMake entry point is ../.. relative
-# to this directory, so a symlink would resolve that path outside the source.
-# PGXS bridge objects remain outside this tree and are rebuilt per PG major.
+# PGXS reuses the bundled shared library across majors. Keep generated C/C++
+# sources for debugedit and debugsource, without copying intermediate objects.
 DUCKDB_CACHE_KEY="$(printf '%s\n' \
   "$(sha256sum %{SOURCE0})" \
   "$(sha256sum %{PATCH0} %{PATCH1})" "$DUCKDB_COMMIT" \
@@ -117,13 +120,14 @@ DUCKDB_CACHE_KEY="$(printf '%s\n' \
   "$DUCKDB_CFLAGS" "$DUCKDB_CXXFLAGS" "$DUCKDB_LDFLAGS" "$DUCKDB_CMAKE_FLAGS" \
   "${DUCKDB_BUILD:-Release}" "${DUCKDB_DISABLE_ASSERTIONS:-0}" | sha256sum | awk '{print $1}')"
 DUCKDB_CACHE_DIR="%{_topdir}/.cache/pg_duckdb/$DUCKDB_CACHE_KEY"
-if test -f "$DUCKDB_CACHE_DIR/.complete" && test -f "$DUCKDB_CACHE_DIR/release/src/libduckdb.so"; then
-  mkdir -p third_party/duckdb/build
-  cp -a "$DUCKDB_CACHE_DIR/." third_party/duckdb/build/
-  # Applying the same patch gives the top-level extension CMake file a fresh
-  # timestamp. The content-keyed cache already includes that exact input;
-  # keep make from unnecessarily reconfiguring and relinking the cached core.
-  touch third_party/duckdb/build/release/src/libduckdb.so
+duckdb_build_type=release
+if test "${DUCKDB_BUILD:-Release}" = Debug; then duckdb_build_type=debug; fi
+DUCKDB_CORE=third_party/duckdb/build/$duckdb_build_type/src/libduckdb.so
+if test -s "$DUCKDB_CACHE_DIR/libduckdb.so" && test -s "$DUCKDB_CACHE_DIR/debug-sources.tar"; then
+  tar -xf "$DUCKDB_CACHE_DIR/debug-sources.tar"
+  mkdir -p "$(dirname "$DUCKDB_CORE")"
+  cp --reflink=auto "$DUCKDB_CACHE_DIR/libduckdb.so" "$DUCKDB_CORE"
+  touch "$DUCKDB_CORE"
 fi
 PATH=%{pginstdir}/bin:$PATH \
   CMAKE_BUILD_PARALLEL_LEVEL=%{duckdb_core_jobs} \
@@ -134,13 +138,15 @@ PATH=%{pginstdir}/bin:$PATH \
   PG_CFLAGS="$PG_CFLAGS" PG_CXXFLAGS="$PG_CXXFLAGS" \
   LDFLAGS="$PG_LDFLAGS" \
   EXTRA_CMAKE_VARIABLES="$DUCKDB_CMAKE_FLAGS"
-DUCKDB_CACHE_TMP="$DUCKDB_CACHE_DIR.tmp.$$"
-rm -rf "$DUCKDB_CACHE_TMP"
-mkdir -p "$DUCKDB_CACHE_TMP"
-cp -a third_party/duckdb/build/. "$DUCKDB_CACHE_TMP/"
-touch "$DUCKDB_CACHE_TMP/.complete"
-rm -rf "$DUCKDB_CACHE_DIR"
-mv "$DUCKDB_CACHE_TMP" "$DUCKDB_CACHE_DIR"
+if ! test -s "$DUCKDB_CACHE_DIR/libduckdb.so" || ! test -s "$DUCKDB_CACHE_DIR/debug-sources.tar"; then
+  mkdir -p "$DUCKDB_CACHE_DIR"
+  find "third_party/duckdb/build/$duckdb_build_type" -type f \( -name '*.c' -o -name '*.cc' -o -name '*.cpp' -o -name '*.cxx' \
+    -o -name '*.h' -o -name '*.hh' -o -name '*.hpp' -o -name '*.inc' -o -name '*.S' \) -print0 > .duckdb-debug-sources
+  tar -cf "$DUCKDB_CACHE_DIR/debug-sources.tar.$$" --null -T .duckdb-debug-sources
+  mv -f "$DUCKDB_CACHE_DIR/debug-sources.tar.$$" "$DUCKDB_CACHE_DIR/debug-sources.tar"
+  cp --reflink=auto "$DUCKDB_CORE" "$DUCKDB_CACHE_DIR/libduckdb.so.$$"
+  mv -f "$DUCKDB_CACHE_DIR/libduckdb.so.$$" "$DUCKDB_CACHE_DIR/libduckdb.so"
+fi
 
 %install
 %{__rm} -rf %{buildroot}
@@ -202,6 +208,11 @@ patchelf --set-rpath '$ORIGIN' %{buildroot}%{pginstdir}/lib/%{pname}.so
 %endif
 
 %changelog
+* Tue Nov 24 2026 Ruohang Feng <rh@vonng.com> - 1.2.2-1PGSTY
+- Package v1.2.2 with DuckDB 2.0.1 and the upstream 1.2.1 to 1.2.2 SQL update.
+- Cache the shared core and generated debug sources across PostgreSQL majors.
+- Require the Clang and llvm-lto binaries selected by PGXS.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.2.1-1PGSTY
 - Package upstream 1.2.1 with its pinned DuckDB 2.0.1 source.
 - Target PostgreSQL 15-19 and EL9+, with PG19 validated separately.

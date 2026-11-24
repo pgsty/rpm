@@ -344,7 +344,7 @@ hydra:
 	./build hydra 15 16 #17 not ready yet
 
 # DuckDB family platform policy:
-# - pg_duckdb and pg_mooncake remain EL8/EL9/EL10 capable.
+# - pg_duckdb and pg_mooncake target PostgreSQL 15-19 on EL9/EL10.
 # - duckdb_fdw 2.0.2 embeds DuckDB 2.0.0; PG15-18 on EL8/9/10 (EL8: GCC Toolset 15).
 # - pg_lake requires EL9+ for system OpenSSL 3.
 # - pg_ducklake is EL9+ until its EL8/GCC8 filesystem path is fixed and tested.

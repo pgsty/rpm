@@ -27,7 +27,7 @@ fail() {
 
 for program in \
   initdb pg_ctl postgres psql pg_config pg_basebackup pg_verifybackup \
-  pg_rewind pg_controldata pg_repack shp2pgsql raster2pgsql; do
+  pg_rewind pg_controldata pg_repack pg_upgrade pg_upgrade-core shp2pgsql raster2pgsql; do
   [[ -x "${PGROOT}/bin/${program}" ]] || fail "missing executable: ${PGROOT}/bin/${program}"
 done
 
@@ -51,12 +51,21 @@ done
 server_version=$("${PGROOT}/bin/postgres" --version)
 basebackup_version=$("${PGROOT}/bin/pg_basebackup" --version)
 rewind_version=$("${PGROOT}/bin/pg_rewind" --version)
-[[ "${server_version}" == *'Percona Server for PostgreSQL 18.6.1'* ]] || \
+case "$("${PGROOT}/bin/pg_config" --version)" in
+  'PostgreSQL 18.'*) expected_server=18.7.1; expected_tde=2.2.2; expected_sql=2.2 ;;
+  'PostgreSQL 19.'*) expected_server=19.0.1; expected_tde=2.3.0; expected_sql=2.3 ;;
+  *) fail "unknown Percona version: ${server_version}" ;;
+esac
+[[ "${server_version}" == *"Percona Server for PostgreSQL ${expected_server}" ]] || \
   fail "unexpected server version: ${server_version}"
-[[ "${basebackup_version}" == *'Percona Server for PostgreSQL 18.6.1'* ]] || \
+[[ "${basebackup_version}" == *"Percona Server for PostgreSQL ${expected_server}" ]] || \
   fail "unexpected pg_basebackup version: ${basebackup_version}"
-[[ "${rewind_version}" == *'Percona Server for PostgreSQL 18.6.1'* ]] || \
+[[ "${rewind_version}" == *"Percona Server for PostgreSQL ${expected_server}" ]] || \
   fail "unexpected pg_rewind version: ${rewind_version}"
+[[ "$("${PGROOT}/bin/pg_upgrade" --version)" == "pg_tde_upgrade (PostgreSQL) "*"$expected_server" ]] || \
+  fail 'pg_upgrade did not invoke the TDE frontend'
+[[ "$("${PGROOT}/bin/pg_upgrade-core" --version)" == "pg_upgrade (PostgreSQL) "*"$expected_server" ]] || \
+  fail 'the TDE frontend is missing its matching core executable'
 
 unresolved=0
 while IFS= read -r module; do
@@ -153,11 +162,13 @@ expected_extensions=$("${PRIMARY_PSQL[@]}" -Atc 'SELECT count(*) FROM pg_availab
 printf '[PHASE] smoke-test Percona extension payloads\n'
 pg_tde_version=$("${PRIMARY_PSQL[@]}" -Atc \
   'SELECT _pg_tde.pg_tde_version()')
-[[ "${pg_tde_version}" == 'pg_tde 2.2.2' ]] || \
+[[ "${pg_tde_version}" == "pg_tde ${expected_tde}" ]] || \
   fail "unexpected pg_tde software version: ${pg_tde_version}"
+pg_tde_sql=$("${PRIMARY_PSQL[@]}" -Atc "SELECT extversion FROM pg_extension WHERE extname = 'pg_tde'")
+[[ "${pg_tde_sql}" == "${expected_sql}" ]] || fail "unexpected pg_tde SQL version: ${pg_tde_sql}"
 vector_version=$("${PRIMARY_PSQL[@]}" -Atc \
   "SELECT extversion FROM pg_extension WHERE extname = 'vector'")
-[[ "${vector_version}" == '0.8.6' ]] || \
+[[ "${vector_version}" == '0.8.7' ]] || \
   fail "unexpected pgvector extension version: ${vector_version}"
 vector_distance=$("${PRIMARY_PSQL[@]}" -Atc \
   "SELECT ('[1,2,3]'::vector <-> '[1,2,4]'::vector)::int")
@@ -167,6 +178,9 @@ postgis_point=$("${PRIMARY_PSQL[@]}" -Atc \
 [[ "${postgis_point}" == 'POINT(1 2)' ]] || fail "unexpected PostGIS result: ${postgis_point}"
 "${PRIMARY_PSQL[@]}" -f "${PGROOT}/share/postgresql/contrib/gather.sql" \
   >"${LOG_DIR}/pg-gather.tsv" 2>"${LOG_DIR}/pg-gather.err"
+"${PRIMARY_PSQL[@]}" -Atc 'SET jit=on; SET jit_above_cost=0; EXPLAIN (ANALYZE) SELECT sum(n) FROM generate_series(1,10000) AS n' \
+  >"${LOG_DIR}/jit.log"
+grep -Eq 'Functions: [1-9]' "${LOG_DIR}/jit.log" || fail 'no JIT functions generated'
 
 "${PRIMARY_PSQL[@]}" -c 'CREATE TABLE wal2json_qa(id bigint PRIMARY KEY, payload text)' \
   >"${LOG_DIR}/wal2json-table.log"
@@ -306,6 +320,6 @@ if LC_ALL=C grep -aF "${MARKER}" "${relation_path}"* >/dev/null 2>&1; then
   fail 'plaintext marker found in the encrypted relation files'
 fi
 
-printf '[RESULT] server=%s pg_tde=%s pgvector=%s extensions=%s/%s encrypted=1 restart_key=pass kmip_invalid_input=pass repack=pass wal2json=pass pg_gather=pass basebackup=pass rewind=pass plaintext=absent\n' \
-  "${server_version}" "${pg_tde_version}" "${vector_version}" \
+printf '[RESULT] server=%s pg_tde=%s sql=%s pgvector=%s extensions=%s/%s jit=pass encrypted=1 restart_key=pass kmip_invalid_input=pass repack=pass wal2json=pass pg_gather=pass basebackup=pass rewind=pass plaintext=absent\n' \
+  "${server_version}" "${pg_tde_version}" "${pg_tde_sql}" "${vector_version}" \
   "${installed_extensions}" "${expected_extensions}"

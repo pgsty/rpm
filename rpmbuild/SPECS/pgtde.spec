@@ -1,17 +1,32 @@
 %global sname pgtde
-%global pgmajorversion 18
-%global pgversion 18.6
+%{!?pgmajorversion:%global pgmajorversion 18}
 %global perconarelease 1
+%if 0%{?pgmajorversion} == 19
+%global pgversion 19.0
+%global pgtdeversion 2.3.0
+%global postgisversion 3.7.0
+%global tigerversion 2025.2
+%global pgauditversion 19.0
+%global pgstatmonitorversion 2.4.1
+%else
+%if 0%{?pgmajorversion} != 18
+%{error:pgtde supports pgmajorversion 18 or 19}
+%endif
+%global pgversion 18.7
 %global pgtdeversion 2.2.2
 %global postgisversion 3.5.7
-%global pgvectorversion 0.8.6
-%global wal2jsonversion 2.6
-%global pgrepackversion 1.5.3
 %global pgauditversion 18.0
-%global setuserversion 4.2.0
 %global pgstatmonitorversion 2.4.0
+%endif
+%global pgvectorversion 0.8.7
+%global wal2jsonversion 2.7
+%global pgrepackversion 1.5.3
+%global setuserversion 4.3.0
 %global pggatherversion 33
 %global pgbaseinstdir /usr/pgtde-%{pgmajorversion}
+%if 0%{?rhel} == 9
+%global _find_debuginfo_dwz_opts %{nil}
+%endif
 
 %define _build_id_links none
 
@@ -25,7 +40,7 @@ Release:        1PGSTY%{?dist}
 Summary:        Percona PostgreSQL kernel with transparent data encryption
 License:        PostgreSQL AND GPL-2.0-or-later AND GPL-3.0-only AND BSD-3-Clause AND (Apache-2.0 OR BSD-3-Clause)
 URL:            https://www.percona.com/postgresql/software/postgresql-distribution
-Source0:        percona-postgresql-%{pgversion}.tar.gz
+Source0:        percona-postgresql-%{pgversion}.%{perconarelease}.tar.gz
 Source1:        percona-pg_tde%{pgmajorversion}-%{pgtdeversion}.tar.gz
 Source2:        pgtde-pg-config
 Source3:        percona-postgis-%{postgisversion}.tar.gz
@@ -34,12 +49,17 @@ Source5:        percona-wal2json-%{wal2jsonversion}.tar.gz
 Source6:        percona-pg_repack-%{pgrepackversion}.tar.gz
 Source7:        percona-pgaudit-%{pgauditversion}.tar.gz
 Source8:        percona-pgaudit%{pgmajorversion}_set_user-%{setuserversion}.tar.gz
-Source9:        pg_stat_monitor-%{pgstatmonitorversion}.tar.gz
+Source9:        percona-pg_stat_monitor-%{pgstatmonitorversion}.tar.gz
 Source10:       percona-pg_gather-%{pggatherversion}.tar.gz
 Source11:       pgtde-sfcgal-config
-Source12:       pgtde-18.6.sources.sha256
+Source12:       pgtde-%{pgversion}.sources.sha256
+%if 0%{?pgmajorversion} == 19
+Source13:       percona-address-standardizer19-%{postgisversion}.tar.gz
+Source14:       percona-postgis-tiger-geocoder19-%{tigerversion}.tar.gz
+%endif
 Patch0:         pg_repack-1.5.3.patch
 Patch1:         pgtde-18.6.patch
+Patch2:         pgtde-upgrade-backend.patch
 
 ExclusiveArch:  aarch64 x86_64
 
@@ -79,13 +99,13 @@ Requires:       perl-DBD-Pg
 
 %description contrib
 The PostgreSQL bundled contrib modules and the Percona Distribution for
-PostgreSQL 18 key extension set: PostGIS (including client and utils),
+PostgreSQL %{pgmajorversion} key extension set: PostGIS (including client and utils),
 pgvector, wal2json, pg_repack, pgaudit, pgaudit set_user, pg_stat_monitor,
 and pg_gather. pg_tde is intentionally part of the main %{name} package.
 
 %prep
 (cd %{_sourcedir} && sha256sum --check %{SOURCE12})
-%setup -q -n percona-postgresql-%{pgversion}
+%setup -q -n percona-postgresql-%{pgversion}.%{perconarelease}
 %{__tar} -xzf %{SOURCE1}
 %{__mv} percona-pg_tde%{pgmajorversion}-%{pgtdeversion} .pg_tde-src
 %{__tar} -xzf %{SOURCE3}
@@ -98,15 +118,22 @@ and pg_gather. pg_tde is intentionally part of the main %{name} package.
 %{__mv} percona-pg_repack-%{pgrepackversion} .pg_repack-src
 patch -p1 --fuzz=0 < %{PATCH0}
 patch -p1 --fuzz=0 < %{PATCH1}
+patch -p1 --fuzz=0 < %{PATCH2}
 %{__tar} -xzf %{SOURCE7}
 %{__mv} percona-pgaudit-%{pgauditversion} .pgaudit-src
 %{__tar} -xzf %{SOURCE8}
 %{__mv} percona-pgaudit%{pgmajorversion}_set_user-%{setuserversion} .set_user-src
 %{__tar} -xzf %{SOURCE9}
-%{__mv} pg_stat_monitor-%{pgstatmonitorversion} .pg_stat_monitor-src
+%{__mv} percona-pg_stat_monitor-%{pgstatmonitorversion} .pg_stat_monitor-src
 %{__tar} -xzf %{SOURCE10}
 %{__mv} percona-pg_gather-%{pggatherversion} .pg_gather-src
-%{__cp} -p %{SOURCE2} .pgtde-pg-config
+%if 0%{?pgmajorversion} == 19
+%{__tar} -xzf %{SOURCE13}
+%{__mv} percona-address-standardizer19-%{postgisversion} .address-standardizer-src
+%{__tar} -xzf %{SOURCE14}
+%{__mv} percona-postgis-tiger-geocoder19-%{tigerversion} .tiger-geocoder-src
+%endif
+sed 's|^prefix=/usr/pgtde-18$|prefix=%{pgbaseinstdir}|' %{SOURCE2} > .pgtde-pg-config
 %{__chmod} 0755 .pgtde-pg-config
 %{__cp} -p %{SOURCE11} .pgtde-sfcgal-config
 %{__chmod} 0755 .pgtde-sfcgal-config
@@ -197,7 +224,6 @@ find "$PGTDE_STAGE%{pgbaseinstdir}" -type f \
   \( -name 'pg_tde*' -o -name 'pg_tde.so' \) -perm /111 -print0 | \
   xargs -0 -r -n 1 chrpath --replace %{pgbaseinstdir}/lib 2>/dev/null || :
 
-# Build Percona's PG18 extension set, including its pg_stat_monitor 2.4 update.
 # The wrapper resolves compile inputs inside the
 # staged kernel while retaining final installation directories for DESTDIR.
 export PGTDE_BUILD_PG_CONFIG="$(pwd)/.pgtde-pg-config"
@@ -211,19 +237,24 @@ export PKG_CONFIG_PATH="/usr/proj95/lib64/pkgconfig:/usr/gdal38/lib64/pkgconfig:
 
 build_pgxs() {
   srcdir="$1"
+  shift
   MAKELEVEL=0 %{__make} -C "$srcdir" %{?_smp_mflags} \
-    USE_PGXS=1 PG_CONFIG="$PGTDE_BUILD_PG_CONFIG"
+    USE_PGXS=1 PG_CONFIG="$PGTDE_BUILD_PG_CONFIG" "$@"
   MAKELEVEL=0 %{__make} -C "$srcdir" \
-    USE_PGXS=1 PG_CONFIG="$PGTDE_BUILD_PG_CONFIG" \
+    USE_PGXS=1 PG_CONFIG="$PGTDE_BUILD_PG_CONFIG" "$@" \
     DESTDIR="$PGTDE_CONTRIB_STAGE" install
 }
 
-build_pgxs .pgvector-src
+build_pgxs .pgvector-src OPTFLAGS=
 build_pgxs .wal2json-src
 build_pgxs .pg_repack-src
 build_pgxs .pgaudit-src
 build_pgxs .set_user-src
 build_pgxs .pg_stat_monitor-src
+%if 0%{?pgmajorversion} == 19
+build_pgxs .address-standardizer-src
+build_pgxs .tiger-geocoder-src
+%endif
 
 cd .postgis-src
 ./autogen.sh
@@ -291,6 +322,12 @@ done
   %{buildroot}%{_licensedir}/%{name}-contrib/postgis-COPYING
 %{__install} -D -m 0644 .postgis-src/LICENSE.TXT \
   %{buildroot}%{_licensedir}/%{name}-contrib/postgis-LICENSE
+%if 0%{?pgmajorversion} == 19
+%{__install} -D -m 0644 .address-standardizer-src/COPYING \
+  %{buildroot}%{_licensedir}/%{name}-contrib/address-standardizer-COPYING
+%{__install} -D -m 0644 .tiger-geocoder-src/COPYING \
+  %{buildroot}%{_licensedir}/%{name}-contrib/tiger-geocoder-COPYING
+%endif
 for license_source in \
   pgvector:.pgvector-src/LICENSE \
   wal2json:.wal2json-src/LICENSE \
@@ -309,6 +346,7 @@ find "%{buildroot}%{pgbaseinstdir}/lib/postgresql" \
 
 # A private PostgreSQL flavor must make its TDE-aware utilities the safe
 # defaults. Retain Percona's names as compatibility symlinks.
+%{__mv} %{buildroot}%{pgbaseinstdir}/bin/pg_upgrade %{buildroot}%{pgbaseinstdir}/bin/pg_upgrade-core
 for mapping in \
   pg_tde_basebackup:pg_basebackup \
   pg_tde_checksums:pg_checksums \
@@ -368,6 +406,7 @@ for mapping in \
 done
 
 %files -f pgtde-main.files
+%{pgbaseinstdir}/bin/pg_upgrade-core
 %doc README* HISTORY
 %license %{_licensedir}/%{name}/*
 
@@ -380,6 +419,16 @@ getent group postgres >/dev/null 2>&1 || groupadd -g 26 -r postgres >/dev/null 2
 getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 26 postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" postgres >/dev/null 2>&1 || :
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 19.0-1PGSTY
+- Package Percona Server 19.0.1 with pg_tde 2.3.0 and its frontend tools
+- Bundle PostGIS 3.7.0 and the standalone address standardizer and TIGER geocoder
+- Retain the core executable required by the TDE upgrade frontend
+- Preserve compiler-generated DWARF for both server versions on EL9
+
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 18.7-1PGSTY
+- Update Percona Server to 18.7.1 with pg_tde 2.2.2
+- Update pgvector to 0.8.7, wal2json to 2.7, and set_user to 4.3.0
+
 * Tue Oct 06 2026 Ruohang Feng (Vonng) <rh@vonng.com> - 18.6-1PGSTY
 - Update bundled pg_stat_monitor to 2.4.0
 - Enable LLVM and retain core and extension bitcode in the existing packages

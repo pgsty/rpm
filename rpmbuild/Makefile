@@ -1389,8 +1389,11 @@ ivorysql-contrib:
 
 ivorysql-all: ivorysql ivorysql-contrib
 
-pgtde:
-	QA_RPATHS=3 ./build pgtde 18
+pgtde: pgtde-18
+pgtde-18 pgtde-19:
+	version=$$(rpmspec -q --srpm --qf '%{VERSION}' --define "pgmajorversion $(@:pgtde-%=%)" SPECS/pgtde.spec) && \
+		cp "SPECS/manifests/pgtde-$$version.sources.sha256" SOURCES/
+	QA_RPATHS=3 ./build pgtde $(@:pgtde-%=%)
 
 agensgraph:
 	QA_RPATHS=3 rpmbuild -ba SPECS/agensgraph.spec
@@ -1500,7 +1503,7 @@ rm-srpm:
 	db2fce spat pgl_ddl_deploy wal2mongo pglogical_ticker logical_ddl pg_failover_slots db_migrator libpgfeutils \
 	libpgfeutils-install pgactive pgclone pgmqtt decoder_raw mimeo pg_bulkload postgresbson neon pdu \
 	pgdog pgdog-install pg_adhoc pg_filedump openhalo openhalodb openhalo18 openhalodb-18 ivorysql ivorysql-contrib ivorysql-all agensgraph zlog polarstore polardb \
-	pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \
+	pgtde pgtde-18 pgtde-19 pgedge pgedge-15 pgedge-16 pgedge-17 pgedge-18 antlr4 babelfish babelfish-17 babelfish-18 orioledb \
 	orioledb-16 orioledb-17 orioledb-18 orioledb-all cloudberry cloudberry-backup cloudberry-pxf \
 	ls-rpm ls-srpm rm-rpm rm-srpm
 

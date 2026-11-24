@@ -21,7 +21,7 @@
 %global lolorversion 1.2.3
 %global snowflakeversion 2.6.1
 %global pgbaseinstdir /usr/pgedge-%{pgmajorversion}
-%if 0%{?rhel} == 9
+%if 0%{?rhel} == 9 || 0%{?rhel} == 10
 %global _find_debuginfo_dwz_opts %{nil}
 %endif
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
@@ -254,7 +254,7 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 - Update PostgreSQL to 15.20, 16.16, 17.12, and 18.7
 - Bundle Spock 5.0.14 and Snowflake 2.6.1 and enable LLVM JIT
 - Refresh the PG15 attribute options patch for the new core
-- Preserve compiler-generated DWARF for the EL9 GNU debugger tools
+- Preserve compiler-generated DWARF for the EL9 and EL10 GNU debugger tools
 
 * Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 18.6-3PGSTY
 - Bundle Spock 5.0.13 and LOLOR 1.2.3 with the existing PostgreSQL cores.

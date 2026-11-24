@@ -1,33 +1,36 @@
 %global sname pgedge
 %{!?pgmajorversion:%global pgmajorversion 18}
 %if 0%{?pgmajorversion} == 18
-%global pgversion 18.6
+%global pgversion 18.7
 %else
 %if 0%{?pgmajorversion} == 17
-%global pgversion 17.11
+%global pgversion 17.12
 %else
 %if 0%{?pgmajorversion} == 16
-%global pgversion 16.15
+%global pgversion 16.16
 %else
 %if 0%{?pgmajorversion} == 15
-%global pgversion 15.19
+%global pgversion 15.20
 %else
 %{error:pgedge supports pgmajorversion 15, 16, 17, or 18}
 %endif
 %endif
 %endif
 %endif
-%global spockversion 5.0.13
+%global spockversion 5.0.14
 %global lolorversion 1.2.3
-%global snowflakeversion 2.6.0
+%global snowflakeversion 2.6.1
 %global pgbaseinstdir /usr/pgedge-%{pgmajorversion}
+%if 0%{?rhel} == 9
+%global _find_debuginfo_dwz_opts %{nil}
+%endif
 # Private PostgreSQL ABI under a fork prefix, not a system libpq provider.
 %global __provides_exclude_from ^%{pgbaseinstdir}/lib/.*\\.so.*$
 %global __requires_exclude ^(libecpg(_compat)?|libpgtypes|libpq|libpqwalreceiver)\\.so.*$
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
-Release:        3PGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        pgEdge PostgreSQL kernel with bundled replication extensions
 License:        PostgreSQL
 URL:            https://github.com/pgEdge
@@ -35,7 +38,9 @@ Source0:        postgresql-%{pgversion}.tar.gz
 Source1:        spock-%{spockversion}.tar.gz
 Source2:        lolor-%{lolorversion}.tar.gz
 Source3:        snowflake-%{snowflakeversion}.tar.gz
-Patch0:         pgedge-spock-5.0.13-pg17-pg18.patch
+%if 0%{?pgmajorversion} == 15
+Patch0:         pgedge-spock-5.0.14-pg15.patch
+%endif
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
 BuildRequires:  gcc-c++, readline-devel, zlib-devel >= 1.0.4
@@ -43,6 +48,7 @@ BuildRequires:  krb5-devel, libselinux-devel >= 2.0.93, libxml2-devel, libxslt-d
 BuildRequires:  lz4-devel, libzstd-devel, libicu-devel, openldap-devel, pam-devel, python3-devel, tcl-devel
 BuildRequires:  systemtap-sdt-devel, openssl-devel, systemd, systemd-devel
 BuildRequires:  jansson-devel, patchelf, pkgconfig
+BuildRequires:  llvm-devel >= 19.0, clang-devel >= 19.0
 %if 0%{?rhel} >= 9
 BuildRequires:  perl, perl-ExtUtils-Embed, perl-FindBin
 %else
@@ -72,7 +78,9 @@ if [ -z "$spock_src" ]; then
 fi
 mv "$spock_src" .spock
 
+%if 0%{?pgmajorversion} == 15
 patch -d .spock -p1 --fuzz=0 < %{PATCH0}
+%endif
 
 lolor_src=$(find .lolor-src -mindepth 1 -maxdepth 1 -type d | head -n 1)
 if [ -z "$lolor_src" ]; then
@@ -97,8 +105,8 @@ else
   exit 1
 fi
 
-for patch_name in $(ls -1 "$patch_dir" | sort); do
-  patch -p1 --fuzz=0 < "$patch_dir/$patch_name"
+for patch_file in "$patch_dir"/*.diff; do
+  patch -p1 --fuzz=0 < "$patch_file"
 done
 
 %build
@@ -123,6 +131,7 @@ export CFLAGS
 --with-libxml \
 --with-libxslt \
 --with-icu \
+--with-llvm \
 --with-gssapi \
 %if 0%{?rhel} >= 9
 --with-perl \
@@ -241,6 +250,12 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 18.7-1PGSTY
+- Update PostgreSQL to 15.20, 16.16, 17.12, and 18.7
+- Bundle Spock 5.0.14 and Snowflake 2.6.1 and enable LLVM JIT
+- Refresh the PG15 attribute options patch for the new core
+- Preserve compiler-generated DWARF for the EL9 GNU debugger tools
+
 * Thu Oct 15 2026 Ruohang Feng <rh@vonng.com> - 18.6-3PGSTY
 - Bundle Spock 5.0.13 and LOLOR 1.2.3 with the existing PostgreSQL cores.
 - Preserve distribution compiler and linker hardening flags.

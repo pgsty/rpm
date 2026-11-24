@@ -7,7 +7,7 @@
 %global _find_debuginfo_opts --build-id-seed %{name}-%{version}-%{release}
 %{!?mooncake_jobs:%global mooncake_jobs 4}
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_mooncake requires the pg_duckdb 1.2.1 packages for Enterprise Linux 9 or newer}
+%{error:pg_mooncake requires Enterprise Linux 9 or newer}
 %endif
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
@@ -24,30 +24,30 @@ for plugin in %{buildroot}%{pginstdir}/share/extension/pg_mooncake/%{duckdb_vers
 done
 
 Name:       %{sname}_%{pgmajorversion}
-Version:    0.3.3
+Version:    0.3.4
 Release:    1PGSTY%{?dist}
 Summary:    Real-time columnstore analytics in PostgreSQL
 License:    MIT AND BUSL-1.1
 URL:        https://github.com/pgsty/pg_mooncake
 Source0:    https://github.com/pgsty/pg_mooncake/releases/download/v%{version}/pg_mooncake-%{version}-source.tar.gz
-Patch0:     pg_mooncake-0.3.3-pgrx-0.20.1.patch
+Patch0:     pg_mooncake-%{version}-pgrx-0.20.1.patch
 
 BuildRequires: postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires: cargo rust rustfmt clang-devel llvm-devel
 BuildRequires: gcc gcc-c++ make cmake >= 3.24 ninja-build git python3
 BuildRequires: pkgconfig openssl-devel libcurl-devel lz4-devel protobuf-compiler
 Requires:   postgresql%{pgmajorversion}-server
-Requires:   pg_duckdb_%{pgmajorversion} = 1.2.1
+Requires:   pg_duckdb_%{pgmajorversion} >= 1.2.1
 
 %description
 pg_mooncake adds columnstore tables and real-time replication from PostgreSQL
 heap tables, using Moonlink and DuckDB execution. This PGSTY-maintained fork
-includes a local DuckDB Mooncake extension for pg_duckdb 1.2.1 / DuckDB 2.0.1.
+includes the Mooncake v0.0.5 scanner built for DuckDB 2.0.1.
 
 %prep
 %setup -q -n %{sname}-%{version}
 patch --batch --fuzz=0 -p1 < %{PATCH0}
-echo '09509abae5f4ad2b9ce21cf89a17b407a2013ebf3820e0f9a258b04005d2866d  Cargo.lock' | sha256sum -c -
+echo 'fdf880384b0133105be85cf14527809cb1a1b8a4ab4f7cb9d22464046a22cf23  Cargo.lock' | sha256sum -c -
 
 %build
 %set_build_flags
@@ -98,6 +98,10 @@ done
 %{pginstdir}/share/extension/pg_mooncake/
 
 %changelog
+* Tue Nov 24 2026 Vonng <rh@vonng.com> - 0.3.4-1PGSTY
+- Require pg_duckdb 1.2.1 or newer and ship the direct upgrades from 0.3.0 through 0.3.3
+- Refresh the pgrx 0.20.1 patch for the upstream 0.3.4 source release
+
 * Mon Nov 23 2026 Vonng <rh@vonng.com> - 0.3.3-1PGSTY
 - Use the upstream source release with pinned submodules for PostgreSQL 15 through 19
 - Update the locked pgrx crates to 0.20.1 and ship the upstream upgrade SQL

@@ -4,14 +4,15 @@
 %global source_commit 7c2edff7a09c5882bfc8f1f8aa8f8d5d7e3b0c41
 %global source_date 20250228
 %global source_short 7c2edff
+%global source_version 0.3
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.3
-Release:	1.git%{source_date}.%{source_short}PGSTY%{?dist}
+Version:	0.3.0
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension to log each DML statement and flashback transactions
 License:	BSD-3-Clause
 URL:		https://github.com/kouber/pg_auditor
-Source0:	pg_auditor-%{version}+git%{source_date}.%{source_short}.tar.gz
+Source0:	pg_auditor-%{source_version}+git%{source_date}.%{source_short}.tar.gz
 #           normalized upstream master snapshot 7c2edff7a09c5882bfc8f1f8aa8f8d5d7e3b0c41
 BuildArch:	noarch
 
@@ -24,7 +25,7 @@ PostgreSQL auditing extension that records each data modification statement of s
 and allows partial or complete flashback of transactions.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}-%{source_version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags}
@@ -41,6 +42,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.3.0-1PGSTY
+- Use a short package version for upstream snapshot 7c2edff.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.3-1.git20250228.7c2edffPGSTY
 - Pin upstream master snapshot %{source_commit}
 - Package the upstream 0.2 to 0.3 SQL upgrade path

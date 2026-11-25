@@ -11,7 +11,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.4.0
-Release:	1.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	PostgreSQL extension for GeoIP geolocation
 
 License:	BSD-2-Clause
@@ -45,6 +45,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} install DESTDIR=%{buildroo
 %{pginstdir}/share/extension/*.sql
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.4.0-2PGSTY
+- Use a short package version for upstream snapshot fcad7f1.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.4.0-1.git20250804.fcad7f1PGSTY
 - Update to upstream snapshot fcad7f1 with extension version 0.4.0
 - Add the PostgreSQL 14 through 18 guard and explicit ip4r dependency

@@ -12,7 +12,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.1
-Release:	5.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
+Release:	6PGSTY%{?dist}
 Summary:	OpenAI tiktoken tokenizer for postgres
 License:	Apache-2.0
 URL:		https://github.com/kelvich/pg_tiktoken
@@ -73,6 +73,9 @@ cp -a %{_builddir}/%{sname}-%{source_version}/target/release/%{pname}-pg%{pgmajo
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.0.1-6PGSTY
+- Use a short package version for upstream snapshot 99cb61d.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.0.1-5.git20260825.99cb61dPGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

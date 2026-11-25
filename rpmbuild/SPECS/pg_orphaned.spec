@@ -2,7 +2,6 @@
 %global sname pg_orphaned
 %global gitdate 20260427
 %global commit 4e23c9c3379bdedc878d585a3d81f7f4d5151993
-%global shortcommit 4e23c9c
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
@@ -26,8 +25,8 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0
-Release:	2.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
+Version:	1.0.0
+Release:	1PGSTY%{?dist}
 Summary:	Allow to manipulate orphaned files thanks to a few functions
 License:	PostgreSQL
 URL:		https://github.com/bdrouvot/pg_orphaned
@@ -72,6 +71,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 1.0.0-1PGSTY
+- Use a short package version for upstream snapshot 4e23c9c.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0-2.git20260427.4e23c9cPGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

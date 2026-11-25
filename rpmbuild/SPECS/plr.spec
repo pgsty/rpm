@@ -6,13 +6,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        8.4.8.11
+Version:        8.4.8.12
 Release:        1PGSTY%{?dist}
 Summary:        R procedural language for PostgreSQL
 License:        GPL-2.0-or-later
 URL:            https://github.com/postgres-plr/plr
-Source0:        plr-8.4.8.11.tar.gz
-# https://github.com/postgres-plr/plr/releases/tag/REL8_4_8_11
+Source0:        plr-8.4.8.12.tar.gz
+# https://github.com/postgres-plr/plr/releases/tag/REL8_4_8_12
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc make R-devel pkgconfig
@@ -30,7 +30,7 @@ BuildRequires:  llvm-devel >= 19.0 clang-devel >= 19.0
 PL/R allows PostgreSQL functions to execute R code.
 
 %prep
-%setup -q -n plr-REL8_4_8_11
+%setup -q -n plr-REL8_4_8_12
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{?_smp_mflags} USE_PGXS=1 %{with_llvm_arg}
@@ -52,6 +52,9 @@ rm -rf %{buildroot}%{pginstdir}/doc/extension
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 8.4.8.12-1PGSTY
+- Update to upstream 8.4.8.12.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 8.4.8.11-1PGSTY
 - Update to upstream 8.4.8.11.
 

@@ -10,13 +10,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.27.0
+Version:	0.27.1
 Release:	1PGSTY%{?dist}
 Summary:	Full text search over SQL tables using the BM25 algorithm
 License:	AGPL-3.0-or-later
 URL:		https://github.com/paradedb/paradedb/
 Source0:	pg_search-%{version}.tar.gz
-Patch0:         pg-search-0.27.0-pgrx-0.20.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang curl git rust rustfmt openssl-devel openblas-devel libicu-devel pkgconfig
@@ -31,7 +30,6 @@ before the extension can be created or used.
 
 %prep
 %setup -q -n %{srcdir}
-%patch -P0 -p1
 
 %build
 export CARGO_PROFILE_RELEASE_DEBUG="${CARGO_PROFILE_RELEASE_DEBUG:-2}"
@@ -105,6 +103,9 @@ cp -a $TARGET_DIR/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmajorversio
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.27.1-1PGSTY
+- Update to upstream 0.27.1.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.27.0-1PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

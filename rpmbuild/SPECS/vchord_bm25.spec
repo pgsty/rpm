@@ -15,26 +15,9 @@ License:	AGPL-3.0-only
 URL:		https://vchord.pgsty.com/
 Source0:	vchord_bm25-%{version}.tar.gz
 
-# The compiled module uses the PostgreSQL tuple-header ABI introduced in these releases.
-%if 0%{?pgmajorversion} == 19
-%global pg_min_version 19.0
-%endif
-%if 0%{?pgmajorversion} == 18
-%global pg_min_version 18.7
-%endif
-%if 0%{?pgmajorversion} == 17
-%global pg_min_version 17.12
-%endif
-%if 0%{?pgmajorversion} == 16
-%global pg_min_version 16.16
-%endif
-%if 0%{?pgmajorversion} == 15
-%global pg_min_version 15.20
-%endif
-
-BuildRequires:	postgresql%{pgmajorversion}-devel >= %{pg_min_version} pgdg-srpm-macros >= 1.0.27
+BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang clang-devel rust rustfmt
-Requires:	postgresql%{pgmajorversion}-server >= %{pg_min_version}
+Requires:	postgresql%{pgmajorversion}-server
 
 %description
 A PostgreSQL extension for BM25 ranking over PostgreSQL tsvector values, using
@@ -101,7 +84,6 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %changelog
 * Wed Nov 25 2026 Vonng <rh@vonng.com> - 1.3.0-1PGSTY
 - Update to upstream 1.3.0 and install the 1.2.0 to 1.3.0 upgrade script
-- Require the server minor release providing the tuple-header ABI
 
 * Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
 - Build upstream 1.2.0 for PostgreSQL 15 through 19 with pgrx 0.20.1

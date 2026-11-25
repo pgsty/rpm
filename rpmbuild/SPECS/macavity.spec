@@ -13,14 +13,13 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.2.0
+Version:        0.2.1
 Release:        1PGSTY%{?dist}
 Summary:        Deterministic fault injection for PostgreSQL test clusters
 License:        MIT
 URL:            https://github.com/CrystallineCore/Macavity
 Source0:        %{sname}-%{version}.tar.gz
-Patch0:        macavity-0.2.0-pg19-headers.patch
-# Upstream tag source: https://codeload.github.com/CrystallineCore/Macavity/tar.gz/refs/tags/v0.2.0
+# Upstream tag source: https://codeload.github.com/CrystallineCore/Macavity/tar.gz/refs/tags/v0.2.1
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  gcc make
@@ -36,8 +35,7 @@ PostgreSQL execution points. This destructive testing extension is intended
 only for development and disposable test clusters.
 
 %prep
-%setup -q -n macavity-0.2.0
-%patch -P 0 -p1
+%setup -q -n Macavity-%{version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} DOCS=
@@ -57,6 +55,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.2.1-1PGSTY
+- Update to upstream 0.2.1.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.2.0-1PGSTY
 - Add PostgreSQL 19 header and type compatibility.
 

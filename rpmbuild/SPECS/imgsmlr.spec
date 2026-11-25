@@ -4,6 +4,7 @@
 %global snapshot_date 20180223
 %global snapshot_commit c484a15cc4ad254b0cc6cd7dc4820ad6472fcfac
 %global snapshot_short c484a15
+%global source_version 1.0+git%{snapshot_date}.%{snapshot_short}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -22,12 +23,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0
-Release:	2.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
+Version:	1.0.0
+Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL extension which implements similar images searching functionality.
 License:	PostgreSQL
 URL:		https://github.com/postgrespro/imgsmlr
-Source0:	%{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}.tar.gz
+Source0:	%{sname}-%{source_version}.tar.gz
 Patch0:		imgsmlr-1.0.patch
 #           https://github.com/postgrespro/imgsmlr/archive/refs/heads/master.zip
 
@@ -46,7 +47,7 @@ ImgSmlr was written as sample extension which illustrate how PostgreSQL
 extendability could cover such untypical tasks for RDBMS as similar images search.
 
 %prep
-%setup -q -n %{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}
+%setup -q -n %{sname}-%{source_version}
 %patch -P 0 -p1
 
 %build
@@ -68,6 +69,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} USE_PGXS=1 %{?_smp_mflags
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 1.0.0-1PGSTY
+- Use a short package version for upstream snapshot c484a15.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0-2.git20180223.c484a15PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

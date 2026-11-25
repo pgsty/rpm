@@ -128,6 +128,9 @@ postgis_tiger_geocoder:
 geos314:
 	./build geos314 18
 
+geos315:
+	./build geos315 18
+
 proj96:
 	@echo "proj96: retired with EL8; no active build target"
 

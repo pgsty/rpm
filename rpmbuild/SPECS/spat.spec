@@ -26,12 +26,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.1.0a5
-Release:	1.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
+Version:	0.1.0
+Release:	a5PGSTY%{?dist}
 Summary:	Redis-like In-Memory DB Embedded in Postgres
 License:	AGPL-3.0-only
 URL:		https://github.com/Florents-Tselai/spat
-Source0:	%{sname}-%{version}+git%{gitdate}.%{shortcommit}.tar.gz
+Source0:	%{sname}-0.1.0a5+git%{gitdate}.%{shortcommit}.tar.gz
 Patch0:		spat-0.1.0a5.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -70,6 +70,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-a5PGSTY
+- Carry the upstream alpha 5 marker in the package release for snapshot fccb581.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.1.0a5-1.git20250512.fccb581PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

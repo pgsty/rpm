@@ -23,14 +23,13 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	4.9.0
+Version:	4.10.0
 Release:	1PGSTY%{?dist}
 Summary:	Clone PostgreSQL databases, schemas, and tables across environments
 License:	PostgreSQL
 URL:		https://github.com/valehdba/pgclone
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:        pgclone-4.9.0-pg19-lsyscache.patch
-# Official source: https://github.com/valehdba/pgclone/archive/refs/tags/v4.9.0.tar.gz
+# Official source: https://github.com/valehdba/pgclone/archive/refs/tags/v4.10.0.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -46,7 +45,6 @@ tables, and functions between PostgreSQL instances directly from SQL.
 
 %prep
 %setup -q -n %{sname}-%{version}
-%patch -P 0 -p1
 
 %build
 cd %{_builddir}/%{sname}-%{version}
@@ -75,6 +73,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 4.10.0-1PGSTY
+- Update to upstream 4.10.0.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 4.9.0-1PGSTY
 - Update to upstream 4.9.0.
 

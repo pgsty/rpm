@@ -69,8 +69,11 @@ BuildRequires:  zlib-devel
 BuildRequires:	llvm-devel >= 19.0
 BuildRequires:	clang-devel >= 19.0
 %if 0%{?rhel} == 9
-# Supported PGDG majors on EL9 record llvm21/bin in PGXS.
+# Earlier EL9 PGDG builds record llvm21/bin in PGXS.
 BuildRequires:  llvm21 clang21
+%elif 0%{?rhel} == 10
+# PGDG PG16-19 select LLVM 21 on EL10 even when the system defaults to 22.
+BuildRequires:  %{_libdir}/llvm21/bin/clang %{_libdir}/llvm21/bin/llvm-lto
 %endif
 %endif
 
@@ -365,6 +368,7 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %changelog
 * Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 3.7.1-1PGSTY
 - Update to upstream 3.7.1.
+- Require the LLVM tools selected by PGDG PGXS on EL10.
 
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
 - Update to pg_lake 3.7.0 with unchanged pinned DuckDB and Avro sources.

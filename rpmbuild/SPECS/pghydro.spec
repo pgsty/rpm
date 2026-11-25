@@ -5,13 +5,15 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	6.6
-Release:	2PGSTY%{?dist}
+Release:	3PGSTY%{?dist}
 Summary:	Drainage network analysis extensions for PostgreSQL and PostGIS
 License:	GPL-2.0-only
 URL:		https://github.com/pghydro/pghydro
-Source0:	%{sname}-%{version}.tar.gz
+Source0:	%{sname}-v.7.1.tar.gz
 BuildArch:	noarch
-#           repacked from upstream release https://github.com/pghydro/pghydro/releases/tag/v.6.6x
+# Upstream tag v.7.1 contains the 6.6 SQL bundle.
+# https://github.com/pghydro/pghydro/tree/v.7.1
+# SHA256: 8136fb45fb0f1c92c3ee930e6e8d408aa1c8643d39fe320bbb0a10003df41991
 
 BuildRequires:	pgdg-srpm-macros >= 1.0.27
 Requires:	postgresql%{pgmajorversion}-server
@@ -25,7 +27,14 @@ pgh_output_pt_br, and pgh_consistency. Runtime use requires PostGIS and
 PostGIS Raster to be installed before the PgHydro extensions are created.
 
 %prep
-%setup -q -n %{sname}-v.%{version}x
+%setup -q -n %{sname}-v.7.1
+# PostgreSQL expects one comma-separated requires setting per control file.
+for control in *.control; do
+    awk -F "'" '/^requires[[:space:]]*=/ { deps = deps (deps ? "," : "") $2; next }
+        { sub(/\r$/, ""); print }
+        END { if (deps) print "requires = " q deps q }' q="'" "$control" > "$control.tmp"
+    mv "$control.tmp" "$control"
+done
 
 %build
 # Pure SQL extension bundle, nothing to compile.
@@ -77,6 +86,9 @@ install -m 0644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %{pginstdir}/share/extension/pgh_consistency--6.6.sql
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 6.6-3PGSTY
+- Package tag v.7.1 with its declared 6.6 SQL bundle.
+
 * Sat Nov 07 2026 Ruohang Feng <rh@vonng.com> - 6.6-2PGSTY
 - Rebuild the SQL-only bundle as noarch with the PostGIS 3.7 dependency.
 

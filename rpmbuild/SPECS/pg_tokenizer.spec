@@ -8,13 +8,13 @@
 %endif
 
 Name:		%{pname}_%{pgmajorversion}
-Version:	1.2.0
+Version:	1.3.0
 Release:	1PGSTY%{?dist}
 Summary:	PostgreSQL tokenizer extension for full-text search
 License:	Apache-2.0
 URL:		https://vchord.pgsty.com/
 Source0:    %{sname}-%{version}.tar.gz
-Patch0:     pg_tokenizer-1.2.0-pgrx-0.20.1.patch
+Patch0:     pg_tokenizer-1.3.0-pgrx-0.20.1.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang clang-devel rust rustfmt
@@ -42,7 +42,7 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=9e9104a0e4b00d8bbef22dc020cdca16bf0f18e733384db5787322c716c03f4b
+LOCK_EXPECTED=3bceddee1d0ba553cb11100b2b761d9de5c95b1dfe3b58606ef47bfe38386c4a
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -75,6 +75,10 @@ install -m 644 sql/upgrade/%{pname}--*--*.sql %{buildroot}%{pginstdir}/share/ext
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Nov 25 2026 Vonng <rh@vonng.com> - 1.3.0-1PGSTY
+- Update to upstream 1.3.0 with its tokenizer cache and tsvector changes
+- Refresh the pgrx 0.20.1 dependency patch and locked checksums
+
 * Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
 - Build upstream 1.2.0 for PostgreSQL 15 through 19
 - Update the locked pgrx and pgrx-tests crates to 0.20.1

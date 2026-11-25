@@ -805,7 +805,9 @@ pgx_ulid:			# rust pgrx 0.20.1
 pg_uuid_v8:
 	./build pg_uuid_v8 15 16 17 18 19
 
-#pg_uuidv7
+.PHONY: pg_uuidv7
+pg_uuidv7:
+	./build pg_uuidv7 15 16 17 18 19
 
 permuteseq:
 	./build permuteseq 15 16 17 18 19

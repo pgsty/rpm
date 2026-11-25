@@ -8,7 +8,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.2.0
+Version:	1.3.0
 Release:	1PGSTY%{?dist}
 Summary:	Native BM25 Ranking Index in PostgreSQL
 License:	AGPL-3.0-only
@@ -45,7 +45,7 @@ if [ "$CURRENT_PGRX" != "$PGRX_VERSION" ]; then
 	echo "cargo-pgrx $PGRX_VERSION is required; run pig build pgrx -v $PGRX_VERSION before building" >&2
 	exit 1
 fi
-LOCK_EXPECTED=55bff64dbfffe27d8321de90c8709ed27b1b65adcbf3c071e773745b53227205
+LOCK_EXPECTED=aa4be3c63ecda85bea394c0eab38c603fae24a4d8c41e838a433fa7b9ebff31d
 LOCK_BEFORE=$(sha256sum Cargo.lock | cut -d ' ' -f1)
 if [ "$LOCK_BEFORE" != "$LOCK_EXPECTED" ]; then
 	echo "unexpected Cargo.lock checksum: $LOCK_BEFORE" >&2
@@ -82,6 +82,9 @@ cp -a %{cargo_target_dir}/release/%{pname}-pg%{pgmajorversion}/usr/pgsql-%{pgmaj
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Nov 25 2026 Vonng <rh@vonng.com> - 1.3.0-1PGSTY
+- Update to upstream 1.3.0 and install the 1.2.0 to 1.3.0 upgrade script
+
 * Mon Nov 23 2026 Vonng <rh@vonng.com> - 1.2.0-1PGSTY
 - Build upstream 1.2.0 for PostgreSQL 15 through 19 with pgrx 0.20.1
 - Include the upstream 1.1.0 to 1.2.0 upgrade script

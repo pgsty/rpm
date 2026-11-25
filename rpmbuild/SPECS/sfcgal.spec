@@ -1,4 +1,5 @@
-# Based on the PGDG EL9 source RPM; see bin/postgis-sources.json.
+# PGDG reference: https://dnf-srpms.postgresql.org/srpms/common/redhat/rhel-9-x86_64/SFCGAL-2.3.0-5PGDG.rhel9.9.src.rpm
+# Upstream source SHA256: 5f6aa1838e5ae31523ebf410cde0240b7a88d7e062b7ffff945e4fae2aaba0fa
 
 Summary:	C++ wrapper library around CGAL for PostGIS
 Name:		SFCGAL
@@ -8,8 +9,9 @@ BuildRequires:	cgal-devel
 %endif
 
 %if 0%{?suse_version} && 0%{?suse_version} == 1600
-Version:	2.2.0
+Version:	2.3.0
 BuildRequires:	CGAL-devel >= 6.1
+BuildRequires:  cmake(nlohmann_json) >= 3.11
 %endif
 
 %if 0%{?rhel} && 0%{?rhel} == 8
@@ -18,13 +20,15 @@ BuildRequires:	CGAL-devel >= 5.4
 %endif
 
 %if 0%{?rhel} && 0%{?rhel} >= 9
-Version:	2.2.0
+Version:	2.3.0
 BuildRequires:	CGAL-devel >= 5.6
+BuildRequires:  cmake(nlohmann_json) >= 3.11
 %endif
 
 %if 0%{?fedora} && 0%{?fedora} >= 41
-Version:	2.2.0
+Version:	2.3.0
 BuildRequires:	CGAL-devel >= 5.6
+BuildRequires:  cmake(nlohmann_json) >= 3.11
 %endif
 
 Release:        1PGSTY%{?dist}
@@ -128,6 +132,9 @@ Development headers and libraries for SFCGAL.
 %{_libdir}/libSFCGAL.so*
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 2.3.0-1PGSTY
+- Package upstream SFCGAL 2.3.0.
+
 * Sun Oct 04 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1PGSTY
 - Import the PGDG GIS packaging for PGSTY.
 - Preserve RPM build flags and generate debuginfo and debugsource packages.

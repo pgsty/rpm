@@ -22,7 +22,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.6
-Release:	1.%{source_snapshot}PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	1 Byte Currency ISO type for PostgreSQL
 License:	MIT
 URL:		https://github.com/adjust/pg-currency
@@ -62,6 +62,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.0.6-2PGSTY
+- Use a short package version for upstream snapshot 6c91875.
+
 * Thu Nov 05 2026 Vonng <rh@vonng.com> - 0.0.6-1.git20261006.6c91875PGSTY
 - Update to upstream control version 0.0.6 at commit 6c91875373f5
 - Include the upstream MRU currency addition and supplied SQL files

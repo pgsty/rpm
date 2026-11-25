@@ -135,6 +135,24 @@ if [[ "${1:-}" == "debug" || "${1:-}" == "dbg" ]]; then
     shift
 fi
 
+# The kernel's spec builds PostgreSQL 19 itself. Run it once.
+case "$EXTENSION_NAME" in
+    openhalo|openhalodb|aux_mysql|openhalo-19|openhalo19|openhalodb-19)
+        EXTENSION_NAME=openhalodb-19
+        for major in "$@"; do
+            if [[ "$major" != 19 ]]; then
+                log_error "OpenHalo requires PostgreSQL 19, got $major"
+                exit 1
+            fi
+        done
+        set -- 19
+        ;;
+    openhalo[0-9]*|openhalo-[0-9]*|openhalodb-[0-9]*)
+        log_error "unsupported OpenHalo target: $EXTENSION_NAME, use openhalo-19"
+        exit 1
+        ;;
+esac
+
 # Cargo's optimized release profile omits DWARF by default. Preserve full
 # release-mode debug information for rpmbuild to split into debuginfo and
 # debugsource packages. Individual specs repeat these defaults so direct

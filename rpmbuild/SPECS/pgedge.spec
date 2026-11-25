@@ -17,7 +17,7 @@
 %endif
 %endif
 %endif
-%global spockversion 5.0.14
+%global spockversion 5.0.15
 %global lolorversion 1.2.3
 %global snowflakeversion 2.6.1
 %global pgbaseinstdir /usr/pgedge-%{pgmajorversion}
@@ -30,7 +30,7 @@
 
 Name:           %{sname}-%{pgmajorversion}
 Version:        %{pgversion}
-Release:        1PGSTY%{?dist}
+Release:        2PGSTY%{?dist}
 Summary:        pgEdge PostgreSQL kernel with bundled replication extensions
 License:        PostgreSQL
 URL:            https://github.com/pgEdge
@@ -39,7 +39,7 @@ Source1:        spock-%{spockversion}.tar.gz
 Source2:        lolor-%{lolorversion}.tar.gz
 Source3:        snowflake-%{snowflakeversion}.tar.gz
 %if 0%{?pgmajorversion} == 15
-Patch0:         pgedge-spock-5.0.14-pg15.patch
+Patch0:         pgedge-spock-5.0.15-pg15.patch
 %endif
 
 BuildRequires:  glibc-devel, bison >= 2.3, flex >= 2.5.35, gettext >= 0.10.35
@@ -250,6 +250,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 18.7-2PGSTY
+- Rebuild PostgreSQL 15 through 18 with Spock 5.0.15.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 18.7-1PGSTY
 - Update PostgreSQL to 15.20, 16.16, 17.12, and 18.7
 - Bundle Spock 5.0.14 and Snowflake 2.6.1 and enable LLVM JIT

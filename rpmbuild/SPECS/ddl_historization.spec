@@ -11,7 +11,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	1.0.0
-Release:	1.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	PostgreSQL Extension to historize in a table all DDL changes made on a database
 License:	GPL-2.0-only
 URL:		https://github.com/rodo/pg_ddl_historization
@@ -42,6 +42,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} install DESTDIR=%{buildroot}
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 1.0.0-2PGSTY
+- Use a short package version for upstream snapshot 18eb9a4.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0.0-1.git20241205.18eb9a4PGSTY
 - Update to upstream main snapshot 18eb9a4 with extension version 1.0.0
 - Bridge the historical 0.2 line into the complete upstream update graph

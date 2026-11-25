@@ -20,8 +20,8 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.0
-Release:	1.git20260808.ff37a7c8PGSTY%{?dist}
+Version:	2.0.0
+Release:	1PGSTY%{?dist}
 Summary:	A PostgreSQL foreign data wrapper for Redis
 License:	PostgreSQL
 URL:		https://github.com/pg-redis-fdw/redis_fdw
@@ -63,6 +63,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} USE_PGXS=
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 2.0.0-1PGSTY
+- Use a short package version for upstream snapshot ff37a7c8.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 2.0-1.git20260808.ff37a7c8PGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

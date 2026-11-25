@@ -1,17 +1,17 @@
-%global source0_sha256 fe3d623600a1c046b4668feec097c507b4ae52f20c1fc7f1ebd384c07a165e77
+%global source0_sha256 a02cb44db1269b699629e419d4949e6e51e984b1f0e9a984e8ee1e1b3b7cc36f
 %global valkey_modules_abi 1
 %global valkey_modules_dir %{_libdir}/valkey/modules
 
 %bcond_without tests
 
 Name:           valkey
-Version:        9.1.4
+Version:        9.2.0
 Release:        1PGSTY%{?dist}
 Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0 AND Apache-2.0
 URL:            https://valkey.io/
 Source0:        https://github.com/valkey-io/valkey/archive/refs/tags/%{version}.tar.gz#/valkey-%{version}.tar.gz
-Patch1:         valkey-9.1.2-tests.patch
+Patch1:         valkey-9.2.0-tests.patch
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -288,6 +288,9 @@ exit 0
 %{_rpmmacrodir}/macros.valkey
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 9.2.0-1PGSTY
+- Update to upstream 9.2.0.
+
 * Sat Nov 21 2026 Vonng <rh@vonng.com> - 9.1.4-1PGSTY
 - Update to the latest 9.1 maintenance release
 

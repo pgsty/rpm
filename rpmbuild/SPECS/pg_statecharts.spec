@@ -6,7 +6,7 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.1.0
+Version:        0.2.0
 Release:        1PGSTY%{?dist}
 Summary:        Hierarchical state machines inside PostgreSQL transactions
 License:        MIT
@@ -56,5 +56,8 @@ install -m 644 stage/* %{buildroot}%{pginstdir}/share/extension/
 %{pginstdir}/share/extension/pg_statecharts_dev--*.sql
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.2.0-1PGSTY
+- Update to upstream 0.2.0.
+
 * Fri Nov 06 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-1PGSTY
 - Package the runtime and optional development extension for PostgreSQL 16-18.

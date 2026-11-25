@@ -1,24 +1,25 @@
 [
   {
     "package": "pg_statecharts",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "pg_versions": [
       16,
       17,
-      18
+      18,
+      19
     ],
-    "archive": "pg_statecharts-0.1.0.tar.gz",
-    "sha256": "8b7a1b580600df6fb982036fa2a416d1d9eb94e75e2c83435cd3a494f5887c06",
+    "archive": "pg_statecharts-0.2.0.tar.gz",
+    "sha256": "9624f26098e444c8cdd03f571e00442a972891d88a50bca34184cfb5bbd5d2ec",
     "repository": "https://github.com/kronor-io/statecharts",
     "extensions": [
       "pg_statecharts",
       "pg_statecharts_dev"
     ],
-    "source_url": "https://github.com/kronor-io/statecharts/releases/download/v0.1.0/pg_statecharts-0.1.0.tar.gz",
-    "upstream_sha256": "da78948b75e9676ed3ebb603aab5717818be48533acc2720a4c58ef0e31f9e65",
-    "license_source": "https://api.pgxn.org/dist/pg_statecharts/0.1.0/pg_statecharts-0.1.0.zip",
-    "license_archive_sha256": "d3aab58f3b2514aebc585f56ef73288e77cad39c76df9853227357c8013b6221",
-    "normalization": "Add only the MIT LICENSE from the matching PGXN distribution to the upstream runtime/dev bundle. Repack with COPYFILE_DISABLE=1 GNU tar --format=gnu --no-xattrs --no-acls, excluding .git, .DS_Store and ._*; root pg_statecharts-0.1.0. Runtime SQL trees in both distributions are identical.",
+    "source_url": "https://github.com/kronor-io/statecharts/releases/download/v0.2.0/pg_statecharts-0.2.0.tar.gz",
+    "upstream_sha256": "e2a281675d086442e94e175ee8cb80d681d250284cdb6574af6e595fe91aaf9d",
+    "license_source": "https://api.pgxn.org/dist/pg_statecharts/0.2.0/pg_statecharts-0.2.0.zip",
+    "license_archive_sha256": "ccfa4fa95147a73027d261dc374bb8103d7418d6dbff11a9549aea1ac9d88a70",
+    "normalization": "Add only the MIT LICENSE from the matching PGXN distribution to the upstream runtime/dev bundle. Repack with COPYFILE_DISABLE=1 GNU tar --format=gnu --no-xattrs --no-acls, excluding .git, .DS_Store and ._*; root pg_statecharts-0.2.0. Runtime SQL trees in both distributions are identical.",
     "architecture": "noarch/all"
   },
   {

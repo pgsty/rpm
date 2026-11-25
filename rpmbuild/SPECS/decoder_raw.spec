@@ -4,6 +4,7 @@
 %global snapshot_date 20260728
 %global snapshot_commit 2271b0d525ea8a42319b0e3e85a81d152bd3ba31
 %global snapshot_short 2271b0d
+%global source_version 1.0+git%{snapshot_date}.%{snapshot_short}
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
  %if 0%{?rhel} && 0%{?rhel} == 7
@@ -22,12 +23,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.0
-Release:	2.git%{snapshot_date}.%{snapshot_short}PGSTY%{?dist}
+Version:	1.0.0
+Release:	1PGSTY%{?dist}
 Summary:	Output plugin for logical replication in Raw SQL format
 License:	PostgreSQL
 URL:		https://github.com/michaelpq/pg_plugins/blob/main/decoder_raw/
-Source0:	%{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}.tar.gz
+Source0:	%{sname}-%{source_version}.tar.gz
 Patch0:		decoder_raw-1.0.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -65,7 +66,7 @@ INSERT queries are generated for all relations everytime using the new
 tuple values fetched from WAL.
 
 %prep
-%setup -q -n %{sname}-%{version}+git%{snapshot_date}.%{snapshot_short}
+%setup -q -n %{sname}-%{source_version}
 %patch -P 0 -p1
 
 %build
@@ -84,6 +85,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 1.0.0-1PGSTY
+- Use a short package version for upstream snapshot 2271b0d.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.0-2.git20260728.2271b0dPGSTY
 - Align LLVM dependencies and the PGXS enablement toggle with pgrpms
 - Merge extension bitcode into the main package and retire the llvmjit subpackage

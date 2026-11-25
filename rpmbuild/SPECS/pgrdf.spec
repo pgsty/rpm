@@ -8,14 +8,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.6.40
-Release:	2PGSTY%{?dist}
+Version:	0.6.41
+Release:	1PGSTY%{?dist}
 Summary:	RDF, SPARQL, SHACL, and OWL reasoning for PostgreSQL
 License:	MIT
 URL:		https://github.com/styk-tv/pgRDF
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:         pgrdf-0.6.40-pgrx-0.20.1.patch
-#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.40.tar.gz
+Patch0:         pgrdf-0.6.41-pgrx-0.20.1.patch
+#           https://github.com/styk-tv/pgRDF/archive/refs/tags/v0.6.41.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	cargo clang rust rustfmt git
@@ -79,6 +79,9 @@ install -m 644 %{_builddir}/%{srcdir}/LICENSE %{buildroot}%{_licensedir}/%{name}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.6.41-1PGSTY
+- Update to upstream 0.6.41.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.6.40-2PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

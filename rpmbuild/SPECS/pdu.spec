@@ -13,7 +13,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	%{pduver}
-Release:	1.git%{gitdate}.%{shortcommit}PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	PostgreSQL data recovery and extraction utility
 License:	Apache-2.0 AND PostgreSQL
 URL:		https://github.com/wublabdubdub/PDU-PostgreSQLDataUnloader
@@ -60,6 +60,9 @@ install -pm 0644 pdu.ini %{buildroot}%{pginstdir}/share/%{sname}/pdu.ini.example
 %{pginstdir}/share/%{sname}/pdu.ini.example
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 3.0.25.12-2PGSTY
+- Use a short package version for upstream snapshot 345422f.
+
 * Tue Sep 08 2026 Ruohang Feng <rh@vonng.com> - 3.0.25.12-1.git20260822.345422fPGSTY
 - Use the first binary revision for the unpublished source snapshot
 - Use RPM build flags and setup metadata to generate full debug packages

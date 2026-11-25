@@ -1,7 +1,7 @@
 %global sname polardb
 %global pgmajorversion 17
 %global pgbaseinstdir /usr/polar-%{pgmajorversion}
-%global polar_commit ff510dfc
+%global polar_commit 479fdbb0
 %global polar_branch POLARDB_17_STABLE
 %global pgport 5432
 
@@ -9,13 +9,13 @@
 %global _lto_cflags %{nil}
 
 Name:           %{sname}-%{pgmajorversion}
-Version:        17.11.1.0
-Release:        2PGSTY%{?dist}
+Version:        17.12.1.0
+Release:        1PGSTY%{?dist}
 Summary:        PolarDB PostgreSQL %{pgmajorversion} kernel
 License:        Apache-2.0 AND PostgreSQL AND BSD-2-Clause AND BSD-3-Clause AND MIT AND Spencer-94
 URL:            https://github.com/polardb/PolarDB-for-PostgreSQL
 Source0:        polardb-for-postgresql-%{version}.tar.gz
-Patch0:         polardb-17.11.1.0.patch
+Patch0:         polardb-17.12.1.0.patch
 # Bundle-style private prefix package; do not register copied libraries as system providers.
 AutoReqProv:    no
 
@@ -174,6 +174,9 @@ getent passwd postgres >/dev/null 2>&1 || useradd -M -g postgres -r -d /var/lib/
 /sbin/ldconfig
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 17.12.1.0-1PGSTY
+- Update to upstream 17.12.1.0.
+
 * Tue Nov 03 2026 Vonng <rh@vonng.com> - 17.11.1.0-2PGSTY
 - Rebuild the complete kernel and contrib bundle with PolarStore 1.2.42-3 and zlog 1.2.20.
 - Pin the updated SDK build inputs and retain verbose compile and link evidence.

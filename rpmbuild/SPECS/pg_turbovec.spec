@@ -8,15 +8,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.16.3
+Version:        2.16.4
 Release:        1PGSTY%{?dist}
 Summary:        TurboQuant-compressed vector search for PostgreSQL
 License:        Apache-2.0
 URL:            https://codeberg.org/gregburd/pg_turbovec
 Source0:        %{sname}-%{version}.tar.gz
-#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.16.3.tar.gz
+#               https://codeberg.org/gregburd/pg_turbovec/archive/v2.16.4.tar.gz
 # Repacked with GNU tar to use a versioned archive root.
-Patch0:         pg-turbovec-2.16.3-pgrx-0.20.1.patch
+Patch0:         pg-turbovec-2.16.4-pgrx-0.20.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang git rust rustfmt
@@ -85,6 +85,9 @@ install -m 644 LICENSE %{buildroot}%{_licensedir}/%{name}/
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 2.16.4-1PGSTY
+- Update to upstream 2.16.4.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 2.16.3-1PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

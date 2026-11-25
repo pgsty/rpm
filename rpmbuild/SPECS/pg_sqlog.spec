@@ -4,14 +4,15 @@
 %global source_commit b016539f6448c2d01a3aec5067b4f1fc2bebb9be
 %global source_date 20241118
 %global source_short b016539
+%global source_version 1.7
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.7
-Release:	1.git%{source_date}.%{source_short}PGSTY%{?dist}
+Version:	1.7.0
+Release:	1PGSTY%{?dist}
 Summary:	Provide SQL interface to PostgreSQL logs
 License:	BSD-3-Clause
 URL:		https://github.com/kouber/pg_sqlog
-Source0:	pg_sqlog-%{version}+git%{source_date}.%{source_short}.tar.gz
+Source0:	pg_sqlog-%{source_version}+git%{source_date}.%{source_short}.tar.gz
 #           normalized upstream master snapshot b016539f6448c2d01a3aec5067b4f1fc2bebb9be
 BuildArch:	noarch
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -23,7 +24,7 @@ pg_sqlog allows to query a foreign table, pointing to a log, recorded in a CSV f
 It has special functions to extract the query duration of each query, as well as to group similar queries together.
 
 %prep
-%setup -q -n %{sname}-%{version}
+%setup -q -n %{sname}-%{source_version}
 
 %build
 PATH=%{pginstdir}/bin:$PATH make
@@ -40,6 +41,9 @@ PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %exclude /usr/lib/.build-id/*
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 1.7.0-1PGSTY
+- Use a short package version for upstream snapshot b016539.
+
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 1.7-1.git20241118.b016539PGSTY
 - Pin upstream master snapshot %{source_commit}
 - Package the upstream 1.6 to 1.7 SQL upgrade path

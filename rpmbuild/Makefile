@@ -1243,7 +1243,9 @@ aws_s3:
 ###############################################################
 #                       Category: SIM                         #
 ###############################################################
-#orafce
+.PHONY: orafce
+orafce:
+	./build orafce 15 16 17 18 19
 #pgtt
 #pg_statement_rollback
 pg_dbms_metadata: # recipe validation; reuse PGDG on active EL platforms

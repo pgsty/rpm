@@ -11,7 +11,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.2
-Release:	1.git%{source_date}.%{source_short}PGSTY%{?dist}
+Release:	2PGSTY%{?dist}
 Summary:	Cross documentation between Django and DBT projects
 License:	GPL-3.0-only
 URL:		https://github.com/ZeroGachis/pg_schedoc
@@ -47,6 +47,9 @@ LC_ALL=C PATH=%{pginstdir}/bin:$PATH make install DESTDIR=%{buildroot}
 %{pginstdir}/share/extension/%{pname}*sql
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.0.2-2PGSTY
+- Use a short package version for upstream snapshot 9f135c3.
+
 * Tue Sep 01 2026 Vonng <rh@vonng.com> - 0.0.2-1.git20260430.9f135c3PGSTY
 - Pin upstream develop snapshot 9f135c3
 - Add the audited 0.0.1 to 0.0.2 migration

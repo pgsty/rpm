@@ -8,13 +8,12 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        1.3.5
+Version:        2.0.0
 Release:        1PGSTY%{?dist}
 Summary:        Extended Date Time Format functions for PostgreSQL
 License:        MIT OR Apache-2.0
 URL:            https://github.com/monumental-archive/edtf
 Source0:        edtf_postgres-%{version}.tar.gz
-Patch0:         edtf-postgres-1.3.5-pgrx-0.20.1.patch
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo rust rustfmt clang clang-devel llvm
@@ -25,7 +24,6 @@ Extended Date Time Format functions for PostgreSQL.
 
 %prep
 %setup -q -n edtf-%{version}
-%patch -P0 -p1
 
 %build
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
@@ -58,6 +56,9 @@ cp -a %{_builddir}/%{sname}-package%{pginstdir}/. %{buildroot}%{pginstdir}/
 %{pginstdir}/share/extension/%{pname}--*.sql
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 2.0.0-1PGSTY
+- Update to upstream 2.0.0.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 1.3.5-1PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

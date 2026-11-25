@@ -7,15 +7,15 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        0.14.0
-Release:        2PGSTY%{?dist}
+Version:        0.15.0
+Release:        1PGSTY%{?dist}
 Summary:        Incremental multidimensional models over PostgreSQL tables
 License:        Apache-2.0 OR MIT
 URL:            https://codeberg.org/gregburd/improv
 Source0:        improv-%{version}.tar.gz
-Patch0:         pg-improv-0.14.0-pgrx-0.20.1.patch
-# https://codeberg.org/gregburd/improv/archive/v0.14.0.tar.gz
-# SHA256: a54ba0d206f482122cacfe31fdf36a975634a81be39cf496ee59e27ff8e452c1
+Patch0:         pg-improv-0.15.0-pgrx-0.20.1.patch
+# https://codeberg.org/gregburd/improv/archive/v0.15.0.tar.gz
+# SHA256: b2ce411e68cf3b3c726e5f61168911569ccaf2399acb80ab77c39ef25f710d96
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:  cargo clang rust rustfmt
@@ -72,6 +72,9 @@ cp -a crates/pg_improv/sql/%{pname}--*.sql %{buildroot}%{pginstdir}/share/extens
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.15.0-1PGSTY
+- Update to upstream 0.15.0.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.14.0-2PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

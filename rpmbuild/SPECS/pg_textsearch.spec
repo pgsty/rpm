@@ -3,7 +3,7 @@
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
 %if 0%{?pgmajorversion} < 17 || 0%{?pgmajorversion} > 19
-%{error:pg_textsearch 1.5.1 only supports PostgreSQL 17 and 18}
+%{error:pg_textsearch 1.6.0 only supports PostgreSQL 17 through 19}
 %endif
 
 %ifarch ppc64 ppc64le s390 s390x armv7hl
@@ -23,15 +23,14 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	1.5.1
+Version:	1.6.0
 Release:	1PGSTY%{?dist}
 Summary:	BM25-based full-text search for PostgreSQL
 License:	PostgreSQL
 URL:		https://github.com/timescale/pg_textsearch
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:        pg_textsearch-1.5.1-pg19-limits-header.patch
-#           https://github.com/timescale/pg_textsearch/releases/download/v1.5.1/pg_textsearch-1.5.1.tar.gz
-#           Supported: PostgreSQL 17, 18 only
+#           https://github.com/timescale/pg_textsearch/releases/download/v1.6.0/pg_textsearch-1.6.0.tar.gz
+#           Supported: PostgreSQL 17 through 19
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 BuildRequires:	gcc
@@ -52,11 +51,10 @@ Features:
 - Configurable BM25 parameters (k1, b)
 - Support for multiple language configurations
 - Partitioned table compatibility
-- PostgreSQL 17 and 18 compatible
+- PostgreSQL 17 through 19 compatible
 
 %prep
 %setup -q -n %{sname}-%{version}
-%patch -P 0 -p1
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}
@@ -78,6 +76,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 1.6.0-1PGSTY
+- Update to upstream 1.6.0.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 1.5.1-1PGSTY
 - Add PostgreSQL 19 compilation compatibility.
 

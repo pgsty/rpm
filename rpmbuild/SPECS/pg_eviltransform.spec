@@ -7,13 +7,12 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	0.0.8
+Version:	0.0.9
 Release:	1PGSTY%{?dist}
 Summary:	Coordinate transformation extension for PostgreSQL/PostGIS
 License:	MIT
 URL:		https://github.com/aiyou178/pg_eviltransform
 Source0:	%{sname}-%{version}.tar.gz
-Patch0:         pg-eviltransform-0.0.8-pgrx-0.20.1.patch
 #           https://github.com/aiyou178/pg_eviltransform/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -27,7 +26,6 @@ Coordinate transformation extension for PostgreSQL/PostGIS.
 
 %prep
 %setup -q -n %{sname}-%{version}
-%patch -P0 -p1
 
 %build
 export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-1.100.0}"
@@ -70,6 +68,9 @@ cp -a %{_builddir}/%{sname}-%{version}/target/release/%{pname}-pg%{pgmajorversio
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.0.9-1PGSTY
+- Update to upstream 0.0.9.
+
 * Mon Nov 23 2026 Ruohang Feng <rh@vonng.com> - 0.0.8-1PGSTY
 - Build with pgrx and cargo-pgrx 0.20.1 on Rust 1.100.0.
 

@@ -140,6 +140,9 @@ cgal54:
 proj98:
 	./build proj98 18
 
+proj99:
+	./build proj99 18
+
 sfcgal:
 	./build sfcgal 18
 

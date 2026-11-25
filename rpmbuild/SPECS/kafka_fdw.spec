@@ -21,7 +21,7 @@
 
 Name:		%{sname}_%{pgmajorversion}
 Version:	0.0.3
-Release:	2.git20251030.8615082PGSTY%{?dist}
+Release:	3PGSTY%{?dist}
 Summary:	kafka foreign database wrapper for postresql
 License:	PostgreSQL
 URL:		https://github.com/adjust/kafka_fdw
@@ -64,6 +64,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.0.3-3PGSTY
+- Use a short package version for upstream snapshot 8615082.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 0.0.3-2.git20251030.8615082PGSTY
 - Add PostgreSQL 19 header and type compatibility.
 

@@ -14,14 +14,14 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        2.9.1
+Version:        2.9.2
 Release:        1PGSTY%{?dist}
 Summary:        Physical and logical data checksums for PostgreSQL
 License:        MIT
 URL:            https://github.com/VictorNagibator/pg_integrity_checksums
 Source0:        %{sname}-%{version}.tar.gz
-# Official archive: https://github.com/VictorNagibator/pg_integrity_checksums/archive/refs/tags/v2.9.1.tar.gz
-# SHA256: 775e21219fe2e35b7018fa7636adcd52928cd1eb4b43268a939e3f8059fa0bff
+# Official archive: https://github.com/VictorNagibator/pg_integrity_checksums/archive/refs/tags/v2.9.2.tar.gz
+# SHA256: c5d5bb0a00a8e366c3b59f87bf82fce316822da4be24fd7acabd1bb531007e35
 
 BuildRequires:  gcc make
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -60,6 +60,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} install DESTDIR=%{buildro
 %exclude /usr/lib/.build-id
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 2.9.2-1PGSTY
+- Update to upstream 2.9.2.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.9.1-1PGSTY
 - Update to upstream 2.9.1.
 

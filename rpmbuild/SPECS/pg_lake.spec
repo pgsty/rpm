@@ -12,7 +12,7 @@
 # /usr/pgsql-NN paths; retain ELF build-id notes but do not package the links.
 
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error:pg_lake 3.7.0 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
+%{error:pg_lake 3.7.1 requires EL9 or later because its DuckDB build requires system OpenSSL 3}
 %endif
 
 # The bundled runtimes are private implementation details.  Do not let their
@@ -22,7 +22,7 @@
 %global __requires_exclude ^(libduckdb\\.so|libavro\\.so\\.24).*$
 
 %if 0%{?pgmajorversion} < 16 || 0%{?pgmajorversion} > 19
-%{error:pg_lake 3.7.0 only supports PostgreSQL 16 through 19}
+%{error:pg_lake 3.7.1 only supports PostgreSQL 16 through 19}
 %endif
 
 %{!?llvm:%global llvm 1}
@@ -34,7 +34,7 @@
 %endif
 
 Name:           %{sname}_%{pgmajorversion}
-Version:        3.7.0
+Version:        3.7.1
 Release:	1PGSTY%{?dist}
 Summary:        PostgreSQL lakehouse extensions powered by DuckDB
 License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND ICU AND ISC AND PostgreSQL AND Unicode-3.0 AND Zlib AND curl AND OpenSSL AND LicenseRef-TPC-EULA-2.2
@@ -43,8 +43,6 @@ URL:            https://github.com/Snowflake-Labs/pg_lake
 # submodules required by the build.
 Source0:        %{sname}-%{version}.tar.gz
 Patch0:         pg_lake-3.7.0-packaging.patch
-# Retain the upstream 3.5.10 Brotli fix still absent from the 3.7.0 source.
-Patch1:         pg_lake-3.7.0-brotli-block-switch.patch
 # Avoid a distinct httpfs type with the same C++ name during LTO.
 Patch2:         pg_lake-3.7.0-s3-odr.patch
 
@@ -94,7 +92,6 @@ pgduck_server binary. Its first start may download the DuckDB spatial extension.
 %prep
 %autosetup -N -n %{sname}-%{version}
 patch -p1 --fuzz=0 < %{PATCH0}
-patch -p1 --fuzz=0 < %{PATCH1}
 patch -p1 --fuzz=0 < %{PATCH2}
 
 rm -rf .rpm-licenses
@@ -366,6 +363,9 @@ test "$(readlink -f "$avro_resolved")" = "$(readlink -f "$private/libavro.so.24"
 %endif
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 3.7.1-1PGSTY
+- Update to upstream 3.7.1.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 3.7.0-1PGSTY
 - Update to pg_lake 3.7.0 with unchanged pinned DuckDB and Avro sources.
 - Rebase archive/private-library packaging and retain scoped Brotli/ODR fixes.

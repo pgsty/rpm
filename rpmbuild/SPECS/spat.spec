@@ -33,6 +33,7 @@ License:	AGPL-3.0-only
 URL:		https://github.com/Florents-Tselai/spat
 Source0:	%{sname}-0.1.0a5+git%{gitdate}.%{shortcommit}.tar.gz
 Patch0:		spat-0.1.0a5.patch
+Patch1:          spat-0.1.0a5-bool-arguments.patch
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
 %if %llvm
@@ -71,6 +72,7 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 
 %changelog
 * Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 0.1.0-a5PGSTY
+- Use boolean defaults for null NX and XX arguments on newer compilers.
 - Carry the upstream alpha 5 marker in the package release for snapshot fccb581.
 
 * Mon Aug 31 2026 Vonng <rh@vonng.com> - 0.1.0a5-1.git20250512.fccb581PGSTY

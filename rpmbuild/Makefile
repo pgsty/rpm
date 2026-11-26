@@ -1036,7 +1036,7 @@ table_log:
 #                       Category: STAT                         #
 ###############################################################
 pg_regresql:
-	./build pg_regresql 15 16 17 18
+	./build pg_regresql 15 16 17 18 19
 
 pg_profile:
 	./build pg_profile 15 16 17 18 19

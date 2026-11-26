@@ -1,5 +1,5 @@
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:pg_regresql is packaged for PostgreSQL 15 through 18; see the PG19 audit record}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:pg_regresql is packaged for PostgreSQL 15 through 19}
 %endif
 
 %global pname pg_regresql
@@ -23,7 +23,7 @@
 %endif
 
 Name:		%{sname}_%{pgmajorversion}
-Version:	2.2.0
+Version:	2.2.1
 Release:	1PGSTY%{?dist}
 Summary:	Trust pg_class statistics for query planning instead of physical file size
 License:	BSD-2-Clause AND PostgreSQL
@@ -47,12 +47,12 @@ statistics instead of estimates from physical file size.
 
 %build
 cd %{_builddir}/%{sname}-%{version}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} all
+PATH=%{pginstdir}/bin:$PATH %{__make} enable_rpath=no %{with_llvm_arg} %{?_smp_mflags} all
 
 %install
 %{__rm} -rf %{buildroot}
 cd %{_builddir}/%{sname}-%{version}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} enable_rpath=no %{with_llvm_arg} %{?_smp_mflags} install DESTDIR=%{buildroot}
 
 %files
 %license LICENSE restore/README.md
@@ -67,6 +67,9 @@ PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags} install D
 %endif
 
 %changelog
+* Tue Nov 24 2026 Ruohang Feng <rh@vonng.com> - 2.2.1-1PGSTY
+- Use the upstream PostgreSQL 19 planner hook.
+
 * Sat Nov 21 2026 Ruohang Feng <rh@vonng.com> - 2.2.0-1PGSTY
 - Update to upstream 2.2.0 with extended-statistics restore backports.
 - Drop the default-goal patch now included upstream and record PostgreSQL licensing.

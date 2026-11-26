@@ -1,0 +1,71 @@
+PostgreSQL 19 loads the PL/Python interpreter from its _PG_init. The
+pre-19 probe starts CPython too early for PyImport_AppendInittab.
+Let Multicorn own initialization in its backend and register its native
+helpers in multicorn.so. The shared Python package can then coexist with
+other PG majors without a PG-major-specific ELF in site-packages.
+
+Retain the Debian fix for borrowed args/kwargs in the native logger.
+--- a/Makefile
++++ b/Makefile
+@@ -1,6 +1,6 @@
+ srcdir       = .
+ MODULE_big   = multicorn
+-OBJS         =  src/errors.o src/python.o src/query.o src/multicorn.o
++OBJS         =  src/errors.o src/python.o src/query.o src/multicorn.o src/utils.o
+ 
+ 
+ DATA         = $(filter-out $(wildcard sql/*--*.sql),$(wildcard sql/*.sql))
+--- a/src/multicorn.c
++++ b/src/multicorn.c
+@@ -43,6 +43,7 @@
+ PG_FUNCTION_INFO_V1(multicorn_validator);
+ 
+ 
++PyMODINIT_FUNC PyInit__utils(void);
+ void		_PG_init(void);
+ void		_PG_fini(void);
+ 
+@@ -145,6 +146,17 @@
+ 	MemoryContext oldctx = MemoryContextSwitchTo(CacheMemoryContext);
+ 	bool need_import_plpy = false;
+ 
++	/* The helper uses backend symbols and belongs to this PostgreSQL major. */
++	if (Py_IsInitialized())
++		elog(ERROR, "multicorn requires a fresh Python interpreter in this backend");
++	if (PyImport_AppendInittab("multicorn._utils", PyInit__utils) < 0)
++		elog(ERROR, "could not register multicorn._utils");
++
++	/*
++	 * PG19 initializes its interpreter from plpython3's _PG_init. Looking up
++	 * PyInit_plpy there would start a second initialization during this one.
++	 */
++#if PG_VERSION_NUM < 190000
+ 	/* Try to load plpython3 with its own module */
+ 	PG_TRY();
+ 	{
+@@ -157,6 +169,7 @@
+ 		need_import_plpy = false;
+ 	}
+ 	PG_END_TRY();
++#endif
+ 	Py_Initialize();
+ 	if (need_import_plpy)
+ 		PyImport_ImportModule("plpy");
+--- a/src/utils.c
++++ b/src/utils.c
+@@ -95,15 +95,8 @@
+ 			detailstr = PyString_AsString(detail);
+ 			errdetail("%s", detailstr);
+ 		}
+-		Py_DECREF(args);
+-		Py_DECREF(kwargs);
+ 		errfinish(__FILE__, __LINE__, PG_FUNCNAME_MACRO);
+ 	}
+-	else
+-	{
+-		Py_DECREF(args);
+-		Py_DECREF(kwargs);
+-	}
+ 	Py_INCREF(Py_None);
+ 	return Py_None;
+ }

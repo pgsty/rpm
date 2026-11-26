@@ -1203,7 +1203,10 @@ pg_noset:
 ###############################################################
 #                       Category: FDW                         #
 ###############################################################
-#multicorn
+multicorn:
+	./build multicorn 19
+.PHONY: multicorn
+
 #odbc_fdw
 jdbc_fdw:
 	./build jdbc_fdw 15 16 17 18 19

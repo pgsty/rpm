@@ -3,8 +3,9 @@
 Extension build scripts for PostgreSQL 15–19 on EL9/EL10.
 
 - [Pigsty PGSQL Repo](https://pigsty.io/docs/repo/pgsql)
-- [RPM Change Log](https://pigsty.io/docs/repo/pgsql/rpm)
+- [RPM Change Log](https://ext.pgsty.com/release/rpm/)
 
+Edit the bilingual repository release notes in `~/pgsty/pgext.cloud/content/release/rpm.md` and `rpm.zh.md` in the same directory. Use the same batch date, packages and versions in both files. Record individual package revisions in the RPM spec’s `%changelog`.
 
 ## Current build scope
 

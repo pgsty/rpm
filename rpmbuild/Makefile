@@ -1215,7 +1215,9 @@ pgspider_ext:
 #db2_fdw
 #pgbouncer_fdw
 #mongo_fdw
-#hdfs_fdw
+hdfs_fdw:
+	./build hdfs_fdw 19
+.PHONY: hdfs_fdw
 
 wrappers:			# rust pgrx 0.20.1
 	./build wrappers 15 16 17 18 19

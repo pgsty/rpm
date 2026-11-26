@@ -691,7 +691,7 @@ pg_http:
 	./build pg_http 15 16 17 18 19
 
 pg_net:
-	./build pg_net 15 16 17 18
+	./build pg_net 15 16 17 18 $(if $(filter 9,$(shell rpm -E %rhel)),19)
 
 pg_csv:
 	./build pg_csv 15 16 17 18 19

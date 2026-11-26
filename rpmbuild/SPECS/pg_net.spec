@@ -1,5 +1,5 @@
-%if 0%{?pgmajorversion} > 18
-%{error:PostgreSQL 19 is not enabled for this recipe; see the PG19 audit record}
+%if 0%{?pgmajorversion} > 19 || (0%{?pgmajorversion} == 19 && 0%{?rhel} != 9)
+%{error:the PostgreSQL 19 RPM gap recipe targets EL9}
 %endif
 
 %global pname pg_net
@@ -35,6 +35,9 @@ Summary:	A PostgreSQL extension that enables asynchronous (non-blocking) HTTP/HT
 License:	Apache-2.0
 URL:		https://github.com/supabase/pg_net
 Source0:	pg_net-%{version}.tar.gz
+%if 0%{?rhel} == 9
+Patch0:         pg_net-0.9.2-pg19-headers.patch
+%endif
 #           Upstream release archive uses the matching v-prefixed tag.
 
 BuildRequires:	postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
@@ -58,6 +61,9 @@ It eliminates the need for servers to continuously poll for database changes and
 
 %prep
 %setup -q -n %{sname}-%{version}
+%if 0%{?rhel} == 9 && 0%{?pgmajorversion} == 19
+%patch -P 0 -p1
+%endif
 
 %build
 PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} %{?_smp_mflags}

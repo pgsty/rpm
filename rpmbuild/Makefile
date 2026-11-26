@@ -1575,7 +1575,7 @@ pgexporter_ext:
 	./build pgexporter_ext 15 16 17 18 19
 
 plphp:
-	./build plphp 15 16 17 18
+	./build plphp 15 16 17 18 19
 
 istore:
 	./build istore 15 16 17 18 19

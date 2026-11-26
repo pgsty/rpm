@@ -2,8 +2,8 @@
 %global sname plphp
 %global pginstdir /usr/pgsql-%{pgmajorversion}
 
-%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 18
-%{error:plphp only supports PostgreSQL 15 through 18 in PGSTY builds}
+%if 0%{?pgmajorversion} < 15 || 0%{?pgmajorversion} > 19
+%{error:plphp only supports PostgreSQL 15 through 19 in PGSTY builds}
 %endif
 
 %{!?llvm:%global llvm 1}
@@ -25,7 +25,8 @@ Patch0:        plphp-2.6-pg19-tuplestore.patch
 # SHA256: 73717c319f34e3e7dbb1e14adf2aff40b17aa63c75a45739b91253c5c1003927
 
 BuildRequires:  postgresql%{pgmajorversion}-devel pgdg-srpm-macros >= 1.0.27
-BuildRequires:  php-devel php-embedded
+BuildRequires:  php-devel >= 8.1
+BuildRequires:  php-embedded >= 8.1
 %if %llvm
 BuildRequires:  llvm-devel >= 19.0
 BuildRequires:  clang-devel >= 19.0
@@ -41,11 +42,11 @@ PHP procedural language for PostgreSQL.
 %patch -P 0 -p1
 
 %build
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PHP_LIBDIR=%{_libdir} PHP_LIBNAME=php %{?_smp_mflags}
+PATH=%{pginstdir}/bin:$PATH %{__make} enable_rpath=no %{with_llvm_arg} PHP_LIBDIR=%{_libdir} PHP_LIBNAME=php %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-PATH=%{pginstdir}/bin:$PATH %{__make} %{with_llvm_arg} PHP_LIBDIR=%{_libdir} PHP_LIBNAME=php install DESTDIR=%{buildroot}
+PATH=%{pginstdir}/bin:$PATH %{__make} enable_rpath=no %{with_llvm_arg} PHP_LIBDIR=%{_libdir} PHP_LIBNAME=php install DESTDIR=%{buildroot}
 
 %files
 %doc README.md

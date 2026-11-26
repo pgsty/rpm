@@ -1302,7 +1302,9 @@ wal2mongo:
 	./build wal2mongo 15 16 17 18 19
 #decoderbufs
 #repmgr
-#pg_fact_loader
+pg_fact_loader:
+	./build pg_fact_loader 15 16 17 18 19
+.PHONY: pg_fact_loader
 
 pglogical_ticker:
 	./build pglogical_ticker 15 16 17 19 # PG18 remains outside the existing target set

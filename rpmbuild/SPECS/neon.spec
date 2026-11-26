@@ -1,7 +1,6 @@
 %define _build_id_links none
 
 %global commit 8f60b04da47ffefe0e52bda2440134b42874eb75
-%global shortcommit 8f60b04
 %global protoc_version 25.1
 %global neon_libexec %{_libexecdir}/neon
 %global neon_pgroot %{_libdir}/neon/pg_install
@@ -14,7 +13,7 @@
 
 Name:           neon
 Version:        20260525
-Release:        2.git%{shortcommit}PGSTY%{?dist}
+Release:        1PGSTY%{?dist}
 Summary:        Serverless PostgreSQL storage and compute platform
 License:        Apache-2.0 AND PostgreSQL
 URL:            https://github.com/neondatabase/neon
@@ -269,6 +268,9 @@ fi
 %{neon_pgroot}/v17
 
 %changelog
+* Wed Nov 25 2026 Ruohang Feng <rh@vonng.com> - 20260525-1PGSTY
+- Use a short package version for upstream snapshot 8f60b04.
+
 * Mon Aug 24 2026 Vonng <rh@vonng.com> - 20260525-2.git8f60b04PGSTY
 - Vendor the locked Cargo graph and make the RPM build fully offline
 - Make the SRPM self-contained by declaring all three packaging patches
